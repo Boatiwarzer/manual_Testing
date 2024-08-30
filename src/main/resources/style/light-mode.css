@@ -1,0 +1,146 @@
+@font-face {
+    src: url('font/Roboto-Thin.ttf');
+}
+
+#text {
+    -fx-font-family: "Roboto";
+}
+
+#designPane {
+    -fx-background-color: #e2f3e2;
+}
+
+#ComponentAnchor {
+    -fx-background-color: #cdeacb;
+}
+
+.input_box {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 100;
+}
+
+#anchorPane {
+    -fx-background-color: #e2f3e2;
+}
+
+#dragicon {
+    -fx-background-radius: 10;
+}
+
+#cubic-icon {
+    -fx-fill: rgba(80.0, 80.0, 80.0, 0.0);
+    -fx-stroke: black;
+}
+
+#node-overlay {
+    -fx-background-radius: 10 10 0 0;
+    -fx-background-color: linear-gradient(to bottom, rgba(255,255,255,0.7) 15%, rgba(50,100,150,0.45) 100%);
+}
+
+#right-link-handle:hover {
+    -fx-background-radius: 0 0 10 0;
+    -fx-background-color: rgba(255, 255, 255, 0.35);
+}
+
+#left-link-handle:hover {
+    -fx-background-radius: 0 0 0 10;
+    -fx-background-color: rgba(255, 255, 255, 0.35);
+}
+
+#icon-blue {
+    -fx-background-color: #3b82f6;
+}
+
+#icon-red {
+    -fx-background-color: #ef4444;
+}
+
+#icon-green {
+    -fx-background-color: #10b981;
+}
+
+#icon-black {
+    -fx-background-color: #000000;
+}
+
+#icon-grey {
+    -fx-background-color: #9ca3af;
+}
+
+#icon-yellow {
+    -fx-background-color: #f59e0b;
+}
+
+#icon-purple {
+    -fx-background-color: #8b5cf6;
+}
+
+#title-plane {
+    -fx-border-width: 2px;
+    -fx-border-color: #22c55e;
+    -fx-border-style: solid;
+}
+
+#newButton {
+    -fx-background-color: #d1fae5;
+    -fx-background-radius: 50;
+    -fx-border-radius: 50;
+}
+
+#openButton {
+    -fx-background-color: #a7f3d0;
+    -fx-background-radius: 50;
+    -fx-border-radius: 50;
+}
+
+#selectButton {
+    -fx-background-color: #34d399;
+    -fx-background-radius: 50;
+    -fx-border-radius: 50;
+    -fx-text-fill: white;
+}
+
+#confirmButton {
+    -fx-background-color: #10b981;
+    -fx-background-radius: 50;
+    -fx-border-radius: 50;
+    -fx-text-fill: white;
+}
+
+#pane {
+    -fx-background-position: fixed;
+    -fx-background-color: #cdeacb;
+}
+#labelTextField, #aliasTextField {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 100;
+}
+#SaveConfirmSetting{
+    -fx-background-color: #10b981;
+    -fx-background-radius: 50;
+    -fx-border-radius: 20;
+    -fx-text-fill: white;
+}
+
+.text-field {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 100;
+}
+
+/* For the Font Combo Box */
+#fontComboBox {
+    -fx-background-color: #f5f5f5; /* Set the background color */
+    -fx-border-color: #cccccc; /* Set the border color */
+    -fx-border-radius: 4px; /* Set the border radius for rounded corners */
+    -fx-font-size: 14px; /* Set the font size */
+
+}
+#sizeComboBox {
+    -fx-background-color: #f5f5f5; /* Set the background color */
+    -fx-border-color: #cccccc; /* Set the border color */
+    -fx-border-radius: 4px; /* Set the border radius for rounded corners */
+    -fx-font-size: 14px; /* Set the font size */
+
+}
+
+

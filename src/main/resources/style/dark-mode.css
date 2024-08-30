@@ -1,0 +1,142 @@
+@font-face {
+    src: url('font/Roboto-Thin.ttf');
+}
+
+.label, #lightThemeRadioButton, #darkThemeRadioButton, #text, #labelTextField, #aliasTextField {
+    -fx-font-family: "Roboto";
+    -fx-text-fill: #ffffff;
+}
+
+#designPane {
+    -fx-background-color: #1e1e1e; /* Dark background */
+}
+
+#ComponentAnchor {
+    -fx-background-color: #2a2a2a; /* Slightly lighter dark background */
+}
+
+.menu, .menu-item {
+    -fx-background-color: #2a2a2a; /* Slightly lighter dark background */
+}
+
+.input_box {
+    -fx-background-color: #3a3a3a; /* Darker input box background */
+    -fx-background-radius: 100;
+    -fx-text-fill: #ffffff; /* Light text color */
+}
+
+#anchorPane {
+    -fx-background-color: #1e1e1e; /* Dark background */
+}
+
+#dragicon {
+    -fx-background-radius: 10;
+}
+
+#cubic-icon {
+    -fx-fill: rgba(200, 200, 200, 0.0); /* Light fill color with transparency */
+    -fx-stroke: white; /* Light stroke color */
+}
+
+#node-overlay {
+    -fx-background-radius: 10 10 0 0;
+    -fx-background-color: linear-gradient(to bottom, rgba(50, 50, 50, 0.7) 15%, rgba(100, 100, 150, 0.45) 100%); /* Darker overlay gradient */
+}
+
+#right-link-handle:hover {
+    -fx-background-radius: 0 0 10 0;
+    -fx-background-color: rgba(50, 50, 50, 0.35); /* Darker hover color */
+}
+
+#left-link-handle:hover {
+    -fx-background-radius: 0 0 0 10;
+    -fx-background-color: rgba(50, 50, 50, 0.35); /* Darker hover color */
+}
+
+#icon-blue {
+    -fx-background-color: #3b82f6;
+}
+
+#icon-red {
+    -fx-background-color: #ef4444;
+}
+
+#icon-green {
+    -fx-background-color: #10b981;
+}
+
+#icon-black {
+    -fx-background-color: #000000;
+}
+
+#icon-grey {
+    -fx-background-color: #4b5563; /* Darker grey */
+}
+
+#icon-yellow {
+    -fx-background-color: #fbbf24; /* Slightly darker yellow */
+}
+
+#icon-purple {
+    -fx-background-color: #8b5cf6;
+}
+
+#homePagePane {
+    -fx-background-color: #1e1e1e; /* Dark background */
+}
+
+#homePageMenuBar {
+    -fx-background-color: #2a2a2a; /* Slightly lighter dark background */
+}
+
+#designPane, #componentsPane, #actorsScrollPane {
+    -fx-background-color: #2a2a2a; /* Dark background */
+}
+
+#title-plane {
+    -fx-border-color: #4ade80; /* Lighter green border color */
+    -fx-border-style: solid;
+}
+
+#newButton {
+    -fx-background-color: #065f46; /* Darker background */
+    -fx-background-radius: 50;
+    -fx-border-radius: 50;
+    -fx-text-fill: #d1fae5; /* Light text color */
+}
+
+#openButton {
+    -fx-background-color: #065f46; /* Darker background */
+    -fx-background-radius: 50;
+    -fx-border-radius: 50;
+    -fx-text-fill: #a7f3d0; /* Light text color */
+}
+
+#selectButton {
+    -fx-background-color: #059669; /* Darker green background */
+    -fx-background-radius: 50;
+    -fx-border-radius: 50;
+    -fx-text-fill: white;
+}
+
+#confirmButton {
+    -fx-background-color: #047857; /* Darker green background */
+    -fx-background-radius: 50;
+    -fx-border-radius: 50;
+    -fx-text-fill: white;
+}
+
+#pane {
+    -fx-background-position: fixed;
+    -fx-background-color: #2a2a2a; /* Slightly lighter dark background */
+}
+#labelTextField, #aliasTextField {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 100;
+}
+#SaveConfirmSetting{
+    -fx-background-color: #193b32;
+    -fx-background-radius: 50;
+    -fx-border-radius: 50;
+    -fx-text-fill: white;
+}
