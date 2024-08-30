@@ -1,7 +1,37 @@
 package ku.cs.testTools;
 
-public class Main {
+import javafx.application.Application;
+import javafx.stage.Stage;
+import ku.cs.fxrouter.FXRouter;
+
+import java.io.IOException;
+
+public class Main extends Application {
+    @Override
+    public void start(Stage stage) throws IOException {
+        FXRouter.bind(this, stage, 1280,720);
+        configRoute();
+        //FXRouter.setTheme(1);
+        //FXRouter.goTo("TempHomePage");
+        //FXRouter.popup("LandingPage", true);
+
+    }
+
+    private static void configRoute() {
+        String packageStr = "ku/cs/testTools/usecasedesigner/";
+        String packageStr1 = "ku/cs/testTools/Testscript/";
+
+        // Config route
+//        FXRouter.when("TempHomePage", packageStr + "home-page.fxml", "KU CS UseCaseDesigner");
+//        FXRouter.when("LandingPage", packageStr + "landing-page.fxml", "Welcome!");
+//        FXRouter.when("NewProjectPage", packageStr + "new-project-page.fxml", "New Project");
+//        FXRouter.when("LabelPage", packageStr + "label-page.fxml", "Label");
+//        FXRouter.when("PreferencePage", packageStr + "preference-page.fxml", "Preference");
+//        FXRouter.when("UseCasePage", packageStr + "use-case-page.fxml", "Use Case Detail");
+//        FXRouter.when("ConnectionPage", packageStr + "connection-page.fxml", "Relation Type");
+//        FXRouter.when("PropertyPage", packageStr + "property-page.fxml", "Properties");
+    }
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        launch(args);
     }
 }
