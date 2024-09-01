@@ -42,7 +42,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.testTools.Controllers.Testscript.TestScriptController">
+<VBox prefHeight="800.0" prefWidth="1360.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -83,29 +83,29 @@
         </Menu>
       </menus>
     </MenuBar>
-      <HBox alignment="CENTER" prefHeight="40.0" prefWidth="100.0" spacing="250.0">
+      <HBox alignment="CENTER" prefHeight="30.0" prefWidth="1360.0" spacing="150.0">
          <children>
-            <Hyperlink text="Use Case">
+            <Hyperlink fx:id="onClickUsecase" onAction="#onClickUsecase" text="Use Case">
                <font>
                   <Font size="14.0" />
                </font>
             </Hyperlink>
-            <Hyperlink text="Test Flow">
+            <Hyperlink fx:id="onClickTestflow" onAction="#onClickTestflow" text="Test Flow">
                <font>
                   <Font size="14.0" />
                </font>
             </Hyperlink>
-            <Hyperlink text="Test Case">
+            <Hyperlink fx:id="onClickTestcase" onAction="#onClickTestcase" text="Test Case">
                <font>
                   <Font size="14.0" />
                </font>
             </Hyperlink>
-            <Hyperlink text="Test Script">
+            <Hyperlink fx:id="onClickTestscript" onAction="#onClickTestscript" text="Test Script">
                <font>
                   <Font size="14.0" />
                </font>
             </Hyperlink>
-            <Hyperlink alignment="CENTER" text="Test Result">
+            <Hyperlink fx:id="onClickTestresult" alignment="CENTER" onAction="#onClickTestresult" text="Test Result">
                <font>
                   <Font size="14.0" />
                </font>
