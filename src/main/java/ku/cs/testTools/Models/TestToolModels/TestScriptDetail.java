@@ -1,4 +1,33 @@
 package ku.cs.testTools.Models.TestToolModels;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import lombok.*;
+
+import java.util.Objects;
+
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
+@Entity
 public class TestScriptDetail {
+    @Id
+    private String idTSD;
+    private String steps;
+    private String inputData;
+    private String expected;
+
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TestScriptDetail that = (TestScriptDetail) o;
+        return getIdTSD() != null && Objects.equals(getIdTSD(), that.getIdTSD());
+    }
+
+    @Override
+    public final int hashCode() {
+        return getClass().hashCode();
+    }
 }
