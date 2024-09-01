@@ -4,7 +4,7 @@ module ku.cs {
     requires javafx.graphics;
     requires java.desktop;
     requires javafx.swing;
-    requires lombok;
+    requires static lombok;
     requires jakarta.persistence;
 
     opens ku.cs.testTools.Controllers.Testscript to javafx.fxml;
