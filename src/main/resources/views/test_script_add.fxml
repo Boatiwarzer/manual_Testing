@@ -33,6 +33,7 @@
 -->
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
@@ -127,11 +128,6 @@
                <children>
                   <Pane layoutX="15.0" layoutY="15.0" prefHeight="700.0" prefWidth="270.0">
                      <children>
-                        <Button fx:id="onCreateButton" layoutX="15.0" layoutY="15.0" mnemonicParsing="false" onAction="#onCreateButton" prefHeight="30.0" prefWidth="110.0" text="Create">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Button>
                         <HBox layoutX="14.0" layoutY="55.0" prefHeight="30.0" prefWidth="240.0">
                            <children>
                               <TextField fx:id="onSearchField" prefHeight="30.0" prefWidth="200.0" promptText="Search">
@@ -151,11 +147,6 @@
                            </children>
                         </HBox>
                         <ListView fx:id="onSearchList" layoutX="15.0" layoutY="95.0" prefHeight="600.0" prefWidth="240.0" />
-                        <Button fx:id="onEditButton" layoutX="145.0" layoutY="15.0" mnemonicParsing="false" onAction="#onEditButton" prefHeight="30.0" prefWidth="110.0" text="Edit">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Button>
                      </children>
                   </Pane>
                   <Pane prefHeight="700.0" prefWidth="1090.0">
@@ -169,11 +160,11 @@
                                           <Font size="18.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="testNameLabel" prefHeight="30.0" prefWidth="300.0" text="test">
+                                    <TextField fx:id="onTestNameField" onAction="#onTestNameField" prefHeight="30.0" prefWidth="300.0">
                                        <font>
-                                          <Font size="18.0" />
+                                          <Font size="14.0" />
                                        </font>
-                                    </Label>
+                                    </TextField>
                                     <Label prefHeight="30.0" prefWidth="50.0" text="ID :">
                                        <font>
                                           <Font size="18.0" />
@@ -210,13 +201,9 @@
                                     </Label>
                                  </children>
                               </HBox>
-                              <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="200.0" spacing="30.0">
+                              <HBox prefHeight="60.0" prefWidth="200.0" spacing="30.0">
                                  <children>
-                                    <Label fx:id="infoUsecaseLabel" alignment="TOP_LEFT" prefHeight="60.0" prefWidth="430.0" text="Label" wrapText="true">
-                                       <font>
-                                          <Font size="16.0" />
-                                       </font>
-                                    </Label>
+                                    <ComboBox fx:id="onUsecaseCombobox" onAction="#onUsecaseCombobox" prefHeight="30.0" prefWidth="430.0" />
                                     <Label fx:id="infoDescriptLabel" alignment="TOP_LEFT" prefHeight="60.0" prefWidth="430.0" text="Label" wrapText="true">
                                        <font>
                                           <Font size="16.0" />
@@ -238,13 +225,9 @@
                                     </Label>
                                  </children>
                               </HBox>
-                              <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="200.0" spacing="30.0">
+                              <HBox prefHeight="60.0" prefWidth="200.0" spacing="30.0">
                                  <children>
-                                    <Label fx:id="infoTestcaseLabel" alignment="TOP_LEFT" prefHeight="60.0" prefWidth="430.0" text="Label" wrapText="true">
-                                       <font>
-                                          <Font size="16.0" />
-                                       </font>
-                                    </Label>
+                                    <ComboBox fx:id="onTestcaseCombobox" onAction="#onTestcaseCombobox" prefHeight="30.0" prefWidth="430.0" />
                                     <Label fx:id="infoPreconLabel" alignment="TOP_LEFT" prefHeight="60.0" prefWidth="430.0" text="Label" wrapText="true">
                                        <font>
                                           <Font size="16.0" />
@@ -259,11 +242,11 @@
                                           <Font size="18.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="infoNoteLabel" prefHeight="30.0" prefWidth="810.0" text="Label">
+                                    <TextField fx:id="onTestNoteField" onAction="#onTestNoteField" prefHeight="30.0" prefWidth="810.0">
                                        <font>
-                                          <Font size="16.0" />
+                                          <Font size="14.0" />
                                        </font>
-                                    </Label>
+                                    </TextField>
                                  </children>
                               </HBox>
                            </children>
@@ -274,6 +257,40 @@
                               <TableColumn prefWidth="75.0" text="C2" />
                            </columns>
                         </TableView>
+                        <Button fx:id="onAddButton" layoutX="15.0" layoutY="295.0" mnemonicParsing="false" onAction="#onAddButton" prefHeight="30.0" prefWidth="110.0" text="Add">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                           <graphic>
+                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@fxml/icon/add%20icon.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="onDeleteListButton" layoutX="140.0" layoutY="295.0" mnemonicParsing="false" onAction="#onDeleteListButton" prefHeight="30.0" prefWidth="135.0" text="Delete">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                           <graphic>
+                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@fxml/icon/delete%20icon.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="onSubmitButton" layoutX="840.0" layoutY="705.0" mnemonicParsing="false" onAction="#onSubmitButton" prefHeight="30.0" prefWidth="110.0" text="Submit">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="onCancelButton" layoutX="965.0" layoutY="705.0" mnemonicParsing="false" onAction="#onCancelButton" prefHeight="30.0" prefWidth="110.0" text="Cancel">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Button>
                      </children>
                   </Pane>
                </children>
