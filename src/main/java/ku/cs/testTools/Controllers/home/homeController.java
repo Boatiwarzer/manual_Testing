@@ -1,10 +1,10 @@
-package ku.cs.testTools.Controllers.Testscript;
-
+package ku.cs.testTools.Controllers.home;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Hyperlink;
-public class TestScriptController {
+
+public class homeController {
 
     @FXML
     private Hyperlink onClickTestcase;

@@ -23,7 +23,7 @@ public class Main extends Application {
         //String packageStr = "ku/cs/usecasedesigner/";
         String packageStr1 = "views/";
         FXRouter.when("home", packageStr1 + "home.fxml","home");
-        FXRouter.when("test-script", packageStr1 + "test_script.fxml","home");
+        FXRouter.when("test_script", packageStr1 + "test_script.fxml","Test Script");
 
         // Config route
 //        FXRouter.when("TempHomePage", packageStr + "home-page.fxml", "KU CS UseCaseDesigner");

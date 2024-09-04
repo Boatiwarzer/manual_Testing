@@ -52,7 +52,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="800.0" prefWidth="1360.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="760.0" prefWidth="1360.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.testTools.Controllers.testScript.TestScriptEditController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -146,7 +146,7 @@
                               </Button>
                            </children>
                         </HBox>
-                        <ListView fx:id="onSearchList" layoutX="15.0" layoutY="95.0" prefHeight="600.0" prefWidth="240.0" />
+                        <ListView fx:id="onSearchList" layoutX="15.0" layoutY="95.0" prefHeight="560.0" prefWidth="240.0" />
                      </children>
                   </Pane>
                   <Pane prefHeight="700.0" prefWidth="1090.0">
@@ -251,7 +251,7 @@
                               </HBox>
                            </children>
                         </VBox>
-                        <TableView fx:id="onTableTestscript" layoutX="15.0" layoutY="335.0" prefHeight="360.0" prefWidth="1060.0">
+                        <TableView fx:id="onTableTestscript" layoutX="15.0" layoutY="335.0" prefHeight="320.0" prefWidth="1060.0">
                            <columns>
                               <TableColumn prefWidth="75.0" text="C1" />
                               <TableColumn prefWidth="75.0" text="C2" />
@@ -269,7 +269,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Button fx:id="onDeleteListButton" layoutX="140.0" layoutY="295.0" mnemonicParsing="false" onAction="#onDeleteListButton" prefHeight="30.0" prefWidth="135.0" text="Delete">
+                        <Button fx:id="onDeleteListButton" layoutX="140.0" layoutY="295.0" mnemonicParsing="false" onAction="#onDeleteListButton" prefHeight="30.0" prefWidth="110.0" text="Delete">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -281,12 +281,12 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Button fx:id="onSubmitButton" layoutX="840.0" layoutY="705.0" mnemonicParsing="false" onAction="#onSubmitButton" prefHeight="30.0" prefWidth="110.0" text="Submit">
+                        <Button fx:id="onSubmitButton" layoutX="840.0" layoutY="685.0" mnemonicParsing="false" onAction="#onSubmitButton" prefHeight="30.0" prefWidth="110.0" text="Submit">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </Button>
-                        <Button fx:id="onDeleteButton" layoutX="965.0" layoutY="705.0" mnemonicParsing="false" onAction="#onDeleteButton" prefHeight="30.0" prefWidth="110.0" text="Delete">
+                        <Button fx:id="onDeleteButton" layoutX="965.0" layoutY="685.0" mnemonicParsing="false" onAction="#onDeleteButton" prefHeight="30.0" prefWidth="110.0" text="Delete">
                            <font>
                               <Font size="14.0" />
                            </font>

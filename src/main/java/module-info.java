@@ -7,8 +7,8 @@ module ku.cs {
     requires static lombok;
     requires jakarta.persistence;
 
-    opens ku.cs.testTools.Controllers.Testscript to javafx.fxml;
+    opens ku.cs.testTools.Controllers.testScript to javafx.fxml;
 
-    exports ku.cs.testTools.Controllers.Testscript;
+    exports ku.cs.testTools.Controllers.testScript;
     exports ku.cs;
 }

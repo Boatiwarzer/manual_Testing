@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.testTools.Controllers.testScript.PopupAddTestscriptController">
    <children>
       <VBox prefHeight="450.0" prefWidth="800.0" spacing="10.0">
          <children>
@@ -20,6 +20,20 @@
                         <Font size="24.0" />
                      </font>
                   </Label>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <Label prefHeight="30.0" prefWidth="120.0" text="Test No.">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="onTestNo" alignment="TOP_LEFT" onAction="#onTestNo" prefHeight="30.0" prefWidth="450.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
                </children>
             </HBox>
             <HBox alignment="TOP_CENTER" prefHeight="60.0" prefWidth="200.0" spacing="30.0">
@@ -58,7 +72,7 @@
                      </font></TextField>
                </children>
             </HBox>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+            <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0" spacing="50.0">
                <children>
                   <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="80.0" text="Confirm">
                      <font>

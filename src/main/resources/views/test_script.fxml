@@ -51,7 +51,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="800.0" prefWidth="1360.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="760.0" prefWidth="1360.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.testTools.Controllers.testScript.TestScriptController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -150,7 +150,7 @@
                               </Button>
                            </children>
                         </HBox>
-                        <ListView fx:id="onSearchList" layoutX="15.0" layoutY="95.0" prefHeight="600.0" prefWidth="240.0" />
+                        <ListView fx:id="onSearchList" layoutX="15.0" layoutY="95.0" prefHeight="560.0" prefWidth="240.0" />
                         <Button fx:id="onEditButton" layoutX="145.0" layoutY="15.0" mnemonicParsing="false" onAction="#onEditButton" prefHeight="30.0" prefWidth="110.0" text="Edit">
                            <font>
                               <Font size="14.0" />
@@ -268,7 +268,7 @@
                               </HBox>
                            </children>
                         </VBox>
-                        <TableView fx:id="onTableTestscript" layoutX="15.0" layoutY="335.0" prefHeight="360.0" prefWidth="1060.0">
+                        <TableView fx:id="onTableTestscript" layoutX="15.0" layoutY="335.0" prefHeight="320.0" prefWidth="1060.0">
                            <columns>
                               <TableColumn prefWidth="75.0" text="C1" />
                               <TableColumn prefWidth="75.0" text="C2" />
