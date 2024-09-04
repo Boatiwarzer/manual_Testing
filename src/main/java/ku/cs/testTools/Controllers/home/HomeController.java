@@ -4,7 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Hyperlink;
 
-public class homeController {
+public class HomeController {
 
     @FXML
     private Hyperlink onClickTestcase;

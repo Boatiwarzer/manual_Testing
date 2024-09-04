@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -9,13 +8,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.testTools.Controllers.testScript.PopupAddTestscriptController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.testTools.Controllers.testCase.PopupAddTestcaseController">
    <children>
       <VBox prefHeight="450.0" prefWidth="800.0" spacing="10.0">
          <children>
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="800.0">
                <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="100.0" prefWidth="200.0" text="Test Script">
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="100.0" prefWidth="200.0" text="Test Case">
                      <font>
                         <Font size="24.0" />
                      </font>
@@ -38,35 +37,25 @@
             </HBox>
             <HBox alignment="TOP_CENTER" prefHeight="60.0" prefWidth="200.0" spacing="30.0">
                <children>
-                  <Label prefHeight="30.0" prefWidth="120.0" text="Test steps">
+                  <Label prefHeight="30.0" prefWidth="120.0" text="Name Variables">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="onTeststepsField" alignment="TOP_LEFT" onAction="#onTeststepsField" prefHeight="60.0" prefWidth="450.0">
+                  <TextField fx:id="onNameVariablesField" alignment="TOP_LEFT" onAction="#onNameVariablesField" prefHeight="60.0" prefWidth="450.0">
                      <font>
                         <Font size="14.0" />
                      </font></TextField>
                </children>
             </HBox>
-            <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0" spacing="30.0">
-               <children>
-                  <Label prefHeight="30.0" prefWidth="120.0" text="Input data">
-                     <font>
-                        <Font size="16.0" />
-                     </font>
-                  </Label>
-                  <ComboBox fx:id="onInputDataCombobox" onAction="#onInputDataCombobox" prefHeight="30.0" prefWidth="450.0" />
-               </children>
-            </HBox>
             <HBox alignment="TOP_CENTER" prefHeight="60.0" prefWidth="200.0" spacing="30.0">
                <children>
-                  <Label prefHeight="30.0" prefWidth="120.0" text="Expected Result">
+                  <Label prefHeight="30.0" prefWidth="120.0" text="Type Variables">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="onExpectedField" alignment="TOP_LEFT" onAction="#onExpectedField" prefHeight="60.0" prefWidth="450.0">
+                  <TextField fx:id="onTypeVariableField" alignment="TOP_LEFT" onAction="#onTypeVariableField" prefHeight="60.0" prefWidth="450.0">
                      <font>
                         <Font size="14.0" />
                      </font></TextField>

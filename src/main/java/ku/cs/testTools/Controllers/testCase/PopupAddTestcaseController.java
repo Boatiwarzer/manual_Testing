@@ -1,12 +1,11 @@
-package ku.cs.testTools.Controllers.testScript;
+package ku.cs.testTools.Controllers.testCase;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 
-public class PopupAddTestscriptController {
+public class PopupAddTestcaseController {
 
     @FXML
     private Button onCancelButton;
@@ -15,16 +14,13 @@ public class PopupAddTestscriptController {
     private Button onConfirmButton;
 
     @FXML
-    private TextField onExpectedField;
-
-    @FXML
-    private ComboBox<?> onInputDataCombobox;
+    private TextField onNameVariablesField;
 
     @FXML
     private TextField onTestNo;
 
     @FXML
-    private TextField onTeststepsField;
+    private TextField onTypeVariableField;
 
     @FXML
     void onCancelButton(ActionEvent event) {
@@ -37,12 +33,7 @@ public class PopupAddTestscriptController {
     }
 
     @FXML
-    void onExpectedField(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onInputDataCombobox(ActionEvent event) {
+    void onNameVariablesField(ActionEvent event) {
 
     }
 
@@ -52,7 +43,7 @@ public class PopupAddTestscriptController {
     }
 
     @FXML
-    void onTeststepsField(ActionEvent event) {
+    void onTypeVariableField(ActionEvent event) {
 
     }
 
