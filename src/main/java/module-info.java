@@ -8,7 +8,10 @@ module ku.cs {
     requires jakarta.persistence;
 
     opens ku.cs.testTools.Controllers.testScript to javafx.fxml;
+    opens ku.cs.testTools.Controllers.home to javafx.fxml;
+
 
     exports ku.cs.testTools.Controllers.testScript;
+    exports ku.cs.testTools.Controllers.home;
     exports ku.cs;
 }
