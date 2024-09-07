@@ -1,11 +1,14 @@
 package ku.cs.testTools.Services.UsecaseServices;
 
-import ku.cs.usecasedesigner.models.*;
+import ku.cs.testTools.Models.UsecaseModels.*;
+import ku.cs.testTools.Models.UsecaseModels.ActorList;
+import ku.cs.testTools.Services.DataSource;
+import ku.cs.testTools.Services.ManageDataSource;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
-public class ActorListFileDataSource implements DataSource<ActorList>, ManageDataSource<Actor>{
+public class ActorListFileDataSource implements DataSource<ActorList>, ManageDataSource<Actor> {
     private String directory;
     private String fileName;
 

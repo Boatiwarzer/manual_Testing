@@ -8,12 +8,9 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ToggleButton;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
-import ku.cs.usecasedesigner.models.ComponentPreference;
-import ku.cs.usecasedesigner.models.ComponentPreferenceList;
-import ku.cs.usecasedesigner.models.Preference;
-import ku.cs.usecasedesigner.models.PreferenceList;
-import ku.cs.usecasedesigner.services.ComponentPreferenceListFileDataSource;
-import ku.cs.usecasedesigner.services.PreferenceListFileDataSource;
+import ku.cs.testTools.Models.UsecaseModels.*;
+import ku.cs.testTools.Services.*;
+import ku.cs.testTools.Services.UsecaseServices.*;
 
 import java.io.IOException;
 import java.util.ArrayList;

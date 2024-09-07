@@ -9,10 +9,10 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
-import ku.cs.usecasedesigner.models.Connection;
-import ku.cs.usecasedesigner.models.ConnectionList;
-import ku.cs.usecasedesigner.services.ConnectionListFileDataSource;
-import ku.cs.usecasedesigner.services.DataSource;
+import ku.cs.testTools.Models.UsecaseModels.Connection;
+import ku.cs.testTools.Models.UsecaseModels.ConnectionList;
+import ku.cs.testTools.Services.UsecaseServices.ConnectionListFileDataSource;
+import ku.cs.testTools.Services.DataSource;
 
 import java.io.IOException;
 import java.util.ArrayList;

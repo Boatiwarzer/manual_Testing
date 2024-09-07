@@ -12,7 +12,7 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @Entity
-public class Result {
+public class TestResult {
     @Id
     private String id;
     private String name;
@@ -23,14 +23,14 @@ public class Result {
     private String expected;
     private String actual;
     private String status;
-    private String Tester;
+    private String tester;
 
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Result result = (Result) o;
-        return getId() != null && Objects.equals(getId(), result.getId());
+        TestResult testResult = (TestResult) o;
+        return getId() != null && Objects.equals(getId(), testResult.getId());
     }
 
     @Override

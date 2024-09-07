@@ -8,8 +8,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
-import ku.cs.usecasedesigner.models.*;
-import ku.cs.usecasedesigner.services.*;
+import ku.cs.testTools.Models.UsecaseModels.*;
+import ku.cs.testTools.Services.*;
+import ku.cs.testTools.Services.UsecaseServices.*;
 
 import java.io.IOException;
 import java.util.ArrayList;

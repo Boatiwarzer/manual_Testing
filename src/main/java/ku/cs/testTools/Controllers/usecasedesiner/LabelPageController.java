@@ -9,8 +9,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
-import ku.cs.usecasedesigner.models.*;
-import ku.cs.usecasedesigner.services.*;
+import ku.cs.testTools.Models.UsecaseModels.*;
+import ku.cs.testTools.Services.UsecaseServices.*;
+import ku.cs.testTools.Services.*;
 
 import java.io.IOException;
 import java.util.ArrayList;

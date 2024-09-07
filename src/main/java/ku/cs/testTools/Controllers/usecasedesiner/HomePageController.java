@@ -26,8 +26,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 import javafx.stage.FileChooser;
 import ku.cs.fxrouter.FXRouter;
-import ku.cs.usecasedesigner.models.*;
-import ku.cs.usecasedesigner.services.*;
+import ku.cs.testTools.Models.UsecaseModels.*;
+import ku.cs.testTools.Services.*;
+import ku.cs.testTools.Services.UsecaseServices.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

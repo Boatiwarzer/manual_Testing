@@ -16,6 +16,7 @@ public class TestCase {
     @Id
     private String idTC;
     private LocalDateTime dateTC;
+    private String useCase;
 
     @Override
     public final boolean equals(Object o) {
