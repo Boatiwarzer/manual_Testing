@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.testTools.Controllers.testCase.PopupAddTestresultController">
+   <children>
+      <VBox prefHeight="700.0" prefWidth="800.0" spacing="10.0">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="800.0">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="100.0" prefWidth="200.0" text="Test Result">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <Label prefHeight="30.0" prefWidth="120.0" text="Test No.">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="onTestNo" alignment="TOP_LEFT" onAction="#onTestNo" prefHeight="30.0" prefWidth="450.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <Label prefHeight="30.0" prefWidth="120.0" text="Test Script ID">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="onTestscriptIDComboBox" onAction="#onTestscriptIDComboBox" prefHeight="30.0" prefWidth="450.0" />
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <Label prefHeight="30.0" prefWidth="120.0" text="Date">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="onDate" prefHeight="30.0" prefWidth="450.0" text="Label" wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="60.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <Label prefHeight="30.0" prefWidth="120.0" text="Description">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="onDescription" alignment="TOP_LEFT" prefHeight="60.0" prefWidth="450.0" text="Label" wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <Label prefHeight="30.0" prefWidth="120.0" text="Role">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="onRole" alignment="TOP_LEFT" onAction="#onRole" prefHeight="30.0" prefWidth="450.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="90.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <Label prefHeight="30.0" prefWidth="120.0" text="Test Steps">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <TableView fx:id="onTableTeststeps" prefHeight="90.0" prefWidth="450.0">
+                    <columns>
+                      <TableColumn prefWidth="75.0" text="C1" />
+                      <TableColumn prefWidth="75.0" text="C2" />
+                    </columns>
+                  </TableView>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <Label prefHeight="30.0" prefWidth="120.0" text="Expected Result">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="onExpected" prefHeight="30.0" prefWidth="450.0" text="Label" wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <Label prefHeight="30.0" prefWidth="120.0" text="Actual Result">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="onActual" alignment="TOP_LEFT" onAction="#onActual" prefHeight="30.0" prefWidth="450.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <Label prefHeight="30.0" prefWidth="120.0" text="Status">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="onStatus" alignment="TOP_LEFT" onAction="#onStatus" prefHeight="30.0" prefWidth="450.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <Label prefHeight="30.0" prefWidth="120.0" text="Tester">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="onTester" prefHeight="30.0" prefWidth="450.0" text="Label" wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0" spacing="50.0">
+               <children>
+                  <Button fx:id="onConfirmButton" mnemonicParsing="false" onAction="#onConfirmButton" prefHeight="30.0" prefWidth="80.0" text="Confirm">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="onCancelButton" mnemonicParsing="false" onAction="#onCancelButton" prefHeight="30.0" prefWidth="80.0" text="Cancel">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
