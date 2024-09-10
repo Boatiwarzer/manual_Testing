@@ -12,7 +12,7 @@ public class TestScriptServices implements DataSource<TestScriptList>, ManageDat
     private String directory;
     private String fileName;
 
-    public ActorListFileDataSource(String directory, String fileName) {
+    public TestScriptServices(String directory, String fileName) {
         this.directory = directory;
         this.fileName = fileName;
         checkFileIsExisted();
@@ -50,14 +50,17 @@ public class TestScriptServices implements DataSource<TestScriptList>, ManageDat
             String line = "";
             while ((line = buffer.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data[0].trim().equals("actor")) {
-                    Actor actor = new Actor(
-                            Integer.parseInt(data[1].trim()), // actorID
-                            data[2].trim(), // actorName
-                            data[3].trim(), // alias
-                            data[4].trim(), // description
-                            data[5].trim(), // note
-                            Integer.parseInt(data[6].trim()) // positionID
+                if (data[0].trim().equals("testScript")) {
+                    TestScript testScript = new TestScript(
+                            Integer.parseInt(data[1].trim()), // 
+                            data[2].trim(), // 
+                            data[3].trim(), // 
+                            data[4].trim(), // 
+                            data[5].trim(),
+                            data[6].trim(),
+                            data[7].trim(),
+                            data[8].trim() 
+                             
                     );
                     actorList.addActor(actor);
                 }
@@ -77,5 +80,8 @@ public class TestScriptServices implements DataSource<TestScriptList>, ManageDat
             }
         }
 
-        return actorList;
+        return testScriptList;
     }
+    @Override
+    public void writeData(TestScriptList testScriptList) {}
+}
