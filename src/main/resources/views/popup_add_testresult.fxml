@@ -78,12 +78,12 @@
             </HBox>
             <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
                <children>
-                  <Label prefHeight="30.0" prefWidth="120.0" text="Role">
+                  <Label prefHeight="30.0" prefWidth="120.0" text="Actor">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="onRole" alignment="TOP_LEFT" onAction="#onRole" prefHeight="30.0" prefWidth="450.0">
+                  <TextField fx:id="onActor" alignment="TOP_LEFT" onAction="#onActor" prefHeight="30.0" prefWidth="450.0">
                      <font>
                         <Font size="14.0" />
                      </font>

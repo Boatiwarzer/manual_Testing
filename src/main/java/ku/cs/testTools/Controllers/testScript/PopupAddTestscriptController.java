@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
 public class PopupAddTestscriptController {
@@ -15,7 +16,7 @@ public class PopupAddTestscriptController {
     private Button onConfirmButton;
 
     @FXML
-    private TextField onExpectedField;
+    private TextArea onExpectedArea;
 
     @FXML
     private ComboBox<?> onInputDataCombobox;
@@ -24,7 +25,7 @@ public class PopupAddTestscriptController {
     private TextField onTestNo;
 
     @FXML
-    private TextField onTeststepsField;
+    private TextArea onTeststepsArea;
 
     @FXML
     void onCancelButton(ActionEvent event) {
@@ -37,22 +38,12 @@ public class PopupAddTestscriptController {
     }
 
     @FXML
-    void onExpectedField(ActionEvent event) {
-
-    }
-
-    @FXML
     void onInputDataCombobox(ActionEvent event) {
 
     }
 
     @FXML
     void onTestNo(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onTeststepsField(ActionEvent event) {
 
     }
 
