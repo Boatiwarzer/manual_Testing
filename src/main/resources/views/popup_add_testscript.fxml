@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -43,10 +44,11 @@
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="onTeststepsField" alignment="TOP_LEFT" onAction="#onTeststepsField" prefHeight="60.0" prefWidth="450.0">
+                  <TextArea fx:id="onTeststepsArea" prefHeight="60.0" prefWidth="450.0" wrapText="true">
                      <font>
                         <Font size="14.0" />
-                     </font></TextField>
+                     </font>
+                  </TextArea>
                </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0" spacing="30.0">
@@ -66,10 +68,11 @@
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="onExpectedField" alignment="TOP_LEFT" onAction="#onExpectedField" prefHeight="60.0" prefWidth="450.0">
+                  <TextArea fx:id="onExpectedArea" prefHeight="60.0" prefWidth="450.0" wrapText="true">
                      <font>
                         <Font size="14.0" />
-                     </font></TextField>
+                     </font>
+                  </TextArea>
                </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0" spacing="50.0">

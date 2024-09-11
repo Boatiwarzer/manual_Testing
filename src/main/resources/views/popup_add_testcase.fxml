@@ -21,6 +21,7 @@
                   </Label>
                </children>
             </HBox>
+            <HBox prefHeight="30.0" prefWidth="200.0" />
             <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
                <children>
                   <Label prefHeight="30.0" prefWidth="120.0" text="Test No.">
@@ -35,30 +36,32 @@
                   </TextField>
                </children>
             </HBox>
-            <HBox alignment="TOP_CENTER" prefHeight="60.0" prefWidth="200.0" spacing="30.0">
+            <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
                <children>
                   <Label prefHeight="30.0" prefWidth="120.0" text="Name Variables">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="onNameVariablesField" alignment="TOP_LEFT" onAction="#onNameVariablesField" prefHeight="60.0" prefWidth="450.0">
+                  <TextField fx:id="onNameVariablesField" onAction="#onNameVariablesField" prefHeight="30.0" prefWidth="450.0">
                      <font>
                         <Font size="14.0" />
-                     </font></TextField>
+                     </font>
+                  </TextField>
                </children>
             </HBox>
-            <HBox alignment="TOP_CENTER" prefHeight="60.0" prefWidth="200.0" spacing="30.0">
+            <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
                <children>
                   <Label prefHeight="30.0" prefWidth="120.0" text="Type Variables">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="onTypeVariableField" alignment="TOP_LEFT" onAction="#onTypeVariableField" prefHeight="60.0" prefWidth="450.0">
+                  <TextField fx:id="onTypeVariableField" onAction="#onTypeVariableField" prefHeight="30.0" prefWidth="450.0">
                      <font>
                         <Font size="14.0" />
-                     </font></TextField>
+                     </font>
+                  </TextField>
                </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0" spacing="50.0">

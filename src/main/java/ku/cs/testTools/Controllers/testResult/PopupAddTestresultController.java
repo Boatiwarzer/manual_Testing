@@ -11,6 +11,9 @@ import javafx.scene.control.TextField;
 public class PopupAddTestresultController {
 
     @FXML
+    private TextField onActor;
+
+    @FXML
     private TextField onActual;
 
     @FXML
@@ -29,9 +32,6 @@ public class PopupAddTestresultController {
     private Label onExpected;
 
     @FXML
-    private TextField onRole;
-
-    @FXML
     private TextField onStatus;
 
     @FXML
@@ -47,6 +47,11 @@ public class PopupAddTestresultController {
     private ComboBox<?> onTestscriptIDComboBox;
 
     @FXML
+    void onActor(ActionEvent event) {
+
+    }
+
+    @FXML
     void onActual(ActionEvent event) {
 
     }
@@ -58,11 +63,6 @@ public class PopupAddTestresultController {
 
     @FXML
     void onConfirmButton(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onRole(ActionEvent event) {
 
     }
 
@@ -82,4 +82,3 @@ public class PopupAddTestresultController {
     }
 
 }
-
