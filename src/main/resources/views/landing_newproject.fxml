@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="260.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.testTools.Controllers.home.NewProjectController">
+   <children>
+      <VBox alignment="CENTER" prefHeight="260.0" prefWidth="500.0" spacing="20.0">
+         <children>
+            <Label text="Welcome to Manual Test Tools">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <VBox alignment="CENTER" prefHeight="160.0" prefWidth="100.0" spacing="15.0">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0" spacing="20.0">
+                     <children>
+                        <Label prefWidth="100.0" text="Project Name">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="onProjectNameField" onAction="#onProjectNameField" prefHeight="30.0" prefWidth="200.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </TextField>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0" spacing="20.0">
+                     <children>
+                        <Label prefWidth="100.0" text="Location Path">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="onSelectButton" mnemonicParsing="false" onAction="#onSelectButton" prefHeight="30.0" prefWidth="200.0" text="Select">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0" spacing="20.0">
+                     <children>
+                        <Button fx:id="onConfirmButton" mnemonicParsing="false" onAction="#onConfirmButton" prefHeight="30.0" prefWidth="80.0" text="Confirm">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="onCancelButton" mnemonicParsing="false" onAction="#onCancelButton" prefHeight="30.0" prefWidth="80.0" text="Cancel">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

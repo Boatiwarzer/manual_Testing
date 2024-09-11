@@ -13,7 +13,7 @@ public class TestFlowController {
     private TitledPane componentTitlePane;
 
     @FXML
-    private TitledPane disignTitlePane;
+    private TitledPane designTitlePane;
 
     @FXML
     private TitledPane noteTitlePane;
