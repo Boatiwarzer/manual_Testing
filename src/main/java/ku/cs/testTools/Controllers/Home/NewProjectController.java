@@ -1,10 +1,20 @@
-package ku.cs.testTools.Controllers.home;
+package ku.cs.testTools.Controllers.Home;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import ku.cs.fxrouter.FXRouter;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 public class NewProjectController {
 
     @FXML
@@ -20,7 +30,7 @@ public class NewProjectController {
     private Button onSelectButton;
 
     @FXML
-    void onCancelButton(ActionEvent event) {
+    void onCancelButton(ActionEvent actionEvent) {
         Node source = (Node) actionEvent.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
@@ -28,11 +38,11 @@ public class NewProjectController {
     }
 
     @FXML
-    void onConfirmButton(ActionEvent event) {
+    void onConfirmButton(ActionEvent actionEvent) {
         System.out.println("Confirm button clicked.");
 
         // Check if the system name and directory are empty
-        if (SystemNameTextField.getText().isEmpty()) {
+        if (onProjectNameField.getText().isEmpty()) {
             systemNameErrorText.setText("Please enter a name.");
             return;
         } else {

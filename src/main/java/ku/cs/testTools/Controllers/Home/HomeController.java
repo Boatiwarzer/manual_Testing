@@ -1,4 +1,4 @@
-package ku.cs.testTools.Controllers.home;
+package ku.cs.testTools.Controllers.Home;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

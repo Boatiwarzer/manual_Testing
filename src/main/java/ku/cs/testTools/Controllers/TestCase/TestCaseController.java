@@ -1,25 +1,24 @@
-package ku.cs.testTools.Controllers.testScript;
+package ku.cs.testTools.Controllers.TestCase;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
-public class TestScriptEditController {
+public class TestCaseController {
 
     @FXML
     private Label infoDescriptLabel;
 
     @FXML
-    private Label infoPreconLabel;
+    private Label infoNoteLabel;
 
     @FXML
-    private Button onAddButton;
+    private Label infoUsecaseLabel;
 
     @FXML
     private Hyperlink onClickTestcase;
@@ -37,10 +36,10 @@ public class TestScriptEditController {
     private Hyperlink onClickUsecase;
 
     @FXML
-    private Button onDeleteButton;
+    private Button onCreateButton;
 
     @FXML
-    private Button onDeleteListButton;
+    private Button onEditButton;
 
     @FXML
     private Button onSearchButton;
@@ -52,22 +51,7 @@ public class TestScriptEditController {
     private ListView<?> onSearchList;
 
     @FXML
-    private Button onSubmitButton;
-
-    @FXML
-    private TableView<?> onTableTestscript;
-
-    @FXML
-    private TextField onTestNameField;
-
-    @FXML
-    private TextField onTestNoteField;
-
-    @FXML
-    private ComboBox<?> onTestcaseCombobox;
-
-    @FXML
-    private ComboBox<?> onUsecaseCombobox;
+    private TableView<?> onTableTestcase;
 
     @FXML
     private Label testDateLabel;
@@ -76,9 +60,7 @@ public class TestScriptEditController {
     private Label testIDLabel;
 
     @FXML
-    void onAddButton(ActionEvent event) {
-
-    }
+    private Label testNameLabel;
 
     @FXML
     void onClickTestcase(ActionEvent event) {
@@ -106,42 +88,17 @@ public class TestScriptEditController {
     }
 
     @FXML
-    void onDeleteButton(ActionEvent event) {
+    void onCreateButton(ActionEvent event) {
 
     }
 
     @FXML
-    void onDeleteListButton(ActionEvent event) {
+    void onEditButton(ActionEvent event) {
 
     }
 
     @FXML
     void onSearchButton(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onSubmitButton(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onTestNameField(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onTestNoteField(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onTestcaseCombobox(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onUsecaseCombobox(ActionEvent event) {
 
     }
 

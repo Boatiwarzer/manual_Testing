@@ -1,16 +1,18 @@
-package ku.cs.testTools.Controllers.useCase;
+package ku.cs.testTools.Controllers.UseCase;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
-public class UseCaseController {
+public class UseCaseAddController {
 
     @FXML
     private ScrollPane actorActionScrollPane;
@@ -19,16 +21,13 @@ public class UseCaseController {
     private VBox actorActionVBox;
 
     @FXML
-    private Label infoDescriptLabel;
+    private Button addActorActionButton;
 
     @FXML
-    private Label infoNoteLabel;
+    private Button addSystemActionButton;
 
     @FXML
-    private Label infoPostConLabel;
-
-    @FXML
-    private Label infoPreConLabel;
+    private Button onCancelButton;
 
     @FXML
     private Hyperlink onClickTestcase;
@@ -46,10 +45,13 @@ public class UseCaseController {
     private Hyperlink onClickUsecase;
 
     @FXML
-    private Button onCreateButton;
+    private TextArea onDescriptArea;
 
     @FXML
-    private Button onEditButton;
+    private TextArea onPostConArea;
+
+    @FXML
+    private TextArea onPreConArea;
 
     @FXML
     private Button onSearchButton;
@@ -61,19 +63,46 @@ public class UseCaseController {
     private ListView<?> onSearchList;
 
     @FXML
+    private Button onSubmitButton;
+
+    @FXML
+    private TextField onTestActorField;
+
+    @FXML
+    private TextField onTestNameField;
+
+    @FXML
+    private TextArea onTestNoteArea;
+
+    @FXML
+    private ComboBox<?> postConListComboBox;
+
+    @FXML
+    private ComboBox<?> preConListComboBox;
+
+    @FXML
     private ScrollPane systemActionScrollPane;
 
     @FXML
     private VBox systemActionVBox;
 
     @FXML
-    private Label testActorLabel;
-
-    @FXML
     private Label testIDLabel;
 
     @FXML
-    private Label testNameLabel;
+    void handleAddActorActionButton(ActionEvent event) {
+
+    }
+
+    @FXML
+    void handleAddSystemActionButton(ActionEvent event) {
+
+    }
+
+    @FXML
+    void onCancelButton(ActionEvent event) {
+
+    }
 
     @FXML
     void onClickTestcase(ActionEvent event) {
@@ -101,17 +130,32 @@ public class UseCaseController {
     }
 
     @FXML
-    void onCreateButton(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onEditButton(ActionEvent event) {
-
-    }
-
-    @FXML
     void onSearchButton(ActionEvent event) {
+
+    }
+
+    @FXML
+    void onSubmitButton(ActionEvent event) {
+
+    }
+
+    @FXML
+    void onTestActorField(ActionEvent event) {
+
+    }
+
+    @FXML
+    void onTestNameField(ActionEvent event) {
+
+    }
+
+    @FXML
+    void postConListComboBox(ActionEvent event) {
+
+    }
+
+    @FXML
+    void preConListComboBox(ActionEvent event) {
 
     }
 

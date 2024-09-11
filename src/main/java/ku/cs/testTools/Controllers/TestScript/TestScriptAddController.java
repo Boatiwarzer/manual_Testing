@@ -1,4 +1,4 @@
-package ku.cs.testTools.Controllers.testScript;
+package ku.cs.testTools.Controllers.TestScript;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

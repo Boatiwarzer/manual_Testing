@@ -1,4 +1,4 @@
-package ku.cs.testTools.Controllers.useCase;
+package ku.cs.testTools.Controllers.TestScript;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -7,25 +7,19 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.VBox;
 
-public class UseCaseEditController {
+public class TestScriptEditController {
 
     @FXML
-    private ScrollPane actorActionScrollPane;
+    private Label infoDescriptLabel;
 
     @FXML
-    private VBox actorActionVBox;
+    private Label infoPreconLabel;
 
     @FXML
-    private Button addActorActionButton;
-
-    @FXML
-    private Button addSystemActionButton;
+    private Button onAddButton;
 
     @FXML
     private Hyperlink onClickTestcase;
@@ -46,13 +40,7 @@ public class UseCaseEditController {
     private Button onDeleteButton;
 
     @FXML
-    private TextArea onDescriptArea;
-
-    @FXML
-    private TextArea onPostConArea;
-
-    @FXML
-    private TextArea onPreConArea;
+    private Button onDeleteListButton;
 
     @FXML
     private Button onSearchButton;
@@ -67,36 +55,28 @@ public class UseCaseEditController {
     private Button onSubmitButton;
 
     @FXML
-    private TextField onTestActorField;
+    private TableView<?> onTableTestscript;
 
     @FXML
     private TextField onTestNameField;
 
     @FXML
-    private TextArea onTestNoteArea;
+    private TextField onTestNoteField;
 
     @FXML
-    private ComboBox<?> postConListComboBox;
+    private ComboBox<?> onTestcaseCombobox;
 
     @FXML
-    private ComboBox<?> preConListComboBox;
+    private ComboBox<?> onUsecaseCombobox;
 
     @FXML
-    private ScrollPane systemActionScrollPane;
-
-    @FXML
-    private VBox systemActionVBox;
+    private Label testDateLabel;
 
     @FXML
     private Label testIDLabel;
 
     @FXML
-    void handleAddActorActionButton(ActionEvent event) {
-
-    }
-
-    @FXML
-    void handleAddSystemActionButton(ActionEvent event) {
+    void onAddButton(ActionEvent event) {
 
     }
 
@@ -131,6 +111,11 @@ public class UseCaseEditController {
     }
 
     @FXML
+    void onDeleteListButton(ActionEvent event) {
+
+    }
+
+    @FXML
     void onSearchButton(ActionEvent event) {
 
     }
@@ -141,27 +126,22 @@ public class UseCaseEditController {
     }
 
     @FXML
-    void onTestActorField(ActionEvent event) {
-
-    }
-
-    @FXML
     void onTestNameField(ActionEvent event) {
 
     }
 
     @FXML
-    void onTestNoteField(MouseEvent event) {
+    void onTestNoteField(ActionEvent event) {
 
     }
 
     @FXML
-    void postConListComboBox(ActionEvent event) {
+    void onTestcaseCombobox(ActionEvent event) {
 
     }
 
     @FXML
-    void preConListComboBox(ActionEvent event) {
+    void onUsecaseCombobox(ActionEvent event) {
 
     }
 

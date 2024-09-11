@@ -1,8 +1,16 @@
-package ku.cs.testTools.Controllers.home;
+package ku.cs.testTools.Controllers.Home;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import ku.cs.fxrouter.FXRouter;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class LandingController {
 
@@ -13,7 +21,7 @@ public class LandingController {
     private Button onOpenfileButton;
 
     @FXML
-    void onNewfileButton(ActionEvent event) {
+    void onNewfileButton(ActionEvent actionEvent) throws IOException{
         // Show new project window
         System.out.println("New project button clicked.");
         FXRouter.popup("NewProjectPage", true);
@@ -26,8 +34,8 @@ public class LandingController {
     }
 
     @FXML
-    void onOpenfileButton(ActionEvent event) throws IOException{
-        / Open file chooser
+    void onOpenfileButton(ActionEvent actionEvent) throws IOException {
+        // Open file chooser
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Project");
 
@@ -67,7 +75,7 @@ public class LandingController {
             objects.add(directory);
             // แก้พาท
             String packageStr1 = "views/";
-            FXRouter.when("home", packageStr1 + "home.fxml","home", "TestTools | " + projectName);
+            FXRouter.when("home", packageStr1 + "home.fxml", "TestTools | " + projectName);
             FXRouter.goTo("home", objects);
             // Close the current window
             Node source = (Node) actionEvent.getSource();
