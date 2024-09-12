@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
@@ -16,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 public class NewProjectController {
+    private String directory;
 
     @FXML
     private Button onCancelButton;
@@ -30,7 +32,7 @@ public class NewProjectController {
     private Button onSelectButton;
 
     @FXML
-    void onCancelButton(ActionEvent actionEvent) {
+    void onCancelButton(ActionEvent actionEvent) throws IOException{
         Node source = (Node) actionEvent.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
@@ -38,26 +40,26 @@ public class NewProjectController {
     }
 
     @FXML
-    void onConfirmButton(ActionEvent actionEvent) {
+    void onConfirmButton(ActionEvent actionEvent) throws IOException{
         System.out.println("Confirm button clicked.");
 
         // Check if the system name and directory are empty
-        if (onProjectNameField.getText().isEmpty()) {
-            systemNameErrorText.setText("Please enter a name.");
-            return;
-        } else {
-            systemNameErrorText.setText("");
-        }
-
-        if (directory == null) {
-            directoryErrorText.setText("Please select a directory.");
-            return;
-        } else {
-            directoryErrorText.setText("");
-        }
+//        if (onProjectNameField.getText().isEmpty()) {
+//            systemNameErrorText.setText("Please enter a name.");
+//            return;
+//        } else {
+//            systemNameErrorText.setText("");
+//        }
+//
+//        if (directory == null) {
+//            directoryErrorText.setText("Please select a directory.");
+//            return;
+//        } else {
+//            directoryErrorText.setText("");
+//        }
 
         // Set value for projectName
-        String projectName = SystemNameTextField.getText();
+        String projectName = onProjectNameField.getText();
 
         setWindowTitle(projectName);
 
@@ -67,7 +69,7 @@ public class NewProjectController {
         objects.add(directory);
         //แก้พาท
         String packageStr1 = "views/";
-        FXRouter.when("home", packageStr1 + "home.fxml","home", "TestTools | " + projectName);
+        FXRouter.when("home", packageStr1 + "home.fxml","TestTools | " + projectName);
         FXRouter.goTo("home", objects);
 
         // Close the current window
@@ -89,13 +91,13 @@ public class NewProjectController {
         if (file != null) {
             System.out.println("Selected directory: " + file.getAbsolutePath());
             directory = file.getAbsolutePath();
-            selectButton.setText(directory);
+            onSelectButton.setText(directory);
             } else {
             System.out.println("No directory selected.");
             }
     }
     private void setWindowTitle(String projectName) {
-        Stage stage = (Stage) SystemNameTextField.getScene().getWindow();
+        Stage stage = (Stage) onProjectNameField.getScene().getWindow();
         stage.setTitle(projectName);
     }   
 }
