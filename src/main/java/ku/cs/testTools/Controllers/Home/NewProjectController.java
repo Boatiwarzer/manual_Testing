@@ -17,8 +17,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 public class NewProjectController {
-    private String directory;
-
     @FXML
     private Button onCancelButton;
 
@@ -30,6 +28,13 @@ public class NewProjectController {
 
     @FXML
     private Button onSelectButton;
+
+    @FXML
+    void onProjectNameField(ActionEvent event) {
+
+    }
+
+    private String directory;
 
     @FXML
     void onCancelButton(ActionEvent actionEvent) throws IOException{
