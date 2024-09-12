@@ -24,7 +24,7 @@ public class LandingController {
     void onNewfileButton(ActionEvent actionEvent) throws IOException{
         // Show new project window
         System.out.println("New project button clicked.");
-        FXRouter.popup("NewProjectPage", true);
+        FXRouter.popup("landing_newproject", true);
 
         // Close the current window
         Node source = (Node) actionEvent.getSource();

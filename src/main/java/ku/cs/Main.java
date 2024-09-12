@@ -14,7 +14,7 @@ public class Main extends Application {
         FXRouter.bind(this, stage, "Manual Testtools", 1360,780);
         configRoute();
         //FXRouter.setTheme(1);
-        FXRouter.goTo("home");
+        FXRouter.popup("landing_page");
         //FXRouter.popup("LandingPage", true);
 
     }
