@@ -2,17 +2,24 @@ package ku.cs.testTools.Models.Manager;
 
 import jakarta.persistence.Entity;
 import lombok.Data;
+import lombok.Getter;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import ku.cs.testTools.Services.AccountComparable;
+import lombok.Setter;
+
+@Getter
 @Data
 @Entity
 public class Account implements Comparable{
     private String role;
+    @Setter
     private String name;
+    @Setter
     private String username;
     private String password;
     private String img;
@@ -26,29 +33,6 @@ public class Account implements Comparable{
         this.img = "Profile-picture/Profile_1.jpg";
         this.date = date;
     }
-    public String getRole() {
-        return role;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getImg() {
-        return img;
-    }
-
-    public String getDate() {
-        return date;
-    }
 
     public void changeName(String name) {
         if (!name.trim().equals("")) {
@@ -61,29 +45,10 @@ public class Account implements Comparable{
         }
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public void setImagePath(String img) {
         this.img = img;
     }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
     public void setLoginTime(){
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
