@@ -2,10 +2,12 @@ package ku.cs.testTools.Controllers.TestScript;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class PopupAddTestscriptController {
 
@@ -28,8 +30,10 @@ public class PopupAddTestscriptController {
     private TextArea onTeststepsArea;
 
     @FXML
-    void onCancelButton(ActionEvent event) {
-
+    void onCancelButton(ActionEvent actionEvent) {
+        Node source = (Node) actionEvent.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
     }
 
     @FXML

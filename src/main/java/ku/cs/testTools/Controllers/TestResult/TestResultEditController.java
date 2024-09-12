@@ -8,14 +8,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import ku.cs.fxrouter.FXRouter;
 
-public class TestResultAddController {
+import java.io.IOException;
+
+public class TestResultEditController {
 
     @FXML
     private Button onAddButton;
-
-    @FXML
-    private Button onCancelButton;
 
     @FXML
     private Hyperlink onClickTestcase;
@@ -31,6 +31,9 @@ public class TestResultAddController {
 
     @FXML
     private Hyperlink onClickUsecase;
+
+    @FXML
+    private Button onDeleteButton;
 
     @FXML
     private Button onDeleteListButton;
@@ -57,40 +60,67 @@ public class TestResultAddController {
     private TextField onTestNoteField;
 
     @FXML
+    private Label testDateLabel;
+
+    @FXML
     private Label testIDLabel;
 
     @FXML
     void onAddButton(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onCancelButton(ActionEvent event) {
-
+        try {
+            FXRouter.popup("popup_add_testresult", true);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
     void onClickTestcase(ActionEvent event) {
-
+        try {
+            FXRouter.goTo("test_case");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
     void onClickTestflow(ActionEvent event) {
-
+        try {
+            FXRouter.goTo("test_flow");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
     void onClickTestresult(ActionEvent event) {
-
+        try {
+            FXRouter.goTo("test_result");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
     void onClickTestscript(ActionEvent event) {
-
+        try {
+            FXRouter.goTo("test_script");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
     void onClickUsecase(ActionEvent event) {
+        try {
+            FXRouter.goTo("use_case");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @FXML
+    void onDeleteButton(ActionEvent event) {
 
     }
 

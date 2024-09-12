@@ -2,6 +2,7 @@ package ku.cs.testTools.Controllers.TestCase;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Hyperlink;
@@ -9,6 +10,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import ku.cs.fxrouter.FXRouter;
+
+import java.io.IOException;
 
 public class TestCaseAddController {
 
@@ -70,38 +75,67 @@ public class TestCaseAddController {
     private Label testIDLabel;
 
     @FXML
-    void onAddButton(ActionEvent event) {
+    void onAddButton(ActionEvent actionEvent){
+        try {
+            FXRouter.popup("popup_add_testcase", true);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
     @FXML
     void onCancelButton(ActionEvent event) {
-
+        try {
+            FXRouter.goTo("test_case");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
     void onClickTestcase(ActionEvent event) {
-
+        try {
+            FXRouter.goTo("test_case");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
     void onClickTestflow(ActionEvent event) {
-
+        try {
+            FXRouter.goTo("test_flow");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
     void onClickTestresult(ActionEvent event) {
-
+        try {
+            FXRouter.goTo("test_result");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
     void onClickTestscript(ActionEvent event) {
-
+        try {
+            FXRouter.goTo("test_script");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
     void onClickUsecase(ActionEvent event) {
-
+        try {
+            FXRouter.goTo("use_case");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML

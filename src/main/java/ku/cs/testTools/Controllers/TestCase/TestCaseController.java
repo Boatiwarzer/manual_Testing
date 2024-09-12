@@ -8,6 +8,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import ku.cs.fxrouter.FXRouter;
+
+import java.io.IOException;
 
 public class TestCaseController {
 
@@ -64,37 +67,65 @@ public class TestCaseController {
 
     @FXML
     void onClickTestcase(ActionEvent event) {
-
+        try {
+            FXRouter.goTo("test_case");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
     void onClickTestflow(ActionEvent event) {
-
+        try {
+            FXRouter.goTo("test_flow");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
     void onClickTestresult(ActionEvent event) {
-
+        try {
+            FXRouter.goTo("test_result");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
     void onClickTestscript(ActionEvent event) {
-
+        try {
+            FXRouter.goTo("test_script");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
     void onClickUsecase(ActionEvent event) {
-
+        try {
+            FXRouter.goTo("use_case");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
     void onCreateButton(ActionEvent event) {
-
+        try {
+            FXRouter.goTo("test_case_add");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
     void onEditButton(ActionEvent event) {
-
+        try {
+            FXRouter.goTo("test_case_edit");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML

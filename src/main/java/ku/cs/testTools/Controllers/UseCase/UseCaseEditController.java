@@ -12,6 +12,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import ku.cs.fxrouter.FXRouter;
+
+import java.io.IOException;
 
 public class UseCaseEditController {
 
@@ -102,32 +105,56 @@ public class UseCaseEditController {
 
     @FXML
     void onClickTestcase(ActionEvent event) {
-
+        try {
+            FXRouter.goTo("test_case");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
     void onClickTestflow(ActionEvent event) {
-
+        try {
+            FXRouter.goTo("test_flow");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
     void onClickTestresult(ActionEvent event) {
-
+        try {
+            FXRouter.goTo("test_result");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
     void onClickTestscript(ActionEvent event) {
-
+        try {
+            FXRouter.goTo("test_script");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
     void onClickUsecase(ActionEvent event) {
-
+        try {
+            FXRouter.goTo("use_case");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
     void onDeleteButton(ActionEvent event) {
-
+//        try {
+//            FXRouter.goTo("popup_delete");
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
     @FXML

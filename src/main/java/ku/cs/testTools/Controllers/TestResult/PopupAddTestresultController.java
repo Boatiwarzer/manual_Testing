@@ -2,11 +2,13 @@ package ku.cs.testTools.Controllers.TestResult;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class PopupAddTestresultController {
 
@@ -57,8 +59,10 @@ public class PopupAddTestresultController {
     }
 
     @FXML
-    void onCancelButton(ActionEvent event) {
-
+    void onCancelButton(ActionEvent actionEvent) {
+        Node source = (Node) actionEvent.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
     }
 
     @FXML

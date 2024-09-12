@@ -11,7 +11,7 @@ import java.io.IOException;
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXRouter.bind(this, stage, 1360,760);
+        FXRouter.bind(this, stage, "Manual Testtools", 1360,780);
         configRoute();
         //FXRouter.setTheme(1);
         FXRouter.goTo("home");
@@ -22,18 +22,30 @@ public class Main extends Application {
     private static void configRoute() {
         //String packageStr = "ku/cs/usecasedesigner/";
         String packageStr1 = "views/";
-        FXRouter.when("home", packageStr1 + "home.fxml","home");
-        FXRouter.when("test_script", packageStr1 + "test_script.fxml","Test Script");
+        FXRouter.when("home", packageStr1 + "home.fxml");
+        FXRouter.when("landing_page", packageStr1 + "landing_page.fxml");
+        FXRouter.when("landing_newproject", packageStr1 + "landing_newproject.fxml");
+        FXRouter.when("use_case", packageStr1 + "use_case.fxml");
+        FXRouter.when("use_case_add", packageStr1 + "use_case_add.fxml");
+        FXRouter.when("use_case_edit", packageStr1 + "use_case_edit.fxml");
+        FXRouter.when("test_flow", packageStr1 + "test_flow.fxml");
+        FXRouter.when("test_case", packageStr1 + "test_case.fxml");
+        FXRouter.when("test_case_add", packageStr1 + "test_case_add.fxml");
+        FXRouter.when("test_case_edit", packageStr1 + "test_case_edit.fxml");
+        FXRouter.when("test_script", packageStr1 + "test_script.fxml");
+        FXRouter.when("test_script_add", packageStr1 + "test_script_add.fxml");
+        FXRouter.when("test_script_edit", packageStr1 + "test_script_edit.fxml");
+        FXRouter.when("test_result", packageStr1 + "test_result.fxml");
+        FXRouter.when("test_result_add", packageStr1 + "test_result_add.fxml");
+        FXRouter.when("test_result_edit", packageStr1 + "test_result_edit.fxml");
+        FXRouter.when("popup_add_testcase", packageStr1 + "popup_add_testcase.fxml");
+        FXRouter.when("popup_add_testscript", packageStr1 + "popup_add_testscript.fxml");
+        FXRouter.when("popup_add_testresult", packageStr1 + "popup_add_testresult.fxml");
+//        FXRouter.when("popup_info_testscript", packageStr1 + "popup_info_testscript.fxml");
+//        FXRouter.when("popup_info_testcase", packageStr1 + "popup_info_testcase.fxml");
+//        FXRouter.when("popup_delete", packageStr1 + "popup_delete.fxml");
 
         // Config route
-//        FXRouter.when("TempHomePage", packageStr + "home-page.fxml", "KU CS UseCaseDesigner");
-//        FXRouter.when("LandingPage", packageStr + "landing-page.fxml", "Welcome!");
-//        FXRouter.when("NewProjectPage", packageStr + "new-project-page.fxml", "New Project");
-//        FXRouter.when("LabelPage", packageStr + "label-page.fxml", "Label");
-//        FXRouter.when("PreferencePage", packageStr + "preference-page.fxml", "Preference");
-//        FXRouter.when("UseCasePage", packageStr + "use-case-page.fxml", "Use Case Detail");
-//        FXRouter.when("ConnectionPage", packageStr + "connection-page.fxml", "Relation Type");
-//        FXRouter.when("PropertyPage", packageStr + "property-page.fxml", "Properties");
     }
     private static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource(fxml + ".fxml"));
