@@ -1,11 +1,15 @@
-package ku.project.bashDream.Models;
+package ku.cs.testTools.Models.Manager;
+
+import jakarta.persistence.Entity;
+import lombok.Data;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
+@Data
+@Entity
 public class Account implements Comparable{
     private String role;
     private String name;

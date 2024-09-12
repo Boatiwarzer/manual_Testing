@@ -1,9 +1,13 @@
-package ku.project.bashDream.Models;
+package ku.cs.testTools.Models.Manager;
 
-import ku.project.bashDream.Services.Datasource;
+import jakarta.persistence.Entity;
+import ku.cs.testTools.Services.DataSource;
+import ku.cs.testTools.Services.ManageDataSource;
+import lombok.Data;
 
 import java.util.*;
-
+@Data
+@Entity
 public class AccountList {
     private ArrayList<Account> accounts;
 
@@ -56,7 +60,7 @@ public class AccountList {
         return accounts;
     }
 
-    private Datasource<AccountList> datasource;
+    private DataSource<AccountList> datasource;
 
     @Override
     public String toString() {

@@ -7,6 +7,7 @@ import ku.cs.testTools.Services.ManageDataSource;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 
 public class TestScriptServices implements DataSource<TestScriptList>, ManageDataSource<TestScript> {
     private String directory;
@@ -52,17 +53,16 @@ public class TestScriptServices implements DataSource<TestScriptList>, ManageDat
                 String[] data = line.split(",");
                 if (data[0].trim().equals("testScript")) {
                     TestScript testScript = new TestScript(
-                            Integer.parseInt(data[1].trim()), // 
+                            data[1].trim(), //
                             data[2].trim(), // 
-                            data[3].trim(), // 
+                            LocalDateTime.parse(data[3].trim()), //
                             data[4].trim(), // 
                             data[5].trim(),
                             data[6].trim(),
                             data[7].trim(),
-                            data[8].trim() 
-                             
+                            data[8].trim()
                     );
-                    actorList.addActor(actor);
+                    testScriptList.addTestScript(testScript);
                 }
             }
         } catch (Exception e) {
@@ -84,4 +84,9 @@ public class TestScriptServices implements DataSource<TestScriptList>, ManageDat
     }
     @Override
     public void writeData(TestScriptList testScriptList) {}
+
+    @Override
+    public String createLine(TestScript testScript) {
+        return "";
+    }
 }

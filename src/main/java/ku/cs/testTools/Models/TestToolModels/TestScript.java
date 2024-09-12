@@ -23,6 +23,16 @@ public class TestScript {
     private String preCon;
     private String freeText;
 
+    public TestScript(String idTS, String nameTS, LocalDateTime dateTS, String descriptionTS, String preCon, String trim5, String trim6, String freeText) {
+        this.idTS = idTS;
+        this.nameTS = nameTS;
+        this.dateTS = dateTS;
+        this.useCase = useCase;
+        this.descriptionTS = descriptionTS;
+        this.testCase = testCase;
+        this.preCon = preCon;
+        this.freeText = freeText;
+    }
 
 
     @Override

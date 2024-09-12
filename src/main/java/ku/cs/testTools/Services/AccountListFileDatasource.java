@@ -1,12 +1,12 @@
-package ku.project.bashDream.Services;
+package ku.cs.testTools.Services;
 
-import ku.project.bashDream.Models.AccountList;
-import ku.project.bashDream.Models.Account;
+import ku.cs.testTools.Models.Manager.AccountList;
+import ku.cs.testTools.Models.Manager.Account;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
-public class AccountListFileDatasource implements Datasource<AccountList>{
+public class AccountListFileDatasource implements DataSource<AccountList>{
     private String directoryName;
     private String fileName;
     public AccountListFileDatasource(String directoryName, String fileName) {

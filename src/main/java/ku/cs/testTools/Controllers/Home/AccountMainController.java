@@ -1,15 +1,16 @@
-package ku.project.bashDream.Controllers.Other;
+package ku.cs.testTools.Controllers.Home;
 
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import ku.project.bashDream.Models.Account;
-import ku.project.bashDream.Models.AccountList;
-import ku.project.bashDream.Services.AccountListFileDatasource;
-import ku.project.bashDream.Services.Datasource;
-import ku.project.bashDream.Services.FXRouter;
+import ku.cs.fxrouter.FXRouter;
+import ku.cs.testTools.Models.Manager.Account;
+import ku.cs.testTools.Models.Manager.AccountList;
+import ku.cs.testTools.Services.AccountListFileDatasource;
+import ku.cs.testTools.Services.DataSource;
+
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -29,7 +30,7 @@ public class AccountMainController {
     private TextField userTextField;
     @FXML
     private Label errorLabel;
-    private Datasource<AccountList> datasource;
+    private DataSource<AccountList> datasource;
     private AccountList accountList;
     private Account selectedAccount;
 
@@ -104,24 +105,24 @@ public class AccountMainController {
             throw new RuntimeException(e);
         }
     }
-    public void selectCategoryComboBox(ActionEvent actionEvent) {
-        String categorySelect = chooseTheme.getSelectionModel().getSelectedItem().toString();
-        if(categorySelect.equals("Default")){
-            try{
-                FXRouter.setPathCss("/ku/project/CSS/Default.css");
-                FXRouter.goTo("account-main", selectedAccount);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }else if(categorySelect.equals("Night Mode")) {
-            try {
-                FXRouter.setPathCss("/ku/project/CSS/Night.css");
-                FXRouter.goTo("account-main", selectedAccount);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+//    public void selectCategoryComboBox(ActionEvent actionEvent) {
+//        String categorySelect = chooseTheme.getSelectionModel().getSelectedItem().toString();
+//        if(categorySelect.equals("Default")){
+//            try{
+//                FXRouter.setPathCss("/ku/project/CSS/Default.css");
+//                FXRouter.goTo("account-main", selectedAccount);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }else if(categorySelect.equals("Night Mode")) {
+//            try {
+//                FXRouter.setPathCss("/ku/project/CSS/Night.css");
+//                FXRouter.goTo("account-main", selectedAccount);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
 
 }
