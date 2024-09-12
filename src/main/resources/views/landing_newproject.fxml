@@ -17,8 +17,22 @@
                   <Font size="24.0" />
                </font>
             </Label>
-            <VBox alignment="CENTER" prefHeight="160.0" prefWidth="100.0" spacing="15.0">
+            <VBox alignment="CENTER" prefHeight="160.0" prefWidth="100.0" spacing="10.0">
                <children>
+                  <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0" spacing="20.0">
+                     <children>
+                        <Label prefWidth="100.0" text="Tester">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="onTesterField" onAction="#onTesterField" prefHeight="30.0" prefWidth="200.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </TextField>
+                     </children>
+                  </HBox>
                   <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0" spacing="20.0">
                      <children>
                         <Label prefWidth="100.0" text="Project Name">

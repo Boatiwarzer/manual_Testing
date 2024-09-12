@@ -30,6 +30,9 @@ public class NewProjectController {
     private Button onSelectButton;
 
     @FXML
+    private TextField onTesterField;
+
+    @FXML
     void onProjectNameField(ActionEvent event) {
 
     }
@@ -104,5 +107,10 @@ public class NewProjectController {
     private void setWindowTitle(String projectName) {
         Stage stage = (Stage) onProjectNameField.getScene().getWindow();
         stage.setTitle(projectName);
-    }   
+    }
+
+    @FXML
+    void onTesterField(ActionEvent event) {
+
+    }
 }
