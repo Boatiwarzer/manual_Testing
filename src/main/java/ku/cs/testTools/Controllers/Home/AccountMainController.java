@@ -1,22 +1,17 @@
 package ku.cs.testTools.Controllers.Home;
 
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import ku.cs.fxrouter.FXRouter;
-import ku.cs.testTools.Models.Manager.Account;
-import ku.cs.testTools.Models.Manager.AccountList;
-import ku.cs.testTools.Services.AccountListFileDatasource;
+import ku.cs.testTools.Models.Manager.Manager;
+import ku.cs.testTools.Models.Manager.ManagerList;
+import ku.cs.testTools.Services.ManagerListFileDatasource;
 import ku.cs.testTools.Services.DataSource;
 
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Optional;
 
 public class AccountMainController {
 
@@ -30,18 +25,18 @@ public class AccountMainController {
     private TextField userTextField;
     @FXML
     private Label errorLabel;
-    private DataSource<AccountList> datasource;
-    private AccountList accountList;
-    private Account selectedAccount;
+    private DataSource<ManagerList> datasource;
+    private ManagerList managerList;
+    private Manager selectedManager;
 
     @FXML
     public void initialize() {
-        datasource = new AccountListFileDatasource("data", "dataAccount.csv");
-        accountList = datasource.readData();
-        System.out.println(accountList);
+        datasource = new ManagerListFileDatasource("data", "dataAccount.csv");
+        managerList = datasource.readData();
+        System.out.println(managerList);
         chooseTheme.getItems().add("Default");
         chooseTheme.getItems().add("Night Mode");
-        if (accountList == null){
+        if (managerList == null){
             System.err.println("Cannot read file");
         } else {
             System.out.println("Can read file");
@@ -62,27 +57,27 @@ public class AccountMainController {
         System.out.println(username);
         String password = passwordTextField.getText();
         System.out.println(password);
-        Account account = accountList.findAccountByUserName(username);
-        selectedAccount = account;
-        System.out.println(account);
+        Manager manager = managerList.findAccountByUserName(username);
+        selectedManager = manager;
+        System.out.println(manager);
         if(username.isEmpty() && username.isEmpty()){
             errorLabel.setText("Please enter your username and password");}
         else if(password.isEmpty()){errorLabel.setText("Please enter your password");}
-        else if(selectedAccount == null){
+        else if(selectedManager == null){
             errorLabel.setText("Your user don't have in app");
         }
         else {
-            if (selectedAccount.getUsername().equals(username) && selectedAccount.getPassword().equals(password)){
-                selectedAccount.setLoginTime();
-                if(account.getRole().equals("User")) {
-                    FXRouter.goTo("user-main",selectedAccount);
-                    datasource.writeData(accountList);
-                }else if(account.getRole().equals("Staff")) {
-                    FXRouter.goTo("staff-main",selectedAccount);
-                    datasource.writeData(accountList);
-                }else if(account.getRole().equals("Admin"))
-                    FXRouter.goTo("admin-main",selectedAccount);
-                    datasource.writeData(accountList);
+            if (selectedManager.getUsername().equals(username) && selectedManager.getPassword().equals(password)){
+                selectedManager.setLoginTime();
+                if(manager.getRole().equals("User")) {
+                    FXRouter.goTo("user-main", selectedManager);
+                    datasource.writeData(managerList);
+                }else if(manager.getRole().equals("Staff")) {
+                    FXRouter.goTo("staff-main", selectedManager);
+                    datasource.writeData(managerList);
+                }else if(manager.getRole().equals("Admin"))
+                    FXRouter.goTo("admin-main", selectedManager);
+                    datasource.writeData(managerList);
             }else {
                 errorLabel.setText("You enter wrong username or password!!");
             }

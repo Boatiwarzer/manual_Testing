@@ -1,15 +1,15 @@
 package ku.cs.testTools.Services;
 
-import ku.cs.testTools.Models.Manager.AccountList;
-import ku.cs.testTools.Models.Manager.Account;
+import ku.cs.testTools.Models.Manager.ManagerList;
+import ku.cs.testTools.Models.Manager.Manager;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
-public class AccountListFileDatasource implements DataSource<AccountList>{
+public class ManagerListFileDatasource implements DataSource<ManagerList>{
     private String directoryName;
     private String fileName;
-    public AccountListFileDatasource(String directoryName, String fileName) {
+    public ManagerListFileDatasource(String directoryName, String fileName) {
         this.directoryName = directoryName;
         this.fileName = fileName;
         checkFileIsExisted();
@@ -32,8 +32,8 @@ public class AccountListFileDatasource implements DataSource<AccountList>{
         }
     }
     @Override
-    public AccountList readData() {
-        AccountList accounts = new AccountList();
+    public ManagerList readData() {
+        ManagerList accounts = new ManagerList();
         String filePath = directoryName + File.separator + fileName;
         File file = new File(filePath);
 
@@ -57,9 +57,9 @@ public class AccountListFileDatasource implements DataSource<AccountList>{
                 if (line.equals("")) continue;
 
                 String[] data = line.split(",");
-                Account account = new Account(data[0].trim(), data[1].trim(),data[2].trim(),data[3].trim(),data[5].trim());
-                account.setImagePath(data[4].trim());
-                accounts.addAccount(account);
+                Manager manager = new Manager(data[0].trim(), data[1].trim(),data[2].trim(),data[3].trim(),data[5].trim());
+                manager.setImagePath(data[4].trim());
+                accounts.addAccount(manager);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -69,7 +69,7 @@ public class AccountListFileDatasource implements DataSource<AccountList>{
 
     }
     @Override
-    public void writeData(AccountList data) {
+    public void writeData(ManagerList data) {
         String filePath = directoryName + File.separator + fileName;
         File file = new File(filePath);
 
@@ -90,9 +90,9 @@ public class AccountListFileDatasource implements DataSource<AccountList>{
 
         try {
             // สร้าง csv ของ Student และเขียนลงในไฟล์ทีละบรรทัด
-            for (Account account : data.getAccounts()) {
-                String line = account.getRole() + "," + account.getName() + "," + account.getUsername() + ","
-                        + account.getPassword() + "," + account.getImg() + "," + account.getDate();
+            for (Manager manager : data.getManagers()) {
+                String line = manager.getRole() + "," + manager.getName() + "," + manager.getUsername() + ","
+                        + manager.getPassword() + "," + manager.getImg() + "," + manager.getDate();
                 buffer.append(line);
                 buffer.append("\n");
             }

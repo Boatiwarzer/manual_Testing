@@ -4,18 +4,15 @@ import jakarta.persistence.Entity;
 import lombok.Data;
 import lombok.Getter;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import ku.cs.testTools.Services.AccountComparable;
+
 import lombok.Setter;
 
 @Getter
 @Data
 @Entity
-public class Account implements Comparable{
+public class Manager implements Comparable{
     private String role;
     @Setter
     private String name;
@@ -25,7 +22,7 @@ public class Account implements Comparable{
     private String img;
     private String date;
 
-    public Account(String role, String name, String username, String password, String date) {
+    public Manager(String role, String name, String username, String password, String date) {
         this.role = role;
         this.name = name;
         this.username = username;
@@ -64,7 +61,7 @@ public class Account implements Comparable{
 
     }
 
-    public int compareTo(Account o) {
+    public int compareTo(Manager o) {
         return date.compareTo(o.getDate());
     }
 
