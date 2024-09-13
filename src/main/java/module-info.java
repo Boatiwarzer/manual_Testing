@@ -8,13 +8,13 @@ module ku.cs {
     requires jakarta.persistence;
 
 
-    opens ku.cs.testTools.Controllers.Home to javafx.fxml;
-    opens ku.cs.testTools.Controllers.UseCase to javafx.fxml;
-    opens ku.cs.testTools.Controllers.TestCase to javafx.fxml;
-    opens ku.cs.testTools.Controllers.TestScript to javafx.fxml;
-    opens ku.cs.testTools.Controllers.TestFlow to javafx.fxml;
-    opens ku.cs.testTools.Controllers.TestResult to javafx.fxml;
-    opens ku.cs.testTools.Controllers.usecasedesiner to javafx.fxml;
+    opens ku.cs.testTools.Controllers.Home to javafx.fxml, jakarta.persistence, lombok;
+    opens ku.cs.testTools.Controllers.UseCase to javafx.fxml, jakarta.persistence, lombok;
+    opens ku.cs.testTools.Controllers.TestCase to javafx.fxml, jakarta.persistence, lombok;
+    opens ku.cs.testTools.Controllers.TestScript to javafx.fxml, jakarta.persistence, lombok;
+    opens ku.cs.testTools.Controllers.TestFlow to javafx.fxml, jakarta.persistence, lombok;
+    opens ku.cs.testTools.Controllers.TestResult to javafx.fxml, jakarta.persistence, lombok;
+    opens ku.cs.testTools.Controllers.usecasedesiner to javafx.fxml, jakarta.persistence, lombok;
     opens ku.cs.testTools.Models.TestToolModels to javafx.base, jakarta.persistence, lombok;
     opens ku.cs.testTools.Models.UsecaseModels to javafx.base, jakarta.persistence, lombok;
     opens ku.cs.testTools.Models.Manager to javafx.base, jakarta.persistence, lombok;
