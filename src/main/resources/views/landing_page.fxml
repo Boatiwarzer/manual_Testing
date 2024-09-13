@@ -28,18 +28,18 @@
                   <Button fx:id="onNewfileButton" contentDisplay="TOP" mnemonicParsing="false" onAction="#onNewfileButton" prefHeight="70.0" prefWidth="70.0" text="New file">
                      <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@icon/newfile%20icon.png" />
-                           </image>
+<!--                           <image>-->
+<!--                              <Image url="@/icon/newfile_icon.png" />-->
+<!--                           </image>-->
                         </ImageView>
                      </graphic>
                   </Button>
                   <Button fx:id="onOpenfileButton" contentDisplay="TOP" mnemonicParsing="false" onAction="#onOpenfileButton" prefHeight="70.0" prefWidth="70.0" text="Open file">
                      <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@icon/openfolder%20icon.png" />
-                           </image>
+<!--                           <image>-->
+<!--                              <Image url="/icon/openfolder_icon.png" />-->
+<!--                           </image>-->
                         </ImageView>
                      </graphic>
                   </Button>

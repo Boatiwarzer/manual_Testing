@@ -6,7 +6,7 @@ module ku.cs {
     requires javafx.swing;
     requires static lombok;
     requires jakarta.persistence;
-
+    requires modelmapper;
 
     opens ku.cs.testTools.Controllers.Home to javafx.fxml, jakarta.persistence, lombok;
     opens ku.cs.testTools.Controllers.UseCase to javafx.fxml, jakarta.persistence, lombok;
