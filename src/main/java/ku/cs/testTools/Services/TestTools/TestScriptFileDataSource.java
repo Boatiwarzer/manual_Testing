@@ -1,7 +1,6 @@
 package ku.cs.testTools.Services.TestTools;
 
 import ku.cs.testTools.Models.TestToolModels.*;
-import ku.cs.testTools.Models.UsecaseModels.ActorList;
 import ku.cs.testTools.Services.DataSource;
 import ku.cs.testTools.Services.ManageDataSource;
 
@@ -9,11 +8,11 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 
-public class TestScriptServices implements DataSource<TestScriptList>, ManageDataSource<TestScript> {
+public class TestScriptFileDataSource implements DataSource<TestScriptList>, ManageDataSource<TestScript> {
     private String directory;
     private String fileName;
 
-    public TestScriptServices(String directory, String fileName) {
+    public TestScriptFileDataSource(String directory, String fileName) {
         this.directory = directory;
         this.fileName = fileName;
         checkFileIsExisted();
