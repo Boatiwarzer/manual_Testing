@@ -19,4 +19,7 @@ public class TestScriptList {
     public void addTestScript(TestScript testScript) {
         testScriptList.add(testScript);
     }
+    public void clear() {
+        testScriptList.clear();
+    }
 }

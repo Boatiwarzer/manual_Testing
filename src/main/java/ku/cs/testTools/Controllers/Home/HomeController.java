@@ -84,11 +84,18 @@ public class HomeController {
             // Load the project
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            //loadProject();
+            loadProject();
             saveProject();
             System.out.println("Project Name: " + projectName);
             System.out.println("Directory: " + directory);
         }
+    }
+
+    private void loadProject() {
+        testScriptList.clear();
+
+        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+        testScriptListDataSource.readData();
     }
 
     private void saveProject() {
