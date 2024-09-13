@@ -15,9 +15,9 @@ module ku.cs {
     opens ku.cs.testTools.Controllers.TestFlow to javafx.fxml;
     opens ku.cs.testTools.Controllers.TestResult to javafx.fxml;
     opens ku.cs.testTools.Controllers.usecasedesiner to javafx.fxml;
-    opens ku.cs.testTools.Models.TestToolModels to javafx.base;
-    opens ku.cs.testTools.Models.UsecaseModels to javafx.base;
-    opens ku.cs.testTools.Models.Manager to javafx.base;
+    opens ku.cs.testTools.Models.TestToolModels to javafx.base, jakarta.persistence, lombok;
+    opens ku.cs.testTools.Models.UsecaseModels to javafx.base, jakarta.persistence, lombok;
+    opens ku.cs.testTools.Models.Manager to javafx.base, jakarta.persistence, lombok;
 
     exports ku.cs.testTools.Controllers.Home;
     exports ku.cs.testTools.Controllers.UseCase;
