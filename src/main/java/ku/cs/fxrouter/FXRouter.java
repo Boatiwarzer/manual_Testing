@@ -206,7 +206,7 @@ public class FXRouter {
         routeAnimation(resource);
 
         stage.setOnCloseRequest(e ->{
-            window.close();
+            stage.close();
         });
     }
 

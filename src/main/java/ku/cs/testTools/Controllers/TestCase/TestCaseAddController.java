@@ -77,7 +77,7 @@ public class TestCaseAddController {
     @FXML
     void onAddButton(ActionEvent actionEvent){
         try {
-            FXRouter.popup("popup_add_testcase", true);
+            FXRouter.popup("popup_add_testcase", false);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
