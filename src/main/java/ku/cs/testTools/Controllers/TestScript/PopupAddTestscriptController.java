@@ -1,5 +1,6 @@
 package ku.cs.testTools.Controllers.TestScript;
 
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -36,6 +37,7 @@ public class PopupAddTestscriptController {
 
     @FXML
     private TextField onTestNo;
+    private String[] items = {"None","edok"};
 
     @FXML
     private TextArea onTeststepsArea;
@@ -47,13 +49,15 @@ public class PopupAddTestscriptController {
 
     @FXML
     void initialize() {
+        selectedComboBox();
         if (FXRouter.getData() != null) {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             // Load the project
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            loadProject();
-            selectedComboBox();
+            onInputDataCombobox.getItems().addAll(items);
+            //loadProject();
+            //selectedComboBox();
             //saveProject();
             System.out.println("Project Name: " + projectName);
             System.out.println("Directory: " + directory);
@@ -100,7 +104,9 @@ public class PopupAddTestscriptController {
 
     }
     private void selectedComboBox(){
-        onInputDataCombobox.getItems().add("None");
+        onInputDataCombobox.setItems(FXCollections.observableArrayList("None"));
+        onInputDataCombobox.getSelectionModel().selectFirst();
+
 //        for (Equipment equipment : equipmentList.getEquipmentList()){
 //            if (!categoryBox.getItems().contains(equipment.getType_equipment())) {
 //                categoryBox.getItems().add(equipment.getType_equipment());
