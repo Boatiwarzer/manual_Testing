@@ -11,20 +11,20 @@ import java.io.IOException;
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXRouter.bind(this, stage, "Manual Testtools", 1360,780);
+        FXRouter.bind(this, stage, "Manual Test Tools", 1360,780);
         configRoute();
-        //FXRouter.setTheme(1);
-        FXRouter.popup("landing_page",true);
-            //FXRouter.popup("LandingPage", true);
-
+//        FXRouter.setTheme(1);
+//        FXRouter.popup("landing_page",true);
+        FXRouter.goTo("role");
     }
 
     private static void configRoute() {
-        //String packageStr = "ku/cs/usecasedesigner/";
         String packageStr1 = "views/";
-        FXRouter.when("home", packageStr1 + "home.fxml");
+        FXRouter.when("home_tester", packageStr1 + "home_tester.fxml");
+        FXRouter.when("home_manager", packageStr1 + "home_manager.fxml");
         FXRouter.when("landing_page", packageStr1 + "landing_page.fxml");
         FXRouter.when("landing_newproject", packageStr1 + "landing_newproject.fxml");
+        FXRouter.when("landing_openproject", packageStr1 + "landing_openproject.fxml");
         FXRouter.when("use_case", packageStr1 + "use_case.fxml");
         FXRouter.when("use_case_add", packageStr1 + "use_case_add.fxml");
         FXRouter.when("use_case_edit", packageStr1 + "use_case_edit.fxml");
@@ -41,9 +41,12 @@ public class Main extends Application {
         FXRouter.when("popup_add_testcase", packageStr1 + "popup_add_testcase.fxml");
         FXRouter.when("popup_add_testscript", packageStr1 + "popup_add_testscript.fxml");
         FXRouter.when("popup_add_testresult", packageStr1 + "popup_add_testresult.fxml");
-//        FXRouter.when("popup_info_testscript", packageStr1 + "popup_info_testscript.fxml");
-//        FXRouter.when("popup_info_testcase", packageStr1 + "popup_info_testcase.fxml");
-//        FXRouter.when("popup_delete", packageStr1 + "popup_delete.fxml");
+        FXRouter.when("popup_info_testscript", packageStr1 + "popup_info_testscript.fxml");
+        FXRouter.when("popup_info_testcase", packageStr1 + "popup_info_testcase.fxml");
+        FXRouter.when("popup_delete", packageStr1 + "popup_delete.fxml");
+        FXRouter.when("role", packageStr1 + "role.fxml");
+//        FXRouter.when("testflow_manager", packageStr1 + "testflow_manager.fxml");
+//        FXRouter.when("testresult_manager", packageStr1 + "testresult_manager.fxml");
 
         // Config route
     }

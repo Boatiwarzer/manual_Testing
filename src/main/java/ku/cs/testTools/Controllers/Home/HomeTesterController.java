@@ -5,15 +5,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Hyperlink;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.TestScriptList;
-import ku.cs.testTools.Models.UsecaseModels.ActorList;
 import ku.cs.testTools.Services.DataSource;
 import ku.cs.testTools.Services.TestTools.TestScriptFileDataSource;
-import ku.cs.testTools.Services.UsecaseServices.ActorListFileDataSource;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class HomeController {
+public class HomeTesterController {
 
     @FXML
     private Hyperlink onClickTestcase;

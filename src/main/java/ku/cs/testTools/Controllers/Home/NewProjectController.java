@@ -79,7 +79,7 @@ public class NewProjectController {
         objects.add(directory);
         //แก้พาท
         String packageStr1 = "views/";
-        FXRouter.when("home", packageStr1 + "home.fxml","TestTools | " + projectName);
+        FXRouter.when("home", packageStr1 + "home_tester.fxml","TestTools | " + projectName);
         FXRouter.goTo("home", objects);
 
         // Close the current window
