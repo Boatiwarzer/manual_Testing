@@ -104,6 +104,7 @@ public class TestScriptAddController {
     void onAddButton(ActionEvent event) {
         try {
             FXRouter.popup("popup_add_testscript", true);
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
