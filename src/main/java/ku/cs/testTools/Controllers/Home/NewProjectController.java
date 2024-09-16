@@ -41,6 +41,8 @@ public class NewProjectController {
 
     @FXML
     void onCancelButton(ActionEvent actionEvent) throws IOException{
+        //แก้พาท
+        FXRouter.popup("landing_page",true);
         Node source = (Node) actionEvent.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();

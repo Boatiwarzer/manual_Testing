@@ -10,8 +10,14 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import ku.cs.fxrouter.FXRouter;
+import ku.cs.testTools.Models.TestToolModels.TestCase;
+import ku.cs.testTools.Models.TestToolModels.TestScript;
+import ku.cs.testTools.Models.TestToolModels.TestScriptDetail;
+import ku.cs.testTools.Models.TestToolModels.TestScriptList;
+import ku.cs.testTools.Models.UsecaseModels.UseCase;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class TestScriptAddController {
 
@@ -52,13 +58,13 @@ public class TestScriptAddController {
     private TextField onSearchField;
 
     @FXML
-    private ListView<?> onSearchList;
+    private ListView<TestScript> onSearchList;
 
     @FXML
     private Button onSubmitButton;
 
     @FXML
-    private TableView<?> onTableTestscript;
+    private TableView<TestScriptDetail> onTableTestscript;
 
     @FXML
     private TextField onTestNameField;
@@ -67,21 +73,38 @@ public class TestScriptAddController {
     private TextField onTestNoteField;
 
     @FXML
-    private ComboBox<?> onTestcaseCombobox;
+    private ComboBox<TestCase> onTestcaseCombobox;
 
     @FXML
-    private ComboBox<?> onUsecaseCombobox;
+    private ComboBox<UseCase> onUsecaseCombobox;
 
     @FXML
     private Label testDateLabel;
 
     @FXML
     private Label testIDLabel;
+    private String projectName, directory;
+    private TestScriptList testScriptList = new TestScriptList();
+
+    @FXML
+    void initialize() {
+        if (FXRouter.getData() != null) {
+            ArrayList<Object> objects = (ArrayList) FXRouter.getData();
+            // Load the project
+            projectName = (String) objects.get(0);
+            directory = (String) objects.get(1);
+            loadProject();
+            //saveProject();
+            System.out.println("Project Name: " + projectName);
+            System.out.println("Directory: " + directory);
+        }
+    }
 
     @FXML
     void onAddButton(ActionEvent event) {
         try {
             FXRouter.popup("popup_add_testscript", true);
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -176,4 +199,7 @@ public class TestScriptAddController {
 
     }
 
+
+    private void loadProject() {
+    }
 }

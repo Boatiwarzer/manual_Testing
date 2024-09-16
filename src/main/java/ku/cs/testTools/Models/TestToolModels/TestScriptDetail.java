@@ -18,6 +18,13 @@ public class TestScriptDetail {
     private String inputData;
     private String expected;
 
+    public TestScriptDetail(String idTSD, String steps, String inputData, String expected) {
+        this.idTSD = idTSD;
+        this.steps = steps;
+        this.inputData = inputData;
+        this.expected = expected;
+    }
+
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;

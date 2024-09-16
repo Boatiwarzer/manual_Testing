@@ -1,19 +1,21 @@
 package ku.cs.testTools.Services.TestTools;
 
 import ku.cs.testTools.Models.TestToolModels.*;
-import ku.cs.testTools.Models.UsecaseModels.ActorList;
+import ku.cs.testTools.Models.UsecaseModels.Actor;
+import ku.cs.testTools.Models.UsecaseModels.ComponentPreferenceList;
 import ku.cs.testTools.Services.DataSource;
 import ku.cs.testTools.Services.ManageDataSource;
+import ku.cs.testTools.Services.UsecaseServices.ComponentPreferenceListFileDataSource;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 
-public class TestScriptServices implements DataSource<TestScriptList>, ManageDataSource<TestScript> {
+public class TestScriptFileDataSource implements DataSource<TestScriptList>, ManageDataSource<TestScript> {
     private String directory;
     private String fileName;
 
-    public TestScriptServices(String directory, String fileName) {
+    public TestScriptFileDataSource(String directory, String fileName) {
         this.directory = directory;
         this.fileName = fileName;
         checkFileIsExisted();
@@ -55,7 +57,7 @@ public class TestScriptServices implements DataSource<TestScriptList>, ManageDat
                     TestScript testScript = new TestScript(
                             data[1].trim(), //
                             data[2].trim(), // 
-                            LocalDateTime.parse(data[3].trim()), //
+                            data[3].trim(), //
                             data[4].trim(), // 
                             data[5].trim(),
                             data[6].trim(),
@@ -83,10 +85,36 @@ public class TestScriptServices implements DataSource<TestScriptList>, ManageDat
         return testScriptList;
     }
     @Override
-    public void writeData(TestScriptList testScriptList) {}
+    public void writeData(TestScriptList testScriptList) {
+        // File writer
+        String filePath = directory + File.separator + fileName;
+        File file = new File(filePath);
+        FileWriter writer = null;
+        BufferedWriter buffer = null;
+        try {
+            writer = new FileWriter(file, StandardCharsets.UTF_8);
+            buffer = new BufferedWriter(writer);
+            for (TestScript testScript : testScriptList.getTestScriptList()) {
+                String line = createLine(testScript);
+                buffer.append(line);
+                buffer.newLine();
+            }
+            buffer.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     public String createLine(TestScript testScript) {
-        return "";
+        return "testScript,"
+                + testScript.getIdTS() + ","
+                + testScript.getNameTS() + ","
+                + testScript.getDateTS() + ","
+                + testScript.getUseCase() + ","
+                + testScript.getDescriptionTS() + ","
+                + testScript.getTestCase() + ","
+                + testScript.getPreCon() + ","
+                + testScript.getFreeText() ;
     }
 }

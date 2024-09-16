@@ -5,6 +5,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 @Getter
@@ -16,14 +17,14 @@ public class TestScript {
     @Id
     private String idTS;
     private String nameTS;
-    private LocalDateTime dateTS;
+    private String dateTS;
     private String useCase;
     private String descriptionTS;
     private String testCase;
     private String preCon;
     private String freeText;
 
-    public TestScript(String idTS, String nameTS, LocalDateTime dateTS, String descriptionTS, String preCon, String trim5, String trim6, String freeText) {
+    public TestScript(String idTS, String nameTS, String dateTS, String descriptionTS, String preCon, String useCase, String testCase, String freeText) {
         this.idTS = idTS;
         this.nameTS = nameTS;
         this.dateTS = dateTS;
@@ -33,7 +34,11 @@ public class TestScript {
         this.preCon = preCon;
         this.freeText = freeText;
     }
-
+    public void setTime(){
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        this.dateTS = now.format(dtf);
+    }
 
     @Override
     public final boolean equals(Object o) {
