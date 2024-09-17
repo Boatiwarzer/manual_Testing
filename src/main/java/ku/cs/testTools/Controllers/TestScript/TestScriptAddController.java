@@ -1,22 +1,21 @@
 package ku.cs.testTools.Controllers.TestScript;
 
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.TestCase;
 import ku.cs.testTools.Models.TestToolModels.TestScript;
 import ku.cs.testTools.Models.TestToolModels.TestScriptDetail;
 import ku.cs.testTools.Models.TestToolModels.TestScriptList;
 import ku.cs.testTools.Models.UsecaseModels.UseCase;
+import ku.cs.testTools.Services.StringConfiguration;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class TestScriptAddController {
@@ -73,10 +72,10 @@ public class TestScriptAddController {
     private TextField onTestNoteField;
 
     @FXML
-    private ComboBox<TestCase> onTestcaseCombobox;
+    private ComboBox<String> onTestcaseCombobox;
 
     @FXML
-    private ComboBox<UseCase> onUsecaseCombobox;
+    private ComboBox<String> onUsecaseCombobox;
 
     @FXML
     private Label testDateLabel;
@@ -88,6 +87,9 @@ public class TestScriptAddController {
 
     @FXML
     void initialize() {
+        selectedComboBox();
+        setDate();
+        loadTable();
         if (FXRouter.getData() != null) {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             // Load the project
@@ -99,6 +101,37 @@ public class TestScriptAddController {
             System.out.println("Directory: " + directory);
         }
     }
+
+    public void loadTable() {
+
+        onTableTestscript.getItems().clear();
+        onTableTestscript.getColumns().clear();
+        onTableTestscript.refresh();
+        ArrayList<StringConfiguration> configs = new ArrayList<>();
+        //configs.add(new StringConfiguration("title:ชื่อวัสดุ", "field:name"));
+        //configs.add(new StringConfiguration("title:หมวดหมู่", "field:categoryMaterial"));
+        configs.add(new StringConfiguration("title:Test No."));
+        configs.add(new StringConfiguration("title:Test Step."));
+        configs.add(new StringConfiguration("title:Input Data."));
+        configs.add(new StringConfiguration("title:Expected Result."));
+
+
+        for (StringConfiguration conf: configs) {
+            TableColumn col = new TableColumn(conf.get("title"));
+            col.setPrefWidth(150);
+            //onTableTestscript.prefWidthProperty().bind(col.widthProperty().divide(4));;
+            //col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
+            onTableTestscript.getColumns().add(col);
+        }
+    }
+
+    public void setDate(){
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDateTime now = LocalDateTime.now();
+        String dates = now.format(dtf);
+        testDateLabel.setText(dates);
+    }
+
 
     @FXML
     void onAddButton(ActionEvent event) {
@@ -201,5 +234,17 @@ public class TestScriptAddController {
 
 
     private void loadProject() {
+    }
+    private void selectedComboBox(){
+        onTestcaseCombobox.setItems(FXCollections.observableArrayList("None"));
+        onTestcaseCombobox.getSelectionModel().selectFirst();
+        onUsecaseCombobox.setItems(FXCollections.observableArrayList("None"));
+        onUsecaseCombobox.getSelectionModel().selectFirst();
+
+//        for (Equipment equipment : equipmentList.getEquipmentList()){
+//            if (!categoryBox.getItems().contains(equipment.getType_equipment())) {
+//                categoryBox.getItems().add(equipment.getType_equipment());
+//            }
+//        }
     }
 }
