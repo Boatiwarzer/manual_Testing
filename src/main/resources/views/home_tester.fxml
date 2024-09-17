@@ -37,12 +37,14 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="760.0" prefWidth="1360.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.testTools.Controllers.Home.HomeController">
+<VBox prefHeight="760.0" prefWidth="1360.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.testTools.Controllers.Home.HomeTesterController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -112,6 +114,18 @@
             </Hyperlink>
          </children>
       </HBox>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS" />
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+         <children>
+            <HBox prefHeight="704.0" prefWidth="1360.0">
+               <children>
+                  <ImageView fitHeight="785.0" fitWidth="564.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/login.png" />
+                     </image>
+                  </ImageView>
+                  <VBox prefHeight="704.0" prefWidth="796.0" />
+               </children>
+            </HBox>
+         </children></AnchorPane>
   </children>
 </VBox>

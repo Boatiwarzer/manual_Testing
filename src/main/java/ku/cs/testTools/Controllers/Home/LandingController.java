@@ -75,8 +75,8 @@ public class LandingController {
             objects.add(directory);
             // แก้พาท
             String packageStr1 = "views/";
-            FXRouter.when("home", packageStr1 + "home.fxml", "TestTools | " + projectName);
-            FXRouter.goTo("home", objects);
+            FXRouter.when("home_tester", packageStr1 + "home_tester.fxml", "TestTools | " + projectName);
+            FXRouter.goTo("home_tester", objects);
             // Close the current window
             Node source = (Node) actionEvent.getSource();
             Stage stage = (Stage) source.getScene().getWindow();

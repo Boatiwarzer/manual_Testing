@@ -4,11 +4,16 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Hyperlink;
 import ku.cs.fxrouter.FXRouter;
+import ku.cs.testTools.Models.TestToolModels.TestScriptList;
+import ku.cs.testTools.Models.UsecaseModels.ActorList;
+import ku.cs.testTools.Services.DataSource;
+import ku.cs.testTools.Services.TestTools.TestScriptFileDataSource;
+import ku.cs.testTools.Services.UsecaseServices.ActorListFileDataSource;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class HomeController {
+public class HomeTesterController {
 
     @FXML
     private Hyperlink onClickTestcase;
@@ -25,6 +30,8 @@ public class HomeController {
     @FXML
     private Hyperlink onClickUsecase;
     private String projectName, directory;
+    private TestScriptList testScriptList = new TestScriptList();
+
 
     @FXML
     void onClickTestcase(ActionEvent event) {
@@ -77,12 +84,23 @@ public class HomeController {
             // Load the project
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-
-//            loadProject();
-//            saveProject();
+            loadProject();
+            saveProject();
             System.out.println("Project Name: " + projectName);
             System.out.println("Directory: " + directory);
         }
+    }
+
+    private void loadProject() {
+        testScriptList.clear();
+
+        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+        testScriptListDataSource.readData();
+    }
+
+    private void saveProject() {
+        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+        testScriptListDataSource.writeData(testScriptList);
     }
 
 }
