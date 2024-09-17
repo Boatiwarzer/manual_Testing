@@ -18,7 +18,7 @@ public class RoleController {
     @FXML
     void onManagerButton(ActionEvent event) {
         try {
-            FXRouter.popup("landing_openproject",true);
+            FXRouter.popup("landing_page_manager",true);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -27,7 +27,7 @@ public class RoleController {
     @FXML
     void onTesterButton(ActionEvent event) {
         try {
-            FXRouter.popup("landing_page",true);
+            FXRouter.popup("landing_page_tester",true);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -23,6 +23,11 @@ public class OpenProjectController {
 
     @FXML
     void onCancelButton(ActionEvent actionEvent) {
+        try {
+            FXRouter.popup("landing_page_manager");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         Node source = (Node) actionEvent.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();

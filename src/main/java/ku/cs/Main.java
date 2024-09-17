@@ -14,7 +14,7 @@ public class Main extends Application {
         FXRouter.bind(this, stage, "Manual Test Tools", 1360,780);
         configRoute();
 //        FXRouter.setTheme(1);
-//        FXRouter.popup("landing_page",true);
+//        FXRouter.popup("landing_page_tester",true);
         FXRouter.goTo("role");
     }
 
@@ -22,7 +22,8 @@ public class Main extends Application {
         String packageStr1 = "views/";
         FXRouter.when("home_tester", packageStr1 + "home_tester.fxml");
         FXRouter.when("home_manager", packageStr1 + "home_manager.fxml");
-        FXRouter.when("landing_page", packageStr1 + "landing_page.fxml");
+        FXRouter.when("landing_page_tester", packageStr1 + "landing_page_tester.fxml");
+        FXRouter.when("landing_page_manager", packageStr1 + "landing_page_manager.fxml");
         FXRouter.when("landing_newproject", packageStr1 + "landing_newproject.fxml");
         FXRouter.when("landing_openproject", packageStr1 + "landing_openproject.fxml");
         FXRouter.when("use_case", packageStr1 + "use_case.fxml");

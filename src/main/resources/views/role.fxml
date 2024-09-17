@@ -101,7 +101,7 @@
                <children>
                   <ImageView fitHeight="785.0" fitWidth="564.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../images/login.png" />
+                        <Image url="@../icon/login.png" />
                      </image>
                   </ImageView>
                   <VBox alignment="CENTER" prefHeight="704.0" prefWidth="796.0">
@@ -130,7 +130,7 @@
                                  <graphic>
                                     <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../images/manager.png" />
+                                          <Image url="@../icon/manager.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
@@ -142,7 +142,7 @@
                                  <graphic>
                                     <ImageView fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../images/tester.png" />
+                                          <Image url="@../icon/tester.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>

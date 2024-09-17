@@ -120,7 +120,7 @@
                <children>
                   <ImageView fitHeight="785.0" fitWidth="564.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../images/login.png" />
+                        <Image url="@../icon/login.png" />
                      </image>
                   </ImageView>
                   <VBox prefHeight="704.0" prefWidth="796.0" />
