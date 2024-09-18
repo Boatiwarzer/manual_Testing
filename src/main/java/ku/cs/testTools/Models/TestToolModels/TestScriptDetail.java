@@ -14,12 +14,14 @@ import java.util.Objects;
 public class TestScriptDetail {
     @Id
     private String idTSD;
+    private String testNo;
     private String steps;
     private String inputData;
     private String expected;
 
-    public TestScriptDetail(String idTSD, String steps, String inputData, String expected) {
+    public TestScriptDetail(String idTSD, String testNo,String steps, String inputData, String expected) {
         this.idTSD = idTSD;
+        this.testNo = testNo;
         this.steps = steps;
         this.inputData = inputData;
         this.expected = expected;

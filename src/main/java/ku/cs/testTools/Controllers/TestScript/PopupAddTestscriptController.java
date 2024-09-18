@@ -48,12 +48,13 @@ public class PopupAddTestscriptController {
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
     private TestScript testScript = (TestScript) FXRouter.getData();
     private TestScriptDetail testScriptDetail = new TestScriptDetail();
-
+    private ArrayList<Object> objects = (ArrayList) FXRouter.getData();
+    private String id;
     @FXML
     void initialize() {
         selectedComboBox();
+        randomId();
         if (FXRouter.getData() != null) {
-            ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             // Load the project
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
@@ -88,13 +89,17 @@ public class PopupAddTestscriptController {
 //        }if(!password1.equals(password2)){
 //            errorLabel.setText("Password not correct");
 //        } if(signup){
-            testScriptDetail = new TestScriptDetail(TsNo, TsStep, Input, Expect);
+            testScriptDetail = new TestScriptDetail(id,TsNo, TsStep, Input, Expect);
             testScriptDetailList.addTestScriptDetail(testScriptDetail);
 
             try {
-                DataSource<TestScriptDetailList> testScriptDetailFIleDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-                testScriptDetailFIleDataSource.writeData(testScriptDetailList);
+                //DataSource<TestScriptDetailList> testScriptDetailFIleDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+                //testScriptDetailFIleDataSource.writeData(testScriptDetailList);
                 FXRouter.goTo("test_script_add",testScriptDetail);
+                System.out.println(testScriptDetail);
+                Node source = (Node) event.getSource();
+                Stage stage = (Stage) source.getScene().getWindow();
+                stage.close();
             } catch (IOException e) {
                 System.err.println("ไปที่หน้า home ไม่ได้");
                 System.err.println("ให้ตรวจสอบการกำหนด route");
@@ -104,6 +109,15 @@ public class PopupAddTestscriptController {
 //
 //        }
 
+    }
+    public void randomId(){
+        int min = 111111;
+        int min2 = 11111;
+        int upperbound = 999999;
+        int back = 99999;
+        String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
+        String random2 = String.valueOf((int)Math.floor(Math.random() * (back - min2 + 1) + min2));
+        this.id = random1+random2;
     }
     private void selectedComboBox(){
         onInputDataCombobox.setItems(FXCollections.observableArrayList("None"));

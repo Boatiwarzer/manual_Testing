@@ -1,17 +1,18 @@
 package ku.cs.testTools.Controllers.TestScript;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import ku.cs.fxrouter.FXRouter;
-import ku.cs.testTools.Models.TestToolModels.TestCase;
-import ku.cs.testTools.Models.TestToolModels.TestScript;
-import ku.cs.testTools.Models.TestToolModels.TestScriptDetail;
-import ku.cs.testTools.Models.TestToolModels.TestScriptList;
+import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Models.UsecaseModels.UseCase;
+import ku.cs.testTools.Services.DataSource;
 import ku.cs.testTools.Services.StringConfiguration;
+import ku.cs.testTools.Services.TestTools.TestScriptDetailFIleDataSource;
+import ku.cs.testTools.Services.TestTools.TestScriptFileDataSource;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -84,45 +85,100 @@ public class TestScriptAddController {
     private Label testIDLabel;
     private String projectName, directory;
     private TestScriptList testScriptList = new TestScriptList();
+    //private ArrayList<Object> objects = (ArrayList) FXRouter.getData();
+    private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
 
     @FXML
     void initialize() {
         selectedComboBox();
         setDate();
-        loadTable();
-        if (FXRouter.getData() != null) {
-            ArrayList<Object> objects = (ArrayList) FXRouter.getData();
-            // Load the project
-            projectName = (String) objects.get(0);
-            directory = (String) objects.get(1);
-            loadProject();
-            //saveProject();
-            System.out.println("Project Name: " + projectName);
-            System.out.println("Directory: " + directory);
+        //loadProject();
+        {if (FXRouter.getData() != null) {
+                testScriptDetailList.addTestScriptDetail((TestScriptDetail) FXRouter.getData());
+                loadTable();
+
+            }else{
+                setTable();
+
+            }
+        }
+        System.out.println(testScriptDetailList);
+    }
+
+//    public void loadTable() {
+//        onTableTestscript.getColumns().clear();
+//        onTableTestscript.refresh();
+//
+//        for (TestScriptDetail testScriptDetail: testScriptDetailList.getTestScriptDetailList()) {
+//            onTableTestscript.getItems().add(testScriptDetail);
+//
+//        }
+//        ArrayList<StringConfiguration> configs = new ArrayList<>();
+//        //configs.add(new StringConfiguration("title:ชื่อวัสดุ", "field:name"));
+//        //configs.add(new StringConfiguration("title:หมวดหมู่", "field:categoryMaterial"));
+//        configs.add(new StringConfiguration("title:Test No.", "field:testNo"));
+//        configs.add(new StringConfiguration("title:Test Step.", "field:steps"));
+//        configs.add(new StringConfiguration("title:Input Data.", "field:inputData"));
+//        configs.add(new StringConfiguration("title:Expected Result.", "field:expected"));
+//
+//
+//        for (StringConfiguration conf: configs) {
+//            TableColumn col = new TableColumn(conf.get("title"));
+//            col.setPrefWidth(150);
+//            col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
+//            onTableTestscript.getColumns().add(col);
+//        }
+//    }
+    public void loadTable() {
+        // Clear existing columns
+        onTableTestscript.getColumns().clear();
+
+        // Define column configurations
+        ArrayList<StringConfiguration> configs = new ArrayList<>();
+        configs.add(new StringConfiguration("title:Test No.", "field:testNo"));
+        configs.add(new StringConfiguration("title:Test Step.", "field:steps"));
+        configs.add(new StringConfiguration("title:Input Data.", "field:inputData"));
+        configs.add(new StringConfiguration("title:Expected Result.", "field:expected"));
+
+        // Create and add columns
+        for (StringConfiguration conf : configs) {
+            TableColumn<TestScriptDetail, String> col = new TableColumn<>(conf.get("title"));
+            col.setPrefWidth(150);
+            col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
+            onTableTestscript.getColumns().add(col);
+        }
+
+        // Add items to the table
+        for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()) {
+            onTableTestscript.getItems().add(testScriptDetail);
         }
     }
 
-    public void loadTable() {
-
-        onTableTestscript.getItems().clear();
+    public void setTable() {
         onTableTestscript.getColumns().clear();
         onTableTestscript.refresh();
+
+
         ArrayList<StringConfiguration> configs = new ArrayList<>();
-        //configs.add(new StringConfiguration("title:ชื่อวัสดุ", "field:name"));
-        //configs.add(new StringConfiguration("title:หมวดหมู่", "field:categoryMaterial"));
-        configs.add(new StringConfiguration("title:Test No."));
-        configs.add(new StringConfiguration("title:Test Step."));
-        configs.add(new StringConfiguration("title:Input Data."));
-        configs.add(new StringConfiguration("title:Expected Result."));
+        configs.add(new StringConfiguration("title:Test No.", "field:testNo"));
+        configs.add(new StringConfiguration("title:Test Step.", "field:steps"));
+        configs.add(new StringConfiguration("title:Input Data.", "field:inputData"));
+        configs.add(new StringConfiguration("title:Expected Result.", "field:expected"));
 
 
         for (StringConfiguration conf: configs) {
             TableColumn col = new TableColumn(conf.get("title"));
             col.setPrefWidth(150);
-            //onTableTestscript.prefWidthProperty().bind(col.widthProperty().divide(4));;
-            //col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
+            col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
             onTableTestscript.getColumns().add(col);
         }
+        ObservableList<TestScriptDetail> data = FXCollections.observableArrayList(
+                new TestScriptDetail("002","1", "Step 1", "Input 1", "Expected 1"),
+                new TestScriptDetail("003","2", "Step 2", "Input 2", "Expected 2"),
+                new TestScriptDetail("004","3", "Step 3", "Input 3", "Expected 3")
+        );
+
+        onTableTestscript.setItems(data);
     }
 
     public void setDate(){
@@ -136,7 +192,7 @@ public class TestScriptAddController {
     @FXML
     void onAddButton(ActionEvent event) {
         try {
-            FXRouter.popup("popup_add_testscript", true);
+            FXRouter.popup("popup_add_testscript",true);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -234,6 +290,12 @@ public class TestScriptAddController {
 
 
     private void loadProject() {
+        testScriptList.clear();
+
+        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+        testScriptListDataSource.readData();
+        DataSource<TestScriptDetailList> testScriptDetailFIleDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+        testScriptDetailFIleDataSource.readData();
     }
     private void selectedComboBox(){
         onTestcaseCombobox.setItems(FXCollections.observableArrayList("None"));

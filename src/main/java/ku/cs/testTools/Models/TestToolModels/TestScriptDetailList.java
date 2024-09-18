@@ -1,7 +1,9 @@
 package ku.cs.testTools.Models.TestToolModels;
 
-import java.util.ArrayList;
+import lombok.Data;
 
+import java.util.ArrayList;
+@Data
 public class TestScriptDetailList {
     private ArrayList<TestScriptDetail> testScriptDetailList;
 
@@ -12,4 +14,5 @@ public class TestScriptDetailList {
     public void addTestScriptDetail(TestScriptDetail testScriptDetail) {
         testScriptDetailList.add(testScriptDetail);
     }
+
 }

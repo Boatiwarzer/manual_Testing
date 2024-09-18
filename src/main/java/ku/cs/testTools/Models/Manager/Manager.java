@@ -14,9 +14,7 @@ import lombok.Setter;
 @Entity
 public class Manager implements Comparable{
     private String role;
-    @Setter
     private String name;
-    @Setter
     private String username;
     private String password;
     private String img;

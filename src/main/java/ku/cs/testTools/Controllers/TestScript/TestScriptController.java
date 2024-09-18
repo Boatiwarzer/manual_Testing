@@ -10,6 +10,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import ku.cs.fxrouter.FXRouter;
+import ku.cs.testTools.Models.TestToolModels.TestScriptDetailList;
 import ku.cs.testTools.Models.TestToolModels.TestScriptList;
 
 import java.io.IOException;
@@ -75,17 +76,12 @@ public class TestScriptController {
     private Label testNameLabel;
     private String projectName, directory;
     private TestScriptList testScriptList = new TestScriptList();
+    private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
     @FXML
     void initialize() {
         if (FXRouter.getData() != null) {
-            ArrayList<Object> objects = (ArrayList) FXRouter.getData();
-            // Load the project
-            projectName = (String) objects.get(0);
-            directory = (String) objects.get(1);
-            //loadProject();
-            //saveProject();
-            System.out.println("Project Name: " + projectName);
-            System.out.println("Directory: " + directory);
+            testScriptDetailList = (TestScriptDetailList) FXRouter.getData();
+
         }
     }
 

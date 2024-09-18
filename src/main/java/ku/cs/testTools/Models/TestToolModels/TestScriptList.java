@@ -8,7 +8,6 @@ import lombok.Getter;
 import java.util.ArrayList;
 
 @Data
-@Entity
 public class TestScriptList {
     private ArrayList<TestScript> testScriptList;
 
