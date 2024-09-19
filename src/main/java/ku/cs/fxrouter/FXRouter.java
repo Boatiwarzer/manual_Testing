@@ -11,6 +11,7 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.HashMap;
+import java.util.Map;
 
 public class FXRouter {
     public static final String WINDOW_TITLE = "";
@@ -90,35 +91,65 @@ public class FXRouter {
     }
     public static void goTo(String routeLabel) throws IOException {
         RouteScene route = (RouteScene)routes.get(routeLabel);
+        if (currentRoute != null) {
+            for (String key : currentRoute.state.keySet()) {
+                route.setState(key, currentRoute.getState(key));
+            }
+        }
         loadNewRoute(route);
     }
 
     public static void goTo(String routeLabel, Object data) throws IOException {
         RouteScene route = (RouteScene)routes.get(routeLabel);
         route.data = data;
+        if (currentRoute != null) {
+            for (String key : currentRoute.state.keySet()) {
+                route.setState(key, currentRoute.getState(key));
+            }
+        }
         loadNewRoute(route);
     }
 
     public static void popup(String routeLabel) throws IOException {
         RouteScene route = (RouteScene)routes.get(routeLabel);
+        if (currentRoute != null) {
+            for (String key : currentRoute.state.keySet()) {
+                route.setState(key, currentRoute.getState(key));
+            }
+        }
         popupNewRoute(route);
 
     }
 
     public static void popup(String routeLabel, boolean focus) throws IOException {
         RouteScene route = (RouteScene)routes.get(routeLabel);
+        if (currentRoute != null) {
+            for (String key : currentRoute.state.keySet()) {
+                route.setState(key, currentRoute.getState(key));
+            }
+        }
         popupNewRoute(route, focus);
 
     }
 
     public static void popup(String routeLabel, Object data) throws IOException {
         RouteScene route = (RouteScene)routes.get(routeLabel);
+        if (currentRoute != null) {
+            for (String key : currentRoute.state.keySet()) {
+                route.setState(key, currentRoute.getState(key));
+            }
+        }
         route.data = data;
         popupNewRoute(route);
     }
 
     public static void popup(String routeLabel, Object data, boolean focus) throws IOException {
         RouteScene route = (RouteScene)routes.get(routeLabel);
+        if (currentRoute != null) {
+            for (String key : currentRoute.state.keySet()) {
+                route.setState(key, currentRoute.getState(key));
+            }
+        }
         route.data = data;
         popupNewRoute(route, focus);
     }
@@ -278,17 +309,21 @@ public class FXRouter {
         private double sceneWidth;
         private double sceneHeight;
         private Object data;
+        private Map<String, Object> state;
 
         public RouteScene(String scenePath) {
             this(scenePath, getWindowTitle(), getWindowWidth(), getWindowHeight());
+            this.state = new HashMap<>();
         }
 
         public RouteScene(String scenePath, String windowTitle) {
             this(scenePath, windowTitle, getWindowWidth(), getWindowHeight());
+            this.state = new HashMap<>();
         }
 
         public RouteScene(String scenePath, double sceneWidth, double sceneHeight) {
             this(scenePath, getWindowTitle(), sceneWidth, sceneHeight);
+            this.state = new HashMap<>();
         }
 
         public RouteScene(String scenePath, String windowTitle, double sceneWidth, double sceneHeight) {
@@ -296,6 +331,7 @@ public class FXRouter {
             this.windowTitle = windowTitle;
             this.sceneWidth = sceneWidth;
             this.sceneHeight = sceneHeight;
+            this.state = new HashMap<>();
         }
 
         public static String getWindowTitle() {
@@ -308,6 +344,13 @@ public class FXRouter {
 
         public static double getWindowHeight() {
             return FXRouter.windowHeight != null ? FXRouter.windowHeight : FXRouter.WINDOW_HEIGHT;
+        }
+        public Object getState(String key) {
+            return state.get(key);
+        }
+
+        public void setState(String key, Object value) {
+            state.put(key, value);
         }
     }
 }

@@ -11,12 +11,21 @@ import java.nio.charset.StandardCharsets;
 public class TestScriptDetailFIleDataSource implements DataSource<TestScriptDetailList>, ManageDataSource<TestScriptDetail> {
     private String directory;
     private String fileName;
+    private static TestScriptDetailFIleDataSource instance;
 
     public TestScriptDetailFIleDataSource(String directory, String fileName) {
         this.directory = directory;
         this.fileName = fileName;
         checkFileIsExisted();
     }
+    public TestScriptDetailList readTemp() {
+        return null;
+    }
+    public TestScriptDetailList writeTemp(TestScriptDetailList testScriptDetailList) {
+        return testScriptDetailList;
+    }
+
+
     private void checkFileIsExisted() {
         File file = new File(directory);
         if (!file.exists()) {
@@ -28,83 +37,63 @@ public class TestScriptDetailFIleDataSource implements DataSource<TestScriptDeta
         if (!file.exists()) {
             try {
                 file.createNewFile();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException("Error creating new file", e);
             }
         }
     }
+
     @Override
     public TestScriptDetailList readData() {
         TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
         String filePath = directory + File.separator + fileName;
-        File file = new File(filePath);
-        FileReader reader = null;
-        BufferedReader buffer = null;
 
-        try {
-            reader = new FileReader(file, StandardCharsets.UTF_8);
-            buffer = new BufferedReader(reader);
-
-            String line = "";
+        try (BufferedReader buffer = new BufferedReader(new FileReader(filePath, StandardCharsets.UTF_8))) {
+            String line;
             while ((line = buffer.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data[0].trim().equals("testScript")) {
+                if (data[0].trim().equals("testScriptDetail")) {
                     TestScriptDetail testScriptDetail = new TestScriptDetail(
-                            data[1].trim(), //
-                            data[2].trim(), //
-                            data[3].trim(), //
-                            data[4].trim(), //
+                            data[1].trim(),
+                            data[2].trim(),
+                            data[3].trim(),
+                            data[4].trim(),
                             data[5].trim()
-
                     );
                     testScriptDetailList.addTestScriptDetail(testScriptDetail);
                 }
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                if (buffer != null) {
-                    buffer.close();
-                }
-                if (reader != null) {
-                    reader.close();
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+        } catch (IOException e) {
+            throw new RuntimeException("Error reading data", e);
         }
 
-        return new TestScriptDetailList();
+        return testScriptDetailList;
     }
+
+
+
     @Override
     public void writeData(TestScriptDetailList testScriptDetailList) {
-        // File writer
         String filePath = directory + File.separator + fileName;
-        File file = new File(filePath);
-        FileWriter writer = null;
-        BufferedWriter buffer = null;
-        try {
-            writer = new FileWriter(file, StandardCharsets.UTF_8);
-            buffer = new BufferedWriter(writer);
+
+        try (BufferedWriter buffer = new BufferedWriter(new FileWriter(filePath, StandardCharsets.UTF_8))) {
             for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()) {
                 String line = createLine(testScriptDetail);
-                buffer.append(line);
+                buffer.write(line);
                 buffer.newLine();
             }
-            buffer.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error writing data", e);
         }
     }
 
     @Override
     public String createLine(TestScriptDetail testScriptDetail) {
-        return "testScriptDetail,"
-                + testScriptDetail.getIdTSD() + ","
-                + testScriptDetail.getTestNo() + ","
-                + testScriptDetail.getSteps() + ","
-                + testScriptDetail.getInputData() + ","
-                + testScriptDetail.getExpected() ;
+        return "testScriptDetail," +
+                testScriptDetail.getIdTSD() + "," +
+                testScriptDetail.getTestNo() + "," +
+                testScriptDetail.getSteps() + "," +
+                testScriptDetail.getInputData() + "," +
+                testScriptDetail.getExpected();
     }
 }

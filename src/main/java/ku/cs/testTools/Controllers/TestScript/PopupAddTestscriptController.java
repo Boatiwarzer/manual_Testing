@@ -46,24 +46,15 @@ public class PopupAddTestscriptController {
     private String projectName, directory;
     private TestScriptList testScriptList = new TestScriptList();
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
-    private TestScript testScript = (TestScript) FXRouter.getData();
+    private TestScript testScript = new TestScript();
     private TestScriptDetail testScriptDetail = new TestScriptDetail();
-    private ArrayList<Object> objects = (ArrayList) FXRouter.getData();
     private String id;
     @FXML
     void initialize() {
         selectedComboBox();
         randomId();
         if (FXRouter.getData() != null) {
-            // Load the project
-            projectName = (String) objects.get(0);
-            directory = (String) objects.get(1);
-            onInputDataCombobox.getItems().addAll(items);
-            //loadProject();
-            //selectedComboBox();
-            //saveProject();
-            System.out.println("Project Name: " + projectName);
-            System.out.println("Directory: " + directory);
+            testScriptDetailList = (TestScriptDetailList) FXRouter.getData();
         }
     }
 
@@ -93,9 +84,7 @@ public class PopupAddTestscriptController {
             testScriptDetailList.addTestScriptDetail(testScriptDetail);
 
             try {
-                //DataSource<TestScriptDetailList> testScriptDetailFIleDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-                //testScriptDetailFIleDataSource.writeData(testScriptDetailList);
-                FXRouter.goTo("test_script_add",testScriptDetail);
+                FXRouter.goTo("test_script_add",testScriptDetailList);
                 System.out.println(testScriptDetail);
                 Node source = (Node) event.getSource();
                 Stage stage = (Stage) source.getScene().getWindow();

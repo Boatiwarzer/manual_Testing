@@ -87,17 +87,18 @@ public class TestScriptAddController {
     private TestScriptList testScriptList = new TestScriptList();
     //private ArrayList<Object> objects = (ArrayList) FXRouter.getData();
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
-
     @FXML
     void initialize() {
         selectedComboBox();
         setDate();
-        //loadProject();
-        {if (FXRouter.getData() != null) {
-                testScriptDetailList.addTestScriptDetail((TestScriptDetail) FXRouter.getData());
-                loadTable();
+        {
+            if (FXRouter.getData() != null) {
 
-            }else{
+                testScriptDetailList = (TestScriptDetailList) FXRouter.getData();
+                //testScriptDetailList.addTestScriptDetail((TestScriptDetail) FXRouter.getData());
+                loadTable(testScriptDetailList);
+            }
+            else{
                 setTable();
 
             }
@@ -129,7 +130,7 @@ public class TestScriptAddController {
 //            onTableTestscript.getColumns().add(col);
 //        }
 //    }
-    public void loadTable() {
+    public void loadTable(TestScriptDetailList testScriptDetailList) {
         // Clear existing columns
         onTableTestscript.getColumns().clear();
 
@@ -148,10 +149,12 @@ public class TestScriptAddController {
             onTableTestscript.getColumns().add(col);
         }
 
-        // Add items to the table
+         //Add items to the table
         for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()) {
             onTableTestscript.getItems().add(testScriptDetail);
         }
+        //ObservableList<TestScriptDetail> data = FXCollections.observableArrayList(testScriptDetailList.getTestScriptDetailList());
+        //onTableTestscript.getItems().addAll(data);
     }
 
     public void setTable() {
@@ -160,25 +163,17 @@ public class TestScriptAddController {
 
 
         ArrayList<StringConfiguration> configs = new ArrayList<>();
-        configs.add(new StringConfiguration("title:Test No.", "field:testNo"));
-        configs.add(new StringConfiguration("title:Test Step.", "field:steps"));
-        configs.add(new StringConfiguration("title:Input Data.", "field:inputData"));
-        configs.add(new StringConfiguration("title:Expected Result.", "field:expected"));
+        configs.add(new StringConfiguration("title:Test No."));
+        configs.add(new StringConfiguration("title:Test Step."));
+        configs.add(new StringConfiguration("title:Input Data."));
+        configs.add(new StringConfiguration("title:Expected Result."));
 
 
         for (StringConfiguration conf: configs) {
             TableColumn col = new TableColumn(conf.get("title"));
             col.setPrefWidth(150);
-            col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
             onTableTestscript.getColumns().add(col);
         }
-        ObservableList<TestScriptDetail> data = FXCollections.observableArrayList(
-                new TestScriptDetail("002","1", "Step 1", "Input 1", "Expected 1"),
-                new TestScriptDetail("003","2", "Step 2", "Input 2", "Expected 2"),
-                new TestScriptDetail("004","3", "Step 3", "Input 3", "Expected 3")
-        );
-
-        onTableTestscript.setItems(data);
     }
 
     public void setDate(){
@@ -192,7 +187,12 @@ public class TestScriptAddController {
     @FXML
     void onAddButton(ActionEvent event) {
         try {
-            FXRouter.popup("popup_add_testscript",true);
+            if (testScriptDetailList != null){
+                FXRouter.popup("popup_add_testscript",testScriptDetailList,true);
+            }else {
+                FXRouter.popup("popup_add_testscript",true);
+            }
+
 
         } catch (IOException e) {
             throw new RuntimeException(e);
