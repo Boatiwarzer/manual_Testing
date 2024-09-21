@@ -75,6 +75,14 @@ public class TestCaseAddController {
     private Label testIDLabel;
 
     @FXML
+    private Button onEditListButton;
+
+    @FXML
+    void onEditListButton(ActionEvent event) {
+
+    }
+
+    @FXML
     void onAddButton(ActionEvent actionEvent){
         try {
             FXRouter.popup("popup_add_testcase", false);

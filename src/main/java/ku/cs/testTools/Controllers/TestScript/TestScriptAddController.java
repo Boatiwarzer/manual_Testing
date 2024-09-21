@@ -82,6 +82,9 @@ public class TestScriptAddController {
     private Label testDateLabel;
 
     @FXML
+    private Button onEditListButton;
+
+    @FXML
     private Label testIDLabel;
     private String projectName, directory;
     private TestScriptList testScriptList = new TestScriptList();
@@ -197,6 +200,10 @@ public class TestScriptAddController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+    @FXML
+    void onEditListButton(ActionEvent event) {
+
     }
 
     @FXML

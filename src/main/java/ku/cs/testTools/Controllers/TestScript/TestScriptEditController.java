@@ -79,6 +79,14 @@ public class TestScriptEditController {
     private Label testIDLabel;
 
     @FXML
+    private Button onEditListButton;
+
+    @FXML
+    void onEditListButton(ActionEvent event) {
+
+    }
+
+    @FXML
     void onAddButton(ActionEvent event) {
         try {
             FXRouter.popup("popup_add_testscript", true);

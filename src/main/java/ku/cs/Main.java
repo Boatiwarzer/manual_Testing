@@ -15,7 +15,8 @@ public class Main extends Application {
         configRoute();
 //        FXRouter.setTheme(1);
 //        FXRouter.popup("landing_page_tester",true);
-        FXRouter.goTo("role");
+//        FXRouter.goTo("role");
+        FXRouter.goTo("use_case");
     }
 
     private static void configRoute() {

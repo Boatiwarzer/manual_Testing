@@ -161,7 +161,7 @@
                                           <Font size="18.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="onTestNameField" onAction="#onTestNameField" prefHeight="30.0" prefWidth="300.0">
+                                    <TextField fx:id="onTestNameField" onKeyTyped="#handleGenerateIDAction" prefHeight="30.0" prefWidth="300.0">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
@@ -192,12 +192,12 @@
                                  <children>
                                     <HBox prefHeight="30.0" prefWidth="480.0">
                                        <children>
-                                          <Label prefHeight="30.0" prefWidth="430.0" text="Pre-Condition :" textAlignment="CENTER">
+                                          <Label prefHeight="30.0" prefWidth="180.0" text="Pre-Condition :" textAlignment="CENTER">
                                              <font>
                                                 <Font size="18.0" />
                                              </font>
                                           </Label>
-                                          <ComboBox fx:id="preConListComboBox" onAction="#preConListComboBox" prefHeight="30.0" prefWidth="30.0">
+                                          <ComboBox fx:id="preConListComboBox" editable="true" onAction="#preConListComboBox" prefHeight="30.0" prefWidth="300.0">
                                              <opaqueInsets>
                                                 <Insets />
                                              </opaqueInsets>
@@ -206,12 +206,12 @@
                                     </HBox>
                                     <HBox prefHeight="30.0" prefWidth="480.0">
                                        <children>
-                                          <Label prefHeight="30.0" prefWidth="430.0" text="Post-Condition :">
+                                          <Label prefHeight="30.0" prefWidth="180.0" text="Post-Condition :">
                                              <font>
                                                 <Font size="18.0" />
                                              </font>
                                           </Label>
-                                          <ComboBox fx:id="postConListComboBox" onAction="#postConListComboBox" prefHeight="30.0" prefWidth="30.0" />
+                                          <ComboBox fx:id="postConListComboBox" editable="true" onAction="#postConListComboBox" prefHeight="30.0" prefWidth="300.0" />
                                        </children>
                                     </HBox>
                                  </children>
@@ -258,12 +258,12 @@
                         </VBox>
                         <ScrollPane fx:id="actorActionScrollPane" hbarPolicy="NEVER" layoutX="15.0" layoutY="300.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="355.0" prefWidth="510.0">
                            <content>
-                              <VBox fx:id="actorActionVBox" prefWidth="400.0" />
+                              <VBox fx:id="actorActionVBox" prefHeight="0.0" prefWidth="509.0" />
                            </content>
                         </ScrollPane>
                         <ScrollPane fx:id="systemActionScrollPane" hbarPolicy="NEVER" layoutX="545.0" layoutY="300.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="355.0" prefWidth="510.0">
                            <content>
-                              <VBox fx:id="systemActionVBox" prefWidth="400.0" />
+                              <VBox fx:id="systemActionVBox" prefHeight="0.0" prefWidth="509.0" />
                            </content>
                         </ScrollPane>
                         <Label layoutX="15.0" layoutY="270.0" prefHeight="30.0" prefWidth="150.0" text="Actor">
@@ -296,6 +296,11 @@
                               <Font size="14.0" />
                            </font>
                         </Button>
+                        <Label fx:id="errorLabel" alignment="CENTER_RIGHT" layoutX="654.0" layoutY="655.0" prefHeight="20.0" prefWidth="400.0" textFill="RED">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
                      </children>
                   </Pane>
                </children>
