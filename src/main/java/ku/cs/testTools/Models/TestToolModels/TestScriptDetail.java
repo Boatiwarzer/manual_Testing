@@ -2,6 +2,7 @@ package ku.cs.testTools.Models.TestToolModels;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import lombok.*;
 
 import java.util.Objects;
@@ -18,13 +19,24 @@ public class TestScriptDetail {
     private String steps;
     private String inputData;
     private String expected;
+    @ManyToOne
+    private TestScript testScript;
 
-    public TestScriptDetail(String idTSD, String testNo,String steps, String inputData, String expected) {
+    public TestScriptDetail(String idTSD, String testNo, String steps, String inputData, String expected) {
         this.idTSD = idTSD;
         this.testNo = testNo;
         this.steps = steps;
         this.inputData = inputData;
         this.expected = expected;
+    }
+
+    public TestScriptDetail(String idTSD, String testNo, String steps, String inputData, String expected, TestScript testScript) {
+        this.idTSD = idTSD;
+        this.testNo = testNo;
+        this.steps = steps;
+        this.inputData = inputData;
+        this.expected = expected;
+        this.testScript = testScript;
     }
 
     @Override
