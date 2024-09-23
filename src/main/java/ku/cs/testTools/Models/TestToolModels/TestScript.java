@@ -28,6 +28,17 @@ public class TestScript {
     @OneToMany(mappedBy = "testScript")
     private List<TestScriptDetail> testScriptDetailList;
 
+    public TestScript(String idTS, String nameTS, String dateTS, String useCase, String descriptionTS, String testCase, String preCon, String freeText) {
+        this.idTS = idTS;
+        this.nameTS = nameTS;
+        this.dateTS = dateTS;
+        this.useCase = useCase;
+        this.descriptionTS = descriptionTS;
+        this.testCase = testCase;
+        this.preCon = preCon;
+        this.freeText = freeText;
+    }
+
     public TestScript(String idTS, String nameTS, String dateTS, String descriptionTS, String preCon, String useCase, String testCase, String freeText, List<TestScriptDetail> testScriptDetailList) {
         this.idTS = idTS;
         this.nameTS = nameTS;
