@@ -2,10 +2,12 @@ package ku.cs.testTools.Models.TestToolModels;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
@@ -23,8 +25,10 @@ public class TestScript {
     private String testCase;
     private String preCon;
     private String freeText;
+    @OneToMany(mappedBy = "testScript")
+    private List<TestScriptDetail> testScriptDetailList;
 
-    public TestScript(String idTS, String nameTS, String dateTS, String descriptionTS, String preCon, String useCase, String testCase, String freeText) {
+    public TestScript(String idTS, String nameTS, String dateTS, String descriptionTS, String preCon, String useCase, String testCase, String freeText, List<TestScriptDetail> testScriptDetailList) {
         this.idTS = idTS;
         this.nameTS = nameTS;
         this.dateTS = dateTS;
@@ -33,6 +37,7 @@ public class TestScript {
         this.testCase = testCase;
         this.preCon = preCon;
         this.freeText = freeText;
+        this.testScriptDetailList = testScriptDetailList;
     }
     public void setTime(){
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -51,5 +56,9 @@ public class TestScript {
     @Override
     public final int hashCode() {
         return getClass().hashCode();
+    }
+
+    public boolean isId(String id) {
+        return this.idTS.equals(id);
     }
 }
