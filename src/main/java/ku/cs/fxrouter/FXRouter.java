@@ -109,6 +109,17 @@ public class FXRouter {
         }
         loadNewRoute(route);
     }
+    public static void goTo(String routeLabel, Object data, Object data2) throws IOException {
+        RouteScene route = (RouteScene)routes.get(routeLabel);
+        route.data2 = data2;
+        route.data = data;
+        if (currentRoute != null) {
+            for (String key : currentRoute.state.keySet()) {
+                route.setState(key, currentRoute.getState(key));
+            }
+        }
+        loadNewRoute(route);
+    }
 
     public static void popup(String routeLabel) throws IOException {
         RouteScene route = (RouteScene)routes.get(routeLabel);
@@ -151,6 +162,17 @@ public class FXRouter {
             }
         }
         route.data = data;
+        popupNewRoute(route, focus);
+    }
+    public static void popup(String routeLabel, Object data, Object data2, boolean focus) throws IOException {
+        RouteScene route = (RouteScene)routes.get(routeLabel);
+        if (currentRoute != null) {
+            for (String key : currentRoute.state.keySet()) {
+                route.setState(key, currentRoute.getState(key));
+            }
+        }
+        route.data = data;
+        route.data2 = data2;
         popupNewRoute(route, focus);
     }
 
@@ -303,8 +325,13 @@ public class FXRouter {
         return themeType;
     }
 
+    public static Object getData2() {
+        return currentRoute.data2;
+    }
+
     public static class RouteScene {
         public String scenePath;
+        public Object data2;
         private String windowTitle;
         private double sceneWidth;
         private double sceneHeight;

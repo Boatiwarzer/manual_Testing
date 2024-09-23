@@ -21,4 +21,12 @@ public class TestScriptList {
     public void clear() {
         testScriptList.clear();
     }
+    public TestScript findTSById(String id) {
+        for (TestScript testScript : testScriptList) {
+            if (testScript.isId(id) ) {
+                return testScript;
+            }
+        }
+        return null;
+    }
 }
