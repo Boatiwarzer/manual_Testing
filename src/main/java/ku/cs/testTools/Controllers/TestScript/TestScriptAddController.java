@@ -1,5 +1,6 @@
 package ku.cs.testTools.Controllers.TestScript;
 
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,6 +15,7 @@ import ku.cs.testTools.Services.StringConfiguration;
 import ku.cs.testTools.Services.TestTools.TestScriptDetailFIleDataSource;
 import ku.cs.testTools.Services.TestTools.TestScriptFileDataSource;
 
+import javafx.beans.value.ChangeListener;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -91,11 +93,13 @@ public class TestScriptAddController {
     private TestScriptList testScriptList = new TestScriptList();
     //private ArrayList<Object> objects = (ArrayList) FXRouter.getData();
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
+    private TestScriptDetail selectedItem;
     @FXML
     void initialize() {
         selectedComboBox();
         setDate();
-
+        clearInfo();
+        onEditListButton.setVisible(false);
         {
             if (FXRouter.getData() != null) {
 
@@ -103,6 +107,7 @@ public class TestScriptAddController {
                 //testScriptDetailList.addTestScriptDetail((TestScriptDetail) FXRouter.getData());
                 loadTable(testScriptDetailList);
                 testIDLabel.setText(tsId);
+                selected();
             }
             else{
                 setTable();
@@ -113,7 +118,12 @@ public class TestScriptAddController {
         System.out.println(testScriptDetailList);
     }
 
-//    public void loadTable() {
+    private void clearInfo() {
+        selectedItem = null;
+        FXRouter.setData3(null);
+    }
+
+    //    public void loadTable() {
 //        onTableTestscript.getColumns().clear();
 //        onTableTestscript.refresh();
 //
@@ -165,7 +175,9 @@ public class TestScriptAddController {
     }
 
     public void setTable() {
+        testScriptDetailList = new TestScriptDetailList();
         onTableTestscript.getColumns().clear();
+        onTableTestscript.getItems().clear();
         onTableTestscript.refresh();
 
 
@@ -199,15 +211,34 @@ public class TestScriptAddController {
         this.tsId = random1+random2;
 
     }
+    void selected() {
+        onTableTestscript.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                selectedItem = null;
+            } else {
+                if (newValue.getIdTSD() != null){
+                    onEditListButton.setVisible(true);
+                }else {
+                    onEditListButton.setVisible(false);
+                }
+                selectedItem = newValue;
+                System.out.println(selectedItem);
+                // Optionally show information based on the new value
+                // showInfo(newValue);
+            }
+        });
+    }
+
 
 
     @FXML
     void onAddButton(ActionEvent event) {
+
         try {
             if (testScriptDetailList != null){
-                FXRouter.popup("popup_add_testscript",testScriptDetailList,tsId,true);
+                FXRouter.popup("popup_add_testscript",testScriptDetailList,tsId,null,true);
             }else {
-                FXRouter.popup("popup_add_testscript",tsId,true);
+                FXRouter.popup("popup_add_testscript",null,tsId,true);
             }
 
 
@@ -216,7 +247,14 @@ public class TestScriptAddController {
         }
     }
     @FXML
-    void onEditListButton(ActionEvent event) {
+    void onEditListButton(ActionEvent event)  {
+        try {
+            if (selectedItem != null){
+                FXRouter.popup("popup_add_testscript",testScriptDetailList,tsId,selectedItem,true);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
@@ -231,7 +269,9 @@ public class TestScriptAddController {
 
     @FXML
     void onClickTestcase(ActionEvent event) {
+        setTable();
         try {
+            setTable();
             FXRouter.goTo("test_case");
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -241,6 +281,7 @@ public class TestScriptAddController {
     @FXML
     void onClickTestflow(ActionEvent event) {
         try {
+            setTable();
             FXRouter.goTo("test_flow");
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -250,6 +291,7 @@ public class TestScriptAddController {
     @FXML
     void onClickTestresult(ActionEvent event) {
         try {
+            setTable();
             FXRouter.goTo("test_result");
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -259,6 +301,7 @@ public class TestScriptAddController {
     @FXML
     void onClickTestscript(ActionEvent event) {
         try {
+            setTable();
             FXRouter.goTo("test_script");
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -268,6 +311,7 @@ public class TestScriptAddController {
     @FXML
     void onClickUsecase(ActionEvent event) {
         try {
+            setTable();
             FXRouter.goTo("use_case");
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -308,6 +352,7 @@ public class TestScriptAddController {
     void onUsecaseCombobox(ActionEvent event) {
 
     }
+
 
 
     private void loadProject() {

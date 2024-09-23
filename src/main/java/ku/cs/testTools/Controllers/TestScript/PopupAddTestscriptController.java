@@ -39,7 +39,6 @@ public class PopupAddTestscriptController {
 
     @FXML
     private TextField onTestNo;
-    private String[] items = {"None","edok"};
 
     @FXML
     private TextArea onTeststepsArea;
@@ -49,14 +48,32 @@ public class PopupAddTestscriptController {
     private TestScript testScript = new TestScript();
     private TestScriptDetail testScriptDetail = new TestScriptDetail();
     private String id;
-    private String idTS = (String) FXRouter.getData2();
+    private String idTS;
     @FXML
     void initialize() {
         selectedComboBox();
+        clearInfo();
         randomId();
+        System.out.println(FXRouter.getData3());
         if (FXRouter.getData() != null) {
             testScriptDetailList = (TestScriptDetailList) FXRouter.getData();
+            idTS = (String) FXRouter.getData2();
+            if (FXRouter.getData3() != null){
+                testScriptDetail = (TestScriptDetail) FXRouter.getData3();
+                testScriptDetailList.findTSById(testScriptDetail.getIdTSD());
+                id = testScriptDetail.getIdTSD();
+                setTextEdit();
+            }
+
+
         }
+    }
+
+    private void setTextEdit() {
+        onTestNo.setText(testScriptDetail.getTestNo());
+        onTeststepsArea.setText(testScriptDetail.getSteps().toLowerCase());;
+        onInputDataCombobox.getSelectionModel().select(testScriptDetail.getInputData());
+        onExpectedArea.setText(testScriptDetail.getExpected());;
     }
 
     private void loadProject() {
@@ -81,25 +98,41 @@ public class PopupAddTestscriptController {
 //        }if(!password1.equals(password2)){
 //            errorLabel.setText("Password not correct");
 //        } if(signup){
+        if (FXRouter.getData3() != null) {
             testScriptDetail = new TestScriptDetail(id,TsNo, TsStep, Input, Expect);
-            testScriptDetailList.addTestScriptDetail(testScriptDetail);
-
-            try {
-                FXRouter.goTo("test_script_add",testScriptDetailList);
-                System.out.println(testScriptDetail);
-                Node source = (Node) event.getSource();
-                Stage stage = (Stage) source.getScene().getWindow();
-                stage.close();
-            } catch (IOException e) {
-                System.err.println("ไปที่หน้า home ไม่ได้");
-                System.err.println("ให้ตรวจสอบการกำหนด route");
-            }
+            testScriptDetailList.addOrUpdateTestScriptDetail(testScriptDetail);
+        }else {
+            testScriptDetail = new TestScriptDetail(id,TsNo, TsStep, Input, Expect);
+            testScriptDetailList.addOrUpdateTestScriptDetail(testScriptDetail);
+        }
+        try {
+            testScriptDetail = null;
+            clearInfo();
+            FXRouter.goTo("test_script_add",testScriptDetailList);
+            System.out.println(testScriptDetail);
+            Node source = (Node) event.getSource();
+            Stage stage = (Stage) source.getScene().getWindow();
+            stage.close();
+            System.out.println(testScriptDetailList);
+        } catch (IOException e) {
+            System.err.println("ไปที่หน้า home ไม่ได้");
+            System.err.println("ให้ตรวจสอบการกำหนด route");
+        }
 //        }else{
 //            errorLabel.setText("Username is Available");
 //
 //        }
 
     }
+
+    private void clearInfo() {
+        id = "";
+        onTestNo.setText("");
+        onTeststepsArea.setText("");
+        onInputDataCombobox.getSelectionModel().selectFirst();
+        onExpectedArea.setText("");
+    }
+
     public void randomId(){
         int min = 111111;
         int min2 = 11111;

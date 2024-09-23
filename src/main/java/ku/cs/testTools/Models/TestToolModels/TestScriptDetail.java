@@ -21,6 +21,7 @@ public class TestScriptDetail {
     private String expected;
     @ManyToOne
     private TestScript testScript;
+    private String idTS;
 
     public TestScriptDetail(String idTSD, String testNo, String steps, String inputData, String expected) {
         this.idTSD = idTSD;
@@ -39,6 +40,25 @@ public class TestScriptDetail {
         this.testScript = testScript;
     }
 
+    public TestScriptDetail(String idTSD, String testNo, String steps, String inputData, String expected, String idTS) {
+        this.idTSD = idTSD;
+        this.testNo = testNo;
+        this.steps = steps;
+        this.inputData = inputData;
+        this.expected = expected;
+        this.idTS = idTS;
+    }
+
+    public TestScriptDetail(String idTSD, String testNo, String steps, String inputData, String expected, TestScript testScript, String idTS) {
+        this.idTSD = idTSD;
+        this.testNo = testNo;
+        this.steps = steps;
+        this.inputData = inputData;
+        this.expected = expected;
+        this.testScript = testScript;
+        this.idTS = idTS;
+    }
+
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;
@@ -50,5 +70,9 @@ public class TestScriptDetail {
     @Override
     public final int hashCode() {
         return getClass().hashCode();
+    }
+
+    public boolean isId(String id) {
+        return this.idTSD.equals(id);
     }
 }

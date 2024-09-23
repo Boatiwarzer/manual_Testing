@@ -133,7 +133,7 @@ public class TestScriptController {
     @FXML
     void onCreateButton(ActionEvent event) {
         try {
-            FXRouter.goTo("test_script_add");
+            FXRouter.goTo("test_script_add",null);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -27,6 +27,7 @@ public class TestScript {
     private String freeText;
     @OneToMany(mappedBy = "testScript")
     private List<TestScriptDetail> testScriptDetailList;
+    private String idTSDList;
 
     public TestScript(String idTS, String nameTS, String dateTS, String useCase, String descriptionTS, String testCase, String preCon, String freeText) {
         this.idTS = idTS;
@@ -50,6 +51,32 @@ public class TestScript {
         this.freeText = freeText;
         this.testScriptDetailList = testScriptDetailList;
     }
+
+    public TestScript(String idTS, String nameTS, String dateTS, String useCase, String descriptionTS, String testCase, String preCon, String freeText, String idTSDList) {
+        this.idTS = idTS;
+        this.nameTS = nameTS;
+        this.dateTS = dateTS;
+        this.useCase = useCase;
+        this.descriptionTS = descriptionTS;
+        this.testCase = testCase;
+        this.preCon = preCon;
+        this.freeText = freeText;
+        this.idTSDList = idTSDList;
+    }
+
+    public TestScript(String idTS, String nameTS, String dateTS, String useCase, String descriptionTS, String testCase, String preCon, String freeText, List<TestScriptDetail> testScriptDetailList, String idTSDList) {
+        this.idTS = idTS;
+        this.nameTS = nameTS;
+        this.dateTS = dateTS;
+        this.useCase = useCase;
+        this.descriptionTS = descriptionTS;
+        this.testCase = testCase;
+        this.preCon = preCon;
+        this.freeText = freeText;
+        this.testScriptDetailList = testScriptDetailList;
+        this.idTSDList = idTSDList;
+    }
+
     public void setTime(){
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
