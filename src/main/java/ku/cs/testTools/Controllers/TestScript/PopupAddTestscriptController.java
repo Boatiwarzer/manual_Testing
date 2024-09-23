@@ -49,6 +49,7 @@ public class PopupAddTestscriptController {
     private TestScript testScript = new TestScript();
     private TestScriptDetail testScriptDetail = new TestScriptDetail();
     private String id;
+    private String idTS = (String) FXRouter.getData2();
     @FXML
     void initialize() {
         selectedComboBox();

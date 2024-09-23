@@ -1,7 +1,9 @@
 package ku.cs.testTools.Services.TestTools;
 
+import ku.cs.testTools.Models.TestToolModels.TestScript;
 import ku.cs.testTools.Models.TestToolModels.TestScriptDetail;
 import ku.cs.testTools.Models.TestToolModels.TestScriptDetailList;
+import ku.cs.testTools.Models.TestToolModels.TestScriptList;
 import ku.cs.testTools.Services.DataSource;
 import ku.cs.testTools.Services.ManageDataSource;
 
@@ -47,19 +49,32 @@ public class TestScriptDetailFIleDataSource implements DataSource<TestScriptDeta
     public TestScriptDetailList readData() {
         TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
         String filePath = directory + File.separator + fileName;
+        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, fileName);
+        TestScriptList testScriptList = testScriptListDataSource.readData();
 
         try (BufferedReader buffer = new BufferedReader(new FileReader(filePath, StandardCharsets.UTF_8))) {
             String line;
             while ((line = buffer.readLine()) != null) {
                 String[] data = line.split(",");
+
                 if (data[0].trim().equals("testScriptDetail")) {
+                    // Assuming the testScript ID is in data[6]
+                    String testScriptId = data[6].trim();
+
+                    // Fetch the TestScript entity using the testScriptId (pseudo-code, implement according to your context)
+                    TestScript testScript = testScriptList.findTSById(testScriptId);
+
+                    // Create the TestScriptDetail object
                     TestScriptDetail testScriptDetail = new TestScriptDetail(
-                            data[1].trim(),
-                            data[2].trim(),
-                            data[3].trim(),
-                            data[4].trim(),
-                            data[5].trim()
+                            data[1].trim(), // idTSD
+                            data[2].trim(), // testNo
+                            data[3].trim(), // steps
+                            data[4].trim(), // inputData
+                            data[5].trim(), // expected
+                            testScript // The associated TestScript object
                     );
+
+                    // Add the detail to the list
                     testScriptDetailList.addTestScriptDetail(testScriptDetail);
                 }
             }
@@ -70,6 +85,7 @@ public class TestScriptDetailFIleDataSource implements DataSource<TestScriptDeta
         return testScriptDetailList;
     }
 
+    // ฟังก์ชันเพื่อสร้าง TestScript จากข้อมูลที่ส่งมา
 
 
     @Override
@@ -94,6 +110,7 @@ public class TestScriptDetailFIleDataSource implements DataSource<TestScriptDeta
                 testScriptDetail.getTestNo() + "," +
                 testScriptDetail.getSteps() + "," +
                 testScriptDetail.getInputData() + "," +
-                testScriptDetail.getExpected();
+                testScriptDetail.getExpected()+ "," +
+                testScriptDetail.getTestScript();
     }
 }

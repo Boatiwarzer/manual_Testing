@@ -86,6 +86,7 @@ public class TestScriptAddController {
 
     @FXML
     private Label testIDLabel;
+    private String tsId;
     private String projectName, directory;
     private TestScriptList testScriptList = new TestScriptList();
     //private ArrayList<Object> objects = (ArrayList) FXRouter.getData();
@@ -94,15 +95,18 @@ public class TestScriptAddController {
     void initialize() {
         selectedComboBox();
         setDate();
+
         {
             if (FXRouter.getData() != null) {
 
                 testScriptDetailList = (TestScriptDetailList) FXRouter.getData();
                 //testScriptDetailList.addTestScriptDetail((TestScriptDetail) FXRouter.getData());
                 loadTable(testScriptDetailList);
+                testIDLabel.setText(tsId);
             }
             else{
                 setTable();
+                randomId();
 
             }
         }
@@ -185,15 +189,25 @@ public class TestScriptAddController {
         String dates = now.format(dtf);
         testDateLabel.setText(dates);
     }
+    public void randomId(){
+        int min = 111111;
+        int min2 = 11111;
+        int upperbound = 999999;
+        int back = 99999;
+        String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
+        String random2 = String.valueOf((int)Math.floor(Math.random() * (back - min2 + 1) + min2));
+        this.tsId = random1+random2;
+
+    }
 
 
     @FXML
     void onAddButton(ActionEvent event) {
         try {
             if (testScriptDetailList != null){
-                FXRouter.popup("popup_add_testscript",testScriptDetailList,true);
+                FXRouter.popup("popup_add_testscript",testScriptDetailList,tsId,true);
             }else {
-                FXRouter.popup("popup_add_testscript",true);
+                FXRouter.popup("popup_add_testscript",tsId,true);
             }
 
 

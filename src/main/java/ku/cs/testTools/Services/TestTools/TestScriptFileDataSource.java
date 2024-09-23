@@ -10,6 +10,9 @@ import ku.cs.testTools.Services.UsecaseServices.ComponentPreferenceListFileDataS
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class TestScriptFileDataSource implements DataSource<TestScriptList>, ManageDataSource<TestScript> {
     private String directory;
@@ -54,15 +57,26 @@ public class TestScriptFileDataSource implements DataSource<TestScriptList>, Man
             while ((line = buffer.readLine()) != null) {
                 String[] data = line.split(",");
                 if (data[0].trim().equals("testScript")) {
+                    // แปลง data[9] เป็น List<TestScriptDetail>
+                    List<TestScriptDetail> additionalDataList = new ArrayList<>();
+                    String[] details = data[9].trim().split(";"); // ใช้ ; เป็นตัวแบ่ง
+
+                    for (String detail : details) {
+                        // สร้าง TestScriptDetail จากแต่ละ detail
+                        TestScriptDetail testScriptDetail = new TestScriptDetail(); // ปรับตาม constructor ของ TestScriptDetail
+                        additionalDataList.add(testScriptDetail);
+                    }
+
                     TestScript testScript = new TestScript(
-                            data[1].trim(), //
-                            data[2].trim(), // 
-                            data[3].trim(), //
-                            data[4].trim(), // 
-                            data[5].trim(),
-                            data[6].trim(),
-                            data[7].trim(),
-                            data[8].trim()
+                            data[1].trim(), // data[1]
+                            data[2].trim(), // data[2]
+                            data[3].trim(), // data[3]
+                            data[4].trim(), // data[4]
+                            data[5].trim(), // data[5]
+                            data[6].trim(), // data[6]
+                            data[7].trim(), // data[7]
+                            data[8].trim(), // data[8]
+                            additionalDataList // data[9] ที่เป็น List<TestScriptDetail>
                     );
                     testScriptList.addTestScript(testScript);
                 }
@@ -115,6 +129,7 @@ public class TestScriptFileDataSource implements DataSource<TestScriptList>, Man
                 + testScript.getDescriptionTS() + ","
                 + testScript.getTestCase() + ","
                 + testScript.getPreCon() + ","
-                + testScript.getFreeText() ;
+                + testScript.getFreeText()+ ","
+                + testScript.getTestScriptDetailList();
     }
 }
