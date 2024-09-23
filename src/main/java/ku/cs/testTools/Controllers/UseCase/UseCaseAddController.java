@@ -1,27 +1,25 @@
 package ku.cs.testTools.Controllers.UseCase;
 
-import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.UseCase;
 import ku.cs.testTools.Models.TestToolModels.UseCaseList;
 import ku.cs.testTools.Services.DataSource;
 import ku.cs.testTools.Services.TestTools.UseCaseListFileDataSource;
-
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
+import ku.cs.testTools.Services.*;
 
 public class UseCaseAddController {
 
@@ -164,83 +162,30 @@ public class UseCaseAddController {
         items = FXCollections.observableArrayList(
                 "Apple", "Banana", "Orange", "Mango", "Pineapple", "Strawberry"
         );
-//        // Set the items in the ComboBox
-//        preConListComboBox.setItems(items);
-//
-//        // Set the ComboBox to editable mode
-//        preConListComboBox.setEditable(true);
-//
-//        // Get the editor (TextField) from the ComboBox
-//        TextField editor = preConListComboBox.getEditor();
-//
-//        // Add a listener to the TextField for detecting text changes
-//        editor.textProperty().addListener((obs, oldText, newText) -> {
-//            // Filter the list based on the user's input
-//            ObservableList<String> filteredItems = FXCollections.observableArrayList();
-//            for (String item : items) {
-//                if (item.toLowerCase().contains(newText.toLowerCase())) {
-//                    filteredItems.add(item);
-//                }
-//            }
-//
-//            // Update the ComboBox items and show the dropdown
-//            preConListComboBox.setItems(filteredItems);
-//            preConListComboBox.show();  // Keep the dropdown open while typing
-//        });
-//        preConListComboBox.setOnAction(event -> {
-//            String selectedItem = preConListComboBox.getSelectionModel().getSelectedItem();
-//
-//            // Allow the user to still edit the text field after an item is selected
-//            if (selectedItem != null && !selectedItem.isEmpty()) {
-//                editor.setText(selectedItem);  // Set the selected item in the editor
-//                editor.positionCaret(selectedItem.length());  // Place the cursor at the end
-//            }
-//        });
+
         // Set the items once at the start
         preConListComboBox.setItems(items);
+        preConListComboBox.getEditor().end();
 
-        // Set ComboBox to editable mode
-        preConListComboBox.setEditable(true);
+        new AutoCompleteComboBoxListener<>(preConListComboBox);
 
-        // Get the editor (TextField) from the ComboBox
+//
+//        // Get the editor (TextField) from the ComboBox
         TextField editor = preConListComboBox.getEditor();
 
-        // Add listener to handle filtering of ComboBox items
-        editor.textProperty().addListener((obs, oldText, newText) -> {
-            if (!newText.isEmpty()) {
-                // Filter the list based on the input
-                ObservableList<String> filteredItems = FXCollections.observableArrayList();
-                for (String item : items) {
-                    if (item.toLowerCase().contains(newText.toLowerCase())) {
-                        filteredItems.add(item);
-                    }
-                }
-                // Only update items if necessary to prevent redundant event firing
-                preConListComboBox.setItems(filteredItems);
-                preConListComboBox.show();  // Keep the dropdown open
-            } else {
-                // Clear selection and reset items when editor is empty
-                preConListComboBox.getSelectionModel().clearSelection();
-                if (preConListComboBox.getItems() != items) {
-                    preConListComboBox.setItems(items);
-                }
-            }
-        });
-
-        // Action when an item is selected
+//        // Action when an item is selected
         preConListComboBox.setOnAction(event -> {
             String selectedItem = preConListComboBox.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
-                editor.setText(selectedItem);  // Set selected item in editor
+                editor.setText(selectedItem); // Set selected item in editor
+                //editor.setEditable(true);
+                editor.requestFocus();// Ensure the editor remains editable
+                // Move cursor to the end
+                Platform.runLater(editor::end);
             }
+
         });
 
-        // Handle showing the dropdown to reset the list to full items when necessary
-        preConListComboBox.showingProperty().addListener((obs, wasShowing, isNowShowing) -> {
-            if (isNowShowing && editor.getText().isEmpty()) {
-                preConListComboBox.setItems(items);  // Reset to full item list
-            }
-        });
     }
 
     @FXML
