@@ -1,5 +1,7 @@
 package ku.cs.testTools.Services;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -22,33 +24,46 @@ public class AutoCompleteComboBoxListener<T> implements EventHandler<KeyEvent> {
 
         this.comboBox.setEditable(true);
         this.comboBox.setOnKeyPressed(new EventHandler<KeyEvent>() {
-
             @Override
             public void handle(KeyEvent t) {
                 comboBox.hide();
             }
         });
+
         this.comboBox.setOnKeyReleased(AutoCompleteComboBoxListener.this);
+
+        // Add listener to clear ComboBox when focus is lost and no item is selected
+        this.comboBox.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (!newValue) { // focus lost
+                    if (comboBox.getValue() == null || !data.contains(comboBox.getValue())) {
+                        comboBox.getEditor().clear();
+                        comboBox.setItems(data); // Reset items
+                    }
+                }
+            }
+        });
     }
 
     @Override
     public void handle(KeyEvent event) {
 
-        if(event.getCode() == KeyCode.UP) {
+        if (event.getCode() == KeyCode.UP) {
             caretPos = -1;
             moveCaret(comboBox.getEditor().getText().length());
             return;
-        } else if(event.getCode() == KeyCode.DOWN) {
-            if(!comboBox.isShowing()) {
+        } else if (event.getCode() == KeyCode.DOWN) {
+            if (!comboBox.isShowing()) {
                 comboBox.show();
             }
             caretPos = -1;
             moveCaret(comboBox.getEditor().getText().length());
             return;
-        } else if(event.getCode() == KeyCode.BACK_SPACE) {
+        } else if (event.getCode() == KeyCode.BACK_SPACE) {
             moveCaretToPos = true;
             caretPos = comboBox.getEditor().getCaretPosition();
-        } else if(event.getCode() == KeyCode.DELETE) {
+        } else if (event.getCode() == KeyCode.DELETE) {
             moveCaretToPos = true;
             caretPos = comboBox.getEditor().getCaretPosition();
         }
@@ -59,26 +74,31 @@ public class AutoCompleteComboBoxListener<T> implements EventHandler<KeyEvent> {
             return;
         }
 
-        ObservableList list = FXCollections.observableArrayList();
-        for (int i=0; i<data.size(); i++) {
-            if(data.get(i).toString().toLowerCase().startsWith(
-                    AutoCompleteComboBoxListener.this.comboBox
-                            .getEditor().getText().toLowerCase())) {
-                list.add(data.get(i));
+        // Search-like behavior: match if text contains the typed characters
+        ObservableList<T> list = FXCollections.observableArrayList();
+        String typedText = comboBox.getEditor().getText().toLowerCase();
+
+        for (T item : data) {
+            if (item.toString().toLowerCase().contains(typedText)) {
+                list.add(item);
             }
         }
-        String t = comboBox.getEditor().getText();
 
+        String t = comboBox.getEditor().getText();
         comboBox.setItems(list);
         comboBox.getEditor().setText(t);
-        if(!moveCaretToPos) {
+
+        if (!moveCaretToPos) {
             caretPos = -1;
         }
+
         moveCaret(t.length());
-        if(!list.isEmpty()) {
+
+        if (!list.isEmpty()) {
             comboBox.show();
         }
     }
+
 
     private void moveCaret(int textLength) {
         if(caretPos == -1) {
