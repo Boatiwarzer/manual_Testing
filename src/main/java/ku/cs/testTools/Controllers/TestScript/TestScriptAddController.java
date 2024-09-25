@@ -92,7 +92,7 @@ public class TestScriptAddController {
     private Label testIDLabel;
     private String tsId;
     private String projectName, directory;
-    private TestScriptList testScriptList = new TestScriptList();
+    private final TestScriptList testScriptList = new TestScriptList();
     //private ArrayList<Object> objects = (ArrayList) FXRouter.getData();
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
     private TestScriptDetail selectedItem;
@@ -157,6 +157,7 @@ public class TestScriptAddController {
     public void loadTable(TestScriptDetailList testScriptDetailList) {
         // Clear existing columns
         onTableTestscript.getColumns().clear();
+        onTableTestscript.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         // Define column configurations
         ArrayList<StringConfiguration> configs = new ArrayList<>();
@@ -168,8 +169,9 @@ public class TestScriptAddController {
         // Create and add columns
         for (StringConfiguration conf : configs) {
             TableColumn<TestScriptDetail, String> col = new TableColumn<>(conf.get("title"));
-            col.setPrefWidth(150);
             col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
+            col.setSortable(false);
+            col.setReorderable(false);
             onTableTestscript.getColumns().add(col);
         }
 
@@ -186,7 +188,7 @@ public class TestScriptAddController {
         onTableTestscript.getColumns().clear();
         onTableTestscript.getItems().clear();
         onTableTestscript.refresh();
-
+        onTableTestscript.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         ArrayList<StringConfiguration> configs = new ArrayList<>();
         configs.add(new StringConfiguration("title:Test No."));
@@ -197,8 +199,10 @@ public class TestScriptAddController {
 
         for (StringConfiguration conf: configs) {
             TableColumn col = new TableColumn(conf.get("title"));
-            col.setPrefWidth(150);
+            col.setSortable(false);
+            col.setReorderable(false);
             onTableTestscript.getColumns().add(col);
+
         }
     }
 
@@ -346,6 +350,13 @@ public class TestScriptAddController {
 
     @FXML
     void onSubmitButton(ActionEvent event) {
+        String name = onTestNameField.getText();
+        String id = tsId;
+        String useCase = onUsecaseCombobox.getValue();
+        String descript = infoDescriptLabel.getText();
+        String tc = onTestcaseCombobox.getValue();
+        String preCon = infoPreconLabel.getText();
+        String note = onTestNoteField.getText();
 
     }
 

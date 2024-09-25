@@ -3,15 +3,14 @@ package ku.cs.testTools.Controllers.TestScript;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import ku.cs.fxrouter.FXRouter;
+import ku.cs.testTools.Models.TestToolModels.TestScriptDetail;
 import ku.cs.testTools.Models.TestToolModels.TestScriptDetailList;
 import ku.cs.testTools.Models.TestToolModels.TestScriptList;
+import ku.cs.testTools.Services.StringConfiguration;
+import ku.cs.testTools.Services.TableColumns;
+import ku.cs.testTools.Services.TableviewSet;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -64,7 +63,7 @@ public class TestScriptController {
     private ListView<?> onSearchList;
 
     @FXML
-    private TableView<?> onTableTestscript;
+    private TableView<TestScriptDetail> onTableTestscript;;
 
     @FXML
     private Label testDateLabel;
@@ -79,10 +78,30 @@ public class TestScriptController {
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
     @FXML
     void initialize() {
+        setTable();
         if (FXRouter.getData() != null) {
             testScriptDetailList = (TestScriptDetailList) FXRouter.getData();
 
         }
+    }
+
+    private void setTable() {
+        new TableviewSet<>(onTableTestscript);
+        ArrayList<StringConfiguration> configs = new ArrayList<>();
+        configs.add(new StringConfiguration("title:Test No."));
+        configs.add(new StringConfiguration("title:Test Step."));
+        configs.add(new StringConfiguration("title:Input Data."));
+        configs.add(new StringConfiguration("title:Expected Result."));
+
+
+        for (StringConfiguration conf: configs) {
+            TableColumn col = new TableColumn(conf.get("title"));
+            new TableColumns(col);
+
+            onTableTestscript.getColumns().add(col);
+        }
+
+
     }
 
     @FXML
