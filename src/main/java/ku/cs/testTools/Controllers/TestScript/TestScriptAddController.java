@@ -11,9 +11,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Models.UsecaseModels.UseCase;
-import ku.cs.testTools.Services.AutoCompleteComboBoxListener;
-import ku.cs.testTools.Services.DataSource;
-import ku.cs.testTools.Services.StringConfiguration;
+import ku.cs.testTools.Services.*;
 import ku.cs.testTools.Services.TestTools.TestScriptDetailFIleDataSource;
 import ku.cs.testTools.Services.TestTools.TestScriptFileDataSource;
 
@@ -156,8 +154,7 @@ public class TestScriptAddController {
 //    }
     public void loadTable(TestScriptDetailList testScriptDetailList) {
         // Clear existing columns
-        onTableTestscript.getColumns().clear();
-        onTableTestscript.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        new TableviewSet<>(onTableTestscript);
 
         // Define column configurations
         ArrayList<StringConfiguration> configs = new ArrayList<>();
@@ -170,8 +167,7 @@ public class TestScriptAddController {
         for (StringConfiguration conf : configs) {
             TableColumn<TestScriptDetail, String> col = new TableColumn<>(conf.get("title"));
             col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
-            col.setSortable(false);
-            col.setReorderable(false);
+            new TableColumns(col);
             onTableTestscript.getColumns().add(col);
         }
 

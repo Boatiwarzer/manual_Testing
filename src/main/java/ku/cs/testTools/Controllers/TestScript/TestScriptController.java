@@ -93,11 +93,9 @@ public class TestScriptController {
         configs.add(new StringConfiguration("title:Input Data."));
         configs.add(new StringConfiguration("title:Expected Result."));
 
-
         for (StringConfiguration conf: configs) {
             TableColumn col = new TableColumn(conf.get("title"));
             new TableColumns(col);
-
             onTableTestscript.getColumns().add(col);
         }
 
