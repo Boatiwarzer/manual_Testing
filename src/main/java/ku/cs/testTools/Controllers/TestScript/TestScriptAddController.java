@@ -346,13 +346,25 @@ public class TestScriptAddController {
 
     @FXML
     void onSubmitButton(ActionEvent event) {
+        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+        testScriptListDataSource.writeData(testScriptList);
+        DataSource<TestScriptDetailList> testScriptDetailListListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+        testScriptDetailListListDataSource.writeData(testScriptDetailList);
         String name = onTestNameField.getText();
-        String id = tsId;
+        String idTS = tsId;
         String useCase = onUsecaseCombobox.getValue();
         String descript = infoDescriptLabel.getText();
         String tc = onTestcaseCombobox.getValue();
         String preCon = infoPreconLabel.getText();
         String note = onTestNoteField.getText();
+        for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()) {
+            String idTSD;
+            String nameTSD;
+            String stepTSD;
+            String inputTSD;
+            String expected;
+
+        }
 
     }
 
