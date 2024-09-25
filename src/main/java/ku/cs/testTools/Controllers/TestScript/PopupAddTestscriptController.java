@@ -1,5 +1,6 @@
 package ku.cs.testTools.Controllers.TestScript;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,6 +15,7 @@ import ku.cs.testTools.Models.TestToolModels.TestScript;
 import ku.cs.testTools.Models.TestToolModels.TestScriptDetail;
 import ku.cs.testTools.Models.TestToolModels.TestScriptDetailList;
 import ku.cs.testTools.Models.TestToolModels.TestScriptList;
+import ku.cs.testTools.Services.AutoCompleteComboBoxListener;
 import ku.cs.testTools.Services.DataSource;
 import ku.cs.testTools.Services.TestTools.TestScriptDetailFIleDataSource;
 import ku.cs.testTools.Services.TestTools.TestScriptFileDataSource;
@@ -98,13 +100,8 @@ public class PopupAddTestscriptController {
 //        }if(!password1.equals(password2)){
 //            errorLabel.setText("Password not correct");
 //        } if(signup){
-        if (FXRouter.getData3() != null) {
-            testScriptDetail = new TestScriptDetail(id,TsNo, TsStep, Input, Expect);
-            testScriptDetailList.addOrUpdateTestScriptDetail(testScriptDetail);
-        }else {
-            testScriptDetail = new TestScriptDetail(id,TsNo, TsStep, Input, Expect);
-            testScriptDetailList.addOrUpdateTestScriptDetail(testScriptDetail);
-        }
+        testScriptDetail = new TestScriptDetail(id,TsNo, TsStep, Input, Expect);
+        testScriptDetailList.addOrUpdateTestScriptDetail(testScriptDetail);
         try {
             testScriptDetail = null;
             clearInfo();
@@ -144,7 +141,19 @@ public class PopupAddTestscriptController {
     }
     private void selectedComboBox(){
         onInputDataCombobox.setItems(FXCollections.observableArrayList("None"));
+        new AutoCompleteComboBoxListener<>(onInputDataCombobox);
         onInputDataCombobox.getSelectionModel().selectFirst();
+        onInputDataCombobox.setOnAction(event -> {
+            String selectedItem = onInputDataCombobox.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                onInputDataCombobox.getEditor().setText(selectedItem); // Set selected item in editor
+                //editor.setEditable(true);
+                onInputDataCombobox.getEditor().requestFocus();// Ensure the editor remains editable
+                // Move cursor to the end
+                Platform.runLater(onInputDataCombobox.getEditor()::end);
+            }
+
+        });
 
 //        for (Equipment equipment : equipmentList.getEquipmentList()){
 //            if (!categoryBox.getItems().contains(equipment.getType_equipment())) {

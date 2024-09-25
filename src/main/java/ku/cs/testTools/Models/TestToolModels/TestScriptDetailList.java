@@ -37,6 +37,17 @@ public class TestScriptDetailList {
             testScriptDetailList.add(testScriptDetail);
         }
     }
+    public void deleteTestScriptDetail(TestScriptDetail testScriptDetail) {
+        // Iterate through the list to find the item to delete
+        for (int i = 0; i < testScriptDetailList.size(); i++) {
+            TestScriptDetail existingDetail = testScriptDetailList.get(i);
+            if (existingDetail.getIdTSD().equals(testScriptDetail.getIdTSD())) {
+                // Remove the item from the list
+                testScriptDetailList.remove(i);
+                break; // Exit after removing the first match
+            }
+        }
+    }
 
     // เมธอดนี้จะต้องถูกย้ายไปยัง TestScriptDetailFIleDataSource
     public TestScriptDetail findTSById(String id) {

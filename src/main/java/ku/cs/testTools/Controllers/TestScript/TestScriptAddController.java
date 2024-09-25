@@ -1,5 +1,6 @@
 package ku.cs.testTools.Controllers.TestScript;
 
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,6 +11,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Models.UsecaseModels.UseCase;
+import ku.cs.testTools.Services.AutoCompleteComboBoxListener;
 import ku.cs.testTools.Services.DataSource;
 import ku.cs.testTools.Services.StringConfiguration;
 import ku.cs.testTools.Services.TestTools.TestScriptDetailFIleDataSource;
@@ -99,7 +101,7 @@ public class TestScriptAddController {
         selectedComboBox();
         setDate();
         clearInfo();
-        onEditListButton.setVisible(false);
+        setButtonVisible();
         {
             if (FXRouter.getData() != null) {
 
@@ -116,6 +118,11 @@ public class TestScriptAddController {
             }
         }
         System.out.println(testScriptDetailList);
+    }
+
+    private void setButtonVisible() {
+        onEditListButton.setVisible(false);
+        onDeleteListButton.setVisible(false);
     }
 
     private void clearInfo() {
@@ -218,8 +225,10 @@ public class TestScriptAddController {
             } else {
                 if (newValue.getIdTSD() != null){
                     onEditListButton.setVisible(true);
+                    onDeleteListButton.setVisible(true);
                 }else {
                     onEditListButton.setVisible(false);
+                    onDeleteListButton.setVisible(false);
                 }
                 selectedItem = newValue;
                 System.out.println(selectedItem);
@@ -257,7 +266,17 @@ public class TestScriptAddController {
         }
 
     }
+    @FXML
+    void onDeleteListButton(ActionEvent event) {
+        try {
+            if (selectedItem != null){
+                FXRouter.popup("popup_delete",testScriptDetailList,tsId,selectedItem,true);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
+    }
     @FXML
     void onCancelButton(ActionEvent event) {
         try {
@@ -318,10 +337,7 @@ public class TestScriptAddController {
         }
     }
 
-    @FXML
-    void onDeleteListButton(ActionEvent event) {
 
-    }
 
     @FXML
     void onSearchButton(ActionEvent event) {
@@ -365,9 +381,35 @@ public class TestScriptAddController {
     }
     private void selectedComboBox(){
         onTestcaseCombobox.setItems(FXCollections.observableArrayList("None"));
+        new AutoCompleteComboBoxListener<>(onTestcaseCombobox);
         onTestcaseCombobox.getSelectionModel().selectFirst();
+        Platform.runLater(onTestcaseCombobox.getEditor()::end);
+        onTestcaseCombobox.setOnAction(event -> {
+            String selectedItem = onTestcaseCombobox.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                onTestcaseCombobox.getEditor().setText(selectedItem); // Set selected item in editor
+                //editor.setEditable(true);
+                onTestcaseCombobox.getEditor().requestFocus();// Ensure the editor remains editable
+                // Move cursor to the end
+                Platform.runLater(onTestcaseCombobox.getEditor()::end);
+            }
+
+        });
         onUsecaseCombobox.setItems(FXCollections.observableArrayList("None"));
+        new AutoCompleteComboBoxListener<>(onUsecaseCombobox);
         onUsecaseCombobox.getSelectionModel().selectFirst();
+        Platform.runLater(onUsecaseCombobox.getEditor()::end);
+        onUsecaseCombobox.setOnAction(event -> {
+            String selectedItem = onUsecaseCombobox.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                onUsecaseCombobox.getEditor().setText(selectedItem); // Set selected item in editor
+                //editor.setEditable(true);
+                onUsecaseCombobox.getEditor().requestFocus();// Ensure the editor remains editable
+                // Move cursor to the end
+                Platform.runLater(onUsecaseCombobox.getEditor()::end);
+            }
+
+        });
 
 //        for (Equipment equipment : equipmentList.getEquipmentList()){
 //            if (!categoryBox.getItems().contains(equipment.getType_equipment())) {
