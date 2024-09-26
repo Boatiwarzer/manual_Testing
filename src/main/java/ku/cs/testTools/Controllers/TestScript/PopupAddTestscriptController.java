@@ -57,9 +57,11 @@ public class PopupAddTestscriptController {
         clearInfo();
         randomId();
         System.out.println(FXRouter.getData3());
+        System.out.println(FXRouter.getData2());
         if (FXRouter.getData() != null) {
             testScriptDetailList = (TestScriptDetailList) FXRouter.getData();
-            idTS = (String) FXRouter.getData2();
+            testScript = (TestScript) FXRouter.getData2();
+            idTS = testScript.getIdTS();
             if (FXRouter.getData3() != null){
                 testScriptDetail = (TestScriptDetail) FXRouter.getData3();
                 testScriptDetailList.findTSById(testScriptDetail.getIdTSD());
@@ -100,12 +102,12 @@ public class PopupAddTestscriptController {
 //        }if(!password1.equals(password2)){
 //            errorLabel.setText("Password not correct");
 //        } if(signup){
-        testScriptDetail = new TestScriptDetail(id,TsNo, TsStep, Input, Expect);
+        testScriptDetail = new TestScriptDetail(id,TsNo, TsStep, Input, Expect,idTS);
         testScriptDetailList.addOrUpdateTestScriptDetail(testScriptDetail);
         try {
             testScriptDetail = null;
             clearInfo();
-            FXRouter.goTo("test_script_add",testScriptDetailList);
+            FXRouter.goTo("test_script_add",testScriptDetailList,testScript);
             System.out.println(testScriptDetail);
             Node source = (Node) event.getSource();
             Stage stage = (Stage) source.getScene().getWindow();

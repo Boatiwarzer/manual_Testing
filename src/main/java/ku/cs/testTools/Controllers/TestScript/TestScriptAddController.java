@@ -89,11 +89,13 @@ public class TestScriptAddController {
     @FXML
     private Label testIDLabel;
     private String tsId;
-    private String projectName, directory;
+    private String projectName = "125", directory = "data";
     private final TestScriptList testScriptList = new TestScriptList();
     //private ArrayList<Object> objects = (ArrayList) FXRouter.getData();
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
     private TestScriptDetail selectedItem;
+    private TestScript testScript;
+
     @FXML
     void initialize() {
         selectedComboBox();
@@ -104,18 +106,38 @@ public class TestScriptAddController {
             if (FXRouter.getData() != null) {
 
                 testScriptDetailList = (TestScriptDetailList) FXRouter.getData();
-                //testScriptDetailList.addTestScriptDetail((TestScriptDetail) FXRouter.getData());
                 loadTable(testScriptDetailList);
-                testIDLabel.setText(tsId);
+                testScript = (TestScript) FXRouter.getData2();
                 selected();
+                setDataTS();
             }
             else{
                 setTable();
                 randomId();
+                System.out.println(tsId);
 
             }
         }
         System.out.println(testScriptDetailList);
+    }
+
+    private void setDataTS() {
+        tsId = testScript.getIdTS();
+        testIDLabel.setText(tsId);
+        String name = testScript.getNameTS();
+        onTestNameField.setText(name);
+        String date = testScript.getDateTS();
+        testDateLabel.setText(date);
+        String useCase = testScript.getUseCase();
+        onUsecaseCombobox.getSelectionModel().select(useCase);
+        String description = testScript.getDescriptionTS();
+        infoDescriptLabel.setText(description);;
+        String tc = testScript.getTestCase();
+        onTestcaseCombobox.getSelectionModel().select(tc);
+        String preCon = testScript.getPreCon();
+        infoPreconLabel.setText(preCon);;
+        String note = testScript.getFreeText();
+        onTestNoteField.setText(note);;
     }
 
     private void setButtonVisible() {
@@ -244,10 +266,20 @@ public class TestScriptAddController {
     void onAddButton(ActionEvent event) {
 
         try {
+            String name = onTestNameField.getText();
+            String idTS = tsId;
+            String date = testDateLabel.getText();
+            String useCase = onUsecaseCombobox.getValue();
+            String description = infoDescriptLabel.getText();
+            String tc = onTestcaseCombobox.getValue();
+            String preCon = infoPreconLabel.getText();
+            String note = onTestNoteField.getText();
+            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note);
+
             if (testScriptDetailList != null){
-                FXRouter.popup("popup_add_testscript",testScriptDetailList,tsId,null,true);
+                FXRouter.popup("popup_add_testscript",testScriptDetailList,testScript,null,true);
             }else {
-                FXRouter.popup("popup_add_testscript",null,tsId,true);
+                FXRouter.popup("popup_add_testscript",null,testScript,true);
             }
 
 
@@ -258,8 +290,17 @@ public class TestScriptAddController {
     @FXML
     void onEditListButton(ActionEvent event)  {
         try {
+            String name = onTestNameField.getText();
+            String idTS = tsId;
+            String date = testDateLabel.getText();
+            String useCase = onUsecaseCombobox.getValue();
+            String description = infoDescriptLabel.getText();
+            String tc = onTestcaseCombobox.getValue();
+            String preCon = infoPreconLabel.getText();
+            String note = onTestNoteField.getText();
+            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note);
             if (selectedItem != null){
-                FXRouter.popup("popup_add_testscript",testScriptDetailList,tsId,selectedItem,true);
+                FXRouter.popup("popup_add_testscript",testScriptDetailList,testScript,selectedItem,true);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -269,8 +310,17 @@ public class TestScriptAddController {
     @FXML
     void onDeleteListButton(ActionEvent event) {
         try {
+            String name = onTestNameField.getText();
+            String idTS = tsId;
+            String date = testDateLabel.getText();
+            String useCase = onUsecaseCombobox.getValue();
+            String description = infoDescriptLabel.getText();
+            String tc = onTestcaseCombobox.getValue();
+            String preCon = infoPreconLabel.getText();
+            String note = onTestNoteField.getText();
+            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note);
             if (selectedItem != null){
-                FXRouter.popup("popup_delete",testScriptDetailList,tsId,selectedItem,true);
+                FXRouter.popup("popup_delete",testScriptDetailList,testScript,selectedItem,true);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -346,27 +396,52 @@ public class TestScriptAddController {
 
     @FXML
     void onSubmitButton(ActionEvent event) {
-        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-        testScriptListDataSource.writeData(testScriptList);
-        DataSource<TestScriptDetailList> testScriptDetailListListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-        testScriptDetailListListDataSource.writeData(testScriptDetailList);
+        // Validate fields
         String name = onTestNameField.getText();
         String idTS = tsId;
+        String date = testDateLabel.getText();
         String useCase = onUsecaseCombobox.getValue();
-        String descript = infoDescriptLabel.getText();
+        String description = infoDescriptLabel.getText();
         String tc = onTestcaseCombobox.getValue();
         String preCon = infoPreconLabel.getText();
         String note = onTestNoteField.getText();
-        for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()) {
-            String idTSD;
-            String nameTSD;
-            String stepTSD;
-            String inputTSD;
-            String expected;
 
+        // Check if mandatory fields are empty
+        if (name == null || name.isEmpty() ||
+                useCase == null || useCase.isEmpty() ||
+                tc == null || tc.isEmpty()) {
+            showAlert("Input Error", "Please fill in all required fields.");
+            return;
         }
 
+        // Create a new TestScript object
+        testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note);
+
+        // Save data to files
+        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptDetailList> testScriptDetailListListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+
+        // Add or update test script
+        testScriptList.addOrUpdateTestScript(testScript);
+
+        // Write data to respective files
+        testScriptListDataSource.writeData(testScriptList);
+        testScriptDetailListListDataSource.writeData(testScriptDetailList);
+
+        // Show success message
+        showAlert("Success", "Test script saved successfully!");
+
     }
+
+    // Helper method to show alert dialogs
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
 
     @FXML
     void onTestNameField(ActionEvent event) {

@@ -29,4 +29,35 @@ public class TestScriptList {
         }
         return null;
     }
+    public void addOrUpdateTestScript(TestScript testScript) {
+        boolean exists = false;
+
+        // Iterate through the list to check for an existing item with the same ID
+        for (int i = 0; i < testScriptList.size(); i++) {
+            TestScript existing = testScriptList.get(i);
+
+            if (existing.isId(testScript.getIdTS())) {
+                // Update existing item
+                testScriptList.set(i, testScript);
+                exists = true;
+                break;
+            }
+        }
+
+        // If the item does not exist, add it to the list
+        if (!exists) {
+            testScriptList.add(testScript);
+        }
+    }
+    public void deleteTestScript(TestScript testScript) {
+        // Iterate through the list to find the item to delete
+        for (int i = 0; i < testScriptList.size(); i++) {
+            TestScript existing = testScriptList.get(i);
+            if (existing.isId(testScript.getIdTS())) {
+                // Remove the item from the list
+                testScriptList.remove(i);
+                break; // Exit after removing the first match
+            }
+        }
+    }
 }

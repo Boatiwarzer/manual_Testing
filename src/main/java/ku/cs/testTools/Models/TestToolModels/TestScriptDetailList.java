@@ -24,7 +24,7 @@ public class TestScriptDetailList {
         for (int i = 0; i < testScriptDetailList.size(); i++) {
             TestScriptDetail existingDetail = testScriptDetailList.get(i);
 
-            if (existingDetail.getIdTSD().equals(testScriptDetail.getIdTSD())) {
+            if (existingDetail.isId(testScriptDetail.getIdTSD())) {
                 // Update existing item
                 testScriptDetailList.set(i, testScriptDetail);
                 exists = true;
@@ -41,7 +41,7 @@ public class TestScriptDetailList {
         // Iterate through the list to find the item to delete
         for (int i = 0; i < testScriptDetailList.size(); i++) {
             TestScriptDetail existingDetail = testScriptDetailList.get(i);
-            if (existingDetail.getIdTSD().equals(testScriptDetail.getIdTSD())) {
+            if (existingDetail.isId(testScriptDetail.getIdTSD())) {
                 // Remove the item from the list
                 testScriptDetailList.remove(i);
                 break; // Exit after removing the first match

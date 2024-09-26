@@ -57,16 +57,6 @@ public class TestScriptFileDataSource implements DataSource<TestScriptList>, Man
             while ((line = buffer.readLine()) != null) {
                 String[] data = line.split(",");
                 if (data[0].trim().equals("testScript")) {
-                    // แปลง data[9] เป็น List<TestScriptDetail>
-                    List<TestScriptDetail> additionalDataList = new ArrayList<>();
-                    String[] details = data[9].trim().split(";"); // ใช้ ; เป็นตัวแบ่ง
-
-                    for (String detail : details) {
-                        // สร้าง TestScriptDetail จากแต่ละ detail
-                        TestScriptDetail testScriptDetail = new TestScriptDetail(); // ปรับตาม constructor ของ TestScriptDetail
-                        additionalDataList.add(testScriptDetail);
-                    }
-
                     TestScript testScript = new TestScript(
                             data[1].trim(), // data[1]
                             data[2].trim(), // data[2]
@@ -75,8 +65,7 @@ public class TestScriptFileDataSource implements DataSource<TestScriptList>, Man
                             data[5].trim(), // data[5]
                             data[6].trim(), // data[6]
                             data[7].trim(), // data[7]
-                            data[8].trim(), // data[8]
-                            additionalDataList // data[9] ที่เป็น List<TestScriptDetail>
+                            data[8].trim() // data[8]
                     );
                     testScriptList.addTestScript(testScript);
                 }
@@ -106,18 +95,20 @@ public class TestScriptFileDataSource implements DataSource<TestScriptList>, Man
         FileWriter writer = null;
         BufferedWriter buffer = null;
         try {
-            writer = new FileWriter(file, StandardCharsets.UTF_8);
+            // เปิดไฟล์ในโหมด append (true)
+            writer = new FileWriter(file, StandardCharsets.UTF_8, true); // true สำหรับ append mode
             buffer = new BufferedWriter(writer);
             for (TestScript testScript : testScriptList.getTestScriptList()) {
                 String line = createLine(testScript);
                 buffer.append(line);
-                buffer.newLine();
+                buffer.newLine();  // สร้างบรรทัดใหม่สำหรับข้อมูลแต่ละอัน
             }
             buffer.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
 
     @Override
     public String createLine(TestScript testScript) {
@@ -129,7 +120,6 @@ public class TestScriptFileDataSource implements DataSource<TestScriptList>, Man
                 + testScript.getDescriptionTS() + ","
                 + testScript.getTestCase() + ","
                 + testScript.getPreCon() + ","
-                + testScript.getFreeText()+ ","
-                + testScript.getTestScriptDetailList();
+                + testScript.getFreeText();
     }
 }

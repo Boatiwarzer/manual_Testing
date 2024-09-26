@@ -70,8 +70,8 @@ public class TestScriptDetailFIleDataSource implements DataSource<TestScriptDeta
                             data[2].trim(), // testNo
                             data[3].trim(), // steps
                             data[4].trim(), // inputData
-                            data[5].trim(), // expected
-                            testScript // The associated TestScript object
+                            data[5].trim(),
+                            data[6].trim()// expected
                     );
 
                     // Add the detail to the list
@@ -92,7 +92,8 @@ public class TestScriptDetailFIleDataSource implements DataSource<TestScriptDeta
     public void writeData(TestScriptDetailList testScriptDetailList) {
         String filePath = directory + File.separator + fileName;
 
-        try (BufferedWriter buffer = new BufferedWriter(new FileWriter(filePath, StandardCharsets.UTF_8))) {
+        // เปิดไฟล์ในโหมด append (true)
+        try (BufferedWriter buffer = new BufferedWriter(new FileWriter(filePath, StandardCharsets.UTF_8, true))) {
             for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()) {
                 String line = createLine(testScriptDetail);
                 buffer.write(line);
@@ -103,6 +104,7 @@ public class TestScriptDetailFIleDataSource implements DataSource<TestScriptDeta
         }
     }
 
+
     @Override
     public String createLine(TestScriptDetail testScriptDetail) {
         return "testScriptDetail," +
@@ -111,6 +113,6 @@ public class TestScriptDetailFIleDataSource implements DataSource<TestScriptDeta
                 testScriptDetail.getSteps() + "," +
                 testScriptDetail.getInputData() + "," +
                 testScriptDetail.getExpected()+ "," +
-                testScriptDetail.getTestScript();
+                testScriptDetail.getIdTS();
     }
 }
