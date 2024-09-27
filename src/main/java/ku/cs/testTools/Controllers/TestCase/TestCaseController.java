@@ -9,15 +9,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import ku.cs.fxrouter.FXRouter;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class TestCaseController {
@@ -95,6 +93,13 @@ public class TestCaseController {
         onSearchList.getItems().addAll(words);
         onSearchList.refresh();
         TextFields.bindAutoCompletion(onSearchField,words);
+        onSearchField.setOnKeyPressed(keyEvent -> {
+            if (Objects.requireNonNull(keyEvent.getCode()) == KeyCode.ENTER) {
+                onSearchList.getItems().clear();
+                onSearchList.getItems().addAll(searchList(onSearchField.getText(), words));
+            }
+        });
+
 
     }
 
