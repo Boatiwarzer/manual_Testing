@@ -103,10 +103,13 @@ public class TestScriptController {
 
         } else {
             setTable();
-            testScriptList = testScriptListDataSource.readData();
-            testScriptDetailList = testScriptDetailListListDataSource.readData();
-            loadListView(testScriptList);
-            selected();
+            if (testScriptListDataSource.readData() != null && testScriptDetailListListDataSource.readData() != null){
+                testScriptList = testScriptListDataSource.readData();
+                testScriptDetailList = testScriptDetailListListDataSource.readData();
+                loadListView(testScriptList);
+                selected();
+            }
+
 
         }
         for (TestScript testScript : testScriptList.getTestScriptList()) {
