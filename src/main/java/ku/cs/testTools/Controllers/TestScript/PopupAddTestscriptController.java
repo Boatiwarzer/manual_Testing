@@ -139,7 +139,7 @@ public class PopupAddTestscriptController {
         int back = 99999;
         String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
         String random2 = String.valueOf((int)Math.floor(Math.random() * (back - min2 + 1) + min2));
-        this.id = random1+random2;
+        this.id = String.format("TSD-%s", random1+random2);
     }
     private void selectedComboBox(){
         onInputDataCombobox.setItems(FXCollections.observableArrayList("None"));

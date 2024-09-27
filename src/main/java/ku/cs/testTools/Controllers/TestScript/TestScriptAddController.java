@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class TestScriptAddController {
 
@@ -97,7 +99,11 @@ public class TestScriptAddController {
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
     private TestScriptDetail selectedItem;
     private TestScript testScript;
-
+    private static int idCounter = 1; // Counter for sequential IDs
+    private static final int MAX_ID = 999; // Upper limit for IDs
+    private static Set<String> usedIds = new HashSet<>(); // Set to store used IDs
+    DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+    DataSource<TestScriptDetailList> testScriptDetailListListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
     @FXML
     void initialize() {
         selectedComboBox();
@@ -233,14 +239,36 @@ public class TestScriptAddController {
         testDateLabel.setText(dates);
     }
     public void randomId(){
-        int min = 111111;
-        int min2 = 11111;
-        int upperbound = 999999;
-        int back = 99999;
+        int min = 1;
+        int min2 = 1;
+        int upperbound = 999;
+        int back = 999;
         String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
         String random2 = String.valueOf((int)Math.floor(Math.random() * (back - min2 + 1) + min2));
-        this.tsId = random1+random2;
+        this.tsId = String.format("TS-%s", random1+random2);
 
+    }
+    public void generateSequentialId() {
+        // Loop until we find an unused ID
+        while (idCounter <= MAX_ID) {
+            // Generate ID with leading zeros, e.g., "001", "002", etc.
+            String sequentialId = String.format("TS-%03d", idCounter);
+
+            // Check if ID is already used
+            if (!usedIds.contains(sequentialId)) {
+                usedIds.add(sequentialId); // Add ID to the set of used IDs
+                this.tsId = sequentialId; // Assign to the object's tsId field
+                idCounter++; // Increment the counter for the next ID
+                break; // Exit loop once a valid ID is found
+            }
+
+            idCounter++; // Increment the counter if ID is already used
+        }
+
+        // Reset counter if we reach the max ID to prevent overflow (optional)
+        if (idCounter > MAX_ID) {
+            idCounter = 1; // Reset the counter back to 1 if needed
+        }
     }
     void selected() {
         onTableTestscript.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
