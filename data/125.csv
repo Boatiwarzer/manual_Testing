@@ -1,8 +1,4 @@
-testScriptDetail,54363573283,2,2,None,2,66221092679
-testScript,61888033977,ๅ,26-09-2024,None,Label,None,Label,ๅ
-testScriptDetail,94216225669,ๅ,ๅ,None,ๅ,61888033977
-testScriptDetail,33872163367,/,/,None,/,61888033977
-testScript,49335020591,1,26-09-2024,None,Label,None,Label,1
-testScriptDetail,33428924865,2,2,None,2,null
-testScriptDetail,24945246888,3,3,None,3,null
-testScriptDetail,53227786625,4,4,None,4,null
+testScript,57486981556,1,26-09-2024,None,Label,None,Label,1
+testScriptDetail,38688043892,2,2,None,2,57486981556
+testScript,83365527086,1,27-09-2024,None,Label,None,Label,1
+testScriptDetail,31771020272,1,1,None,1,83365527086

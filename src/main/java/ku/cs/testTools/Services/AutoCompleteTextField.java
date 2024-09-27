@@ -2,7 +2,6 @@ package ku.cs.testTools.Services;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -22,18 +21,12 @@ public class AutoCompleteTextField<T> extends TextField {
         this.popup = new Popup();
 
         // Configure the ListView
-        listView.setItems(data);
         listView.setMaxHeight(120); // Limit dropdown height
         popup.getContent().add(new VBox(listView));
         popup.setAutoHide(true);  // Auto hide popup when clicked outside
 
         // Event handling for the TextField
-        this.setOnKeyReleased(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                handleKeyReleased(event);
-            }
-        });
+        this.setOnKeyReleased(this::handleKeyReleased);
 
         // Event handling for selecting an item from ListView
         listView.setOnMouseClicked(e -> {
@@ -44,17 +37,25 @@ public class AutoCompleteTextField<T> extends TextField {
             }
         });
 
+        // Hide the popup when the focus is lost
         this.focusedProperty().addListener((obs, oldVal, newVal) -> {
-            if (!newVal) { // When focus is lost, hide popup
+            if (!newVal) {
+                popup.hide();
+            }
+        });
+
+        // Hide the popup when ListView loses focus
+        listView.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
                 popup.hide();
             }
         });
     }
 
     private void handleKeyReleased(KeyEvent event) {
-        if (event.getCode() == KeyCode.DOWN) {
-            listView.requestFocus(); // Focus the list when pressing down arrow
-            listView.getSelectionModel().select(0);
+        if (event.getCode() == KeyCode.DOWN && !listView.getItems().isEmpty()) {
+            listView.requestFocus(); // Focus the list when pressing the down arrow
+            listView.getSelectionModel().select(0); // Select the first item
             return;
         }
 
@@ -75,6 +76,7 @@ public class AutoCompleteTextField<T> extends TextField {
         if (!filteredList.isEmpty()) {
             listView.setItems(filteredList);
             if (!popup.isShowing()) {
+                // Show the popup right below the TextField
                 popup.show(this, this.localToScreen(0, this.getHeight()).getX(),
                         this.localToScreen(0, this.getHeight()).getY());
             }
@@ -83,4 +85,3 @@ public class AutoCompleteTextField<T> extends TextField {
         }
     }
 }
-

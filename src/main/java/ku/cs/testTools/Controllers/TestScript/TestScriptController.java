@@ -5,12 +5,16 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import ku.cs.fxrouter.FXRouter;
+import ku.cs.testTools.Models.TestToolModels.TestScript;
 import ku.cs.testTools.Models.TestToolModels.TestScriptDetail;
 import ku.cs.testTools.Models.TestToolModels.TestScriptDetailList;
 import ku.cs.testTools.Models.TestToolModels.TestScriptList;
+import ku.cs.testTools.Services.DataSource;
 import ku.cs.testTools.Services.StringConfiguration;
 import ku.cs.testTools.Services.TableColumns;
 import ku.cs.testTools.Services.TableviewSet;
+import ku.cs.testTools.Services.TestTools.TestScriptDetailFIleDataSource;
+import ku.cs.testTools.Services.TestTools.TestScriptFileDataSource;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -73,16 +77,48 @@ public class TestScriptController {
 
     @FXML
     private Label testNameLabel;
-    private String projectName, directory;
+    private String projectName = "125", directory = "data";
     private TestScriptList testScriptList = new TestScriptList();
+    private TestScript testScript = new TestScript();
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
+    DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+    DataSource<TestScriptDetailList> testScriptDetailListListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
     @FXML
     void initialize() {
-        setTable();
         if (FXRouter.getData() != null) {
-            testScriptDetailList = (TestScriptDetailList) FXRouter.getData();
+            TestScriptList ts = testScriptListDataSource.readData();
+            TestScriptDetailList tsd = testScriptDetailListListDataSource.readData();
+            testScript = (TestScript) FXRouter.getData();
+            loadListView(testScriptList);
+            selected();
+
+        } else {
+            setTable();
+            TestScriptList ts = testScriptListDataSource.readData();
+            TestScriptDetailList tsd = testScriptDetailListListDataSource.readData();
+            loadListView(testScriptList);
+            selected();
 
         }
+    }
+
+    private void selected() {
+        setDataTS();
+    }
+
+    private void setDataTS() {
+    }
+
+    private void loadListView(TestScriptList testScriptList) {
+        if (testScriptList != null){
+            
+        }else {
+            setTable();
+            clearInfo();
+        }
+    }
+
+    private void clearInfo() {
     }
 
     private void setTable() {

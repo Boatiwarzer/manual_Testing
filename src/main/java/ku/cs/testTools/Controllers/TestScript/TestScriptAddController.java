@@ -430,6 +430,11 @@ public class TestScriptAddController {
 
         // Show success message
         showAlert("Success", "Test script saved successfully!");
+        try {
+            FXRouter.goTo("test_script",testScript);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 

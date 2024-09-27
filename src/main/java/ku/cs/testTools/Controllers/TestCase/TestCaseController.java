@@ -1,5 +1,6 @@
 package ku.cs.testTools.Controllers.TestCase;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -9,8 +10,15 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import ku.cs.fxrouter.FXRouter;
+import org.controlsfx.control.textfield.TextFields;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class TestCaseController {
 
@@ -51,7 +59,7 @@ public class TestCaseController {
     private TextField onSearchField;
 
     @FXML
-    private ListView<?> onSearchList;
+    private ListView<String> onSearchList;
 
     @FXML
     private TableView<?> onTableTestcase;
@@ -65,6 +73,40 @@ public class TestCaseController {
     @FXML
     private Label testNameLabel;
 
+    ArrayList<String> words = new ArrayList<>(
+            Arrays.asList("test", "dog","Human", "Days of our life", "The best day",
+                    "Friends", "Animal", "Human", "Humans", "Bear", "Life",
+                    "This is some text", "Words", "222", "Bird", "Dog", "A few words",
+                    "Subscribe!", "SoftwareEngineeringStudent", "You got this!!",
+                    "Super Human", "Super", "Like")
+    );
+    String[] word ={"test", "dog","Human", "Days of our life", "The best day",
+            "Friends", "Animal", "Human", "Humans", "Bear", "Life",
+            "This is some text", "Words", "222", "Bird", "Dog", "A few words",
+            "Subscribe!", "SoftwareEngineeringStudent", "You got this!!",
+            "Super Human", "Super", "Like"};
+
+    @FXML
+    void onSearchButton(ActionEvent event) {
+        onSearchList.getItems().clear();
+        onSearchList.getItems().addAll(searchList(onSearchField.getText(),words));
+    }
+    public void initialize() {
+        onSearchList.getItems().addAll(words);
+        onSearchList.refresh();
+        TextFields.bindAutoCompletion(onSearchField,words);
+
+    }
+
+    private List<String> searchList(String searchWords, List<String> listOfStrings) {
+
+        List<String> searchWordsArray = Arrays.asList(searchWords.trim().split(" "));
+
+        return listOfStrings.stream().filter(input -> {
+            return searchWordsArray.stream().allMatch(word ->
+                    input.toLowerCase().contains(word.toLowerCase()));
+        }).collect(Collectors.toList());
+    }
     @FXML
     void onClickTestcase(ActionEvent event) {
         try {
@@ -128,9 +170,6 @@ public class TestCaseController {
         }
     }
 
-    @FXML
-    void onSearchButton(ActionEvent event) {
 
-    }
 
 }
