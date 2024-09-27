@@ -1,5 +1,8 @@
 package ku.cs.testTools.Models.TestToolModels;
 
+import lombok.Getter;
+
+@Getter
 public class UseCase {
     private String useCaseID;
     private String useCaseName;
@@ -17,34 +20,6 @@ public class UseCase {
         this.preCondition = preCondition;
         this.postCondition = postCondition;
         this.note = note;
-    }
-
-    public String getUseCaseID() {
-        return useCaseID;
-    }
-
-    public String getUseCaseName() {
-        return useCaseName;
-    }
-
-    public String getActor() {
-        return actor;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getPreCondition() {
-        return preCondition;
-    }
-
-    public String getPostCondition() {
-        return postCondition;
-    }
-
-    public String getNote() {
-        return note;
     }
 
 

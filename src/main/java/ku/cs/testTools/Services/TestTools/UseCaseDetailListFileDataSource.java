@@ -9,13 +9,12 @@ import ku.cs.testTools.Services.ManageDataSource;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 
-public class UseCaseListFileDataSource implements DataSource<UseCaseList>, ManageDataSource<UseCase> {
+public class UseCaseDetailListFileDataSource implements DataSource<UseCaseDetailList>, ManageDataSource<UseCaseDetail> {
     private String directory;
     private String fileName;
 
-    public UseCaseListFileDataSource(String directory, String fileName){
+    public UseCaseDetailListFileDataSource(String directory, String fileName) {
         this.directory = directory;
         this.fileName = fileName;
         checkFileIsExisted();
@@ -39,36 +38,33 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
     }
 
     @Override
-    public UseCaseList readData() {
-        UseCaseList useCaseList = new UseCaseList();
+    public UseCaseDetailList readData() {
+        UseCaseDetailList useCaseDetailList = new UseCaseDetailList();
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
         FileReader reader = null;
         BufferedReader buffer = null;
 
         try {
-            reader = new FileReader(file, StandardCharsets.UTF_8);
+            reader = new FileReader(file);
             buffer = new BufferedReader(reader);
 
             String line = "";
             while ((line = buffer.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data[0].trim().equals("useCase")) {
-                    UseCase useCase = new UseCase(
+                if (data[0].trim().equals("useCaseDetail")) {
+                    UseCaseDetail useCaseDetail = new UseCaseDetail(
                             data[1], // useCaseID
-                            data[2], // useCaseName
-                            data[3], // actor
-                            data[4], // description
-                            data[5], // preCondition
-                            data[6], // postCondition
-                            data[7]  // note
+                            data[2], // action
+                            Integer.parseInt(data[3]), // number
+                            data[4] // detail
                     );
-                    useCaseList.addUseCase(useCase);
+                    useCaseDetailList.addUseCaseDetail(useCaseDetail);
                 }
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
-        }finally {
+        } finally {
             try {
                 if (buffer != null) {
                     buffer.close();
@@ -80,11 +76,12 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
                 throw new RuntimeException(e);
             }
         }
-        return useCaseList;
+
+        return useCaseDetailList;
     }
 
     @Override
-    public void writeData(UseCaseList useCaseList) {
+    public void writeData(UseCaseDetailList useCaseDetailList) {
 //        // Import actorList from CSV
 //        ActorListFileDataSource actorListFileDataSource = new ActorListFileDataSource(directory, fileName);
 //        ActorList actorList = actorListFileDataSource.readData();
@@ -103,17 +100,17 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
 //        // Import preferenceList from CSV
 //        PreferenceListFileDataSource preferenceListFileDataSource = new PreferenceListFileDataSource(directory, fileName);
 //        PreferenceList preferenceList = preferenceListFileDataSource.readData();
-//        // Import subsystemList from CSV
-//        SubSystemListFileDataSource subsystemListFileDataSource = new SubSystemListFileDataSource(directory, fileName);
-//        SubSystemList subsystemList = subsystemListFileDataSource.readData();
-        // Import UseCaseDetailList from CSV
-        UseCaseDetailListFileDataSource useCaseDetailListFileDataSource = new UseCaseDetailListFileDataSource(directory, fileName);
-        UseCaseDetailList useCaseDetailList = useCaseDetailListFileDataSource.readData();
-//        // Import UseCaseSystemList from CSV
+//        // Import subSystemList from CSV
+//        SubSystemListFileDataSource subSystemListFileDataSource = new SubSystemListFileDataSource(directory, fileName);
+//        SubSystemList subSystemList = subSystemListFileDataSource.readData();
+        // Import useCaseList from CSV
+        UseCaseListFileDataSource useCaseListFileDataSource = new UseCaseListFileDataSource(directory, fileName);
+        UseCaseList useCaseList = useCaseListFileDataSource.readData();
+//        // Import useCaseSystemList from CSV
 //        UseCaseSystemListFileDataSource useCaseSystemListFileDataSource = new UseCaseSystemListFileDataSource(directory, fileName);
 //        UseCaseSystemList useCaseSystemList = useCaseSystemListFileDataSource.readData();
 
-        //File writer
+        // File writer
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
         FileWriter writer = null;
@@ -122,21 +119,24 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
             writer = new FileWriter(file, StandardCharsets.UTF_8);
             buffer = new BufferedWriter(writer);
 
-            // Write ActorList to CSV
+//            // Write ActorList to CSV
 //            for (Actor actor : actorList.getActorList()) {
-//                buffer.write(actorListFileDataSource.createLine(actor));
+//                String line = actorListFileDataSource.createLine(actor);
+//                buffer.append(line);
 //                buffer.newLine();
 //            }
 //
-//            //Write ComponentPreferenceList to CSV
+//            // Write ComponentPreferenceList to CSV
 //            for (ComponentPreference componentPreference : componentPreferenceList.getComponentPreferenceList()) {
-//                buffer.write(componentPreferenceListFileDataSource.createLine(componentPreference));
+//                String line = componentPreferenceListFileDataSource.createLine(componentPreference);
+//                buffer.append(line);
 //                buffer.newLine();
 //            }
 //
-//            //Write ConnectionList to CSV
+//            // Write ConnectionList to CSV
 //            for (Connection connection : connectionList.getConnectionList()) {
-//                buffer.write(connectionListFileDataSource.createLine(connection));
+//                String line = connectionListFileDataSource.createLine(connection);
+//                buffer.append(line);
 //                buffer.newLine();
 //            }
 //
@@ -147,58 +147,59 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
 //                buffer.newLine();
 //            }
 //
-//            //Write PositionList to CSV
+//            // Write PositionList to CSV
 //            for (Position position : positionList.getPositionList()) {
-//                buffer.write(positionListFileDataSource.createLine(position));
+//                String line = positionListFileDataSource.createLine(position);
+//                buffer.append(line);
 //                buffer.newLine();
 //            }
 //
-//            //Write PreferenceList to CSV
+//            // Write PreferenceList to CSV
 //            for (Preference preference : preferenceList.getPreferenceList()) {
-//                buffer.write(preferenceListFileDataSource.createLine(preference));
+//                String line = preferenceListFileDataSource.createLine(preference);
+//                buffer.append(line);
 //                buffer.newLine();
 //            }
 //
-//            //Write SubsystemList to CSV
-//            for (SubSystem subsystem : subsystemList.getSubSystemList()) {
-//                buffer.write(subsystemListFileDataSource.createLine(subsystem));
+//            // Write SubSystemList to CSV
+//            for (SubSystem subSystem : subSystemList.getSubSystemList()) {
+//                String line = subSystemListFileDataSource.createLine(subSystem);
+//                buffer.append(line);
 //                buffer.newLine();
 //            }
 
             // Write UseCaseDetailList to CSV
             for (UseCaseDetail useCaseDetail : useCaseDetailList.getUseCaseDetailList()) {
-                buffer.write(useCaseDetailListFileDataSource.createLine(useCaseDetail));
+                buffer.write(createLine(useCaseDetail));
                 buffer.newLine();
             }
 
-            //Write useCaseList to CSV
+            // Write UseCaseList to CSV
             for (UseCase useCase : useCaseList.getUseCaseList()) {
-                buffer.write(createLine(useCase));
+                String line = useCaseListFileDataSource.createLine(useCase);
+                buffer.append(line);
                 buffer.newLine();
             }
-//
-//            //Write UseCaseSystemList to CSV
+
+//            // Write UseCaseSystemList to CSV
 //            for (UseCaseSystem useCaseSystem : useCaseSystemList.getSystemList()) {
-//                buffer.write(useCaseSystemListFileDataSource.createLine(useCaseSystem));
+//                String line = useCaseSystemListFileDataSource.createLine(useCaseSystem);
+//                buffer.append(line);
 //                buffer.newLine();
 //            }
 
             buffer.close();
-
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public String createLine(UseCase useCase) {
-        return "useCase" + ","
-                + useCase.getUseCaseID() + ","
-                + useCase.getUseCaseName() + ","
-                + useCase.getActor() + ","
-                + useCase.getDescription() + ","
-                + useCase.getPreCondition() + ","
-                + useCase.getPostCondition() + ","
-                + useCase.getNote() + ",";
+    public String createLine(UseCaseDetail useCaseDetail) {
+        return "useCaseDetail" + ","
+                + useCaseDetail.getUseCaseID() + ","
+                + useCaseDetail.getAction() + ","
+                + useCaseDetail.getNumber() + ","
+                + useCaseDetail.getDetail();
     }
 }

@@ -5,23 +5,28 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.UseCase;
+import ku.cs.testTools.Models.TestToolModels.UseCaseDetail;
+import ku.cs.testTools.Models.TestToolModels.UseCaseDetailList;
 import ku.cs.testTools.Models.TestToolModels.UseCaseList;
 import ku.cs.testTools.Services.DataSource;
+import ku.cs.testTools.Services.TestTools.UseCaseDetailListFileDataSource;
 import ku.cs.testTools.Services.TestTools.UseCaseListFileDataSource;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.net.URL;
+import java.util.*;
+import java.util.stream.Collectors;
+
 import ku.cs.testTools.Services.*;
 
-public class UseCaseAddController {
+public class UseCaseAddController implements Initializable {
 
     @FXML
     private ScrollPane actorActionScrollPane, systemActionScrollPane;
@@ -42,7 +47,7 @@ public class UseCaseAddController {
     private TextField onSearchField, onTestActorField, onTestNameField;
 
     @FXML
-    private ListView<?> onSearchList;
+    private ListView<String> onSearchList;
 
     @FXML
     private ComboBox<String> postConListComboBox;
@@ -57,6 +62,9 @@ public class UseCaseAddController {
     private UseCase useCase;
     private UseCaseList useCaseList;
     private DataSource<UseCaseList> useCaseListDataSource;
+    private UseCaseDetail useCaseDetail;
+    private UseCaseDetailList useCaseDetailList;
+    private DataSource<UseCaseDetailList> useCaseDetailListDataSource;
     private ObservableList<String> items;
     @FXML
     public void initialize() {
@@ -69,12 +77,12 @@ public class UseCaseAddController {
             // Read the data from the csv files
             useCaseListDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv");
             useCaseList = useCaseListDataSource.readData();
+            useCaseDetailListDataSource = new UseCaseDetailListFileDataSource(directory, projectName + ".csv");
+            useCaseDetailList = useCaseDetailListDataSource.readData();
 //            actorListFileDataSource = new ActorListFileDataSource(directory, projectName + ".csv");
 //            actorList = actorListFileDataSource.readData();
 //            positionListFileDataSource = new PositionListFileDataSource(directory, projectName + ".csv");
 //            positionList = positionListFileDataSource.readData();
-//            useCaseDetailListDataSource = new UseCaseDetailListFileDataSource(directory, projectName + ".csv");
-//            useCaseDetailList = useCaseDetailListDataSource.readData();
 
             // Find the use case by useCaseID
             useCase = useCaseList.findByUseCaseId(useCaseID);
@@ -87,106 +95,109 @@ public class UseCaseAddController {
             onPostConArea.setText(useCase.getPostCondition());
             onTestNoteArea.setText(useCase.getNote());
 
-//            if (!Objects.equals(useCase.getDescription(), "!@#$%^&*()_+")) {
-//                onDescriptArea.setText(useCase.getDescription());
-//            }
-//            if (!Objects.equals(useCase.getPreCondition(), "!@#$%^&*()_+")) {
-//                onPreConArea.setText(useCase.getPreCondition());
-//            }
-//            if (!Objects.equals(useCase.getActor(), 0)) {
-//                onTestActorField.setText(useCase.getActor());
-//                // load actorID to actorTextField
-//                // split the actorID by "/" and get the actorName from the actorList
-//                String[] actorIDs = useCase.getActor().split("/");
-//                // find each actor by actorID and add the actorName to the actorTextField
-//                for (String actorID : actorIDs) {
-//                    Actor actor = actorList.findByActorId(Integer.parseInt(actorID));
-//                    if (actor != null) {
-//                        if (actorTextField.getText().isEmpty()) {
-//                            actorTextField.setText(actor.getActorName());
-//                        } else {
-//                            actorTextField.appendText("/" + actor.getActorName());
-//                        }
-//                    }
-//                }
-//            }
-//            if (!Objects.equals(useCase.getPostCondition(), "!@#$%^&*()_+")) {
-//                postConditionTextField.setText(useCase.getPostCondition());
-//            }
-//
-//            if (!Objects.equals(useCase.getNote(), "!@#$%^&*()_+")) {
-//                noteTextArea.setText(useCase.getNote());
-//            }
+            if (!Objects.equals(useCase.getDescription(), "!@#$%^&*()_+")) {
+                onDescriptArea.setText(useCase.getDescription());
+            }
+            if (!Objects.equals(useCase.getPreCondition(), "!@#$%^&*()_+")) {
+                onPreConArea.setText(useCase.getPreCondition());
+            }
+            if (!Objects.equals(useCase.getActor(), "!@#$%^&*()_+")) {
+                onTestActorField.setText(useCase.getActor());
+            }
+            if (!Objects.equals(useCase.getPostCondition(), "!@#$%^&*()_+")) {
+                onPostConArea.setText(useCase.getPostCondition());
+            }
+            if (!Objects.equals(useCase.getNote(), "!@#$%^&*()_+")) {
+                onTestNoteArea.setText(useCase.getNote());
+            }
 
             // load useCaseDetail to the actorActionVBox and systemActionVBox
-//            for (UseCaseDetail useCaseDetail : useCaseDetailList.getUseCaseDetailList()) {
-//                if (useCaseDetail.getUseCaseID() == useCase.getUseCaseID()) {
-//                    if (useCaseDetail.getType().equals("actor")) {
-//                        HBox hBox = new HBox();
-//                        TextArea textArea = new TextArea();
-//                        textArea.setPrefHeight(20);
-//                        textArea.setWrapText(true);
-//                        textArea.setText(useCaseDetail.getDetail());
+            for (UseCaseDetail useCaseDetail : useCaseDetailList.getUseCaseDetailList()) {
+                if (useCaseDetail.getUseCaseID() == useCase.getUseCaseID()) {
+                    if (useCaseDetail.getAction().equals("actor")) {
+                        HBox hBox = new HBox();
+                        TextArea textArea = new TextArea();
+                        textArea.setMinSize(480, 50);
+                        textArea.setMaxSize(480, 50);
+                        textArea.setStyle("-fx-font-size: 14px;");
+                        textArea.setWrapText(true);
+                        textArea.setText(useCaseDetail.getDetail());
 //                        textArea.textProperty().addListener((observable, oldValue, newValue) -> {
 //                            textArea.setPrefHeight(textArea.getText().split("\n").length * 20);
 //                        });
-//                        Button deleteButton = new Button("-");
-//                        deleteButton.setPrefHeight(20);
-//                        deleteButton.setOnAction(event -> {
-//                            actorActionVBox.getChildren().remove(hBox);
-//                        });
-//                        hBox.getChildren().add(textArea);
-//                        hBox.getChildren().add(deleteButton);
-//                        actorActionVBox.getChildren().add(hBox);
-//                    } else if (useCaseDetail.getType().equals("system")) {
-//                        HBox hBox = new HBox();
-//                        TextArea textArea = new TextArea();
-//                        textArea.setPrefHeight(20);
-//                        textArea.setWrapText(true);
-//                        textArea.setText(useCaseDetail.getDetail());
+                        Button deleteButton = new Button("-");
+                        deleteButton.setPrefHeight(30);
+                        deleteButton.setPrefWidth(28);
+                        deleteButton.setOnAction(event -> {
+                            actorActionVBox.getChildren().remove(hBox);
+                        });
+                        hBox.getChildren().add(textArea);
+                        hBox.getChildren().add(deleteButton);
+                        actorActionVBox.getChildren().add(hBox);
+                    } else if (useCaseDetail.getAction().equals("system")) {
+                        HBox hBox = new HBox();
+                        TextArea textArea = new TextArea();
+                        textArea.setMinSize(480, 50);
+                        textArea.setMaxSize(480, 50);
+                        textArea.setStyle("-fx-font-size: 14px;");
+                        textArea.setWrapText(true);
+                        textArea.setText(useCaseDetail.getDetail());
 //                        textArea.textProperty().addListener((observable, oldValue, newValue) -> {
 //                            textArea.setPrefHeight(textArea.getText().split("\n").length * 20);
 //                        });
-//                        Button deleteButton = new Button("-");
-//                        deleteButton.setPrefHeight(20);
-//                        deleteButton.setOnAction(event -> {
-//                            systemActionVBox.getChildren().remove(hBox);
-//                        });
-//                        hBox.getChildren().add(textArea);
-//                        hBox.getChildren().add(deleteButton);
-//                        systemActionVBox.getChildren().add(hBox);
-//                    }
-//                }
-//            }
+                        Button deleteButton = new Button("-");
+                        deleteButton.setPrefHeight(30);
+                        deleteButton.setPrefWidth(28);
+                        deleteButton.setOnAction(event -> {
+                            systemActionVBox.getChildren().remove(hBox);
+                        });
+                        hBox.getChildren().add(textArea);
+                        hBox.getChildren().add(deleteButton);
+                        systemActionVBox.getChildren().add(hBox);
+                    }
+                }
+            }
         }
         items = FXCollections.observableArrayList(
                 "Apple", "Banana", "Orange", "Mango", "Pineapple", "Strawberry"
         );
 
-        // Set the items once at the start
         preConListComboBox.setItems(items);
         preConListComboBox.getEditor().end();
 
         new AutoCompleteComboBoxListener<>(preConListComboBox);
+        TextField editorPre = preConListComboBox.getEditor();
 
-//
-//        // Get the editor (TextField) from the ComboBox
-        TextField editor = preConListComboBox.getEditor();
-
-//        // Action when an item is selected
         preConListComboBox.setOnAction(event -> {
             String selectedItem = preConListComboBox.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
-                editor.setText(selectedItem); // Set selected item in editor
+                editorPre.setText(selectedItem);
                 //editor.setEditable(true);
-                editor.requestFocus();// Ensure the editor remains editable
-                // Move cursor to the end
-                Platform.runLater(editor::end);
-            }
+                editorPre.requestFocus();
 
+                Platform.runLater(editorPre::end);
+            }
+        });
+
+        postConListComboBox.setItems(items);
+        postConListComboBox.getEditor().end();
+
+        new AutoCompleteComboBoxListener<>(postConListComboBox);
+        TextField editorPost = postConListComboBox.getEditor();
+
+        postConListComboBox.setOnAction(event -> {
+            String selectedItem = postConListComboBox.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                editorPost.setText(selectedItem);
+                //editor.setEditable(true);
+                editorPost.requestFocus();
+
+                Platform.runLater(editorPost::end);
+            }
         });
 
     }
+
 
     @FXML
     void handleAddActorActionButton(ActionEvent actionEvent) {
@@ -199,6 +210,7 @@ public class UseCaseAddController {
                 return;
             }
         }
+
         errorLabel.setText("");
         // Create a new HBox to hold the textArea and delete button
         HBox hBox = new HBox();
@@ -374,12 +386,35 @@ public class UseCaseAddController {
         }
     }
 
+    ArrayList<String> words = new ArrayList<>(
+            Arrays.asList("test", "dog","Human", "Days of our life", "The best day",
+                    "Friends", "Animal", "Human", "Humans", "Bear", "Life",
+                    "This is some text", "Words", "222", "Bird", "Dog", "A few words",
+                    "Subscribe!", "SoftwareEngineeringStudent", "You got this!!",
+                    "Super Human", "Super", "Like")
+    );
+
     @FXML
     void onSearchButton(ActionEvent event) {
-
+        onSearchList.getItems().clear();
+        onSearchList.getItems().addAll(searchList(onSearchField.getText(),words));
     }
 
-//    private int currentID = 1;
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        onSearchList.getItems().addAll(words);
+    }
+
+    private List<String> searchList(String searchWords, List<String> listOfStrings) {
+
+        List<String> searchWordsArray = Arrays.asList(searchWords.trim().split(" "));
+
+        return listOfStrings.stream().filter(input -> {
+            return searchWordsArray.stream().allMatch(word ->
+                    input.toLowerCase().contains(word.toLowerCase()));
+        }).collect(Collectors.toList());
+    }
+
     @FXML
     void onSubmitButton(ActionEvent event) {
 //        if (!onTestNameField.getText().isEmpty()) {
@@ -542,10 +577,7 @@ public class UseCaseAddController {
 
     @FXML
     void preConListComboBox(ActionEvent event) {
-        String selectedItem = preConListComboBox.getSelectionModel().getSelectedItem();
-        if (selectedItem != null) {
-            System.out.println("Selected: " + selectedItem);
-        }
+
     }
 
 }
