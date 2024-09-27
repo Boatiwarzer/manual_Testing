@@ -62,7 +62,6 @@
             <artifactId>controlsfx</artifactId>
             <version>11.1.0</version> <!-- Ensure compatibility with JavaFX -->
         </dependency>
-
     </dependencies>
 
     <build>
@@ -85,10 +84,10 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>ku.cs.testTools.Main</mainClass>
-                            <options>
-                                <option>--add-exports</option>
-                                <option>javafx.base/com.sun.javafx.event=org.controlsfx.controls</option>
-                            </options>
+                            <jvmArgs>
+                                <jvmArg>--add-opens</jvmArg>
+                                <jvmArg>javafx.base/com.sun.javafx.event=org.controlsfx.controls</jvmArg>
+                            </jvmArgs>
                             <javafxModules>
                                 <javafxModule>javafx.controls</javafxModule>
                                 <javafxModule>javafx.fxml</javafxModule>
@@ -98,7 +97,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
 </project>
