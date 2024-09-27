@@ -260,6 +260,14 @@ public class TestScriptAddController {
                 // showInfo(newValue);
             }
         });
+        onTableTestscript.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) { // When TableView loses focus
+                onTableTestscript.getSelectionModel().clearSelection(); // Clear selection
+                selectedItem = null; // Optionally reset selectedItem
+                onEditListButton.setVisible(false); // Hide buttons
+                onDeleteListButton.setVisible(false); // Hide buttons
+            }
+        });
     }
 
 
