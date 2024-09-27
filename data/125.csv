@@ -1,7 +1,20 @@
 testScript,57486981556,1,26-09-2024,None,Label,None,Label,1
 testScriptDetail,38688043892,2,2,None,2,57486981556
 testScript,83365527086,1,27-09-2024,None,Label,None,Label,1
-testScriptDetail,31771020272,1,1,None,1,83365527086
+testScriptDetail,31771020272,6,3,None,1,83365527086
 
 testScript,56812934230,1,27-09-2024,None,Label,None,Label,1
-testScriptDetail,50300282661,1,1,None,1,56812934230
+testScriptDetail,50300282661,8,1,None,1,56812934230
+testScript,50700593715,1,27-09-2024,None,Label,None,Label,1
+testScriptDetail,71208773084,7,1,None,3,50700593715
+testScript,91033921386,Login,27-09-2024,None,Label,None,Label,xx
+testScriptDetail,51607516263,001,go to,None,Show,91033921386
+testScriptDetail,62294472185,002,click,None,click,91033921386
+testScript,67050186536,333,27-09-2024,None,Label,None,Label,1
+testScriptDetail,62532384032,12,12,None,12,67050186536
+testScript,28097033063,HAAA,27-09-2024,None,Label,None,Label,a
+testScriptDetail,80382411816,ff,f,None,ff,28097033063
+testScript,37700238396,2,27-09-2024,None,Label,None,Label,2
+testScriptDetail,14972196521,2,3,None,4,37700238396
+testScript,29586466098,135,27-09-2024,None,Label,None,Label,5
+testScriptDetail,50484536094,1,1,None,1,29586466098

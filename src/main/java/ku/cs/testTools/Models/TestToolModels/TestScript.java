@@ -92,6 +92,11 @@ public class TestScript {
     }
 
     @Override
+    public String toString() {
+        return idTS + " : " + nameTS;
+    }
+
+    @Override
     public final int hashCode() {
         return getClass().hashCode();
     }

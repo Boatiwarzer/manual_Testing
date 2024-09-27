@@ -2,10 +2,13 @@ package ku.cs.testTools.Models.TestToolModels;
 
 import jakarta.persistence.Entity;
 import ku.cs.testTools.Models.UsecaseModels.Actor;
+import ku.cs.testTools.Services.TestScriptComparable;
 import lombok.Data;
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 @Data
 public class TestScriptList {
@@ -59,5 +62,9 @@ public class TestScriptList {
                 break; // Exit after removing the first match
             }
         }
+    }
+
+    public void sort(Comparator<TestScript> cmp) {
+        Collections.sort(testScriptList, cmp);
     }
 }
