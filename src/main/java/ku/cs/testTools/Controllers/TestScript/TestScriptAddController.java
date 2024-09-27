@@ -16,6 +16,8 @@ import ku.cs.testTools.Services.TestTools.TestScriptDetailFIleDataSource;
 import ku.cs.testTools.Services.TestTools.TestScriptFileDataSource;
 
 import javafx.beans.value.ChangeListener;
+import org.controlsfx.control.textfield.TextFields;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -69,10 +71,10 @@ public class TestScriptAddController {
     private TableView<TestScriptDetail> onTableTestscript;
 
     @FXML
-    private TextField onTestNameField;
+    private TextField onTestNameField = TextFields.createClearableTextField();;
 
     @FXML
-    private TextField onTestNoteField;
+    private TextField onTestNoteField = TextFields.createClearableTextField();;
 
     @FXML
     private ComboBox<String> onTestcaseCombobox;

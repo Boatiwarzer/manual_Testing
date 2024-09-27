@@ -54,7 +54,7 @@ public class TestCaseController {
     private Button onSearchButton;
 
     @FXML
-    private TextField onSearchField;
+    private TextField onSearchField ;
 
     @FXML
     private ListView<String> onSearchList;
