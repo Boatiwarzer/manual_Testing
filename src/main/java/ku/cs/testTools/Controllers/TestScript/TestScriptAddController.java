@@ -1,9 +1,9 @@
 package ku.cs.testTools.Controllers.TestScript;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -13,21 +13,17 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
-import ku.cs.testTools.Models.UsecaseModels.UseCase;
 import ku.cs.testTools.Services.*;
 import ku.cs.testTools.Services.TestTools.TestScriptDetailFIleDataSource;
 import ku.cs.testTools.Services.TestTools.TestScriptFileDataSource;
 
-import javafx.beans.value.ChangeListener;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class TestScriptAddController {
 
@@ -93,16 +89,19 @@ public class TestScriptAddController {
 
     @FXML
     private Button onEditListButton;
+    private ArrayList <String> word = new ArrayList<>();
+
 
     @FXML
     private Label testIDLabel;
     private String tsId;
     private String projectName = "125", directory = "data";
-    private final TestScriptList testScriptList = new TestScriptList();
+    private  TestScriptList testScriptList = new TestScriptList();
     //private ArrayList<Object> objects = (ArrayList) FXRouter.getData();
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
     private TestScriptDetail selectedItem;
     private TestScript testScript;
+    private TestScript selectedTestScript;
     private static int idCounter = 1; // Counter for sequential IDs
     private static final int MAX_ID = 999; // Upper limit for IDs
     private static Set<String> usedIds = new HashSet<>(); // Set to store used IDs
@@ -120,17 +119,59 @@ public class TestScriptAddController {
                 testScriptDetailList = (TestScriptDetailList) FXRouter.getData();
                 loadTable(testScriptDetailList);
                 testScript = (TestScript) FXRouter.getData2();
-                selected();
+                selectedTSD();
+                selectedListView();
                 setDataTS();
+                if (testScriptListDataSource.readData() != null && testScriptDetailListListDataSource.readData() != null){
+                    testScriptList = testScriptListDataSource.readData();
+                    loadListView(testScriptList);
+                    for (TestScript testScript : testScriptList.getTestScriptList()) {
+                        word.add(testScript.getNameTS());
+                    }
+                    searchSet();
+                }
             }
             else{
                 setTable();
                 randomId();
                 System.out.println(tsId);
+                if (testScriptListDataSource.readData() != null && testScriptDetailListListDataSource.readData() != null){
+                    testScriptList = testScriptListDataSource.readData();
+                    loadListView(testScriptList);
+                    selectedTSD();
+                    for (TestScript testScript : testScriptList.getTestScriptList()) {
+                        word.add(testScript.getNameTS());
+                    }
+                    searchSet();
+                }
 
             }
         }
         System.out.println(testScriptDetailList);
+
+    }
+
+    private void selectedListView() {
+        if (testScript != null){
+            onSearchList.getSelectionModel().select(testScript);
+            onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue == null) {
+                    selectedTestScript = null;
+                } else{
+                    selectedTestScript = newValue;
+                }
+            });
+
+        }else {
+            onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue == null) {
+                    selectedTestScript = null;
+                } else {
+                    selectedTestScript = newValue;
+                }
+            });
+
+        }
     }
 
     private void setDataTS() {
@@ -161,31 +202,60 @@ public class TestScriptAddController {
         selectedItem = null;
         FXRouter.setData3(null);
     }
+    private void searchSet() {
+        ArrayList <String> word = new ArrayList<>();
+        for (TestScript testScript : testScriptList.getTestScriptList()) {
+            word.add(testScript.getNameTS());
 
-    //    public void loadTable() {
-//        onTableTestscript.getColumns().clear();
-//        onTableTestscript.refresh();
-//
-//        for (TestScriptDetail testScriptDetail: testScriptDetailList.getTestScriptDetailList()) {
-//            onTableTestscript.getItems().add(testScriptDetail);
-//
-//        }
-//        ArrayList<StringConfiguration> configs = new ArrayList<>();
-//        //configs.add(new StringConfiguration("title:ชื่อวัสดุ", "field:name"));
-//        //configs.add(new StringConfiguration("title:หมวดหมู่", "field:categoryMaterial"));
-//        configs.add(new StringConfiguration("title:Test No.", "field:testNo"));
-//        configs.add(new StringConfiguration("title:Test Step.", "field:steps"));
-//        configs.add(new StringConfiguration("title:Input Data.", "field:inputData"));
-//        configs.add(new StringConfiguration("title:Expected Result.", "field:expected"));
-//
-//
-//        for (StringConfiguration conf: configs) {
-//            TableColumn col = new TableColumn(conf.get("title"));
-//            col.setPrefWidth(150);
-//            col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
-//            onTableTestscript.getColumns().add(col);
-//        }
-//    }
+        }
+        System.out.println(word);
+
+        TextFields.bindAutoCompletion(onSearchField,word);
+        onSearchField.setOnKeyPressed(keyEvent -> {
+            if (Objects.requireNonNull(keyEvent.getCode()) == KeyCode.ENTER) {
+                onSearchList.getItems().clear();
+                onSearchList.getItems().addAll(searchList(onSearchField.getText(), testScriptList.getTestScriptList()));
+            }
+        });
+    }
+    private void loadListView(TestScriptList testScriptList) {
+        onSearchList.refresh();
+        if (testScriptList != null){
+            testScriptList.sort(new TestScriptComparable());
+            for (TestScript testScript : testScriptList.getTestScriptList()) {
+                if (!testScript.getDateTS().equals("null")){
+                    onSearchList.getItems().add(testScript);
+
+                }
+            }
+        }else {
+            setTable();
+            clearInfo();
+        }
+    }
+    @FXML
+    void onSearchButton(ActionEvent event) {
+        onSearchList.getItems().clear();
+        onSearchList.getItems().addAll(searchList(onSearchField.getText(),testScriptList.getTestScriptList()));
+    }
+
+    private List<TestScript> searchList(String searchWords, ArrayList<TestScript> listOfScripts) {
+
+        // Split searchWords into a list of individual words
+        List<String> searchWordsArray = Arrays.asList(searchWords.trim().split("\\s+"));
+
+        // Filter the list of TestScript objects
+        return listOfScripts.stream()
+                .filter(testScript ->
+                        searchWordsArray.stream().allMatch(word ->
+                                // Check if any relevant field in TestScript contains the search word (case insensitive)
+                                testScript.getIdTS().toLowerCase().contains(word.toLowerCase()) ||
+                                        testScript.getNameTS().toLowerCase().contains(word.toLowerCase())
+
+                        )
+                )
+                .collect(Collectors.toList());  // Return the filtered list
+    }
     public void loadTable(TestScriptDetailList testScriptDetailList) {
         // Clear existing columns
         new TableviewSet<>(onTableTestscript);
@@ -274,7 +344,7 @@ public class TestScriptAddController {
             idCounter = 1; // Reset the counter back to 1 if needed
         }
     }
-    void selected() {
+    void selectedTSD() {
         onTableTestscript.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null) {
                 selectedItem = null;
@@ -461,13 +531,6 @@ public class TestScriptAddController {
         }
     }
 
-
-
-    @FXML
-    void onSearchButton(ActionEvent event) {
-
-    }
-
     @FXML
     void onSubmitButton(ActionEvent event) {
         // Validate fields
@@ -542,16 +605,6 @@ public class TestScriptAddController {
 
     }
 
-
-
-    private void loadProject() {
-        testScriptList.clear();
-
-        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-        testScriptListDataSource.readData();
-        DataSource<TestScriptDetailList> testScriptDetailFIleDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-        testScriptDetailFIleDataSource.readData();
-    }
     private void selectedComboBox(){
         onTestcaseCombobox.setItems(FXCollections.observableArrayList("None"));
         new AutoCompleteComboBoxListener<>(onTestcaseCombobox);

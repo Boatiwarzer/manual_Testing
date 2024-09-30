@@ -30,20 +30,32 @@ public class PopupDeleteController {
     void initialize() {
         if (FXRouter.getData() != null) {
             testScriptDetailList = (TestScriptDetailList) FXRouter.getData();
-            idTS = (String) FXRouter.getData2();
+            testScript = (TestScript) FXRouter.getData2();
+            idTS = testScript.getIdTS();
             if (FXRouter.getData3() != null){
                 testScriptDetail = (TestScriptDetail) FXRouter.getData3();
                 testScriptDetailList.findTSById(testScriptDetail.getIdTSD());
                 id = testScriptDetail.getIdTSD();
             }
+
+
         }
 
     }
     @FXML
-    void onCancelButton(ActionEvent actionEvent) {
-        Node source = (Node) actionEvent.getSource();
-        Stage stage = (Stage) source.getScene().getWindow();
-        stage.close();
+    void onCancelButton(ActionEvent event) {
+        try {
+            testScriptDetail = null;
+            FXRouter.goTo("test_script_add", testScriptDetailList, testScript);
+            System.out.println(testScriptDetail);
+            Node source = (Node) event.getSource();
+            Stage stage = (Stage) source.getScene().getWindow();
+            stage.close();
+            System.out.println(testScriptDetailList);
+        } catch (IOException e) {
+            System.err.println("ไปที่หน้า home ไม่ได้");
+            System.err.println("ให้ตรวจสอบการกำหนด route");
+        }
 
     }
 
@@ -51,7 +63,6 @@ public class PopupDeleteController {
     void onDeleteButton(ActionEvent event) {
         testScriptDetailList.deleteTestScriptDetail(testScriptDetail);
         try {
-            testScriptDetail = null;
             FXRouter.goTo("test_script_add",testScriptDetailList);
             Node source = (Node) event.getSource();
             Stage stage = (Stage) source.getScene().getWindow();

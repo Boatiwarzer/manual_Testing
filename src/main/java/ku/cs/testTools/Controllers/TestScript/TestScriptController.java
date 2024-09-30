@@ -100,6 +100,10 @@ public class TestScriptController {
             testScript = (TestScript) FXRouter.getData();
             loadListView(testScriptList);
             selected();
+            for (TestScript testScript : testScriptList.getTestScriptList()) {
+                word.add(testScript.getNameTS());
+            }
+            searchSet();
 
         } else {
             setTable();
@@ -108,25 +112,16 @@ public class TestScriptController {
                 testScriptDetailList = testScriptDetailListListDataSource.readData();
                 loadListView(testScriptList);
                 selected();
+                for (TestScript testScript : testScriptList.getTestScriptList()) {
+                    word.add(testScript.getNameTS());
+                }
+                searchSet();
             }
 
 
         }
-        for (TestScript testScript : testScriptList.getTestScriptList()) {
-            word.add(testScript.getNameTS());
-        }
-        searchSet();
-    }
-    private List<String> convertToStringList(ArrayList<TestScript> testScriptList) {
-        return testScriptList.stream()
-                .map(testScript ->
-                        testScript.getIdTS() + ", " +
-                                testScript.getNameTS()
-                )
-                .collect(Collectors.toList());  // Collect the resulting strings into a list
-    }
 
-
+    }
     private void searchSet() {
         ArrayList <String> word = new ArrayList<>();
         for (TestScript testScript : testScriptList.getTestScriptList()) {
@@ -152,22 +147,20 @@ public class TestScriptController {
                     clearInfo();
                     selectedTestScript = null;
                 } else{
+                    onEditButton.setVisible(newValue.getIdTS() != null);
                     showInfo(newValue);
                     selectedTestScript = newValue;
                 }
             });
 
         }else {
-            onSearchList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TestScript>() {
-                @Override
-                public void changed(ObservableValue<? extends TestScript> observable, TestScript oldValue, TestScript newValue) {
-                    if (newValue == null) {
-                        clearInfo();
-                        selectedTestScript = null;
-                    } else {
-                        showInfo(newValue);
-                        selectedTestScript = newValue;
-                    }
+            onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue == null) {
+                    clearInfo();
+                    selectedTestScript = null;
+                } else {
+                    showInfo(newValue);
+                    selectedTestScript = newValue;
                 }
             });
 
@@ -352,7 +345,7 @@ public class TestScriptController {
     @FXML
     void onEditButton(ActionEvent event) {
         try {
-            FXRouter.goTo("test_script_edit");
+            FXRouter.goTo("test_script_edit",selectedTestScript);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
