@@ -5,9 +5,12 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Models.UsecaseModels.UseCase;
@@ -23,6 +26,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class TestScriptAddController {
@@ -112,7 +116,7 @@ public class TestScriptAddController {
         setButtonVisible();
         {
             if (FXRouter.getData() != null) {
-
+                onTableTestscript.isFocused();
                 testScriptDetailList = (TestScriptDetailList) FXRouter.getData();
                 loadTable(testScriptDetailList);
                 testScript = (TestScript) FXRouter.getData2();
@@ -288,12 +292,16 @@ public class TestScriptAddController {
                 // showInfo(newValue);
             }
         });
+        // Listener สำหรับ focusedProperty ของ TableView
         onTableTestscript.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) { // When TableView loses focus
-                onTableTestscript.getSelectionModel().clearSelection(); // Clear selection
-                selectedItem = null; // Optionally reset selectedItem
-                onEditListButton.setVisible(false); // Hide buttons
-                onDeleteListButton.setVisible(false); // Hide buttons
+            if (!newValue) { // เมื่อ TableView สูญเสีย focus
+                // เช็คว่า focus มาจากปุ่มที่กดหรือไม่
+                if (!onEditListButton.isPressed() && !onDeleteListButton.isPressed()) {
+                    onTableTestscript.getSelectionModel().clearSelection(); // เคลียร์การเลือก
+                    //selectedItem = null; // อาจจะรีเซ็ต selectedItem
+                    onEditListButton.setVisible(false); // ซ่อนปุ่ม
+                    onDeleteListButton.setVisible(false); // ซ่อนปุ่ม
+                }
             }
         });
     }
@@ -327,6 +335,23 @@ public class TestScriptAddController {
     }
     @FXML
     void onEditListButton(ActionEvent event)  {
+        onEditListButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                // ทำการแก้ไข
+                // ...
+
+                // ขอ focus กลับไปที่ TableView
+                onTableTestscript.requestFocus();
+            }
+        });
+        onEditListButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                onTableTestscript.requestFocus();
+
+            }
+        });
         try {
             String name = onTestNameField.getText();
             String idTS = tsId;
@@ -347,7 +372,18 @@ public class TestScriptAddController {
     }
     @FXML
     void onDeleteListButton(ActionEvent event) {
+        onDeleteListButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                // ทำการลบ
+                // ...
+
+                // ขอ focus กลับไปที่ TableView
+                onTableTestscript.requestFocus();
+            }
+        });
         try {
+            onTableTestscript.requestFocus();
             String name = onTestNameField.getText();
             String idTS = tsId;
             String date = testDateLabel.getText();

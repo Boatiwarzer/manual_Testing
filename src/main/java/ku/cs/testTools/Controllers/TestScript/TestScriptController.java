@@ -183,7 +183,7 @@ public class TestScriptController {
         String date = testScript.getDateTS();
         testDateLabel.setText(date);
         String useCase = testScript.getUseCase();
-        onClickUsecase.setText(useCase);
+        infoUsecaseLabel.setText(useCase);
         String description = testScript.getDescriptionTS();
         infoDescriptLabel.setText(description);;
         String tc = testScript.getTestCase();
