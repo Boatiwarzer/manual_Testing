@@ -310,7 +310,10 @@ public class TestScriptEditController {
 
         //Add items to the table
         for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()) {
-            onTableTestscript.getItems().add(testScriptDetail);
+            if (testScriptDetail.getIdTS().equals(testScript.getIdTS())){
+                onTableTestscript.getItems().add(testScriptDetail);
+            }
+
         }
         //ObservableList<TestScriptDetail> data = FXCollections.observableArrayList(testScriptDetailList.getTestScriptDetailList());
         //onTableTestscript.getItems().addAll(data);
