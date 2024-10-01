@@ -216,6 +216,7 @@ public class TestScriptController {
 
     }
     private void loadListView(TestScriptList testScriptList) {
+        onEditButton.setVisible(false);
         onSearchList.refresh();
         if (testScriptList != null){
             testScriptList.sort(new TestScriptComparable());

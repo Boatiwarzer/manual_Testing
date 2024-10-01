@@ -97,6 +97,7 @@ public class TestScriptEditController {
     private TestScriptList testScriptList = new TestScriptList();
     //private ArrayList<Object> objects = (ArrayList) FXRouter.getData();
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
+    private TestScriptDetailList testScriptDetailListTemp = new TestScriptDetailList();
     private TestScriptDetail selectedItem;
     private TestScript testScript;
     private TestScript selectedTestScript;
@@ -122,7 +123,12 @@ public class TestScriptEditController {
                 setDataTS();
                 if (testScriptListDataSource.readData() != null && testScriptDetailListListDataSource.readData() != null){
                     testScriptList = testScriptListDataSource.readData();
-                    testScriptDetailList = testScriptDetailListListDataSource.readData();
+                    testScriptDetailListTemp = testScriptDetailListListDataSource.readData();
+                    for (TestScriptDetail testScriptDetail : testScriptDetailListTemp.getTestScriptDetailList()) {
+                        if (testScript.getIdTS().trim().equals(testScriptDetail.getIdTS().trim())){
+                            testScriptDetailList.addOrUpdateTestScriptDetail(testScriptDetail);
+                        }
+                    }
                     loadTable(testScriptDetailList);
                     loadListView(testScriptList);
                     for (TestScript testScript : testScriptList.getTestScriptList()) {
@@ -310,7 +316,7 @@ public class TestScriptEditController {
 
         //Add items to the table
         for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()) {
-            if (testScriptDetail.getIdTS().equals(testScript.getIdTS())){
+            if (testScriptDetail.getIdTS().trim().equals(testScript.getIdTS().trim())){
                 onTableTestscript.getItems().add(testScriptDetail);
             }
 
@@ -539,7 +545,7 @@ public class TestScriptEditController {
 
         // Write data to respective files
         testScriptListDataSource.writeData(testScriptList);
-        testScriptDetailListListDataSource.writeData(testScriptDetailList);
+        testScriptDetailListListDataSource.writeData(testScriptDetailListTemp);
 
         // Show success message
         showAlert("Success", "Test script saved successfully!");
