@@ -558,21 +558,11 @@ public class TestScriptEditController {
     }
     @FXML
     void onDeleteButton(ActionEvent event) {
-        onDeleteListButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                // ทำการลบ
-                // ...
-
-                // ขอ focus กลับไปที่ TableView
-                onTableTestscript.requestFocus();
-            }
-        });
         try {
             testScriptList.deleteTestScript(testScript);
             testScriptListDataSource.writeData(testScriptList);
             if (testScript != null){
-                FXRouter.popup("popup_delete",testScriptList,true);
+                FXRouter.popup("popup_delete",null,testScript,true);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
