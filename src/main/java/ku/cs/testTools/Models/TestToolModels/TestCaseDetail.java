@@ -2,6 +2,7 @@ package ku.cs.testTools.Models.TestToolModels;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import lombok.*;
 
 import java.util.Objects;
@@ -14,8 +15,12 @@ import java.util.Objects;
 public class TestCaseDetail {
     @Id
     private String idTCD;
+    private String testNo;
     private String nameTCD;
     private String variableTCD;
+    @ManyToOne
+    private TestCase testCase;
+    private String idTC;
 
     @Override
     public final boolean equals(Object o) {
@@ -28,5 +33,8 @@ public class TestCaseDetail {
     @Override
     public final int hashCode() {
         return getClass().hashCode();
+    }
+    public boolean isId(String id) {
+        return this.idTCD.equals(id);
     }
 }

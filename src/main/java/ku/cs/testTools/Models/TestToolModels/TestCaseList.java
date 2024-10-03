@@ -1,11 +1,12 @@
 package ku.cs.testTools.Models.TestToolModels;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.ArrayList;
-@Getter
-@Setter
+import java.util.Collections;
+import java.util.Comparator;
+
+@Data
 public class TestCaseList {
     private ArrayList<TestCase> testCaseList;
 
@@ -21,47 +22,52 @@ public class TestCaseList {
         testCaseList.remove(testCase);
     }
 
-    public ArrayList<TestCase> getTestCaseList() {
-        return testCaseList;
-    }
-
-    public void setTestCaseList(ArrayList<TestCase> testCaseList) {
-        this.testCaseList = testCaseList;
-    }
-
-//    public UseCaseDetail getUseCaseDetail(int useCaseID) {
-//        for (UseCaseDetail useCaseDetail : useCaseDetailList) {
-//            if (useCaseDetail.getUseCaseID() == useCaseID) {
-//                return useCaseDetail;
-//            }
-//        }
-//        return null;
-//    }
-//
-//    public UseCaseDetail findByUseCaseId(int useCaseId) {
-//        for (UseCaseDetail useCaseDetail : useCaseDetailList) {
-//            if (useCaseDetail.getUseCaseID() == useCaseId) {
-//                return useCaseDetail;
-//            }
-//        }
-//        return null;
-//    }
-//
-//    public UseCaseDetail findByNumber (int number) {
-//        for (UseCaseDetail useCaseDetail : useCaseDetailList) {
-//            if (useCaseDetail.getNumber() == number) {
-//                return useCaseDetail;
-//            }
-//        }
-//        return null;
-//    }
-
     public void clear() {
         testCaseList.clear();
     }
+    public TestCase findTCById(String id) {
+        for (TestCase testCase : testCaseList) {
+            if (testCase.isId(id) ) {
+                return testCase;
+            }
+        }
+        return null;
+    }
+    public void addOrUpdateTestCase(TestCase testCase) {
+        boolean exists = false;
 
-    // clear use case detail that contains use Case ID
-//    public void clearUseCaseDetail(int useCaseID) {
-//        testCaseList.removeIf(useCaseDetail -> useCaseDetail.getUseCaseID() == useCaseID);
-//    }
+        // Iterate through the list to check for an existing item with the same ID
+        for (int i = 0; i < testCaseList.size(); i++) {
+            TestCase existing = testCaseList.get(i);
+
+            if (existing.isId(testCase.getIdTC())) {
+                // Update existing item
+                testCaseList.set(i, testCase);
+                exists = true;
+                break;
+            }
+        }
+
+        // If the item does not exist, add it to the list
+        if (!exists) {
+            testCaseList.add(testCase);
+        }
+    }
+    public void deleteTestCase(TestCase testCase) {
+        // Iterate through the list to find the item to delete
+        for (int i = 0; i < testCaseList.size(); i++) {
+            TestCase existing = testCaseList.get(i);
+            if (existing.isId(testCase.getIdTC())) {
+                // Remove the item from the list
+                testCaseList.remove(i);
+                break; // Exit after removing the first match
+            }
+        }
+    }
+    public void sort(Comparator<TestCase> cmp) {
+        testCaseList.sort(cmp);
+    }
+
+
+
 }

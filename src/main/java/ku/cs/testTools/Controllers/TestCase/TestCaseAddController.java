@@ -12,8 +12,17 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
+import ku.cs.testTools.Models.TestToolModels.*;
+import ku.cs.testTools.Services.DataSource;
+import ku.cs.testTools.Services.TestTools.TestCaseDetailFileDataSource;
+import ku.cs.testTools.Services.TestTools.TestCaseFileDataSource;
+import ku.cs.testTools.Services.TestTools.TestScriptDetailFIleDataSource;
+import ku.cs.testTools.Services.TestTools.TestScriptFileDataSource;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class TestCaseAddController {
 
@@ -51,13 +60,13 @@ public class TestCaseAddController {
     private TextField onSearchField;
 
     @FXML
-    private ListView<?> onSearchList;
+    private ListView<TestCase> onSearchList;
 
     @FXML
     private Button onSubmitButton;
 
     @FXML
-    private TableView<?> onTableTestscase;
+    private TableView<TestCaseDetail> onTableTestscase;
 
     @FXML
     private TextField onTestNameField;
@@ -66,7 +75,7 @@ public class TestCaseAddController {
     private TextField onTestNoteField;
 
     @FXML
-    private ComboBox<?> onUsecaseCombobox;
+    private ComboBox<String> onUsecaseCombobox;
 
     @FXML
     private Label testDateLabel;
@@ -76,6 +85,100 @@ public class TestCaseAddController {
 
     @FXML
     private Button onEditListButton;
+    private ArrayList<String> word = new ArrayList<>();
+    private String tcId;
+    private String projectName = "125", directory = "data";
+    private TestCaseList testCaseList = new TestCaseList();
+    //private ArrayList<Object> objects = (ArrayList) FXRouter.getData();
+    private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
+    private TestCaseDetail selectedItem;
+    private TestCase testCase;
+    private TestCase selectedTestCase;
+    private static int idCounter = 1; // Counter for sequential IDs
+    private static final int MAX_ID = 999; // Upper limit for IDs
+    private static Set<String> usedIds = new HashSet<>(); // Set to store used IDs
+    DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory,projectName + ".csv");
+    DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
+
+    @FXML
+    void initialize() {
+        selectedComboBox();
+        setDate();
+        clearInfo();
+        setButtonVisible();
+        {
+            if (FXRouter.getData() != null) {
+                onTableTestscase.isFocused();
+                testCaseDetailList = (TestCaseDetailList) FXRouter.getData();
+                loadTable(testCaseDetailList);
+                testCase = (TestCase) FXRouter.getData2();
+                selectedTCD();
+                selectedListView();
+                setDataTC();
+                if (testCaseListDataSource.readData() != null && testCaseDetailListDataSource.readData() != null){
+                    testCaseList = testCaseListDataSource.readData();
+                    loadListView(testCaseList);
+                    for (TestCase testCase : testCaseList.getTestCaseList()) {
+                        word.add(testCase.getNameTC());
+                    }
+                    searchSet();
+                }
+            }
+            else{
+                setTable();
+                randomId();
+                System.out.println(tcId);
+                if (testCaseListDataSource.readData() != null && testCaseDetailListDataSource.readData() != null){
+                    testCaseList = testCaseListDataSource.readData();
+                    loadListView(testCaseList);
+                    selectedTCD();
+                    for (TestCase testCase : testCaseList.getTestCaseList()) {
+                        word.add(testCase.getNameTC());
+                    }
+                    searchSet();
+                }
+
+            }
+        }
+        System.out.println(testCaseDetailList);
+
+    }
+
+    private void randomId() {
+    }
+
+    private void setTable() {
+    }
+
+    private void searchSet() {
+    }
+
+    private void loadListView(TestCaseList testCaseList) {
+    }
+
+    private void setDataTC() {
+    }
+
+    private void selectedListView() {
+    }
+
+    private void selectedTCD() {
+    }
+
+    private void loadTable(TestCaseDetailList testCaseDetailList) {
+    }
+
+    private void setButtonVisible() {
+    }
+
+    private void clearInfo() {
+    }
+
+    private void setDate() {
+    }
+
+    private void selectedComboBox() {
+    }
 
     @FXML
     void onEditListButton(ActionEvent event) {
