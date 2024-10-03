@@ -142,10 +142,10 @@ public class PopupAddTestscriptController {
     }
 
     public void randomId(){
-        int min = 111111;
-        int min2 = 11111;
-        int upperbound = 999999;
-        int back = 99999;
+        int min = 111;
+        int min2 = 1;
+        int upperbound = 999;
+        int back = 9;
         String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
         String random2 = String.valueOf((int)Math.floor(Math.random() * (back - min2 + 1) + min2));
         this.id = String.format("TSD-%s", random1+random2);

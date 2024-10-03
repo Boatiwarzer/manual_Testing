@@ -1,4 +1,4 @@
-package ku.cs.testTools.Controllers.Home;
+package ku.cs.testTools.Controllers.TestScript;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,7 +16,7 @@ import ku.cs.testTools.Services.TestTools.TestScriptFileDataSource;
 
 import java.io.IOException;
 
-public class PopupDeleteController {
+public class PopupDeleteTestScriptController {
 
     @FXML
     private Button onCancelButton;

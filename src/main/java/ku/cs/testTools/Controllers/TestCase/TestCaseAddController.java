@@ -1,28 +1,30 @@
 package ku.cs.testTools.Controllers.TestCase;
 
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
-import ku.cs.testTools.Services.DataSource;
+import ku.cs.testTools.Services.*;
 import ku.cs.testTools.Services.TestTools.TestCaseDetailFileDataSource;
 import ku.cs.testTools.Services.TestTools.TestCaseFileDataSource;
 import ku.cs.testTools.Services.TestTools.TestScriptDetailFIleDataSource;
 import ku.cs.testTools.Services.TestTools.TestScriptFileDataSource;
+import org.controlsfx.control.textfield.TextFields;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class TestCaseAddController {
 
@@ -145,53 +147,313 @@ public class TestCaseAddController {
     }
 
     private void randomId() {
+        int min = 1;
+        int min2 = 1;
+        int upperbound = 999;
+        int back = 999;
+        String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
+        String random2 = String.valueOf((int)Math.floor(Math.random() * (back - min2 + 1) + min2));
+        this.tcId = String.format("TC-%s", random1+random2);
     }
 
     private void setTable() {
+        testCaseDetailList = new TestCaseDetailList();
+        onTableTestscase.getColumns().clear();
+        onTableTestscase.getItems().clear();
+        onTableTestscase.refresh();
+        onTableTestscase.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        ArrayList<StringConfiguration> configs = new ArrayList<>();
+        configs.add(new StringConfiguration("title:TC-ID."));
+        configs.add(new StringConfiguration("title:Test No."));
+        configs.add(new StringConfiguration("title:Name Variable."));
+        configs.add(new StringConfiguration("title:Type Variable."));
+        configs.add(new StringConfiguration("title:Date."));
+
+
+        for (StringConfiguration conf: configs) {
+            TableColumn col = new TableColumn(conf.get("title"));
+            col.setSortable(false);
+            col.setReorderable(false);
+            onTableTestscase.getColumns().add(col);
+
+        }
     }
 
     private void searchSet() {
+        ArrayList <String> word = new ArrayList<>();
+        for (TestCase testCase : testCaseList.getTestCaseList()) {
+            word.add(testCase.getNameTC());
+
+        }
+        System.out.println(word);
+
+        TextFields.bindAutoCompletion(onSearchField,word);
+        onSearchField.setOnKeyPressed(keyEvent -> {
+            if (Objects.requireNonNull(keyEvent.getCode()) == KeyCode.ENTER) {
+                onSearchList.getItems().clear();
+                onSearchList.getItems().addAll(searchList(onSearchField.getText(), testCaseList.getTestCaseList()));
+            }
+        });
+    }
+    @FXML
+    void onSearchButton(ActionEvent event) {
+        onSearchList.getItems().clear();
+        onSearchList.getItems().addAll(searchList(onSearchField.getText(),testCaseList.getTestCaseList()));
+
+    }
+
+    private List<TestCase> searchList(String searchWords, ArrayList<TestCase> listOfCases) {
+
+        // Split searchWords into a list of individual words
+        List<String> searchWordsArray = Arrays.asList(searchWords.trim().split("\\s+"));
+
+        return listOfCases.stream()
+                .filter(testCase ->
+                        searchWordsArray.stream().allMatch(word ->
+                                testCase.getIdTC().toLowerCase().contains(word.toLowerCase()) ||
+                                        testCase.getNameTC().toLowerCase().contains(word.toLowerCase())
+
+                        )
+                )
+                .collect(Collectors.toList());  // Return the filtered list
     }
 
     private void loadListView(TestCaseList testCaseList) {
+        onSearchList.refresh();
+        if (testCaseList != null){
+            testCaseList.sort(new TestCaseComparable());
+            for (TestCase testCase : testCaseList.getTestCaseList()) {
+                if (!testCase.getDateTC().equals("null")){
+                    onSearchList.getItems().add(testCase);
+
+                }
+            }
+        }else {
+            setTable();
+            clearInfo();
+        }
+
     }
 
     private void setDataTC() {
+        tcId = testCase.getIdTC();
+        testIDLabel.setText(tcId);
+        String name = testCase.getNameTC();
+        onTestNameField.setText(name);
+        String date = testCase.getDateTC();
+        testDateLabel.setText(date);
+        String useCase = testCase.getUseCase();
+        onUsecaseCombobox.getSelectionModel().select(useCase);
+        String description = testCase.getDescriptionTC();
+        infoDescriptLabel.setText(description);;
+        String note = testCase.getNote();
+        onTestNoteField.setText(note);;
     }
 
     private void selectedListView() {
+        if (testCase != null){
+            onSearchList.getSelectionModel().select(testCase);
+            onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue == null) {
+                    selectedTestCase = null;
+                } else{
+                    selectedTestCase = newValue;
+                }
+            });
+
+        }else {
+            onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue == null) {
+                    selectedTestCase = null;
+                } else {
+                    selectedTestCase = newValue;
+                }
+            });
+
+        }
     }
 
     private void selectedTCD() {
+        onTableTestscase.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                selectedItem = null;
+            } else {
+                if (newValue.getIdTCD() != null){
+                    onEditListButton.setVisible(true);
+                    onDeleteListButton.setVisible(true);
+                }else {
+                    onEditListButton.setVisible(false);
+                    onDeleteListButton.setVisible(false);
+                }
+                selectedItem = newValue;
+                System.out.println(selectedItem);
+                // Optionally show information based on the new value
+                // showInfo(newValue);
+            }
+        });
+        // Listener สำหรับ focusedProperty ของ TableView
+        onTableTestscase.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) { // เมื่อ TableView สูญเสีย focus
+                // เช็คว่า focus มาจากปุ่มที่กดหรือไม่
+                if (!onEditListButton.isPressed() && !onDeleteListButton.isPressed()) {
+                    onTableTestscase.getSelectionModel().clearSelection(); // เคลียร์การเลือก
+                    //selectedItem = null; // อาจจะรีเซ็ต selectedItem
+                    onEditListButton.setVisible(false); // ซ่อนปุ่ม
+                    onDeleteListButton.setVisible(false); // ซ่อนปุ่ม
+                }
+            }
+        });
     }
 
     private void loadTable(TestCaseDetailList testCaseDetailList) {
+        // Clear existing columns
+        new TableviewSet<>(onTableTestscase);
+
+        // Define column configurations
+        ArrayList<StringConfiguration> configs = new ArrayList<>();
+        configs.add(new StringConfiguration("title:TC-ID."));
+        configs.add(new StringConfiguration("title:Test No."));
+        configs.add(new StringConfiguration("title:Name Variable."));
+        configs.add(new StringConfiguration("title:Type Variable."));
+        configs.add(new StringConfiguration("title:Date."));
+
+
+        // Create and add columns
+        for (StringConfiguration conf : configs) {
+            TableColumn<TestCaseDetail, String> col = new TableColumn<>(conf.get("title"));
+            col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
+            new TableColumns(col);
+            onTableTestscase.getColumns().add(col);
+        }
+
+        //Add items to the table
+        for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()) {
+            onTableTestscase.getItems().add(testCaseDetail);
+        }
     }
 
     private void setButtonVisible() {
+        onEditListButton.setVisible(false);
+        onDeleteListButton.setVisible(false);
     }
 
     private void clearInfo() {
+        selectedItem = null;
+        FXRouter.setData3(null);
     }
 
     private void setDate() {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDateTime now = LocalDateTime.now();
+        String dates = now.format(dtf);
+        testDateLabel.setText(dates);
     }
 
     private void selectedComboBox() {
+        onUsecaseCombobox.setItems(FXCollections.observableArrayList("None"));
+        new AutoCompleteComboBoxListener<>(onUsecaseCombobox);
+        onUsecaseCombobox.getSelectionModel().selectFirst();
+        Platform.runLater(onUsecaseCombobox.getEditor()::end);
+        onUsecaseCombobox.setOnAction(event -> {
+            String selectedItem = onUsecaseCombobox.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                onUsecaseCombobox.getEditor().setText(selectedItem); // Set selected item in editor
+                //editor.setEditable(true);
+                onUsecaseCombobox.getEditor().requestFocus();// Ensure the editor remains editable
+                // Move cursor to the end
+                Platform.runLater(onUsecaseCombobox.getEditor()::end);
+            }
+
+        });
+
     }
 
     @FXML
     void onEditListButton(ActionEvent event) {
+        onEditListButton.setOnMouseClicked(event1 -> {
+            onTableTestscase.requestFocus();
+        });
+        onEditListButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                onTableTestscase.requestFocus();
+
+            }
+        });
+        try {
+            String name = onTestNameField.getText();
+            String idTC = tcId;
+            String date = testDateLabel.getText();
+            String useCase = onUsecaseCombobox.getValue();
+            String description = infoDescriptLabel.getText();
+            String note = onTestNoteField.getText();
+            testCase = new TestCase(idTC, name, date, useCase, description,note);
+            if (selectedItem != null){
+                FXRouter.popup("popup_add_testcase",testCaseDetailList,testCase,selectedItem,true);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
     @FXML
     void onAddButton(ActionEvent actionEvent){
         try {
-            FXRouter.popup("popup_add_testcase", false);
+            String name = onTestNameField.getText();
+            String idTC = tcId;
+            String date = testDateLabel.getText();
+            String useCase = onUsecaseCombobox.getValue();
+            String description = infoDescriptLabel.getText();
+            String note = onTestNoteField.getText();
+            testCase = new TestCase(idTC, name, date, useCase, description,note);
+
+            if (testCaseDetailList != null){
+                FXRouter.popup("popup_add_testcase",testCaseDetailList,testCase,null,true);
+            }else {
+                FXRouter.popup("popup_add_testcase",null,testCase,true);
+            }
+
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+
+    }
+    @FXML
+    void onDeleteListButton(ActionEvent event) {
+        onDeleteListButton.setOnMouseClicked(event1 -> {
+            onTableTestscase.requestFocus();
+        });
+        try {
+            String name = onTestNameField.getText();
+            String idTC = tcId;
+            String date = testDateLabel.getText();
+            String useCase = onUsecaseCombobox.getValue();
+            String description = infoDescriptLabel.getText();
+            String note = onTestNoteField.getText();
+            testCase = new TestCase(idTC, name, date, useCase, description,note);
+            if (selectedItem != null){
+                FXRouter.popup("popup_delete",testCaseDetailList,testCase,selectedItem,true);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+
+    @FXML
+    void onSubmitButton(ActionEvent event) {
+
+    }
+
+
+
+    @FXML
+    void onUsecaseCombobox(ActionEvent event) {
 
     }
 
@@ -249,34 +511,6 @@ public class TestCaseAddController {
         }
     }
 
-    @FXML
-    void onDeleteListButton(ActionEvent event) {
 
-    }
-
-    @FXML
-    void onSearchButton(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onSubmitButton(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onTestNameField(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onTestNoteField(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onUsecaseCombobox(ActionEvent event) {
-
-    }
 
 }

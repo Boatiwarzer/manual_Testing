@@ -160,7 +160,7 @@
                                           <Font size="18.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="onTestNameField" onAction="#onTestNameField" prefHeight="30.0" prefWidth="300.0">
+                                    <TextField fx:id="onTestNameField"  prefHeight="30.0" prefWidth="300.0">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
@@ -218,7 +218,7 @@
                                           <Font size="18.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="onTestNoteField" onAction="#onTestNoteField" prefHeight="30.0" prefWidth="810.0">
+                                    <TextField fx:id="onTestNoteField"  prefHeight="30.0" prefWidth="810.0">
                                        <font>
                                           <Font size="14.0" />
                                        </font>

@@ -188,9 +188,9 @@ public class TestScriptAddController {
         String tc = testScript.getTestCase();
         onTestcaseCombobox.getSelectionModel().select(tc);
         String preCon = testScript.getPreCon();
-        infoPreconLabel.setText(preCon);;
+        infoPreconLabel.setText(preCon);
         String note = testScript.getFreeText();
-        onTestNoteField.setText(note);;
+        onTestNoteField.setText(note);
     }
 
     private void setButtonVisible() {
@@ -405,23 +405,10 @@ public class TestScriptAddController {
     }
     @FXML
     void onEditListButton(ActionEvent event)  {
-        onEditListButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                // ทำการแก้ไข
-                // ...
-
-                // ขอ focus กลับไปที่ TableView
-                onTableTestscript.requestFocus();
-            }
+        onEditListButton.setOnMouseClicked(event2 -> {
+            onTableTestscript.requestFocus();
         });
-        onEditListButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                onTableTestscript.requestFocus();
-
-            }
-        });
+        onEditListButton.setOnAction(event1 -> onTableTestscript.requestFocus());
         try {
             String name = onTestNameField.getText();
             String idTS = tsId;
@@ -442,15 +429,8 @@ public class TestScriptAddController {
     }
     @FXML
     void onDeleteListButton(ActionEvent event) {
-        onDeleteListButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                // ทำการลบ
-                // ...
-
-                // ขอ focus กลับไปที่ TableView
-                onTableTestscript.requestFocus();
-            }
+        onDeleteListButton.setOnMouseClicked(event1 -> {
+            onTableTestscript.requestFocus();
         });
         try {
             onTableTestscript.requestFocus();

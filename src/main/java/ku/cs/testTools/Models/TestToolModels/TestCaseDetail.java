@@ -18,9 +18,27 @@ public class TestCaseDetail {
     private String testNo;
     private String nameTCD;
     private String variableTCD;
+    private String dateTCD;
+
     @ManyToOne
     private TestCase testCase;
     private String idTC;
+    public TestCaseDetail(String idTCD, String testNo, String nameTCD, String variableTCD, String dateTCD ,String idTC) {
+        this.idTCD = idTCD;
+        this.testNo = testNo;
+        this.nameTCD = nameTCD;
+        this.variableTCD = variableTCD;
+        this.idTC = idTC;
+        this.dateTCD = dateTCD;
+    }
+
+    public TestCaseDetail(String idTCD, String testNo, String nameTCD, String variableTCD, String idTC) {
+        this.idTCD = idTCD;
+        this.testNo = testNo;
+        this.nameTCD = nameTCD;
+        this.variableTCD = variableTCD;
+        this.idTC = idTC;
+    }
 
     @Override
     public final boolean equals(Object o) {
