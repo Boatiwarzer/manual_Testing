@@ -32,4 +32,20 @@ public class UseCaseDetail {
     public void setDetail(String detail) {
         this.detail = detail;
     }
+
+    public String getUseCaseID() {
+        return useCaseID;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
 }

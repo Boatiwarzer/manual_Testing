@@ -16,7 +16,7 @@ import ku.cs.testTools.Services.TestTools.TestScriptFileDataSource;
 
 import java.io.IOException;
 
-public class PopupDeleteTestScriptController {
+public class PopupDeleteTestscriptController {
 
     @FXML
     private Button onCancelButton;

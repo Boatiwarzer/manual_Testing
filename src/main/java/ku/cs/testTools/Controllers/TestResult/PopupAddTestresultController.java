@@ -31,6 +31,12 @@ public class PopupAddTestresultController {
     private Label onDescription;
 
     @FXML
+    private Label testResultIDLabel;
+
+    @FXML
+    private Label testResultNameLabel;
+
+    @FXML
     private Label onExpected;
 
     @FXML

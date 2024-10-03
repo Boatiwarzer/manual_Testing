@@ -5,10 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.TestScript;
@@ -44,6 +41,13 @@ public class PopupAddTestscriptController {
 
     @FXML
     private TextArea onTeststepsArea;
+
+    @FXML
+    private Label testScriptIDLabel;
+
+    @FXML
+    private Label testScriptNameLabel;
+
     private String projectName, directory;
     private TestScriptList testScriptList = new TestScriptList();
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();

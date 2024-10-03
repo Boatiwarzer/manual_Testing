@@ -6,15 +6,16 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
-import ku.cs.testTools.Models.TestToolModels.UseCase;
-import ku.cs.testTools.Models.TestToolModels.UseCaseDetail;
-import ku.cs.testTools.Models.TestToolModels.UseCaseDetailList;
-import ku.cs.testTools.Models.TestToolModels.UseCaseList;
+import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.DataSource;
+import ku.cs.testTools.Services.TestTools.TestScriptDetailFIleDataSource;
+import ku.cs.testTools.Services.TestTools.TestScriptFileDataSource;
 import ku.cs.testTools.Services.TestTools.UseCaseDetailListFileDataSource;
 import ku.cs.testTools.Services.TestTools.UseCaseListFileDataSource;
 import javafx.scene.input.KeyCode;
@@ -58,56 +59,37 @@ public class UseCaseAddController implements Initializable {
     @FXML
     private Label testIDLabel, errorLabel;
 
-    private String directory, projectName;
+    private String directory, projectName, useCaseId;
     private UseCase useCase;
     private UseCaseList useCaseList;
-    private DataSource<UseCaseList> useCaseListDataSource;
+    private DataSource<UseCaseList> useCaseListDataSource ; //= new UseCaseListFileDataSource(directory, projectName + ".csv")
     private UseCaseDetail useCaseDetail;
     private UseCaseDetailList useCaseDetailList;
-    private DataSource<UseCaseDetailList> useCaseDetailListDataSource;
+    private DataSource<UseCaseDetailList> useCaseDetailListDataSource ; //= new UseCaseDetailListFileDataSource(directory, projectName + ".csv")
     private ObservableList<String> items;
+    private boolean isGenerated = false;
     @FXML
     public void initialize() {
         if (FXRouter.getData() != null) {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            String useCaseID = (String) objects.get(2);
+//            String useCaseID = (String) objects.get(2);
 
             // Read the data from the csv files
             useCaseListDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv");
             useCaseList = useCaseListDataSource.readData();
             useCaseDetailListDataSource = new UseCaseDetailListFileDataSource(directory, projectName + ".csv");
             useCaseDetailList = useCaseDetailListDataSource.readData();
-//            actorListFileDataSource = new ActorListFileDataSource(directory, projectName + ".csv");
-//            actorList = actorListFileDataSource.readData();
-//            positionListFileDataSource = new PositionListFileDataSource(directory, projectName + ".csv");
-//            positionList = positionListFileDataSource.readData();
+
 
             // Find the use case by useCaseID
-            useCase = useCaseList.findByUseCaseId(useCaseID);
+//            useCase = useCaseList.findByUseCaseId(useCaseID);
+            setData();
+            handleGenerateIDAction();
+            System.out.println(useCaseId);
 
-            testIDLabel.setText(useCase.getUseCaseID());
-            onTestNameField.setText(useCase.getUseCaseName());
-            onTestActorField.setText(useCase.getActor());
-            onDescriptArea.setText(useCase.getDescription());
-            onPreConArea.setText(useCase.getPreCondition());
-            onPostConArea.setText(useCase.getPostCondition());
-            onTestNoteArea.setText(useCase.getNote());
-
-            if (!Objects.equals(useCase.getDescription(), "!@#$%^&*()_+")) {
-                onDescriptArea.setText(useCase.getDescription());
-            }
-            if (!Objects.equals(useCase.getPreCondition(), "!@#$%^&*()_+")) {
-                onPreConArea.setText(useCase.getPreCondition());
-            }
-            if (!Objects.equals(useCase.getActor(), "!@#$%^&*()_+")) {
-                onTestActorField.setText(useCase.getActor());
-            }
-            if (!Objects.equals(useCase.getPostCondition(), "!@#$%^&*()_+")) {
-                onPostConArea.setText(useCase.getPostCondition());
-            }
-            if (!Objects.equals(useCase.getNote(), "!@#$%^&*()_+")) {
+            if (!Objects.equals(useCase.getNote(), "none")) {
                 onTestNoteArea.setText(useCase.getNote());
             }
 
@@ -122,9 +104,6 @@ public class UseCaseAddController implements Initializable {
                         textArea.setStyle("-fx-font-size: 14px;");
                         textArea.setWrapText(true);
                         textArea.setText(useCaseDetail.getDetail());
-//                        textArea.textProperty().addListener((observable, oldValue, newValue) -> {
-//                            textArea.setPrefHeight(textArea.getText().split("\n").length * 20);
-//                        });
                         Button deleteButton = new Button("-");
                         deleteButton.setPrefHeight(30);
                         deleteButton.setPrefWidth(28);
@@ -142,9 +121,6 @@ public class UseCaseAddController implements Initializable {
                         textArea.setStyle("-fx-font-size: 14px;");
                         textArea.setWrapText(true);
                         textArea.setText(useCaseDetail.getDetail());
-//                        textArea.textProperty().addListener((observable, oldValue, newValue) -> {
-//                            textArea.setPrefHeight(textArea.getText().split("\n").length * 20);
-//                        });
                         Button deleteButton = new Button("-");
                         deleteButton.setPrefHeight(30);
                         deleteButton.setPrefWidth(28);
@@ -157,7 +133,9 @@ public class UseCaseAddController implements Initializable {
                     }
                 }
             }
+
         }
+
         items = FXCollections.observableArrayList(
                 "Apple", "Banana", "Orange", "Mango", "Pineapple", "Strawberry"
         );
@@ -198,6 +176,42 @@ public class UseCaseAddController implements Initializable {
 
     }
 
+    private void setData(){
+        useCaseId = useCase.getUseCaseID();
+        testIDLabel.setText(useCaseId);
+        String useCaseName = useCase.getUseCaseName();
+        onTestNameField.setText(useCaseName);
+        String useCaseActor = useCase.getActor();
+        onTestActorField.setText(useCaseActor);
+        String useCaseDescript = useCase.getDescription();
+        onDescriptArea.setText(useCaseDescript);
+        String useCasePreCon = useCase.getPreCondition();
+        onPreConArea.setText(useCasePreCon);
+        String useCasePostCon = useCase.getPostCondition();
+        onPostConArea.setText(useCasePostCon);
+        String useCaseNote = useCase.getNote();
+        onTestNoteArea.setText(useCaseNote);
+    }
+
+    private void handleGenerateIDAction() {
+        int min = 111111;
+        int min2 = 11111;
+        int upperbound = 999999;
+        int back = 99999;
+        String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
+        String random2 = String.valueOf((int)Math.floor(Math.random() * (back - min2 + 1) + min2));
+        this.useCaseId = String.format("UC-%s", random1+random2);
+//        this.useCaseId = random1+random2;
+        testIDLabel.setText(useCaseId);
+    }
+
+    @FXML
+    void GenerateID(KeyEvent event) {
+        if (!isGenerated) {  // ถ้ายังไม่ได้ทำงานมาก่อน
+            handleGenerateIDAction();
+            isGenerated = true;  // ตั้งค่าว่าทำงานแล้ว
+        }
+    }
 
     @FXML
     void handleAddActorActionButton(ActionEvent actionEvent) {
@@ -265,72 +279,6 @@ public class UseCaseAddController implements Initializable {
         hBox.getChildren().add(deleteButton);
         systemActionVBox.getChildren().add(hBox);
     }
-
-
-//    public void handlePreConditionChoiceButton(ActionEvent actionEvent) {
-//        // Show the useCaseList in a menu item and let the user choose a useCase to add to the preConditionTextField
-//        ContextMenu contextMenu = new ContextMenu();
-//        for (UseCase tempUseCase : useCaseList.getUseCaseList()) {
-//            // Do not add the current useCase to the postCondition
-//            if (tempUseCase.getUseCaseID() == useCase.getUseCaseID()) {
-//                // Show the disabled useCase in the menu
-//                MenuItem menuItem = new MenuItem(tempUseCase.getUseCaseName());
-//                menuItem.setDisable(true);
-//                continue;
-//            }
-//            MenuItem menuItem = new MenuItem(tempUseCase.getUseCaseName());
-//            menuItem.setOnAction(event -> {
-//                if (preConditionTextField.getText().isEmpty()) {
-//                    preConditionTextField.setText(tempUseCase.getUseCaseName());
-//                } else {
-//                    preConditionTextField.appendText("/" + useCase.getUseCaseName());
-//                }
-//                // set current useCase as the postCondition of the selected useCase
-//                if (Objects.equals(tempUseCase.getPostCondition(), "!@#$%^&*()_+")) {
-//                    tempUseCase.setPostCondition(useCase.getUseCaseName());
-//                } else {
-//                    tempUseCase.setPostCondition(tempUseCase.getPostCondition() + "/" + useCase.getUseCaseName());
-//                }
-//            });
-//            contextMenu.getItems().add(menuItem);
-//        }
-//        // Get the position of the button
-//        Button button = (Button) actionEvent.getSource();
-//        contextMenu.show(button, button.getLayoutX() + button.getScene().getX() + button.getScene().getWindow().getX(),
-//                button.getLayoutY() + button.getScene().getY() + button.getScene().getWindow().getY() + button.getHeight());
-//    }
-//
-//    public void handlePostConditionChoiceButton(ActionEvent actionEvent) {
-//        // Show the useCaseList in a menu item and let the user choose a useCase to add to the preConditionTextField
-//        ContextMenu contextMenu = new ContextMenu();
-//        for (UseCase tempUseCase : useCaseList.getUseCaseList()) {
-//            // Do not add the current useCase to the postCondition
-//            if (tempUseCase.getUseCaseID() == useCase.getUseCaseID()) {
-//                MenuItem menuItem = new MenuItem(tempUseCase.getUseCaseName());
-//                menuItem.setDisable(true);
-//                continue;
-//            }
-//            MenuItem menuItem = new MenuItem(tempUseCase.getUseCaseName());
-//            menuItem.setOnAction(event -> {
-//                if (postConditionTextField.getText().isEmpty()) {
-//                    postConditionTextField.setText(tempUseCase.getUseCaseName());
-//                } else {
-//                    postConditionTextField.appendText("/" + tempUseCase.getUseCaseName());
-//                }
-//                // set current useCase as the preCondition of the selected useCase
-//                if (Objects.equals(tempUseCase.getPreCondition(), "!@#$%^&*()_+")) {
-//                    tempUseCase.setPreCondition(useCase.getUseCaseName());
-//                } else {
-//                    tempUseCase.setPreCondition(tempUseCase.getPreCondition() + "/" + useCase.getUseCaseName());
-//                }
-//            });
-//            contextMenu.getItems().add(menuItem);
-//        }
-//        // Get the position of the button
-//        Button button = (Button) actionEvent.getSource();
-//        contextMenu.show(button, button.getLayoutX() + button.getScene().getX() + button.getScene().getWindow().getX(),
-//                button.getLayoutY() + button.getScene().getY() + button.getScene().getWindow().getY() + button.getHeight());
-//    }
 
     @FXML
     void onCancelButton(ActionEvent event) {
@@ -416,28 +364,20 @@ public class UseCaseAddController implements Initializable {
     }
 
     @FXML
-    void onSubmitButton(ActionEvent event) {
-//        if (!onTestNameField.getText().isEmpty()) {
-//            // สร้าง UseCase ใหม่และเพิ่มลงใน UseCaseList
-//            UseCase useCase = new UseCase(testIDLabel.getText());
-//            useCaseList.addUseCase(useCase);
-//
-//            // บันทึก UseCaseList ลงไฟล์
-//            dataSource.writeData(useCaseList);
-//
-//            // เพิ่ม currentNumber และแสดง usecaseID ใหม่
-//            currentID++;
-//            updateID();
-        // Set value for useCaseID
-        // Check if useCase ID is not empty and not being used by another use case
-//        if (!useCaseIDTextField.getText().isEmpty()) {
-//            int useCaseID = Integer.parseInt(useCaseIDTextField.getText());
-//            if (useCaseList.findByUseCaseId(useCaseID) == null || useCaseID == useCase.getUseCaseID()) {
+    void onSubmitButton(ActionEvent event) throws IOException {
+        String ucId = testIDLabel.getText();
+        String ucName = onTestNameField.getText();
+        String ucActor = onTestActorField.getText();
+        String ucDescript = onDescriptArea.getText();
+        String ucPreCon = onPreConArea.getText();
+        String ucPostCon = onPostConArea.getText();
+        String ucNote = onTestNoteArea.getText();
+
+        useCase = new UseCase(ucId, ucName, ucActor, ucDescript, ucPreCon, ucPostCon, ucNote);
+//        if (!testIDLabel.getText().isEmpty()) {
+//            if (useCaseList.findByUseCaseId(useCaseId) == null || testIDLabel.equals(useCase.getUseCaseID())) {
 //                errorLabel.setText("");
-//                componentPreferenceListDataSource = new ComponentPreferenceListFileDataSource(directory, projectName + ".csv");
-//                componentPreferenceList = componentPreferenceListDataSource.readData();
-//                componentPreferenceList.updateIDWithType(useCase.getUseCaseID(), "useCase", useCaseID);
-//                useCase.setUseCaseID(useCaseID);
+//                useCase.setUseCaseID(useCaseId);
 //            } else {
 //                errorLabel.setText("This use case ID is already being used by another use case.");
 //                return;
@@ -446,14 +386,11 @@ public class UseCaseAddController implements Initializable {
 //            errorLabel.setText("Please enter the use case ID.");
 //            return;
 //        }
-//
-//        // Set value for useCaseName
-//        // Check if useCaseName is not empty and not being used by another use case
-//        if (!useCaseNameTextField.getText().isEmpty()) {
-//            String useCaseName = useCaseNameTextField.getText();
-//            if (!useCaseList.isUseCaseNameExist(useCaseName) || useCaseName.equals(useCase.getUseCaseName())) {
+
+//        if (!ucName.isEmpty() || ucName == null) {
+//            if (!useCaseList.isUseCaseNameExist(ucName) || ucName.equals(useCase.getUseCaseName())) {
 //                errorLabel.setText("");
-//                useCase.setUseCaseName(useCaseName);
+//                useCase.setUseCaseName(ucName);
 //            } else {
 //                errorLabel.setText("This use case name is already being used by another use case.");
 //                return;
@@ -462,98 +399,102 @@ public class UseCaseAddController implements Initializable {
 //            errorLabel.setText("Please enter the use case name.");
 //            return;
 //        }
-//
-//        // Set value for actorID
-//        // Check if actorTextField is not empty
-//        if (!actorTextField.getText().isEmpty()) {
-//            String[] actorNames = actorTextField.getText().split("/");
-//            String actorID = "";
-//            for (String actorName : actorNames) {
-//                Actor actor = actorList.findByActorName(actorName);
-//                if (actor != null) {
-//                    if (actorID.isEmpty()) {
-//                        actorID = actor.getActorID() + "";
-//                    } else {
-//                        actorID += "/" + actor.getActorID();
-//                    }
-//                }
-//            }
-//            useCase.setActorID(actorID);
-//        }
-//
-//        // Set value for description
-//        if (!descriptionTextArea.getText().isEmpty()) {
-//            useCase.setDescription(descriptionTextArea.getText());
-//        } else {
-//            useCase.setDescription("!@#$%^&*()_+");
-//        }
-//
-//        // Set value for preCondition
-//        if (!preConditionTextField.getText().isEmpty()) {
-//            useCase.setPreCondition(preConditionTextField.getText());
-//        } else {
-//            useCase.setPreCondition("!@#$%^&*()_+");
-//        }
-//
+        if (!ucId.isEmpty()) {
+            useCase.setUseCaseID(ucId);
+        } else {
+            errorLabel.setText("Please enter the actor name.");
+            return;
+        }
+
+        if (!ucName.isEmpty()) {
+            useCase.setUseCaseName(ucName);
+        } else {
+            errorLabel.setText("Please enter the actor name.");
+            return;
+        }
+
+        if (!onTestActorField.getText().isEmpty()) {
+            useCase.setActor(onTestActorField.getText());
+        } else {
+            errorLabel.setText("Please enter the actor name.");
+            return;
+        }
+
+        if (!onDescriptArea.getText().isEmpty()) {
+            useCase.setDescription(onDescriptArea.getText());
+        } else {
+            errorLabel.setText("Please enter the Description.");
+            return;
+//            useCase.setDescription("none");
+        }
+
+        if (!onPreConArea.getText().isEmpty()) {
+            useCase.setPreCondition(onPreConArea.getText());
+        } else {
+            errorLabel.setText("Please enter the Pre-condition.");
+            return;
+//            useCase.setPreCondition("none");
+        }
+
+        if (!onPostConArea.getText().isEmpty()) {
+            useCase.setPostCondition(onPostConArea.getText());
+        } else {
+            errorLabel.setText("Please enter the Post-condition.");
+            return;
+//            useCase.setPostCondition("none");
+        }
+
+        if (!onTestNoteArea.getText().isEmpty()) {
+            useCase.setNote(onTestNoteArea.getText());
+        } else {
+            useCase.setNote("none");
+        }
+
 //        useCaseDetailList.clearUseCaseDetail(useCase.getUseCaseID());
-//        // Get the text from the textAreas in the actorActionVBox and write them to the useCaseDetailList
-//        int actorNumber = 1;
-//        for (Node node : actorActionVBox.getChildren()) {
-//            HBox hBox = (HBox) node;
-//            TextArea textArea = (TextArea) hBox.getChildren().get(0);
-//            if (!textArea.getText().isEmpty()) {
-//                UseCaseDetail useCaseDetail = new UseCaseDetail(useCase.getUseCaseID(), "actor", actorNumber, textArea.getText());
-//                useCaseDetailList.addUseCaseDetail(useCaseDetail);
-//                actorNumber++;
-//            }
-//        }
-//
-//        // Get the text from the textAreas in the systemActionVBox and write them to the useCaseDetailList
-//        int systemNumber = 1;
-//        for (Node node : systemActionVBox.getChildren()) {
-//            HBox hBox = (HBox) node;
-//            TextArea textArea = (TextArea) hBox.getChildren().get(0);
-//            if (!textArea.getText().isEmpty()) {
-//                UseCaseDetail useCaseDetail = new UseCaseDetail(useCase.getUseCaseID(), "system", systemNumber, textArea.getText());
-//                useCaseDetailList.addUseCaseDetail(useCaseDetail);
-//                systemNumber++;
-//            }
-//        }
-//
-//        // Set value for postCondition
-//        if (!postConditionTextField.getText().isEmpty()) {
-//            useCase.setPostCondition(postConditionTextField.getText());
-//        } else {
-//            useCase.setPostCondition("!@#$%^&*()_+");
-//        }
-//
-//        // Set value for note
-//        if (!noteTextArea.getText().isEmpty()) {
-//            useCase.setNote(noteTextArea.getText());
-//        } else {
-//            useCase.setNote("!@#$%^&*()_+");
-//        }
-//
-//        // Edit the useCase in the useCaseList
-//        useCaseListDataSource.writeData(useCaseList);
-//        // Edit the useCaseDetailList
-//        useCaseDetailListDataSource.writeData(useCaseDetailList);
-//        // Edit the componentPreferenceList
-//        componentPreferenceListDataSource.writeData(componentPreferenceList);
-//
+        // Get the text from the textAreas in the actorActionVBox and write them to the useCaseDetailList
+        int actorNumber = 1;
+        for (Node node : actorActionVBox.getChildren()) {
+            HBox hBox = (HBox) node;
+            TextArea textArea = (TextArea) hBox.getChildren().get(0);
+            if (!textArea.getText().isEmpty()) {
+                UseCaseDetail useCaseDetail = new UseCaseDetail(useCase.getUseCaseID(), "actor", actorNumber, textArea.getText());
+                useCaseDetailList.addUseCaseDetail(useCaseDetail);
+                actorNumber++;
+            }
+        }
+
+        // Get the text from the textAreas in the systemActionVBox and write them to the useCaseDetailList
+        int systemNumber = 1;
+        for (Node node : systemActionVBox.getChildren()) {
+            HBox hBox = (HBox) node;
+            TextArea textArea = (TextArea) hBox.getChildren().get(0);
+            if (!textArea.getText().isEmpty()) {
+                UseCaseDetail useCaseDetail = new UseCaseDetail(useCase.getUseCaseID(), "system", systemNumber, textArea.getText());
+                useCaseDetailList.addUseCaseDetail(useCaseDetail);
+                systemNumber++;
+            }
+        }
+
+
+        // Edit the useCase in the useCaseList
+        useCaseListDataSource.writeData(useCaseList);
+        // Edit the useCaseDetailList
+        useCaseDetailListDataSource.writeData(useCaseDetailList);
+        // Edit the componentPreferenceList
+
+        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv");
+        DataSource<UseCaseDetailList> useCaseDetailListDataSource = new UseCaseDetailListFileDataSource(directory, projectName + ".csv");
+
+        useCaseListDataSource.writeData(useCaseList);
+        useCaseDetailListDataSource.writeData(useCaseDetailList);
+
 //        // send the project name and directory to HomePage
 //        ArrayList<Object> objects = new ArrayList<>();
 //        objects.add(projectName);
 //        objects.add(directory);
-//        objects.add(positionList.findByPositionId(useCase.getPositionID()).getSubSystemID());
-//
-//        FXRouter.goTo("HomePage", objects);
-//
-//        // Close the current window
-//        Node source = (Node) actionEvent.getSource();
-//        Stage stage = (Stage) source.getScene().getWindow();
-//        stage.close();
-//        }
+
+//        FXRouter.goTo("use_case", objects);
+        isGenerated = false;
     }
 //    private void updateID() {
 //        String newTestIDLabel = String.format("UC-%03d", currentID);
@@ -566,11 +507,6 @@ public class UseCaseAddController implements Initializable {
     }
 
     @FXML
-    private void handleGenerateIDAction() {
-
-    }
-
-    @FXML
     void postConListComboBox(ActionEvent event) {
 
     }
@@ -579,5 +515,6 @@ public class UseCaseAddController implements Initializable {
     void preConListComboBox(ActionEvent event) {
 
     }
+
 
 }

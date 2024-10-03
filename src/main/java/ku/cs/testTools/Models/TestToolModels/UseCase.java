@@ -51,6 +51,34 @@ public class UseCase {
         this.note = note;
     }
 
+    public String getUseCaseID() {
+        return useCaseID;
+    }
+
+    public String getUseCaseName() {
+        return useCaseName;
+    }
+
+    public String getActor() {
+        return actor;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getPreCondition() {
+        return preCondition;
+    }
+
+    public String getPostCondition() {
+        return postCondition;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
 
 //    @Override
 //    public String toString() {

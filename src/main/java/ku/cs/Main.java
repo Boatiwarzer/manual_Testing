@@ -45,7 +45,9 @@ public class Main extends Application {
         FXRouter.when("popup_add_testresult", packageStr1 + "popup_add_testresult.fxml");
         FXRouter.when("popup_info_testscript", packageStr1 + "popup_info_testscript.fxml");
         FXRouter.when("popup_info_testcase", packageStr1 + "popup_info_testcase.fxml");
-        FXRouter.when("popup_delete", packageStr1 + "popup_delete.fxml");
+        FXRouter.when("popup_delete_testscript", packageStr1 + "popup_delete_testscript.fxml");
+        FXRouter.when("popup_delete_testcase", packageStr1 + "popup_delete_testcase.fxml");
+        FXRouter.when("popup_delete_testresult", packageStr1 + "popup_delete_testresult.fxml");
         FXRouter.when("role", packageStr1 + "role.fxml");
 //        FXRouter.when("testflow_manager", packageStr1 + "testflow_manager.fxml");
 //        FXRouter.when("testresult_manager", packageStr1 + "testresult_manager.fxml");

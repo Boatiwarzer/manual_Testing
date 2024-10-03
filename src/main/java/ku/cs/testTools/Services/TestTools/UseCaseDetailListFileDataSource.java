@@ -82,33 +82,9 @@ public class UseCaseDetailListFileDataSource implements DataSource<UseCaseDetail
 
     @Override
     public void writeData(UseCaseDetailList useCaseDetailList) {
-//        // Import actorList from CSV
-//        ActorListFileDataSource actorListFileDataSource = new ActorListFileDataSource(directory, fileName);
-//        ActorList actorList = actorListFileDataSource.readData();
-//        // Import componentPreferenceList from CSV
-//        ComponentPreferenceListFileDataSource componentPreferenceListFileDataSource = new ComponentPreferenceListFileDataSource(directory, fileName);
-//        ComponentPreferenceList componentPreferenceList = componentPreferenceListFileDataSource.readData();
-//        // Import connectionList from CSV
-//        ConnectionListFileDataSource connectionListFileDataSource = new ConnectionListFileDataSource(directory, fileName);
-//        ConnectionList connectionList = connectionListFileDataSource.readData();
-//        // Import noteList from CSV
-//        NoteListFileDataSource noteListFileDataSource = new NoteListFileDataSource(directory, fileName);
-//        NoteList noteList = noteListFileDataSource.readData();
-//        // Import positionList from CSV
-//        PositionListFileDataSource positionListFileDataSource = new PositionListFileDataSource(directory, fileName);
-//        PositionList positionList = positionListFileDataSource.readData();
-//        // Import preferenceList from CSV
-//        PreferenceListFileDataSource preferenceListFileDataSource = new PreferenceListFileDataSource(directory, fileName);
-//        PreferenceList preferenceList = preferenceListFileDataSource.readData();
-//        // Import subSystemList from CSV
-//        SubSystemListFileDataSource subSystemListFileDataSource = new SubSystemListFileDataSource(directory, fileName);
-//        SubSystemList subSystemList = subSystemListFileDataSource.readData();
         // Import useCaseList from CSV
         UseCaseListFileDataSource useCaseListFileDataSource = new UseCaseListFileDataSource(directory, fileName);
         UseCaseList useCaseList = useCaseListFileDataSource.readData();
-//        // Import useCaseSystemList from CSV
-//        UseCaseSystemListFileDataSource useCaseSystemListFileDataSource = new UseCaseSystemListFileDataSource(directory, fileName);
-//        UseCaseSystemList useCaseSystemList = useCaseSystemListFileDataSource.readData();
 
         // File writer
         String filePath = directory + File.separator + fileName;
@@ -118,55 +94,6 @@ public class UseCaseDetailListFileDataSource implements DataSource<UseCaseDetail
         try {
             writer = new FileWriter(file, StandardCharsets.UTF_8);
             buffer = new BufferedWriter(writer);
-
-//            // Write ActorList to CSV
-//            for (Actor actor : actorList.getActorList()) {
-//                String line = actorListFileDataSource.createLine(actor);
-//                buffer.append(line);
-//                buffer.newLine();
-//            }
-//
-//            // Write ComponentPreferenceList to CSV
-//            for (ComponentPreference componentPreference : componentPreferenceList.getComponentPreferenceList()) {
-//                String line = componentPreferenceListFileDataSource.createLine(componentPreference);
-//                buffer.append(line);
-//                buffer.newLine();
-//            }
-//
-//            // Write ConnectionList to CSV
-//            for (Connection connection : connectionList.getConnectionList()) {
-//                String line = connectionListFileDataSource.createLine(connection);
-//                buffer.append(line);
-//                buffer.newLine();
-//            }
-//
-//            // Write NoteList to CSV
-//            for (Note note : noteList.getNoteList()) {
-//                String line = noteListFileDataSource.createLine(note);
-//                buffer.append(line);
-//                buffer.newLine();
-//            }
-//
-//            // Write PositionList to CSV
-//            for (Position position : positionList.getPositionList()) {
-//                String line = positionListFileDataSource.createLine(position);
-//                buffer.append(line);
-//                buffer.newLine();
-//            }
-//
-//            // Write PreferenceList to CSV
-//            for (Preference preference : preferenceList.getPreferenceList()) {
-//                String line = preferenceListFileDataSource.createLine(preference);
-//                buffer.append(line);
-//                buffer.newLine();
-//            }
-//
-//            // Write SubSystemList to CSV
-//            for (SubSystem subSystem : subSystemList.getSubSystemList()) {
-//                String line = subSystemListFileDataSource.createLine(subSystem);
-//                buffer.append(line);
-//                buffer.newLine();
-//            }
 
             // Write UseCaseDetailList to CSV
             for (UseCaseDetail useCaseDetail : useCaseDetailList.getUseCaseDetailList()) {
@@ -180,13 +107,6 @@ public class UseCaseDetailListFileDataSource implements DataSource<UseCaseDetail
                 buffer.append(line);
                 buffer.newLine();
             }
-
-//            // Write UseCaseSystemList to CSV
-//            for (UseCaseSystem useCaseSystem : useCaseSystemList.getSystemList()) {
-//                String line = useCaseSystemListFileDataSource.createLine(useCaseSystem);
-//                buffer.append(line);
-//                buffer.newLine();
-//            }
 
             buffer.close();
         } catch (Exception e) {

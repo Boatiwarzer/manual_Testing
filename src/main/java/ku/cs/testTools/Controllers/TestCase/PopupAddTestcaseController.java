@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
@@ -29,6 +30,13 @@ public class PopupAddTestcaseController {
 
     @FXML
     private TextField onTypeVariableField;
+
+    @FXML
+    private Label testCaseIDLabel;
+
+    @FXML
+    private Label testCaseNameLabel;
+
     private String projectName, directory;
     private TestCaseList testCaseList = new TestCaseList();
     private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();

@@ -161,7 +161,7 @@
                                           <Font size="18.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="onTestNameField" onKeyTyped="#handleGenerateIDAction" prefHeight="30.0" prefWidth="300.0">
+                                    <TextField fx:id="onTestNameField" onKeyTyped="#GenerateID" prefHeight="30.0" prefWidth="300.0">
                                        <font>
                                           <Font size="14.0" />
                                        </font>

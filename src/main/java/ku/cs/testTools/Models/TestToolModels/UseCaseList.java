@@ -29,9 +29,6 @@ public class UseCaseList {
         return useCaseList.size();
     }
 
-    public UseCase getUseCase(int index) {
-        return useCaseList.get(index);
-    }
 
     public UseCase findByUseCaseId(String useCaseId) {
         for (UseCase useCase : useCaseList) {
@@ -40,5 +37,13 @@ public class UseCaseList {
             }
         }
         return null;
+    }
+    public boolean isUseCaseNameExist(String useCaseName) {
+        for (UseCase useCase : useCaseList) {
+            if (useCase.getUseCaseName().equals(useCaseName)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
