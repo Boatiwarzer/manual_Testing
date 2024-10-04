@@ -163,12 +163,18 @@ public class TestCaseAddController {
         configs.add(new StringConfiguration("title:Type Variable."));
         configs.add(new StringConfiguration("title:Date."));
 
-
+        int index = 0;
         for (StringConfiguration conf: configs) {
             TableColumn col = new TableColumn(conf.get("title"));
+            if (index <= 1) {  // ถ้าเป็นคอลัมน์แรก
+                col.setPrefWidth(80);
+                col.setMaxWidth(80);   // จำกัดขนาดสูงสุดของคอลัมน์แรก
+                col.setMinWidth(80); // ตั้งค่าขนาดคอลัมน์แรก
+            }
             col.setSortable(false);
             col.setReorderable(false);
             onTableTestscase.getColumns().add(col);
+            index++;
 
         }
     }
@@ -315,10 +321,10 @@ public class TestCaseAddController {
         // Create and add columns
         for (StringConfiguration conf : configs) {
             TableColumn<TestCaseDetail, String> col = new TableColumn<>(conf.get("title"));
-            if (index == 0) {  // ถ้าเป็นคอลัมน์แรก
-                col.setPrefWidth(100);
-                col.setMaxWidth(100);   // จำกัดขนาดสูงสุดของคอลัมน์แรก
-                col.setMinWidth(100); // ตั้งค่าขนาดคอลัมน์แรก
+            if (index <= 1) {  // ถ้าเป็นคอลัมน์แรก
+                col.setPrefWidth(80);
+                col.setMaxWidth(80);   // จำกัดขนาดสูงสุดของคอลัมน์แรก
+                col.setMinWidth(80); // ตั้งค่าขนาดคอลัมน์แรก
             }
             col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
             new TableColumns(col);
@@ -447,9 +453,36 @@ public class TestCaseAddController {
 
     @FXML
     void onSubmitButton(ActionEvent event) {
+        try {
+            String name = onTestNameField.getText();
+            String idTC = tcId;
+            String date = testDateLabel.getText();
+            String useCase = onUsecaseCombobox.getValue();
+            String description = infoDescriptLabel.getText();
+            String note = onTestNoteField.getText();
+            testCase = new TestCase(idTC, name, date, useCase, description,note);
+
+            testCaseList.addOrUpdateTestCase(testCase);
+
+            // Write data to respective files
+            testCaseListDataSource.writeData(testCaseList);
+            testCaseDetailListDataSource.writeData(testCaseDetailList);
+            showAlert("Success", "Test case saved successfully!");
+
+            FXRouter.goTo("test_case",testCase,true);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
-
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
 
 
     @FXML

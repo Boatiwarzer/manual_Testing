@@ -63,7 +63,7 @@ public class PopupDeleteTestscriptController {
 
     }
     @FXML
-    void onCancelButton(ActionEvent event) {
+    void onDeleteButton(ActionEvent event) {
         try {
             if (FXRouter.getData() != null){
                 testScriptDetail = null;
@@ -97,7 +97,7 @@ public class PopupDeleteTestscriptController {
     }
 
     @FXML
-    void onDeleteButton(ActionEvent event) {
+    void onCancelButton(ActionEvent event) {
         try {
             if (FXRouter.getData() != null){
                 testScriptDetailList.deleteTestScriptDetail(testScriptDetail);

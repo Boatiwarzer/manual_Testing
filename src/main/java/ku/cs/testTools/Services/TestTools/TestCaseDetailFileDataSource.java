@@ -88,6 +88,7 @@ public class TestCaseDetailFileDataSource implements DataSource<TestCaseDetailLi
                 testCaseDetail.getTestNo() + "," +
                 testCaseDetail.getNameTCD() + "," +
                 testCaseDetail.getVariableTCD() + "," +
-                testCaseDetail.getDateTCD();
+                testCaseDetail.getDateTCD()+ "," +
+                testCaseDetail.getIdTC();
     }
 }

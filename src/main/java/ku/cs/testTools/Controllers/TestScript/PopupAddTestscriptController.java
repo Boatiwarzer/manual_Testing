@@ -85,8 +85,7 @@ public class PopupAddTestscriptController {
         onExpectedArea.setText(testScriptDetail.getExpected());;
     }
 
-    private void loadProject() {
-    }
+
 
     @FXML
     void onCancelButton(ActionEvent event) {
