@@ -74,13 +74,10 @@ public class PopupAddTestcaseController {
     }
 
     private void randomId() {
-        int min = 111;
-        int min2 = 1;
+        int min = 1;
         int upperbound = 999;
-        int back = 9;
         String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
-        String random2 = String.valueOf((int)Math.floor(Math.random() * (back - min2 + 1) + min2));
-        this.id = String.format("TCD-%s", random1+random2);
+        this.id = String.format("TCD-%s", random1);
     }
 
     private void clearInfo() {
