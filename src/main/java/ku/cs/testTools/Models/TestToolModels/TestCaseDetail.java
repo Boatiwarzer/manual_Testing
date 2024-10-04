@@ -12,6 +12,8 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class TestCaseDetail {
     @Id
     private String idTCD;

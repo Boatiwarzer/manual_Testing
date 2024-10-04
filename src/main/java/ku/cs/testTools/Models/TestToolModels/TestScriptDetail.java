@@ -12,6 +12,8 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @Entity
+@Data
+@AllArgsConstructor
 public class TestScriptDetail {
     @Id
     private String idTSD;

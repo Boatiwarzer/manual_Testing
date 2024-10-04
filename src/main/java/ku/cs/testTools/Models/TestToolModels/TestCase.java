@@ -13,6 +13,8 @@ import java.util.Objects;
 @Setter
 @RequiredArgsConstructor
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class TestCase {
     @Id
     private String idTC;

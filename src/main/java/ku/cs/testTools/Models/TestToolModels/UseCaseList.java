@@ -1,7 +1,9 @@
 package ku.cs.testTools.Models.TestToolModels;
 
-import java.util.ArrayList;
+import lombok.Data;
 
+import java.util.ArrayList;
+@Data
 public class UseCaseList {
     private ArrayList<UseCase> useCaseList;
 

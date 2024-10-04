@@ -1,9 +1,15 @@
 package ku.cs.testTools.Models.TestToolModels;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 
-@Getter
+@Data
+@Entity
 public class UseCase {
+    @Id
     private String useCaseID;
     private String useCaseName;
     private String actor;

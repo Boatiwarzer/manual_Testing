@@ -1,10 +1,14 @@
 package ku.cs.testTools.Models.TestToolModels;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import lombok.Data;
 import lombok.Getter;
-
+@Data
+@Entity
 @Getter
 public class UseCaseDetail {
-
+    @Id
     private String useCaseID;
     private String action;
     private int number;

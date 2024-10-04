@@ -148,12 +148,9 @@ public class TestCaseAddController {
 
     private void randomId() {
         int min = 1;
-        int min2 = 1;
         int upperbound = 999;
-        int back = 999;
         String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
-        String random2 = String.valueOf((int)Math.floor(Math.random() * (back - min2 + 1) + min2));
-        this.tcId = String.format("TC-%s", random1+random2);
+        this.tcId = String.format("TC-%s", random1);
     }
 
     private void setTable() {

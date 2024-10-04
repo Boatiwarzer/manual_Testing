@@ -3,6 +3,7 @@ package ku.cs.testTools.Models.TestToolModels;
 import jakarta.persistence.Entity;
 import ku.cs.testTools.Models.UsecaseModels.Actor;
 import ku.cs.testTools.Services.TestScriptComparable;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 
@@ -11,6 +12,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 @Data
+@AllArgsConstructor
 public class TestScriptList {
     private ArrayList<TestScript> testScriptList;
 

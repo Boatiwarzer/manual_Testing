@@ -1,7 +1,10 @@
 package ku.cs.testTools.Models.TestToolModels;
 
-import java.util.ArrayList;
+import jakarta.persistence.Entity;
+import lombok.Data;
 
+import java.util.ArrayList;
+@Data
 public class UseCaseDetailList {
     private ArrayList<UseCaseDetail> useCaseDetailList;
 
