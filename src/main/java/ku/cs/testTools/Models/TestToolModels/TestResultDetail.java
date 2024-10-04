@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 @Entity
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 public class TestResultDetail {
 

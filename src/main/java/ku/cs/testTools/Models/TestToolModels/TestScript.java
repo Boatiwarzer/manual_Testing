@@ -15,7 +15,6 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Entity
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 public class TestScript {
     @Id
