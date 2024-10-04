@@ -55,6 +55,7 @@ public class PopupAddTestscriptController {
     private TestScriptDetail testScriptDetail = new TestScriptDetail();
     private String id;
     private String idTS;
+    private String date;
     @FXML
     void initialize() {
         selectedComboBox();
@@ -109,13 +110,14 @@ public class PopupAddTestscriptController {
         String TsStep = onTeststepsArea.getText().toLowerCase();
         String Input = onInputDataCombobox.getValue();
         String Expect = onExpectedArea.getText();
+        setDateTSD();
         //boolean signup = isAvailable(username, userTextField);
 //        if(userTextField.getText().isEmpty() && passwordTextField.getText().isEmpty() && passwordTextField.getText().isEmpty() && conPasswordTextField.getText().isEmpty()){
 //            errorLabel.setText("Please enter data");
 //        }if(!password1.equals(password2)){
 //            errorLabel.setText("Password not correct");
 //        } if(signup){
-        testScriptDetail = new TestScriptDetail(id,TsNo, TsStep, Input, Expect,idTS);
+        testScriptDetail = new TestScriptDetail(id,TsNo, TsStep, Input, Expect,idTS,date);
         testScriptDetailList.addOrUpdateTestScriptDetail(testScriptDetail);
         try {
             testScriptDetail = null;
@@ -137,6 +139,12 @@ public class PopupAddTestscriptController {
 
     }
 
+    private void setDateTSD() {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDateTime now = LocalDateTime.now();
+        this.date = now.format(dtf);
+    }
+
     private void clearInfo() {
         id = "";
         onTestNo.setText("");
@@ -146,13 +154,10 @@ public class PopupAddTestscriptController {
     }
 
     public void randomId(){
-        int min = 111;
-        int min2 = 1;
+        int min = 1;
         int upperbound = 999;
-        int back = 9;
         String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
-        String random2 = String.valueOf((int)Math.floor(Math.random() * (back - min2 + 1) + min2));
-        this.id = String.format("TSD-%s", random1+random2);
+        this.id = String.format("TSD-%s", random1);
     }
     private void selectedComboBox(){
         onInputDataCombobox.setItems(FXCollections.observableArrayList("None"));

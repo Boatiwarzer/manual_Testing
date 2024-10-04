@@ -266,13 +266,23 @@ public class TestScriptAddController {
         configs.add(new StringConfiguration("title:Test Step.", "field:steps"));
         configs.add(new StringConfiguration("title:Input Data.", "field:inputData"));
         configs.add(new StringConfiguration("title:Expected Result.", "field:expected"));
+        configs.add(new StringConfiguration("title:Date.", "field:dateTSD"));
+
+        int index = 0;
 
         // Create and add columns
         for (StringConfiguration conf : configs) {
             TableColumn<TestScriptDetail, String> col = new TableColumn<>(conf.get("title"));
+            if (index == 0) {  // ถ้าเป็นคอลัมน์แรก
+                col.setPrefWidth(80);
+                col.setMaxWidth(80);   // จำกัดขนาดสูงสุดของคอลัมน์แรก
+                col.setMinWidth(80); // ตั้งค่าขนาดคอลัมน์แรก
+            }
             col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
+
             new TableColumns(col);
             onTableTestscript.getColumns().add(col);
+            index++;
         }
 
          //Add items to the table
@@ -296,12 +306,18 @@ public class TestScriptAddController {
         configs.add(new StringConfiguration("title:Input Data."));
         configs.add(new StringConfiguration("title:Expected Result."));
 
-
+        int index = 0;
         for (StringConfiguration conf: configs) {
             TableColumn col = new TableColumn(conf.get("title"));
+            if (index == 0) {  // ถ้าเป็นคอลัมน์แรก
+                col.setPrefWidth(80);
+                col.setMaxWidth(80);   // จำกัดขนาดสูงสุดของคอลัมน์แรก
+                col.setMinWidth(80); // ตั้งค่าขนาดคอลัมน์แรก
+            }
             col.setSortable(false);
             col.setReorderable(false);
             onTableTestscript.getColumns().add(col);
+            index++;
 
         }
     }
@@ -314,12 +330,9 @@ public class TestScriptAddController {
     }
     public void randomId(){
         int min = 1;
-        int min2 = 1;
         int upperbound = 999;
-        int back = 999;
         String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
-        String random2 = String.valueOf((int)Math.floor(Math.random() * (back - min2 + 1) + min2));
-        this.tsId = String.format("TS-%s", random1+random2);
+        this.tsId = String.format("TS-%s", random1);
 
     }
     public void generateSequentialId() {

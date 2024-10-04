@@ -311,13 +311,19 @@ public class TestCaseAddController {
         configs.add(new StringConfiguration("title:Type Variable.", "field:variableTCD"));
         configs.add(new StringConfiguration("title:Date.", "field:dateTCD"));
 
-
+        int index = 0;
         // Create and add columns
         for (StringConfiguration conf : configs) {
             TableColumn<TestCaseDetail, String> col = new TableColumn<>(conf.get("title"));
+            if (index == 0) {  // ถ้าเป็นคอลัมน์แรก
+                col.setPrefWidth(100);
+                col.setMaxWidth(100);   // จำกัดขนาดสูงสุดของคอลัมน์แรก
+                col.setMinWidth(100); // ตั้งค่าขนาดคอลัมน์แรก
+            }
             col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
             new TableColumns(col);
             onTableTestscase.getColumns().add(col);
+            index++;
         }
 
         //Add items to the table
