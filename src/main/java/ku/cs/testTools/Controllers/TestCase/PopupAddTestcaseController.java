@@ -118,7 +118,7 @@ public class PopupAddTestcaseController {
 //        }if(!password1.equals(password2)){
 //            errorLabel.setText("Password not correct");
 //        } if(signup){
-        testCaseDetail = new TestCaseDetail(id,TsNo, Name, Type, idTC,dateTCD);
+        testCaseDetail = new TestCaseDetail(id,TsNo, Name, Type, dateTCD,idTC);
         testCaseDetailList.addOrUpdateTestCase(testCaseDetail);
         try {
             testCaseDetail = null;

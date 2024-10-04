@@ -4,10 +4,7 @@ import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.DataSource;
 import ku.cs.testTools.Services.ManageDataSource;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 public class TestCaseDetailFileDataSource implements DataSource<TestCaseDetailList>, ManageDataSource<TestCaseDetail> {
@@ -46,10 +43,6 @@ public class TestCaseDetailFileDataSource implements DataSource<TestCaseDetailLi
                 String[] data = line.split(",");
 
                 if (data[0].trim().equals("testCaseDetail")) {
-                    // Assuming the testScript ID is in data[6]
-                    String testScriptId = data[6].trim();
-
-
                     // Create the TestScriptDetail object
                     TestCaseDetail testCaseDetail = new TestCaseDetail(
                             data[1].trim(), // idTSD
@@ -73,11 +66,28 @@ public class TestCaseDetailFileDataSource implements DataSource<TestCaseDetailLi
 
     @Override
     public void writeData(TestCaseDetailList testCaseDetailList) {
+        String filePath = directory + File.separator + fileName;
+
+        // เปิดไฟล์ในโหมด append (true)
+        try (BufferedWriter buffer = new BufferedWriter(new FileWriter(filePath, StandardCharsets.UTF_8, true))) {
+            for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()) {
+                String line = createLine(testCaseDetail);
+                buffer.write(line);
+                buffer.newLine();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Error writing data", e);
+        }
 
     }
 
     @Override
     public String createLine(TestCaseDetail testCaseDetail) {
-        return "";
+        return "testCaseDetail," +
+                testCaseDetail.getIdTCD() + "," +
+                testCaseDetail.getTestNo() + "," +
+                testCaseDetail.getNameTCD() + "," +
+                testCaseDetail.getVariableTCD() + "," +
+                testCaseDetail.getDateTCD();
     }
 }

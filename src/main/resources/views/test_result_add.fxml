@@ -138,7 +138,7 @@
                                  <graphic>
                                     <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@fxml/icon/search_icon.png" />
+                                          <Image url="@../icon/search_icon.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
@@ -205,7 +205,7 @@
                            <graphic>
                               <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@fxml/icon/add%20icon.png" />
+                                    <Image url="@../icon/add_icon.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -217,7 +217,7 @@
                            <graphic>
                               <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@fxml/icon/delete%20icon.png" />
+                                    <Image url="@../icon/delete_icon.png" />
                                  </image>
                               </ImageView>
                            </graphic>

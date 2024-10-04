@@ -154,11 +154,7 @@ public class TestCaseAddController {
     }
 
     private void setTable() {
-        testCaseDetailList = new TestCaseDetailList();
-        onTableTestscase.getColumns().clear();
-        onTableTestscase.getItems().clear();
-        onTableTestscase.refresh();
-        onTableTestscase.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        new TableviewSet<>(onTableTestscase);
 
         ArrayList<StringConfiguration> configs = new ArrayList<>();
         configs.add(new StringConfiguration("title:TC-ID."));
@@ -309,11 +305,11 @@ public class TestCaseAddController {
 
         // Define column configurations
         ArrayList<StringConfiguration> configs = new ArrayList<>();
-        configs.add(new StringConfiguration("title:TC-ID."));
-        configs.add(new StringConfiguration("title:Test No."));
-        configs.add(new StringConfiguration("title:Name Variable."));
-        configs.add(new StringConfiguration("title:Type Variable."));
-        configs.add(new StringConfiguration("title:Date."));
+        configs.add(new StringConfiguration("title:TC-ID.", "field:idTCD"));
+        configs.add(new StringConfiguration("title:Test No.", "field:testNo"));
+        configs.add(new StringConfiguration("title:Name Variable.", "field:nameTCD"));
+        configs.add(new StringConfiguration("title:Type Variable.", "field:variableTCD"));
+        configs.add(new StringConfiguration("title:Date.", "field:dateTCD"));
 
 
         // Create and add columns
@@ -328,6 +324,7 @@ public class TestCaseAddController {
         for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()) {
             onTableTestscase.getItems().add(testCaseDetail);
         }
+
     }
 
     private void setButtonVisible() {

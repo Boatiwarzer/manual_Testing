@@ -29,8 +29,9 @@ public class TestCaseDetail {
         this.testNo = testNo;
         this.nameTCD = nameTCD;
         this.variableTCD = variableTCD;
-        this.idTC = idTC;
         this.dateTCD = dateTCD;
+        this.idTC = idTC;
+
     }
 
     public TestCaseDetail(String idTCD, String testNo, String nameTCD, String variableTCD, String idTC) {
