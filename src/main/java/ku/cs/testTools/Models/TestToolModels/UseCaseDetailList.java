@@ -2,8 +2,12 @@ package ku.cs.testTools.Models.TestToolModels;
 
 import jakarta.persistence.Entity;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
+@Setter
+@Getter
 @Data
 public class UseCaseDetailList {
     private ArrayList<UseCaseDetail> useCaseDetailList;
@@ -18,14 +22,6 @@ public class UseCaseDetailList {
 
     public void removeUseCaseDetail(UseCaseDetail useCaseDetail) {
         useCaseDetailList.remove(useCaseDetail);
-    }
-
-    public ArrayList<UseCaseDetail> getUseCaseDetailList() {
-        return useCaseDetailList;
-    }
-
-    public void setUseCaseDetailList(ArrayList<UseCaseDetail> useCaseDetailList) {
-        this.useCaseDetailList = useCaseDetailList;
     }
 
     public UseCaseDetail getUseCaseDetail(String useCaseID) {

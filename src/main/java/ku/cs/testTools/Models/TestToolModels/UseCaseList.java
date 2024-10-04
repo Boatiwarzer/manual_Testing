@@ -1,8 +1,12 @@
 package ku.cs.testTools.Models.TestToolModels;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
+@Setter
+@Getter
 @Data
 public class UseCaseList {
     private ArrayList<UseCase> useCaseList;
@@ -13,14 +17,6 @@ public class UseCaseList {
 
     public void addUseCase(UseCase useCase) {
         useCaseList.add(useCase);
-    }
-
-    public ArrayList<UseCase> getUseCaseList() {
-        return useCaseList;
-    }
-
-    public void setUseCaseList(ArrayList<UseCase> useCaseList) {
-        this.useCaseList = useCaseList;
     }
 
     public void removeUseCase(UseCase useCase) {
