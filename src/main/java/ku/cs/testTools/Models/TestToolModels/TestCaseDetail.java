@@ -2,6 +2,7 @@ package ku.cs.testTools.Models.TestToolModels;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.*;
 
@@ -20,7 +21,6 @@ public class TestCaseDetail {
     private String nameTCD;
     private String variableTCD;
     private String dateTCD;
-
     @ManyToOne
     private TestCase testCase;
     private String idTC;
