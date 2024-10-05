@@ -2,6 +2,9 @@ package ku.cs.testTools.Models.TestToolModels;
 
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 @Getter
 public class UseCase {
     private String useCaseID;
@@ -11,8 +14,9 @@ public class UseCase {
     private String preCondition;
     private String postCondition;
     private String note;
+    private String date;
 
-    public UseCase(String useCaseID, String useCaseName, String actor, String description, String preCondition, String postCondition, String note) {
+    public UseCase(String useCaseID, String useCaseName, String actor, String description, String preCondition, String postCondition, String note, String date) {
         this.useCaseID = useCaseID;
         this.useCaseName = useCaseName;
         this.actor = actor;
@@ -20,8 +24,21 @@ public class UseCase {
         this.preCondition = preCondition;
         this.postCondition = postCondition;
         this.note = note;
+        this.date = date;
     }
+//    public UseCase(String useCaseID, String useCaseName, String actor, String description, String preCondition, String postCondition) {
+//        this.useCaseID = useCaseID;
+//        this.useCaseName = useCaseName;
+//        this.actor = actor;
+//        this.description = description;
+//        this.preCondition = preCondition;
+//        this.postCondition = postCondition;
+//        this.note = "None";
+//    }
 
+    public String getDate() {
+        return date;
+    }
 
     public void setUseCaseID(String useCaseID) {
         this.useCaseID = useCaseID;
@@ -77,6 +94,13 @@ public class UseCase {
 
     public String getNote() {
         return note;
+    }
+
+    public String setDate() {
+        LocalDateTime dateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        this.date = dateTime.format(formatter);
+        return date;
     }
 
 

@@ -22,12 +22,15 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import ku.cs.testTools.Services.*;
+import org.controlsfx.control.textfield.TextFields;
 
-public class UseCaseAddController implements Initializable {
+public class UseCaseAddController {
 
     @FXML
     private ScrollPane actorActionScrollPane, systemActionScrollPane;
@@ -59,39 +62,44 @@ public class UseCaseAddController implements Initializable {
     @FXML
     private Label testIDLabel, errorLabel;
 
-    private String directory, projectName, useCaseId;
+    private String projectName = "uc", directory = "data", useCaseId; // directory, projectName
     private UseCase useCase;
-    private UseCaseList useCaseList;
-    private DataSource<UseCaseList> useCaseListDataSource ; //= new UseCaseListFileDataSource(directory, projectName + ".csv")
+    private UseCase selectedUseCase;
+    private UseCaseList useCaseList = new UseCaseList();
+    private DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv"); //= new UseCaseListFileDataSource(directory, projectName + ".csv")
     private UseCaseDetail useCaseDetail;
-    private UseCaseDetailList useCaseDetailList;
-    private DataSource<UseCaseDetailList> useCaseDetailListDataSource ; //= new UseCaseDetailListFileDataSource(directory, projectName + ".csv")
+    private UseCaseDetailList useCaseDetailList = new UseCaseDetailList();
+    private DataSource<UseCaseDetailList> useCaseDetailListDataSource = new UseCaseDetailListFileDataSource(directory, projectName + ".csv"); //= new UseCaseDetailListFileDataSource(directory, projectName + ".csv")
     private ObservableList<String> items;
+    private ArrayList <String> word = new ArrayList<>();
     private boolean isGenerated = false;
     @FXML
     public void initialize() {
         if (FXRouter.getData() != null) {
-            ArrayList<Object> objects = (ArrayList) FXRouter.getData();
-            projectName = (String) objects.get(0);
-            directory = (String) objects.get(1);
+//            ArrayList<Object> objects = (ArrayList<Object>) FXRouter.getData();
+//            projectName = (String) objects.get(0);
+//            directory = (String) objects.get(1);
 //            String useCaseID = (String) objects.get(2);
 
-            // Read the data from the csv files
-            useCaseListDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv");
+            // อ่านข้อมูลจากไฟล์และกำหนดค่าให้กับ useCaseList
+            useCaseListDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv"); //directory, projectName + ".csv"
             useCaseList = useCaseListDataSource.readData();
+
             useCaseDetailListDataSource = new UseCaseDetailListFileDataSource(directory, projectName + ".csv");
             useCaseDetailList = useCaseDetailListDataSource.readData();
 
-
-            // Find the use case by useCaseID
 //            useCase = useCaseList.findByUseCaseId(useCaseID);
+//            selectedListView();
             setData();
             handleGenerateIDAction();
-            System.out.println(useCaseId);
-
-            if (!Objects.equals(useCase.getNote(), "none")) {
-                onTestNoteArea.setText(useCase.getNote());
-            }
+//            if (useCaseListDataSource.readData() != null && useCaseDetailListDataSource.readData() != null){
+//                useCaseList = useCaseListDataSource.readData();
+//                loadListView(useCaseList);
+//                for (UseCase useCase : useCaseList.getUseCaseList()) {
+//                    word.add(useCase.getUseCaseName());
+//                }
+//                searchSet();
+//            }
 
             // load useCaseDetail to the actorActionVBox and systemActionVBox
             for (UseCaseDetail useCaseDetail : useCaseDetailList.getUseCaseDetailList()) {
@@ -191,6 +199,7 @@ public class UseCaseAddController implements Initializable {
         onPostConArea.setText(useCasePostCon);
         String useCaseNote = useCase.getNote();
         onTestNoteArea.setText(useCaseNote);
+        String useCaseDate = useCase.getDate();
     }
 
     private void handleGenerateIDAction() {
@@ -334,24 +343,102 @@ public class UseCaseAddController implements Initializable {
         }
     }
 
-    ArrayList<String> words = new ArrayList<>(
-            Arrays.asList("test", "dog","Human", "Days of our life", "The best day",
-                    "Friends", "Animal", "Human", "Humans", "Bear", "Life",
-                    "This is some text", "Words", "222", "Bird", "Dog", "A few words",
-                    "Subscribe!", "SoftwareEngineeringStudent", "You got this!!",
-                    "Super Human", "Super", "Like")
-    );
+//    ArrayList<String> words = new ArrayList<>(
+//            Arrays.asList("test", "dog","Human", "Days of our life", "The best day",
+//                    "Friends", "Animal", "Human", "Humans", "Bear", "Life",
+//                    "This is some text", "Words", "222", "Bird", "Dog", "A few words",
+//                    "Subscribe!", "SoftwareEngineeringStudent", "You got this!!",
+//                    "Super Human", "Super", "Like")
+//    );
+//
+//    @FXML
+//    void onSearchButton(ActionEvent event) {
+//        onSearchList.getItems().clear();
+//        onSearchList.getItems().addAll(searchList(onSearchField.getText(),words));
+//    }
+//    private void selectedListView() {
+//        if (useCase != null){
+//            onSearchList.getSelectionModel().select(useCase);
+//            onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+//                if (newValue == null) {
+//                    selectedUseCase = null;
+//                } else{
+//                    selectedUseCase = newValue;
+//                }
+//            });
+//
+//        }else {
+//            onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+//                if (newValue == null) {
+//                    selectedUseCase = null;
+//                } else {
+//                    selectedUseCase = newValue;
+//                }
+//            });
+//
+//        }
+//    }
 
+    private void clearInfo() {
+//        selectedItem = null;
+        FXRouter.setData3(null);
+    }
+//    private void searchSet() {
+//        ArrayList <String> word = new ArrayList<>();
+//        for (UseCase useCase : useCaseList.getUseCaseList()) {
+//            word.add(useCase.getUseCaseName());
+//
+//        }
+//        System.out.println(word);
+//
+//        TextFields.bindAutoCompletion(onSearchField,word);
+//        onSearchField.setOnKeyPressed(keyEvent -> {
+//            if (Objects.requireNonNull(keyEvent.getCode()) == KeyCode.ENTER) {
+//                onSearchList.getItems().clear();
+//                onSearchList.getItems().addAll(searchList(onSearchField.getText(), useCaseList.getUseCaseList()));
+//            }
+//        });
+//    }
+//    private void loadListView(UseCaseList useCaseList) {
+//        onSearchList.refresh();
+//        if (useCaseList != null){
+//            useCaseList.sort(new UseCaseComparable());
+//            for (UseCase useCase : useCaseList.getUseCaseList()) {
+//                if (!useCase.getDate().equals("null")){
+//                    onSearchList.getItems().add(useCase);
+//                }
+//            }
+//        }else {
+//            clearInfo();
+//        }
+//    }
     @FXML
     void onSearchButton(ActionEvent event) {
         onSearchList.getItems().clear();
-        onSearchList.getItems().addAll(searchList(onSearchField.getText(),words));
+//        onSearchList.getItems().addAll(searchList(onSearchField.getText(),useCaseList.getUseCaseList()));
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        onSearchList.getItems().addAll(words);
+    private List<UseCase> searchList(String searchWords, ArrayList<UseCase> listOfScripts) {
+
+        // Split searchWords into a list of individual words
+        List<String> searchWordsArray = Arrays.asList(searchWords.trim().split("\\s+"));
+
+        // Filter the list of TestScript objects
+        return listOfScripts.stream()
+                .filter(testScript ->
+                        searchWordsArray.stream().allMatch(word ->
+                                // Check if any relevant field in TestScript contains the search word (case insensitive)
+                                useCase.getUseCaseID().toLowerCase().contains(word.toLowerCase()) ||
+                                        useCase.getUseCaseName().toLowerCase().contains(word.toLowerCase())
+                        )
+                )
+                .collect(Collectors.toList());  // Return the filtered list
     }
+
+//    @Override
+//    public void initialize(URL url, ResourceBundle resourceBundle) {
+//        onSearchList.getItems().addAll(words);
+//    }
 
     private List<String> searchList(String searchWords, List<String> listOfStrings) {
 
@@ -372,83 +459,30 @@ public class UseCaseAddController implements Initializable {
         String ucPreCon = onPreConArea.getText();
         String ucPostCon = onPostConArea.getText();
         String ucNote = onTestNoteArea.getText();
+        String ucDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
-        useCase = new UseCase(ucId, ucName, ucActor, ucDescript, ucPreCon, ucPostCon, ucNote);
-//        if (!testIDLabel.getText().isEmpty()) {
-//            if (useCaseList.findByUseCaseId(useCaseId) == null || testIDLabel.equals(useCase.getUseCaseID())) {
-//                errorLabel.setText("");
-//                useCase.setUseCaseID(useCaseId);
-//            } else {
-//                errorLabel.setText("This use case ID is already being used by another use case.");
-//                return;
-//            }
-//        } else {
-//            errorLabel.setText("Please enter the use case ID.");
-//            return;
-//        }
-
-//        if (!ucName.isEmpty() || ucName == null) {
-//            if (!useCaseList.isUseCaseNameExist(ucName) || ucName.equals(useCase.getUseCaseName())) {
-//                errorLabel.setText("");
-//                useCase.setUseCaseName(ucName);
-//            } else {
-//                errorLabel.setText("This use case name is already being used by another use case.");
-//                return;
-//            }
-//        } else {
-//            errorLabel.setText("Please enter the use case name.");
-//            return;
-//        }
-        if (!ucId.isEmpty()) {
-            useCase.setUseCaseID(ucId);
-        } else {
-            errorLabel.setText("Please enter the actor name.");
+        if (useCaseList.isUseCaseIDExist(ucId)) {
+            errorLabel.setText("Use case ID already exists.");
             return;
         }
 
-        if (!ucName.isEmpty()) {
-            useCase.setUseCaseName(ucName);
-        } else {
-            errorLabel.setText("Please enter the actor name.");
-            return;
-        }
+//        UseCase newUseCase = new UseCase(ucId, ucName, ucActor, ucDescript, ucPreCon, ucPostCon, ucNote);
+//        useCaseList.addUseCase(newUseCase);
 
-        if (!onTestActorField.getText().isEmpty()) {
-            useCase.setActor(onTestActorField.getText());
-        } else {
-            errorLabel.setText("Please enter the actor name.");
-            return;
-        }
+        if (!ucName.isEmpty() && !ucActor.isEmpty() && !ucDescript.isEmpty() && !ucPreCon.isEmpty() && !ucPostCon.isEmpty()) {
+            if (!useCaseList.isUseCaseNameExist(ucName)) {
+                if (!ucNote.isEmpty()) {
+                    UseCase newUseCase = new UseCase(ucId, ucName, ucActor, ucDescript, ucPreCon, ucPostCon, ucNote, ucDate);
+                    useCaseList.addUseCase(newUseCase);
+                    errorLabel.setText("Use case added successfully!");
+                } else {
+                    UseCase noneNote = new UseCase(ucId, ucName, ucActor, ucDescript, ucPreCon, ucPostCon, "None", ucDate);
+                    useCaseList.addUseCase(noneNote);
+                    errorLabel.setText("Use case added successfully!");
+                }
+            } else errorLabel.setText("Use case name already exists.");
+        } else errorLabel.setText("Please fill in all required fields.");
 
-        if (!onDescriptArea.getText().isEmpty()) {
-            useCase.setDescription(onDescriptArea.getText());
-        } else {
-            errorLabel.setText("Please enter the Description.");
-            return;
-//            useCase.setDescription("none");
-        }
-
-        if (!onPreConArea.getText().isEmpty()) {
-            useCase.setPreCondition(onPreConArea.getText());
-        } else {
-            errorLabel.setText("Please enter the Pre-condition.");
-            return;
-//            useCase.setPreCondition("none");
-        }
-
-        if (!onPostConArea.getText().isEmpty()) {
-            useCase.setPostCondition(onPostConArea.getText());
-        } else {
-            errorLabel.setText("Please enter the Post-condition.");
-            return;
-//            useCase.setPostCondition("none");
-        }
-
-        if (!onTestNoteArea.getText().isEmpty()) {
-            useCase.setNote(onTestNoteArea.getText());
-        } else {
-            useCase.setNote("none");
-        }
 
 //        useCaseDetailList.clearUseCaseDetail(useCase.getUseCaseID());
         // Get the text from the textAreas in the actorActionVBox and write them to the useCaseDetailList
@@ -457,7 +491,7 @@ public class UseCaseAddController implements Initializable {
             HBox hBox = (HBox) node;
             TextArea textArea = (TextArea) hBox.getChildren().get(0);
             if (!textArea.getText().isEmpty()) {
-                UseCaseDetail useCaseDetail = new UseCaseDetail(useCase.getUseCaseID(), "actor", actorNumber, textArea.getText());
+                UseCaseDetail useCaseDetail = new UseCaseDetail(ucId, "actor", actorNumber, textArea.getText());
                 useCaseDetailList.addUseCaseDetail(useCaseDetail);
                 actorNumber++;
             }
@@ -469,31 +503,27 @@ public class UseCaseAddController implements Initializable {
             HBox hBox = (HBox) node;
             TextArea textArea = (TextArea) hBox.getChildren().get(0);
             if (!textArea.getText().isEmpty()) {
-                UseCaseDetail useCaseDetail = new UseCaseDetail(useCase.getUseCaseID(), "system", systemNumber, textArea.getText());
+                UseCaseDetail useCaseDetail = new UseCaseDetail(ucId, "system", systemNumber, textArea.getText());
                 useCaseDetailList.addUseCaseDetail(useCaseDetail);
                 systemNumber++;
             }
         }
 
 
-        // Edit the useCase in the useCaseList
         useCaseListDataSource.writeData(useCaseList);
-        // Edit the useCaseDetailList
         useCaseDetailListDataSource.writeData(useCaseDetailList);
-        // Edit the componentPreferenceList
+
 
         DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv");
         DataSource<UseCaseDetailList> useCaseDetailListDataSource = new UseCaseDetailListFileDataSource(directory, projectName + ".csv");
 
-        useCaseListDataSource.writeData(useCaseList);
-        useCaseDetailListDataSource.writeData(useCaseDetailList);
-
-//        // send the project name and directory to HomePage
-//        ArrayList<Object> objects = new ArrayList<>();
-//        objects.add(projectName);
-//        objects.add(directory);
+        // send the project name and directory to HomePage
+        ArrayList<Object> objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
 
 //        FXRouter.goTo("use_case", objects);
+        FXRouter.goTo("use_case",useCase);
         isGenerated = false;
     }
 //    private void updateID() {

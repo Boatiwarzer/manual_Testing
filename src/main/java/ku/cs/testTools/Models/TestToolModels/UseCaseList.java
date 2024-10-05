@@ -1,6 +1,8 @@
 package ku.cs.testTools.Models.TestToolModels;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class UseCaseList {
     private ArrayList<UseCase> useCaseList;
@@ -38,6 +40,14 @@ public class UseCaseList {
         }
         return null;
     }
+    public boolean isUseCaseIDExist(String useCaseID) {
+        for (UseCase useCase : useCaseList) {
+            if (useCase.getUseCaseID().equals(useCaseID)) {
+                return true;
+            }
+        }
+        return false;
+    }
     public boolean isUseCaseNameExist(String useCaseName) {
         for (UseCase useCase : useCaseList) {
             if (useCase.getUseCaseName().equals(useCaseName)) {
@@ -45,5 +55,8 @@ public class UseCaseList {
             }
         }
         return false;
+    }
+    public void sort(Comparator<UseCase> cmp) {
+        Collections.sort(useCaseList, cmp);
     }
 }

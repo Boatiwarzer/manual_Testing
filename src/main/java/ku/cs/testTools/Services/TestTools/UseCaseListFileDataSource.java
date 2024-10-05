@@ -61,7 +61,8 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
                             data[4], // description
                             data[5], // preCondition
                             data[6], // postCondition
-                            data[7]  // note
+                            data[7], // note
+                            data[8]  // date
                     );
                     useCaseList.addUseCase(useCase);
                 }
@@ -95,7 +96,7 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
         FileWriter writer = null;
         BufferedWriter buffer = null;
         try {
-            writer = new FileWriter(file, StandardCharsets.UTF_8);
+            writer = new FileWriter(file, StandardCharsets.UTF_8, true);
             buffer = new BufferedWriter(writer);
 
             // Write UseCaseDetailList to CSV
@@ -126,6 +127,7 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
                 + useCase.getDescription() + ","
                 + useCase.getPreCondition() + ","
                 + useCase.getPostCondition() + ","
-                + useCase.getNote() + ",";
+                + useCase.getNote() + ","
+                + useCase.getDate();
     }
 }
