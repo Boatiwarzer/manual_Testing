@@ -1,14 +1,12 @@
 package ku.cs.testTools.Models.TestToolModels;
 
-<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-=======
+
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
->>>>>>> e0f7541ad8b87017e69a00e7cb7833abfbcc1dac
 
 import java.util.ArrayList;
 @Setter
