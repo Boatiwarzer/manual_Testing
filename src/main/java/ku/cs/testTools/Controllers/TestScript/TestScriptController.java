@@ -193,15 +193,25 @@ public class TestScriptController {
 
         // Define column configurations
         ArrayList<StringConfiguration> configs = new ArrayList<>();
+        configs.add(new StringConfiguration("title:TSD-ID.", "field:idTSD"));
         configs.add(new StringConfiguration("title:Test No.", "field:testNo"));
         configs.add(new StringConfiguration("title:Test Step.", "field:steps"));
         configs.add(new StringConfiguration("title:Input Data.", "field:inputData"));
         configs.add(new StringConfiguration("title:Expected Result.", "field:expected"));
+        configs.add(new StringConfiguration("title:Date.", "field:dateTSD"));
+
+        int index = 0;
 
         // Create and add columns
         for (StringConfiguration conf : configs) {
             TableColumn<TestScriptDetail, String> col = new TableColumn<>(conf.get("title"));
             col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
+            if (index <= 1) {  // ถ้าเป็นคอลัมน์แรก
+                col.setPrefWidth(80);
+                col.setMaxWidth(80);   // จำกัดขนาดสูงสุดของคอลัมน์แรก
+                col.setMinWidth(80); // ตั้งค่าขนาดคอลัมน์แรก
+            }
+            index++;
             new TableColumns(col);
             onTableTestscript.getColumns().add(col);
         }
@@ -251,13 +261,23 @@ public class TestScriptController {
     private void setTable() {
         new TableviewSet<>(onTableTestscript);
         ArrayList<StringConfiguration> configs = new ArrayList<>();
+        configs.add(new StringConfiguration("title:TSD-ID."));
         configs.add(new StringConfiguration("title:Test No."));
         configs.add(new StringConfiguration("title:Test Step."));
         configs.add(new StringConfiguration("title:Input Data."));
         configs.add(new StringConfiguration("title:Expected Result."));
+        configs.add(new StringConfiguration("title:Date."));
+
+        int index = 0;
 
         for (StringConfiguration conf: configs) {
             TableColumn col = new TableColumn(conf.get("title"));
+            if (index <= 1) {  // ถ้าเป็นคอลัมน์แรก
+                col.setPrefWidth(80);
+                col.setMaxWidth(80);   // จำกัดขนาดสูงสุดของคอลัมน์แรก
+                col.setMinWidth(80); // ตั้งค่าขนาดคอลัมน์แรก
+            }
+            index++;
             new TableColumns(col);
             onTableTestscript.getColumns().add(col);
         }

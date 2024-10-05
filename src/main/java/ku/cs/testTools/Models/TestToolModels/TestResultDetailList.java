@@ -1,7 +1,10 @@
 package ku.cs.testTools.Models.TestToolModels;
 
-import java.util.ArrayList;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+@AllArgsConstructor
 public class TestResultDetailList {
     private ArrayList<TestResultDetail> testResultDetailList;
 

@@ -1,12 +1,22 @@
 package ku.cs.testTools.Models.TestToolModels;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 
+<<<<<<< HEAD
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Getter
+=======
+@Data
+@Entity
+>>>>>>> e0f7541ad8b87017e69a00e7cb7833abfbcc1dac
 public class UseCase {
+    @Id
     private String useCaseID;
     private String useCaseName;
     private String actor;

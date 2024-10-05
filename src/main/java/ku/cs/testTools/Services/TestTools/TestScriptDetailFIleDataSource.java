@@ -58,12 +58,6 @@ public class TestScriptDetailFIleDataSource implements DataSource<TestScriptDeta
                 String[] data = line.split(",");
 
                 if (data[0].trim().equals("testScriptDetail")) {
-                    // Assuming the testScript ID is in data[6]
-                    String testScriptId = data[6].trim();
-
-                    // Fetch the TestScript entity using the testScriptId (pseudo-code, implement according to your context)
-                    TestScript testScript = testScriptList.findTSById(testScriptId);
-
                     // Create the TestScriptDetail object
                     TestScriptDetail testScriptDetail = new TestScriptDetail(
                             data[1].trim(), // idTSD
@@ -71,7 +65,8 @@ public class TestScriptDetailFIleDataSource implements DataSource<TestScriptDeta
                             data[3].trim(), // steps
                             data[4].trim(), // inputData
                             data[5].trim(),
-                            data[6].trim()// expected
+                            data[6].trim(),
+                            data[7].trim()// expected
                     );
 
                     // Add the detail to the list
@@ -113,6 +108,7 @@ public class TestScriptDetailFIleDataSource implements DataSource<TestScriptDeta
                 testScriptDetail.getSteps() + "," +
                 testScriptDetail.getInputData() + "," +
                 testScriptDetail.getExpected()+ "," +
-                testScriptDetail.getIdTS();
+                testScriptDetail.getIdTS()+ "," +
+                testScriptDetail.getDateTSD();
     }
 }

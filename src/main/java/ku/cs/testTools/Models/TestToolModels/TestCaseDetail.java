@@ -2,6 +2,7 @@ package ku.cs.testTools.Models.TestToolModels;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.*;
 
@@ -12,6 +13,7 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @Entity
+@AllArgsConstructor
 public class TestCaseDetail {
     @Id
     private String idTCD;
@@ -19,7 +21,6 @@ public class TestCaseDetail {
     private String nameTCD;
     private String variableTCD;
     private String dateTCD;
-
     @ManyToOne
     private TestCase testCase;
     private String idTC;
@@ -28,8 +29,9 @@ public class TestCaseDetail {
         this.testNo = testNo;
         this.nameTCD = nameTCD;
         this.variableTCD = variableTCD;
-        this.idTC = idTC;
         this.dateTCD = dateTCD;
+        this.idTC = idTC;
+
     }
 
     public TestCaseDetail(String idTCD, String testNo, String nameTCD, String variableTCD, String idTC) {

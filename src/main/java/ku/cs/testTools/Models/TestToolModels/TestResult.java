@@ -12,6 +12,7 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @Entity
+@AllArgsConstructor
 public class TestResult {
     @Id
     private String id;

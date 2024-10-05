@@ -13,6 +13,7 @@ import java.util.Objects;
 @Setter
 @RequiredArgsConstructor
 @Entity
+@AllArgsConstructor
 public class TestCase {
     @Id
     private String idTC;
@@ -22,7 +23,7 @@ public class TestCase {
     private String descriptionTC;
     private String note;
     @OneToMany(mappedBy = "testCase")
-    private List<TestScriptDetail> testScriptCaseList;
+    private List<TestCaseDetail> testCaseList;
     private String idTCDList;
 
     public TestCase(String idTC, String nameTC, String dateTC, String useCase, String descriptionTC, String note) {

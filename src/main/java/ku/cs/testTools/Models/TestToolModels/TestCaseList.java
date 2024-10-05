@@ -1,12 +1,15 @@
 package ku.cs.testTools.Models.TestToolModels;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
 @Data
+@AllArgsConstructor
 public class TestCaseList {
     private ArrayList<TestCase> testCaseList;
 

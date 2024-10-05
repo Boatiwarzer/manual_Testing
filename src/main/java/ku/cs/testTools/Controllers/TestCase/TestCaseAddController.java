@@ -148,20 +148,13 @@ public class TestCaseAddController {
 
     private void randomId() {
         int min = 1;
-        int min2 = 1;
         int upperbound = 999;
-        int back = 999;
         String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
-        String random2 = String.valueOf((int)Math.floor(Math.random() * (back - min2 + 1) + min2));
-        this.tcId = String.format("TC-%s", random1+random2);
+        this.tcId = String.format("TC-%s", random1);
     }
 
     private void setTable() {
-        testCaseDetailList = new TestCaseDetailList();
-        onTableTestscase.getColumns().clear();
-        onTableTestscase.getItems().clear();
-        onTableTestscase.refresh();
-        onTableTestscase.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        new TableviewSet<>(onTableTestscase);
 
         ArrayList<StringConfiguration> configs = new ArrayList<>();
         configs.add(new StringConfiguration("title:TC-ID."));
@@ -170,12 +163,18 @@ public class TestCaseAddController {
         configs.add(new StringConfiguration("title:Type Variable."));
         configs.add(new StringConfiguration("title:Date."));
 
-
+        int index = 0;
         for (StringConfiguration conf: configs) {
             TableColumn col = new TableColumn(conf.get("title"));
+            if (index <= 1) {  // ถ้าเป็นคอลัมน์แรก
+                col.setPrefWidth(80);
+                col.setMaxWidth(80);   // จำกัดขนาดสูงสุดของคอลัมน์แรก
+                col.setMinWidth(80); // ตั้งค่าขนาดคอลัมน์แรก
+            }
             col.setSortable(false);
             col.setReorderable(false);
             onTableTestscase.getColumns().add(col);
+            index++;
 
         }
     }
@@ -312,25 +311,32 @@ public class TestCaseAddController {
 
         // Define column configurations
         ArrayList<StringConfiguration> configs = new ArrayList<>();
-        configs.add(new StringConfiguration("title:TC-ID."));
-        configs.add(new StringConfiguration("title:Test No."));
-        configs.add(new StringConfiguration("title:Name Variable."));
-        configs.add(new StringConfiguration("title:Type Variable."));
-        configs.add(new StringConfiguration("title:Date."));
+        configs.add(new StringConfiguration("title:TC-ID.", "field:idTCD"));
+        configs.add(new StringConfiguration("title:Test No.", "field:testNo"));
+        configs.add(new StringConfiguration("title:Name Variable.", "field:nameTCD"));
+        configs.add(new StringConfiguration("title:Type Variable.", "field:variableTCD"));
+        configs.add(new StringConfiguration("title:Date.", "field:dateTCD"));
 
-
+        int index = 0;
         // Create and add columns
         for (StringConfiguration conf : configs) {
             TableColumn<TestCaseDetail, String> col = new TableColumn<>(conf.get("title"));
+            if (index <= 1) {  // ถ้าเป็นคอลัมน์แรก
+                col.setPrefWidth(80);
+                col.setMaxWidth(80);   // จำกัดขนาดสูงสุดของคอลัมน์แรก
+                col.setMinWidth(80); // ตั้งค่าขนาดคอลัมน์แรก
+            }
             col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
             new TableColumns(col);
             onTableTestscase.getColumns().add(col);
+            index++;
         }
 
         //Add items to the table
         for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()) {
             onTableTestscase.getItems().add(testCaseDetail);
         }
+
     }
 
     private void setButtonVisible() {
@@ -447,9 +453,36 @@ public class TestCaseAddController {
 
     @FXML
     void onSubmitButton(ActionEvent event) {
+        try {
+            String name = onTestNameField.getText();
+            String idTC = tcId;
+            String date = testDateLabel.getText();
+            String useCase = onUsecaseCombobox.getValue();
+            String description = infoDescriptLabel.getText();
+            String note = onTestNoteField.getText();
+            testCase = new TestCase(idTC, name, date, useCase, description,note);
+
+            testCaseList.addOrUpdateTestCase(testCase);
+
+            // Write data to respective files
+            testCaseListDataSource.writeData(testCaseList);
+            testCaseDetailListDataSource.writeData(testCaseDetailList);
+            showAlert("Success", "Test case saved successfully!");
+
+            FXRouter.goTo("test_case",testCase,true);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
-
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
 
 
     @FXML

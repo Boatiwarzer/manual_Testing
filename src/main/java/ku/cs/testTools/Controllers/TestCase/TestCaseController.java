@@ -1,20 +1,18 @@
 package ku.cs.testTools.Controllers.TestCase;
 
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import ku.cs.fxrouter.FXRouter;
+import ku.cs.testTools.Models.TestToolModels.*;
+import ku.cs.testTools.Services.*;
+import ku.cs.testTools.Services.TestTools.TestCaseDetailFileDataSource;
+import ku.cs.testTools.Services.TestTools.TestCaseFileDataSource;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -57,10 +55,10 @@ public class TestCaseController {
     private TextField onSearchField ;
 
     @FXML
-    private ListView<String> onSearchList;
+    private ListView<TestCase> onSearchList;
 
     @FXML
-    private TableView<?> onTableTestcase;
+    private TableView<TestCaseDetail> onTableTestcase;
 
     @FXML
     private Label testDateLabel;
@@ -70,48 +68,231 @@ public class TestCaseController {
 
     @FXML
     private Label testNameLabel;
-
-    ArrayList<String> words = new ArrayList<>(
-            Arrays.asList("test", "dog","Human", "Days of our life", "The best day",
-                    "Friends", "Animal", "Human", "Humans", "Bear", "Life",
-                    "This is some text", "Words", "222", "Bird", "Dog", "A few words",
-                    "Subscribe!", "SoftwareEngineeringStudent", "You got this!!",
-                    "Super Human", "Super", "Like")
-    );
-    String[] word ={"test", "dog","Human", "Days of our life", "The best day",
-            "Friends", "Animal", "Human", "Humans", "Bear", "Life",
-            "This is some text", "Words", "222", "Bird", "Dog", "A few words",
-            "Subscribe!", "SoftwareEngineeringStudent", "You got this!!",
-            "Super Human", "Super", "Like"};
-
+    private ArrayList<String> word = new ArrayList<>();
+    private String tcId;
+    private String projectName = "125", directory = "data";
+    private TestCaseList testCaseList = new TestCaseList();
+    //private ArrayList<Object> objects = (ArrayList) FXRouter.getData();
+    private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
+    private TestCaseDetail selectedItem;
+    private TestCase testCase;
+    private TestCase selectedTestCase;
+    private static int idCounter = 1; // Counter for sequential IDs
+    private static final int MAX_ID = 999; // Upper limit for IDs
+    private static Set<String> usedIds = new HashSet<>(); // Set to store used IDs
+    DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory,projectName + ".csv");
+    DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
     @FXML
-    void onSearchButton(ActionEvent event) {
-        onSearchList.getItems().clear();
-        onSearchList.getItems().addAll(searchList(onSearchField.getText(),words));
+    void initialize() {
+        if (FXRouter.getData() != null) {
+            testCaseList = testCaseListDataSource.readData();
+            testCaseDetailList = testCaseDetailListDataSource.readData();
+            testCase = (TestCase) FXRouter.getData();
+            loadListView(testCaseList);
+            selected();
+            for (TestCase testcase : testCaseList.getTestCaseList()) {
+                word.add(testcase.getNameTC());
+            }
+            searchSet();
+
+        } else {
+            setTable();
+            if (testCaseListDataSource.readData() != null && testCaseDetailListDataSource.readData() != null){
+                testCaseList = testCaseListDataSource.readData();
+                testCaseDetailList = testCaseDetailListDataSource.readData();
+                loadListView(testCaseList);
+                selected();
+                for (TestCase testCase : testCaseList.getTestCaseList()) {
+                    word.add(testCase.getNameTC());
+                }
+                searchSet();
+            }
+
+
+        }
+
     }
-    public void initialize() {
-        onSearchList.getItems().addAll(words);
-        onSearchList.refresh();
-        TextFields.bindAutoCompletion(onSearchField,words);
+    private void searchSet() {
+        ArrayList <String> word = new ArrayList<>();
+        for (TestCase testCase : testCaseList.getTestCaseList()) {
+            word.add(testCase.getNameTC());
+
+        }
+        System.out.println(word);
+
+        TextFields.bindAutoCompletion(onSearchField,word);
         onSearchField.setOnKeyPressed(keyEvent -> {
             if (Objects.requireNonNull(keyEvent.getCode()) == KeyCode.ENTER) {
                 onSearchList.getItems().clear();
-                onSearchList.getItems().addAll(searchList(onSearchField.getText(), words));
+                onSearchList.getItems().addAll(searchList(onSearchField.getText(), testCaseList.getTestCaseList()));
             }
         });
+    }
 
+    private void selected() {
+        if (testCase != null){
+            onSearchList.getSelectionModel().select(testCase);
+            onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue == null) {
+                    clearInfo();
+                    selectedTestCase = null;
+                } else{
+                    onEditButton.setVisible(newValue.getIdTC() != null);
+                    showInfo(newValue);
+                    selectedTestCase = newValue;
+                }
+            });
+
+        }else {
+            onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue == null) {
+                    clearInfo();
+                    selectedTestCase = null;
+                } else {
+                    showInfo(newValue);
+                    selectedTestCase = newValue;
+                }
+            });
+
+        }
 
     }
 
-    private List<String> searchList(String searchWords, List<String> listOfStrings) {
-
-        List<String> searchWordsArray = Arrays.asList(searchWords.trim().split(" "));
-
-        return listOfStrings.stream().filter(input -> {
-            return searchWordsArray.stream().allMatch(word ->
-                    input.toLowerCase().contains(word.toLowerCase()));
-        }).collect(Collectors.toList());
+    private void showInfo(TestCase testCase) {
+        String tsId = testCase.getIdTC();
+        testIDLabel.setText(tsId);
+        String name = testCase.getNameTC();
+        testNameLabel.setText(name);
+        String date = testCase.getDateTC();
+        testDateLabel.setText(date);
+        String useCase = testCase.getUseCase();
+        infoUsecaseLabel.setText(useCase);
+        String description = testCase.getDescriptionTC();
+        infoDescriptLabel.setText(description);;
+        String note = testCase.getNote();
+        infoNoteLabel.setText(note);
+        setTableInfo(testCase);
     }
+
+    private void setTableInfo(TestCase testCase) { // Clear existing columns
+        new TableviewSet<>(onTableTestcase);
+
+        // Define column configurations
+        ArrayList<StringConfiguration> configs = new ArrayList<>();
+        configs.add(new StringConfiguration("title:TSD-ID.", "field:idTSD"));
+        configs.add(new StringConfiguration("title:Test No.", "field:testNo"));
+        configs.add(new StringConfiguration("title:Test Step.", "field:steps"));
+        configs.add(new StringConfiguration("title:Input Data.", "field:inputData"));
+        configs.add(new StringConfiguration("title:Expected Result.", "field:expected"));
+        configs.add(new StringConfiguration("title:Date.", "field:dateTSD"));
+
+        int index = 0;
+
+        // Create and add columns
+        for (StringConfiguration conf : configs) {
+            TableColumn<TestCaseDetail, String> col = new TableColumn<>(conf.get("title"));
+            col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
+            if (index <= 1) {  // ถ้าเป็นคอลัมน์แรก
+                col.setPrefWidth(80);
+                col.setMaxWidth(80);   // จำกัดขนาดสูงสุดของคอลัมน์แรก
+                col.setMinWidth(80); // ตั้งค่าขนาดคอลัมน์แรก
+            }
+            index++;
+            new TableColumns(col);
+            onTableTestcase.getColumns().add(col);
+        }
+
+        //Add items to the table
+        for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()) {
+            if (testCaseDetail.getIdTC().trim().equals(testCase.getIdTC().trim())){
+                onTableTestcase.getItems().add(testCaseDetail);
+
+            }
+        }
+
+    }
+    private void loadListView(TestCaseList testCaseList) {
+        onEditButton.setVisible(false);
+        onSearchList.refresh();
+        if (testCaseList != null){
+            testCaseList.sort(new TestCaseComparable());
+            for (TestCase testCase : testCaseList.getTestCaseList()) {
+                if (!testCase.getDateTC().equals("null")){
+                    onSearchList.getItems().add(testCase);
+
+                }
+            }
+        }else {
+            setTable();
+            clearInfo();
+        }
+    }
+
+    private void clearInfo() {
+        // Clear all the fields by setting them to an empty string
+        testIDLabel.setText("");
+        testNameLabel.setText("");
+        testDateLabel.setText("");
+        onClickUsecase.setText("");
+        infoDescriptLabel.setText("");
+        infoNoteLabel.setText("");
+
+        // Optionally clear the table if needed
+        onTableTestcase.getItems().clear();
+    }
+
+
+    private void setTable() {
+        new TableviewSet<>(onTableTestcase);
+        ArrayList<StringConfiguration> configs = new ArrayList<>();
+        configs.add(new StringConfiguration("title:TSD-ID."));
+        configs.add(new StringConfiguration("title:Test No."));
+        configs.add(new StringConfiguration("title:Test Step."));
+        configs.add(new StringConfiguration("title:Input Data."));
+        configs.add(new StringConfiguration("title:Expected Result."));
+        configs.add(new StringConfiguration("title:Date."));
+
+        int index = 0;
+
+        for (StringConfiguration conf: configs) {
+            TableColumn col = new TableColumn(conf.get("title"));
+            if (index <= 1) {  // ถ้าเป็นคอลัมน์แรก
+                col.setPrefWidth(80);
+                col.setMaxWidth(80);   // จำกัดขนาดสูงสุดของคอลัมน์แรก
+                col.setMinWidth(80); // ตั้งค่าขนาดคอลัมน์แรก
+            }
+            index++;
+            new TableColumns(col);
+            onTableTestcase.getColumns().add(col);
+        }
+
+
+    }
+    @FXML
+    void onSearchButton(ActionEvent event) {
+        onSearchList.getItems().clear();
+        onSearchList.getItems().addAll(searchList(onSearchField.getText(),testCaseList.getTestCaseList()));
+    }
+
+    private List<TestCase> searchList(String searchWords, ArrayList<TestCase> listOfScripts) {
+
+        // Split searchWords into a list of individual words
+        List<String> searchWordsArray = Arrays.asList(searchWords.trim().split("\\s+"));
+
+        // Filter the list of TestScript objects
+        return listOfScripts.stream()
+                .filter(testCase ->
+                        searchWordsArray.stream().allMatch(word ->
+                                testCase.getIdTC().toLowerCase().contains(word.toLowerCase()) ||
+                                        testCase.getNameTC().toLowerCase().contains(word.toLowerCase())
+
+                        )
+                )
+                .collect(Collectors.toList());  // Return the filtered list
+    }
+
+
+
     @FXML
     void onClickTestcase(ActionEvent event) {
         try {
@@ -160,7 +341,7 @@ public class TestCaseController {
     @FXML
     void onCreateButton(ActionEvent event) {
         try {
-            FXRouter.goTo("test_case_add");
+            FXRouter.goTo("test_case_add",null);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -169,7 +350,7 @@ public class TestCaseController {
     @FXML
     void onEditButton(ActionEvent event) {
         try {
-            FXRouter.goTo("test_case_edit");
+            FXRouter.goTo("test_case_edit",selectedTestCase);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -3,7 +3,6 @@ package ku.cs.testTools.Models.TestToolModels;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import lombok.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -15,6 +14,8 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @Entity
+@Data
+@AllArgsConstructor
 public class TestScript {
     @Id
     private String idTS;
@@ -61,19 +62,6 @@ public class TestScript {
         this.testCase = testCase;
         this.preCon = preCon;
         this.freeText = freeText;
-        this.idTSDList = idTSDList;
-    }
-
-    public TestScript(String idTS, String nameTS, String dateTS, String useCase, String descriptionTS, String testCase, String preCon, String freeText, List<TestScriptDetail> testScriptDetailList, String idTSDList) {
-        this.idTS = idTS;
-        this.nameTS = nameTS;
-        this.dateTS = dateTS;
-        this.useCase = useCase;
-        this.descriptionTS = descriptionTS;
-        this.testCase = testCase;
-        this.preCon = preCon;
-        this.freeText = freeText;
-        this.testScriptDetailList = testScriptDetailList;
         this.idTSDList = idTSDList;
     }
 
