@@ -120,7 +120,7 @@
                         <VBox prefHeight="90.0" prefWidth="360.0">
                            <children>
                               <VBox prefHeight="5.0" prefWidth="100.0" />
-                              <Label fx:id="infoDescriptLabel" alignment="TOP_LEFT" prefHeight="85.0" prefWidth="360.0" text="Label" wrapText="true">
+                              <Label fx:id="infoDescriptLabel" alignment="TOP_LEFT" prefHeight="85.0" prefWidth="360.0" text="Label" textFill="#0055ff" wrapText="true">
                                  <font>
                                     <Font size="16.0" />
                                  </font>
@@ -135,7 +135,7 @@
                         <VBox prefHeight="90.0" prefWidth="360.0">
                            <children>
                               <VBox prefHeight="5.0" prefWidth="100.0" />
-                              <Label fx:id="infoPreconLabel" alignment="TOP_LEFT" prefHeight="85.0" prefWidth="360.0" text="Label" wrapText="true">
+                              <Label fx:id="infoPreconLabel" alignment="TOP_LEFT" prefHeight="85.0" prefWidth="360.0" text="Label" textFill="#0055ff" wrapText="true">
                                  <font>
                                     <Font size="16.0" />
                                  </font>
