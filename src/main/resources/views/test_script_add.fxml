@@ -67,7 +67,7 @@
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="onTestNameField" onAction="#onTestNameField" prefHeight="30.0" prefWidth="300.0">
+                        <TextField fx:id="onTestNameField"  prefHeight="30.0" prefWidth="300.0">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -101,13 +101,13 @@
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <ComboBox fx:id="onUsecaseCombobox" onAction="#onUsecaseCombobox" prefHeight="30.0" prefWidth="360.0" />
+                        <ComboBox fx:id="onUsecaseCombobox"  prefHeight="30.0" prefWidth="360.0" />
                         <Label prefHeight="30.0" prefWidth="120.0" text="Test Case :" textAlignment="CENTER">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <ComboBox fx:id="onTestcaseCombobox" onAction="#onTestcaseCombobox" prefHeight="30.0" prefWidth="360.0" />
+                        <ComboBox fx:id="onTestcaseCombobox"  prefHeight="30.0" prefWidth="360.0" />
                      </children>
                   </HBox>
                   <HBox prefHeight="90.0" prefWidth="200.0" spacing="20.0">
@@ -151,7 +151,7 @@
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="onTestNoteField" onAction="#onTestNoteField" prefHeight="30.0" prefWidth="900.0">
+                        <TextField fx:id="onTestNoteField"  prefHeight="30.0" prefWidth="900.0">
                            <font>
                               <Font size="14.0" />
                            </font>

@@ -179,12 +179,11 @@ public class TestCaseController {
 
         // Define column configurations
         ArrayList<StringConfiguration> configs = new ArrayList<>();
-        configs.add(new StringConfiguration("title:TSD-ID.", "field:idTSD"));
+        configs.add(new StringConfiguration("title:TC-ID.", "field:idTCD"));
         configs.add(new StringConfiguration("title:Test No.", "field:testNo"));
-        configs.add(new StringConfiguration("title:Test Step.", "field:steps"));
-        configs.add(new StringConfiguration("title:Input Data.", "field:inputData"));
-        configs.add(new StringConfiguration("title:Expected Result.", "field:expected"));
-        configs.add(new StringConfiguration("title:Date.", "field:dateTSD"));
+        configs.add(new StringConfiguration("title:Name Variable.", "field:nameTCD"));
+        configs.add(new StringConfiguration("title:Type Variable.", "field:variableTCD"));
+        configs.add(new StringConfiguration("title:Date.", "field:dateTCD"));
 
         int index = 0;
 
