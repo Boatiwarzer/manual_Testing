@@ -10,13 +10,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import ku.cs.fxrouter.FXRouter;
-import ku.cs.testTools.Models.TestToolModels.TestScript;
-import ku.cs.testTools.Models.TestToolModels.TestScriptDetail;
-import ku.cs.testTools.Models.TestToolModels.TestScriptDetailList;
-import ku.cs.testTools.Models.TestToolModels.TestScriptList;
+import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
+import ku.cs.testTools.Services.TestTools.TestCaseFileDataSource;
 import ku.cs.testTools.Services.TestTools.TestScriptDetailFIleDataSource;
 import ku.cs.testTools.Services.TestTools.TestScriptFileDataSource;
+import ku.cs.testTools.Services.TestTools.UseCaseListFileDataSource;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.IOException;
@@ -93,7 +92,7 @@ public class TestScriptEditController {
     @FXML
     private Button onEditListButton;
     private String tsId;
-    private String projectName = "125", directory = "data";
+    private String projectName1 = "uc", projectName = "125", directory = "data";
     private TestScriptList testScriptList = new TestScriptList();
     //private ArrayList<Object> objects = (ArrayList) FXRouter.getData();
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
@@ -106,8 +105,11 @@ public class TestScriptEditController {
     private ArrayList <String> word = new ArrayList<>();
     // Upper limit for IDs
     private static Set<String> usedIds = new HashSet<>(); // Set to store used IDs
-    DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-    DataSource<TestScriptDetailList> testScriptDetailListListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+    private final DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+    private final DataSource<TestScriptDetailList> testScriptDetailListListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+    private final DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
+    private final DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName1+".csv");
+
     @FXML
     void initialize() {
         selectedComboBox();

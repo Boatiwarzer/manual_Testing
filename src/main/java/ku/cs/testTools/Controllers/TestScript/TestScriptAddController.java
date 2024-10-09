@@ -107,10 +107,10 @@ public class TestScriptAddController {
     private static int idCounter = 1; // Counter for sequential IDs
     private static final int MAX_ID = 999; // Upper limit for IDs
     private static Set<String> usedIds = new HashSet<>(); // Set to store used IDs
-    DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-    DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-    DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
-    DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName1+".csv");
+    private final DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+    private final DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+    private final DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
+    private final DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName1+".csv");
     @FXML
     void initialize() {
         clearInfo();
@@ -211,6 +211,7 @@ public class TestScriptAddController {
     }
 
     private void clearInfo() {
+        testIDLabel.setText("");
         infoDescriptLabel.setText("");
         infoPreconLabel.setText("");
         selectedItem = null;
