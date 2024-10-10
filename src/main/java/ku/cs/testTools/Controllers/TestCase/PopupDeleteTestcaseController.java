@@ -37,23 +37,24 @@ public class PopupDeleteTestcaseController {
     private Button onDeleteButton;
     private String projectName = "125", directory = "data";
 
-    DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory,projectName + ".csv");
+    DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
     DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
+
     @FXML
     void initialize() {
         if (FXRouter.getData() != null) {
             testCaseDetailList = (TestCaseDetailList) FXRouter.getData();
             testCase = (TestCase) FXRouter.getData2();
             idTC = testCase.getIdTC();
-            if (FXRouter.getData3() != null){
+            if (FXRouter.getData3() != null) {
                 testCaseDetail = (TestCaseDetail) FXRouter.getData3();
                 testCaseDetailList.findTCById(testCaseDetail.getIdTCD());
                 id = testCaseDetail.getIdTCD();
             }
 
 
-        }else {
-            if (FXRouter.getData2() != null){
+        } else {
+            if (FXRouter.getData2() != null) {
                 if (testCaseListDataSource.readData() != null && testCaseDetailListDataSource.readData() != null) {
                     testCaseList = testCaseListDataSource.readData();
                     testCaseDetailListTemp = testCaseDetailListDataSource.readData();
@@ -70,7 +71,7 @@ public class PopupDeleteTestcaseController {
     @FXML
     void onDeleteButton(ActionEvent event) {
         try {
-            if (FXRouter.getData() != null){
+            if (FXRouter.getData() != null) {
                 testCaseDetail = null;
                 FXRouter.goTo("test_case_add", testCaseDetailList, testCase);
                 System.out.println(testCaseDetail);
@@ -78,10 +79,9 @@ public class PopupDeleteTestcaseController {
                 Stage stage = (Stage) source.getScene().getWindow();
                 stage.close();
                 System.out.println(testCaseDetailList);
-            }
-            else {
+            } else {
                 for (TestCaseDetail testCaseDetail : testCaseDetailListTemp.getTestCaseDetailList()) {
-                    if (testCase.getIdTC().trim().equals(testCaseDetail.getIdTC().trim())){
+                    if (testCase.getIdTC().trim().equals(testCaseDetail.getIdTC().trim())) {
                         testCaseDetailList.deleteTestCase(testCaseDetail);
                     }
                 }
@@ -103,13 +103,13 @@ public class PopupDeleteTestcaseController {
     @FXML
     void onCancelButton(ActionEvent event) {
         try {
-            if (FXRouter.getData() != null){
+            if (FXRouter.getData() != null) {
                 testCaseDetailList.deleteTestCase(testCaseDetail);
-                FXRouter.goTo("test_case_add",testCaseDetailList);
+                FXRouter.goTo("test_case_add", testCaseDetailList);
                 Node source = (Node) event.getSource();
                 Stage stage = (Stage) source.getScene().getWindow();
                 stage.close();
-            }else {
+            } else {
 
             }
 
@@ -119,6 +119,7 @@ public class PopupDeleteTestcaseController {
         }
 
     }
+}
 
 
 
