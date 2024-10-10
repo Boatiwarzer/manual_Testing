@@ -1,22 +1,20 @@
 package ku.cs.testTools.Controllers.TestScript;
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseEvent;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
+import ku.cs.testTools.Services.TestTools.TestCaseFileDataSource;
 import ku.cs.testTools.Services.TestTools.TestScriptDetailFIleDataSource;
 import ku.cs.testTools.Services.TestTools.TestScriptFileDataSource;
 
+import ku.cs.testTools.Services.TestTools.UseCaseListFileDataSource;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.IOException;
@@ -96,22 +94,28 @@ public class TestScriptAddController {
     private Label testIDLabel;
     private String tsId;
     private String projectName = "125", directory = "data";
+    private String projectName1 = "uc";
+
     private  TestScriptList testScriptList = new TestScriptList();
     //private ArrayList<Object> objects = (ArrayList) FXRouter.getData();
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
     private TestScriptDetail selectedItem;
     private TestScript testScript;
     private TestScript selectedTestScript;
+    private TestCaseList testCaseList = new TestCaseList();
+    private UseCaseList useCaseList = new UseCaseList();
     private static int idCounter = 1; // Counter for sequential IDs
     private static final int MAX_ID = 999; // Upper limit for IDs
     private static Set<String> usedIds = new HashSet<>(); // Set to store used IDs
-    DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-    DataSource<TestScriptDetailList> testScriptDetailListListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+    private final DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+    private final DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+    private final DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
+    private final DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName1+".csv");
     @FXML
     void initialize() {
+        clearInfo();
         selectedComboBox();
         setDate();
-        clearInfo();
         setButtonVisible();
         {
             if (FXRouter.getData() != null) {
@@ -122,7 +126,7 @@ public class TestScriptAddController {
                 selectedTSD();
                 selectedListView();
                 setDataTS();
-                if (testScriptListDataSource.readData() != null && testScriptDetailListListDataSource.readData() != null){
+                if (testScriptListDataSource.readData() != null && testScriptDetailListDataSource.readData() != null){
                     testScriptList = testScriptListDataSource.readData();
                     loadListView(testScriptList);
                     for (TestScript testScript : testScriptList.getTestScriptList()) {
@@ -135,7 +139,7 @@ public class TestScriptAddController {
                 setTable();
                 randomId();
                 System.out.println(tsId);
-                if (testScriptListDataSource.readData() != null && testScriptDetailListListDataSource.readData() != null){
+                if (testScriptListDataSource.readData() != null && testScriptDetailListDataSource.readData() != null){
                     testScriptList = testScriptListDataSource.readData();
                     loadListView(testScriptList);
                     selectedTSD();
@@ -148,6 +152,14 @@ public class TestScriptAddController {
             }
         }
         System.out.println(testScriptDetailList);
+
+    }
+
+    private void testCaseCombobox() {
+        for (TestCase testCase : testCaseList.getTestCaseList()){
+            String tc_combobox = testCase.getIdTC() + " : " + testCase.getNameTC();
+            onTestcaseCombobox.getItems().add(tc_combobox);
+        }
 
     }
 
@@ -199,6 +211,9 @@ public class TestScriptAddController {
     }
 
     private void clearInfo() {
+        testIDLabel.setText("");
+        infoDescriptLabel.setText("");
+        infoPreconLabel.setText("");
         selectedItem = null;
         FXRouter.setData3(null);
     }
@@ -582,54 +597,42 @@ public class TestScriptAddController {
     }
 
 
-    @FXML
-    void onTestNameField(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onTestNoteField(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onTestcaseCombobox(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onUsecaseCombobox(ActionEvent event) {
-
-    }
-
     private void selectedComboBox(){
+        onTestcaseCombobox.getItems().clear();
         onTestcaseCombobox.setItems(FXCollections.observableArrayList("None"));
         new AutoCompleteComboBoxListener<>(onTestcaseCombobox);
         onTestcaseCombobox.getSelectionModel().selectFirst();
-        Platform.runLater(onTestcaseCombobox.getEditor()::end);
+        if (testCaseListDataSource.readData() != null){
+            testCaseList = testCaseListDataSource.readData();
+            testCaseCombobox();
+
+        }
         onTestcaseCombobox.setOnAction(event -> {
             String selectedItem = onTestcaseCombobox.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
                 onTestcaseCombobox.getEditor().setText(selectedItem); // Set selected item in editor
-                //editor.setEditable(true);
-                onTestcaseCombobox.getEditor().requestFocus();// Ensure the editor remains editable
-                // Move cursor to the end
                 Platform.runLater(onTestcaseCombobox.getEditor()::end);
+
             }
 
         });
+
+        onUsecaseCombobox.getItems().clear();
         onUsecaseCombobox.setItems(FXCollections.observableArrayList("None"));
         new AutoCompleteComboBoxListener<>(onUsecaseCombobox);
         onUsecaseCombobox.getSelectionModel().selectFirst();
-        Platform.runLater(onUsecaseCombobox.getEditor()::end);
+        if (useCaseListDataSource.readData() != null){
+            useCaseList= useCaseListDataSource.readData();
+            useCaseCombobox();
+        }
         onUsecaseCombobox.setOnAction(event -> {
             String selectedItem = onUsecaseCombobox.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
                 onUsecaseCombobox.getEditor().setText(selectedItem); // Set selected item in editor
-                //editor.setEditable(true);
-                onUsecaseCombobox.getEditor().requestFocus();// Ensure the editor remains editable
-                // Move cursor to the end
                 Platform.runLater(onUsecaseCombobox.getEditor()::end);
+                if (!selectedItem.equals("None")) {
+                    selectedComboBoxSetInfo(selectedItem);
+                }
             }
 
         });
@@ -640,4 +643,26 @@ public class TestScriptAddController {
 //            }
 //        }
     }
+
+    private void selectedComboBoxSetInfo(String selectedItem) {
+        // แยกข้อมูล UseCase ID จาก selectedItem โดยใช้ split(":") เพื่อตัดข้อความก่อนเครื่องหมาย :
+        String[] data = selectedItem.split("[:,]");
+
+        // ตรวจสอบว่า data มี UseCase ID ใน index 0 หรือไม่
+        if (data.length > 0 && useCaseList.findByUseCaseId(data[0].trim()) != null) {
+            UseCase useCase = useCaseList.findByUseCaseId(data[0].trim());
+
+            // อัปเดตข้อมูลใน Label
+            infoPreconLabel.setText(useCase.getPreCondition());
+            infoDescriptLabel.setText(useCase.getDescription());
+        }
+    }
+
+    private void useCaseCombobox() {
+        for (UseCase useCase : useCaseList.getUseCaseList()){
+            String uc_combobox = useCase.getUseCaseID() + " : " + useCase.getUseCaseName();
+            onUsecaseCombobox.getItems().add(uc_combobox);
+        }
+    }
+
 }

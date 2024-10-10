@@ -86,29 +86,23 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
 
     @Override
     public void writeData(UseCaseList useCaseList) {
-        // Import UseCaseDetailList from CSV
-        UseCaseDetailListFileDataSource useCaseDetailListFileDataSource = new UseCaseDetailListFileDataSource(directory, fileName);
-        UseCaseDetailList useCaseDetailList = useCaseDetailListFileDataSource.readData();
-
         //File writer
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
         FileWriter writer = null;
         BufferedWriter buffer = null;
+        UseCaseList existingUseCaseList = readData();
+
         try {
             writer = new FileWriter(file, StandardCharsets.UTF_8, true);
             buffer = new BufferedWriter(writer);
 
-            // Write UseCaseDetailList to CSV
-            for (UseCaseDetail useCaseDetail : useCaseDetailList.getUseCaseDetailList()) {
-                buffer.write(useCaseDetailListFileDataSource.createLine(useCaseDetail));
-                buffer.newLine();
-            }
-
             //Write useCaseList to CSV
             for (UseCase useCase : useCaseList.getUseCaseList()) {
-                buffer.write(createLine(useCase));
-                buffer.newLine();
+                if (!existingUseCaseList.isUseCaseIDExist(useCase.getUseCaseID())) {
+                    buffer.write(createLine(useCase));
+                    buffer.newLine();
+                }
             }
 
             buffer.close();

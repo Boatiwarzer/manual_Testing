@@ -11,7 +11,7 @@ import lombok.Setter;
 @Entity
 @Getter
 public class UseCaseDetail {
-    @Id
+//    @Id
     private String useCaseID;
     private String action;
     private int number;
@@ -24,4 +24,35 @@ public class UseCaseDetail {
         this.detail = detail;
     }
 
+    public String getUseCaseID() {
+        return useCaseID;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setUseCaseID(String useCaseID) {
+        this.useCaseID = useCaseID;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
+    }
 }

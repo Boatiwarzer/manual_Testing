@@ -83,6 +83,8 @@ public class PopupAddTestscriptController {
         onTeststepsArea.setText(testScriptDetail.getSteps().toLowerCase());;
         onInputDataCombobox.getSelectionModel().select(testScriptDetail.getInputData());
         onExpectedArea.setText(testScriptDetail.getExpected());;
+        testScriptIDLabel.setText(testScriptDetail.getIdTSD());
+        testScriptNameLabel.setText("");
     }
 
 

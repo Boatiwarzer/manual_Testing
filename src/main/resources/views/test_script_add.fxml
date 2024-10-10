@@ -54,10 +54,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<BorderPane xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.testTools.Controllers.TestScript.TestScriptAddController">
+<BorderPane prefHeight="760.0" prefWidth="1360.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.testTools.Controllers.TestScript.TestScriptAddController">
    <center>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0">
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="700.0" prefWidth="1090.0">
       <children>
             <VBox layoutX="15.0" layoutY="15.0" prefHeight="265.0" prefWidth="1060.0" spacing="5.0" AnchorPane.leftAnchor="15.199999999999818">
                <children>
@@ -68,7 +67,7 @@
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="onTestNameField" onAction="#onTestNameField" prefHeight="30.0" prefWidth="300.0">
+                        <TextField fx:id="onTestNameField"  prefHeight="30.0" prefWidth="300.0">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -95,52 +94,54 @@
                         </Label>
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0" spacing="360.0">
+                  <HBox prefHeight="60.0" prefWidth="200.0" spacing="20.0">
                      <children>
-                        <Label prefHeight="30.0" prefWidth="100.0" text="Use Case :" textAlignment="CENTER">
+                        <Label prefHeight="30.0" prefWidth="120.0" text="Use Case :" textAlignment="CENTER">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </Label>
+                        <ComboBox fx:id="onUsecaseCombobox"  prefHeight="30.0" prefWidth="360.0" />
+                        <Label prefHeight="30.0" prefWidth="120.0" text="Test Case :" textAlignment="CENTER">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <ComboBox fx:id="onTestcaseCombobox"  prefHeight="30.0" prefWidth="360.0" />
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="90.0" prefWidth="200.0" spacing="20.0">
+                     <children>
                         <Label prefHeight="30.0" prefWidth="120.0" text="Description :">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </Label>
-                     </children>
-                  </HBox>
-                  <HBox prefHeight="60.0" prefWidth="200.0" spacing="30.0">
-                     <children>
-                        <ComboBox fx:id="onUsecaseCombobox" onAction="#onUsecaseCombobox" prefHeight="30.0" prefWidth="430.0" />
-                        <Label fx:id="infoDescriptLabel" alignment="TOP_LEFT" prefHeight="60.0" prefWidth="430.0" text="Label" wrapText="true">
-                           <font>
-                              <Font size="16.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </HBox>
-                  <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0" spacing="360.0">
-                     <children>
-                        <Label prefHeight="30.0" prefWidth="100.0" text="Test Case :" textAlignment="CENTER">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </Label>
+                        <VBox prefHeight="90.0" prefWidth="360.0">
+                           <children>
+                              <VBox prefHeight="5.0" prefWidth="100.0" />
+                              <Label fx:id="infoDescriptLabel" alignment="TOP_LEFT" prefHeight="85.0" prefWidth="360.0" text="Label" textFill="#0055ff" wrapText="true">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
                         <Label prefHeight="30.0" prefWidth="120.0" text="Pre-Condition :">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </Label>
-                     </children>
-                  </HBox>
-                  <HBox prefHeight="60.0" prefWidth="200.0" spacing="30.0">
-                     <children>
-                        <ComboBox fx:id="onTestcaseCombobox" onAction="#onTestcaseCombobox" prefHeight="30.0" prefWidth="430.0" />
-                        <Label fx:id="infoPreconLabel" alignment="TOP_LEFT" prefHeight="60.0" prefWidth="430.0" text="Label" wrapText="true">
-                           <font>
-                              <Font size="16.0" />
-                           </font>
-                        </Label>
+                        <VBox prefHeight="90.0" prefWidth="360.0">
+                           <children>
+                              <VBox prefHeight="5.0" prefWidth="100.0" />
+                              <Label fx:id="infoPreconLabel" alignment="TOP_LEFT" prefHeight="85.0" prefWidth="360.0" text="Label" textFill="#0055ff" wrapText="true">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
                      </children>
                   </HBox>
                   <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
@@ -150,7 +151,7 @@
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="onTestNoteField" onAction="#onTestNoteField" prefHeight="30.0" prefWidth="810.0">
+                        <TextField fx:id="onTestNoteField"  prefHeight="30.0" prefWidth="900.0">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -215,9 +216,9 @@
                   </Button>
                </children>
             </HBox>
-            <HBox layoutX="840.0" layoutY="685.0" AnchorPane.rightAnchor="8.799999999999898">
+            <HBox layoutX="835.0" layoutY="665.0" AnchorPane.rightAnchor="14.799999999999955">
                <children>
-                  <Button fx:id="onSubmitButton" mnemonicParsing="false" onAction="#onSubmitButton" prefHeight="30.0" prefWidth="110.0" text="Submit">
+                  <Button fx:id="onSubmitButton" layoutX="840.0" layoutY="685.0" mnemonicParsing="false" onAction="#onSubmitButton" prefHeight="30.0" prefWidth="110.0" text="Submit">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -225,7 +226,7 @@
                         <Insets right="20.0" />
                      </HBox.margin>
                   </Button>
-                  <Button fx:id="onCancelButton" mnemonicParsing="false" onAction="#onCancelButton" prefHeight="30.0" prefWidth="110.0" text="Cancel">
+                  <Button fx:id="onCancelButton" layoutX="840.0" mnemonicParsing="false" onAction="#onCancelButton" prefHeight="30.0" prefWidth="110.0" text="Cancel">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -330,7 +331,7 @@
                   </Button>
                </children>
             </HBox>
-            <ListView fx:id="onSearchList" layoutX="15.0" layoutY="95.0" prefHeight="607.0" prefWidth="240.0" />
+            <ListView fx:id="onSearchList" layoutX="15.0" layoutY="95.0" prefHeight="560.0" prefWidth="240.0" />
          </children>
       </Pane>
    </left>

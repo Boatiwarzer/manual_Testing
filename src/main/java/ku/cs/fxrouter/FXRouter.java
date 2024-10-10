@@ -7,12 +7,15 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
-
+@Data
 public class FXRouter {
     public static final String WINDOW_TITLE = "";
     public static final Double WINDOW_WIDTH = 800.0D;
@@ -24,9 +27,10 @@ public class FXRouter {
     public static String windowTitle;
     public static Double windowWidth;
     public static Double windowHeight;
+    @Setter
     public static String animationType;
     public static Double animationDuration;
-    public static AbstractMap<String, RouteScene> routes = new HashMap();
+    public static AbstractMap<String, RouteScene> routes = new HashMap<>();
     public static int themeType;
     public static RouteScene currentRoute;
 
@@ -296,9 +300,6 @@ public class FXRouter {
         goTo(routeLabel, data);
     }
 
-    public static void setAnimationType(String anType) {
-        animationType = anType;
-    }
     public static void setTheme(int theme) {
         themeType = theme;
     }
@@ -356,7 +357,11 @@ public class FXRouter {
         currentRoute.data3 = data3;
 
     }
+    public static void setPart(Object setPart) {
+        RouteScene.setPart = setPart;
 
+    }
+    @Data
     public static class RouteScene {
         public String scenePath;
         public Object data2;
@@ -365,6 +370,7 @@ public class FXRouter {
         private double sceneHeight;
         private Object data;
         private Object data3;
+        private static Object setPart;
         //private Map<String, Object> state;
 
         public RouteScene(String scenePath) {

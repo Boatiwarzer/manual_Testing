@@ -31,7 +31,6 @@ public class AutoCompleteComboBoxListener<T> implements EventHandler<KeyEvent> {
         });
 
         this.comboBox.setOnKeyReleased(AutoCompleteComboBoxListener.this);
-
         // Add listener to clear ComboBox when focus is lost and no item is selected
         this.comboBox.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
@@ -48,7 +47,13 @@ public class AutoCompleteComboBoxListener<T> implements EventHandler<KeyEvent> {
 
     @Override
     public void handle(KeyEvent event) {
-
+        if (event.getCode() == KeyCode.ENTER) {
+            Object selectedItem = comboBox.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                comboBox.hide(); // ซ่อนรายการ
+            }
+            return;
+        }
         if (event.getCode() == KeyCode.UP) {
             caretPos = -1;
             moveCaret(comboBox.getEditor().getText().length());
