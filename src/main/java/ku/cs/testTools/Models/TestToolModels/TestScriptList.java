@@ -37,11 +37,11 @@ public class TestScriptList {
     public void addOrUpdateTestScript(TestScript testScript) {
         boolean exists = false;
 
-        // Iterate through the list to check for an existing item with the same ID
+        // Iterate through the list to check for an existing item with the same ID or name
         for (int i = 0; i < testScriptList.size(); i++) {
             TestScript existing = testScriptList.get(i);
 
-            if (existing.isId(testScript.getIdTS())) {
+            if (existing.isId(testScript.getIdTS()) && existing.getNameTS().equals(testScript.getNameTS())) {
                 // Update existing item
                 testScriptList.set(i, testScript);
                 exists = true;
@@ -54,6 +54,7 @@ public class TestScriptList {
             testScriptList.add(testScript);
         }
     }
+
     public void deleteTestScript(TestScript testScript) {
         // Iterate through the list to find the item to delete
         for (int i = 0; i < testScriptList.size(); i++) {

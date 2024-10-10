@@ -127,7 +127,7 @@ public class TestScriptAddController {
                 selectedListView();
                 setDataTS();
                 if (testScriptListDataSource.readData() != null && testScriptDetailListDataSource.readData() != null){
-                    testScriptList = testScriptListDataSource.readData();
+                    TestScriptList testScriptList = testScriptListDataSource.readData();
                     loadListView(testScriptList);
                     for (TestScript testScript : testScriptList.getTestScriptList()) {
                         word.add(testScript.getNameTS());
@@ -140,7 +140,7 @@ public class TestScriptAddController {
                 randomId();
                 System.out.println(tsId);
                 if (testScriptListDataSource.readData() != null && testScriptDetailListDataSource.readData() != null){
-                    testScriptList = testScriptListDataSource.readData();
+                    TestScriptList testScriptList = testScriptListDataSource.readData();
                     loadListView(testScriptList);
                     selectedTSD();
                     for (TestScript testScript : testScriptList.getTestScriptList()) {
@@ -567,20 +567,20 @@ public class TestScriptAddController {
         testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note);
 
         // Save data to files
-        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-        DataSource<TestScriptDetailList> testScriptDetailListListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+        //DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+       // DataSource<TestScriptDetailList> testScriptDetailListListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
 
         // Add or update test script
         testScriptList.addOrUpdateTestScript(testScript);
 
         // Write data to respective files
         testScriptListDataSource.writeData(testScriptList);
-        testScriptDetailListListDataSource.writeData(testScriptDetailList);
+        testScriptDetailListDataSource.writeData(testScriptDetailList);
 
         // Show success message
         showAlert("Success", "Test script saved successfully!");
         try {
-            FXRouter.goTo("test_script",testScript);
+            FXRouter.goTo("test_script");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

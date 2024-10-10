@@ -143,7 +143,7 @@ public class TestScriptController {
 
     private void selected() {
         if (testScript != null){
-            onSearchList.getSelectionModel().select(testScript);
+            onSearchList.getSelectionModel().getSelectedItems();
             onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue == null) {
                     clearInfo();
