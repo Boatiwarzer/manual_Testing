@@ -9,6 +9,7 @@ import ku.cs.testTools.Services.UsecaseServices.ComponentPreferenceListFileDataS
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,7 +68,7 @@ public class TestScriptFileDataSource implements DataSource<TestScriptList>, Man
                             data[7].trim(), // data[7]
                             data[8].trim() // data[8]
                     );
-                    testScriptList.addTestScript(testScript);
+                    testScriptList.addOrUpdateTestScript(testScript);
                 }
             }
         } catch (Exception e) {
@@ -92,22 +93,45 @@ public class TestScriptFileDataSource implements DataSource<TestScriptList>, Man
         // File writer
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
-        FileWriter writer = null;
-        BufferedWriter buffer = null;
-        try {
-            // เปิดไฟล์ในโหมด append (true)
-            writer = new FileWriter(file, StandardCharsets.UTF_8, true); // true สำหรับ append mode
-            buffer = new BufferedWriter(writer);
-            for (TestScript testScript : testScriptList.getTestScriptList()) {
-                String line = createLine(testScript);
-                buffer.append(line);
-                buffer.newLine();  // สร้างบรรทัดใหม่สำหรับข้อมูลแต่ละอัน
+        List<String> fileLines = new ArrayList<>();
+
+        // อ่านข้อมูลเดิมในไฟล์ถ้ามี
+        if (file.exists()) {
+            try {
+                fileLines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-            buffer.close();
+        }
+
+        // อัปเดตข้อมูลที่มีอยู่แล้ว หรือเพิ่มข้อมูลใหม่
+        for (TestScript testScript : testScriptList.getTestScriptList()) {
+            String newLine = createLine(testScript);
+            boolean updated = false;
+            for (int i = 0; i < fileLines.size(); i++) {
+                String line = fileLines.get(i);
+                if (line.contains(testScript.getIdTS())) { // เช็คว่า ID ตรงกันหรือไม่
+                    fileLines.set(i, newLine); // เขียนทับบรรทัดเดิม
+                    updated = true;
+                    break;
+                }
+            }
+            if (!updated) {
+                fileLines.add(newLine); // เพิ่มข้อมูลใหม่ถ้าไม่เจอ ID เดิม
+            }
+        }
+
+        // เขียนข้อมูลทั้งหมดกลับไปที่ไฟล์
+        try (BufferedWriter buffer = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8, false))) { // false สำหรับเขียนทับไฟล์
+            for (String line : fileLines) {
+                buffer.write(line);
+                buffer.newLine();
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
 
 
     @Override

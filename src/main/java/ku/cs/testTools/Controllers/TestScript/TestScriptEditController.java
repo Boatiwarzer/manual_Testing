@@ -100,21 +100,23 @@ public class TestScriptEditController {
     private TestScriptDetail selectedItem;
     private TestScript testScript;
     private TestScript selectedTestScript;
+    private TestCaseList testCaseList = new TestCaseList();
+    private UseCaseList useCaseList = new UseCaseList();
     private static int idCounter = 1; // Counter for sequential IDs
     private static final int MAX_ID = 999;
     private ArrayList <String> word = new ArrayList<>();
     // Upper limit for IDs
     private static Set<String> usedIds = new HashSet<>(); // Set to store used IDs
     private final DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-    private final DataSource<TestScriptDetailList> testScriptDetailListListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+    private final DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
     private final DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
     private final DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName1+".csv");
 
     @FXML
     void initialize() {
-        selectedComboBox();
         setDate();
         clearInfo();
+        selectedComboBox();
         setButtonVisible();
         {
             if (FXRouter.getData() != null) {
@@ -123,17 +125,17 @@ public class TestScriptEditController {
                 selectedTSD();
                 selectedListView();
                 setDataTS();
-                if (testScriptListDataSource.readData() != null && testScriptDetailListListDataSource.readData() != null){
-                    testScriptList = testScriptListDataSource.readData();
-                    testScriptDetailListTemp = testScriptDetailListListDataSource.readData();
+                if (testScriptListDataSource.readData() != null && testScriptDetailListDataSource.readData() != null){
+                    TestScriptList testScriptListTemp = testScriptListDataSource.readData();
+                    testScriptDetailListTemp = testScriptDetailListDataSource.readData();
                     for (TestScriptDetail testScriptDetail : testScriptDetailListTemp.getTestScriptDetailList()) {
                         if (testScript.getIdTS().trim().equals(testScriptDetail.getIdTS().trim())){
                             testScriptDetailList.addOrUpdateTestScriptDetail(testScriptDetail);
                         }
                     }
                     loadTable(testScriptDetailList);
-                    loadListView(testScriptList);
-                    for (TestScript testScript : testScriptList.getTestScriptList()) {
+                    loadListView(testScriptListTemp);
+                    for (TestScript testScript : testScriptListTemp.getTestScriptList()) {
                         word.add(testScript.getNameTS());
                     }
                     searchSet();
@@ -143,11 +145,11 @@ public class TestScriptEditController {
                 setTable();
                 randomId();
                 System.out.println(tsId);
-                if (testScriptListDataSource.readData() != null && testScriptDetailListListDataSource.readData() != null){
-                    testScriptList = testScriptListDataSource.readData();
-                    loadListView(testScriptList);
+                if (testScriptListDataSource.readData() != null && testScriptDetailListDataSource.readData() != null){
+                    TestScriptList testScriptListTemp = testScriptListDataSource.readData();
+                    loadListView(testScriptListTemp);
                     selectedTSD();
-                    for (TestScript testScript : testScriptList.getTestScriptList()) {
+                    for (TestScript testScript : testScriptListTemp.getTestScriptList()) {
                         word.add(testScript.getNameTS());
                     }
                     searchSet();
@@ -162,35 +164,67 @@ public class TestScriptEditController {
         onTestcaseCombobox.setItems(FXCollections.observableArrayList("None"));
         new AutoCompleteComboBoxListener<>(onTestcaseCombobox);
         onTestcaseCombobox.getSelectionModel().selectFirst();
-        Platform.runLater(onTestcaseCombobox.getEditor()::end);
+        if (testCaseListDataSource.readData() != null){
+            testCaseList = testCaseListDataSource.readData();
+            testCaseCombobox();
+
+        }
         onTestcaseCombobox.setOnAction(event -> {
             String selectedItem = onTestcaseCombobox.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
                 onTestcaseCombobox.getEditor().setText(selectedItem); // Set selected item in editor
-                //editor.setEditable(true);
-                onTestcaseCombobox.getEditor().requestFocus();// Ensure the editor remains editable
-                // Move cursor to the end
                 Platform.runLater(onTestcaseCombobox.getEditor()::end);
+
             }
 
         });
+        onUsecaseCombobox.getItems().clear();
         onUsecaseCombobox.setItems(FXCollections.observableArrayList("None"));
         new AutoCompleteComboBoxListener<>(onUsecaseCombobox);
         onUsecaseCombobox.getSelectionModel().selectFirst();
-        Platform.runLater(onUsecaseCombobox.getEditor()::end);
+        if (useCaseListDataSource.readData() != null){
+            useCaseList= useCaseListDataSource.readData();
+            useCaseCombobox();
+        }
         onUsecaseCombobox.setOnAction(event -> {
             String selectedItem = onUsecaseCombobox.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
                 onUsecaseCombobox.getEditor().setText(selectedItem); // Set selected item in editor
-                //editor.setEditable(true);
-                onUsecaseCombobox.getEditor().requestFocus();// Ensure the editor remains editable
-                // Move cursor to the end
                 Platform.runLater(onUsecaseCombobox.getEditor()::end);
+                if (!selectedItem.equals("None")) {
+                    selectedComboBoxSetInfo(selectedItem);
+                }
             }
 
         });
     }
+    private void testCaseCombobox() {
+        for (TestCase testCase : testCaseList.getTestCaseList()){
+            String tc_combobox = testCase.getIdTC() + " : " + testCase.getNameTC();
+            onTestcaseCombobox.getItems().add(tc_combobox);
+        }
 
+    }
+    private void selectedComboBoxSetInfo(String selectedItem) {
+        // แยกข้อมูล UseCase ID จาก selectedItem โดยใช้ split(":") เพื่อตัดข้อความก่อนเครื่องหมาย :
+        String[] data = selectedItem.split("[:,]");
+
+        // ตรวจสอบว่า data มี UseCase ID ใน index 0 หรือไม่
+        if (data.length > 0 && useCaseList.findByUseCaseId(data[0].trim()) != null) {
+            UseCase useCase = useCaseList.findByUseCaseId(data[0].trim());
+
+            // อัปเดตข้อมูลใน Label
+            infoPreconLabel.setText(useCase.getPreCondition());
+            infoDescriptLabel.setText(useCase.getDescription());
+        }
+    }
+
+    private void useCaseCombobox() {
+        for (UseCase useCase : useCaseList.getUseCaseList()){
+            String uc_combobox = useCase.getUseCaseID() + " : " + useCase.getUseCaseName();
+            onUsecaseCombobox.getItems().add(uc_combobox);
+        }
+    }
 
         private void selectedListView() {
         if (testScript != null){
@@ -557,16 +591,13 @@ public class TestScriptEditController {
         // Create a new TestScript object
         testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note);
 
-        // Save data to files
-        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-        DataSource<TestScriptDetailList> testScriptDetailListListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
 
         // Add or update test script
         testScriptList.addOrUpdateTestScript(testScript);
 
         // Write data to respective files
         testScriptListDataSource.writeData(testScriptList);
-        testScriptDetailListListDataSource.writeData(testScriptDetailListTemp);
+        testScriptDetailListDataSource.writeData(testScriptDetailListTemp);
 
         // Show success message
         showAlert("Success", "Test script saved successfully!");

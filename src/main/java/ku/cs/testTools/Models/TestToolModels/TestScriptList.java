@@ -41,7 +41,7 @@ public class TestScriptList {
         for (int i = 0; i < testScriptList.size(); i++) {
             TestScript existing = testScriptList.get(i);
 
-            if (existing.isId(testScript.getIdTS()) && existing.getNameTS().equals(testScript.getNameTS())) {
+            if (existing.isId(testScript.getIdTS())) {
                 // Update existing item
                 testScriptList.set(i, testScript);
                 exists = true;

@@ -9,6 +9,9 @@ import ku.cs.testTools.Services.ManageDataSource;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestScriptDetailFIleDataSource implements DataSource<TestScriptDetailList>, ManageDataSource<TestScriptDetail> {
     private String directory;
@@ -86,11 +89,38 @@ public class TestScriptDetailFIleDataSource implements DataSource<TestScriptDeta
     @Override
     public void writeData(TestScriptDetailList testScriptDetailList) {
         String filePath = directory + File.separator + fileName;
+        File file = new File(filePath);
+        List<String> fileLines = new ArrayList<>();
 
-        // เปิดไฟล์ในโหมด append (true)
-        try (BufferedWriter buffer = new BufferedWriter(new FileWriter(filePath, StandardCharsets.UTF_8, true))) {
-            for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()) {
-                String line = createLine(testScriptDetail);
+        // อ่านข้อมูลเดิมในไฟล์ถ้ามี
+        if (file.exists()) {
+            try {
+                fileLines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
+            } catch (IOException e) {
+                throw new RuntimeException("Error reading existing data", e);
+            }
+        }
+
+        // อัปเดตข้อมูลที่มีอยู่แล้ว หรือเพิ่มข้อมูลใหม่
+        for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()) {
+            String newLine = createLine(testScriptDetail);
+            boolean updated = false;
+            for (int i = 0; i < fileLines.size(); i++) {
+                String line = fileLines.get(i);
+                if (line.contains(testScriptDetail.getIdTSD())) { // เช็คว่า ID ตรงกันหรือไม่
+                    fileLines.set(i, newLine); // เขียนทับบรรทัดเดิม
+                    updated = true;
+                    break;
+                }
+            }
+            if (!updated) {
+                fileLines.add(newLine); // เพิ่มข้อมูลใหม่ถ้าไม่เจอ ID เดิม
+            }
+        }
+
+        // เขียนข้อมูลทั้งหมดกลับไปที่ไฟล์
+        try (BufferedWriter buffer = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8, false))) { // false สำหรับเขียนทับไฟล์ทั้งหมด
+            for (String line : fileLines) {
                 buffer.write(line);
                 buffer.newLine();
             }
@@ -98,6 +128,7 @@ public class TestScriptDetailFIleDataSource implements DataSource<TestScriptDeta
             throw new RuntimeException("Error writing data", e);
         }
     }
+
 
 
     @Override

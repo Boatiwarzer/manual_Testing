@@ -4,10 +4,7 @@ testCaseDetail,TCD-633,22,2222,22,04-10-2024,TC-84
 testScript,TS-22,Login,10-10-2024,UC-99610740081 : adad,test1,None,asda,test
 testScript,TS-949,TEST,10-10-2024,UC-93443034704 : adadasda,test2,TC-84 : LoginTest,2,tEST
 testScriptDetail,TSD-864,TST,tt,None,TT,TS-949,10-10-2024
-
-
-
-
-
-testScript,TS-360,1,10-10-2024,UC-93443034704 : adadasda,test2,TC-84 : LoginTest,2,1
-testScriptDetail,TSD-541,2,22,None,2,TS-360,10-10-2024
+testScript,TS-360,125,10-10-2024,UC-93443034704 : adadasda,test2,TC-84 : LoginTest,2,125
+testScriptDetail,TSD-864,TST,tt,None,TT,TS-949,10-10-2024
+testScript,TS-359,12,11-10-2024,UC-99610740081 : adad,test1,TC-84 : LoginTest,asda,12
+testScriptDetail,TSD-846,2,2,None,2,TS-359,11-10-2024

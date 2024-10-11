@@ -547,7 +547,6 @@ public class TestScriptAddController {
     void onSubmitButton(ActionEvent event) {
         // Validate fields
         String name = onTestNameField.getText();
-        String idTS = tsId;
         String date = testDateLabel.getText();
         String useCase = onUsecaseCombobox.getValue();
         String description = infoDescriptLabel.getText();
@@ -564,8 +563,8 @@ public class TestScriptAddController {
         }
 
         // Create a new TestScript object
-        testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note);
-
+        testScript = new TestScript(tsId, name, date, useCase, description, tc, preCon, note);
+        System.out.println(testScriptList.findTSById(testScript.getIdTS()));
         // Save data to files
         //DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
        // DataSource<TestScriptDetailList> testScriptDetailListListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
