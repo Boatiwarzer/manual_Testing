@@ -1,11 +1,11 @@
-useCase,UC-99610740081,adad,sdawd,test1,asda,wdasd,None,2024-10-07 13:31:33
-useCaseDetail,UC-99610740081,actor,1,sdasd
-useCaseDetail,UC-99610740081,system,1,sdasdasd
-useCase,UC-93443034704,adadasda,sdawd,test2,2,wdasd,asdads,2024-10-07 13:31:36
-useCaseDetail,UC-93443034704,actor,1,sdasd
-useCaseDetail,UC-93443034704,system,1,sdasdasd
-useCase,UC-42171769098,adadasda111111,sdawd,test3,3,wdasd,asdads,2024-10-07 13:31:53
-useCaseDetail,UC-42171769098,actor,1,sdasd
-useCaseDetail,UC-42171769098,actor,2,dasd
-useCaseDetail,UC-42171769098,actor,3,dadad
-useCaseDetail,UC-42171769098,system,1,sdasdasd
+useCase,UC-977,asd,asd,asd,asd,asd,None,2024-10-10 15:20:40
+useCaseDetail,UC-977,actor,1,asd
+useCaseDetail,UC-977,system,1,asd
+useCase,UC-338,asdf,asdf,asdf,asdf,asdf,asdf,2024-10-10 15:21:09
+useCaseDetail,UC-338,actor,1,asdf
+useCaseDetail,UC-338,system,1,asdf
+useCase,UC-726,asdfg,asdfg,asdfg,asdfg,asdfg,asdfg,2024-10-10 15:21:50
+useCaseDetail,UC-726,actor,1,asdfg
+useCaseDetail,UC-726,actor,2,asdfg
+useCaseDetail,UC-726,system,1,asdfg
+useCaseDetail,UC-726,system,2,asdfg
