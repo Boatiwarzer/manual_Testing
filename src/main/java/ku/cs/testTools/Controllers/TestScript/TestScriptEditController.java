@@ -27,10 +27,12 @@ import java.util.stream.Collectors;
 public class TestScriptEditController {
 
     @FXML
-    private Label infoDescriptLabel;
+    private TextArea infoDescriptLabel;
 
     @FXML
-    private Label infoPreconLabel;
+    private TextArea infoPreconLabel;
+    @FXML
+    private TextArea infoPostconLabel;
 
     @FXML
     private Button onAddButton;
@@ -75,7 +77,7 @@ public class TestScriptEditController {
     private TextField onTestNameField;
 
     @FXML
-    private TextField onTestNoteField;
+    private TextArea onTestNoteField;
 
     @FXML
     private ComboBox<String> onTestcaseCombobox;
@@ -193,11 +195,20 @@ public class TestScriptEditController {
                 Platform.runLater(onUsecaseCombobox.getEditor()::end);
                 if (!selectedItem.equals("None")) {
                     selectedComboBoxSetInfo(selectedItem);
+                }else {
+                    clearUsecase();
                 }
             }
 
         });
     }
+
+    private void clearUsecase() {
+        infoPreconLabel.setText("");
+        infoDescriptLabel.setText("");
+        infoPostconLabel.setText("");
+    }
+
     private void testCaseCombobox() {
         for (TestCase testCase : testCaseList.getTestCaseList()){
             String tc_combobox = testCase.getIdTC() + " : " + testCase.getNameTC();
@@ -674,24 +685,6 @@ public class TestScriptEditController {
             throw new RuntimeException(e);
         }
     }
-    @FXML
-    void onTestNameField(ActionEvent event) {
 
-    }
-
-    @FXML
-    void onTestNoteField(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onTestcaseCombobox(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onUsecaseCombobox(ActionEvent event) {
-
-    }
 
 }
