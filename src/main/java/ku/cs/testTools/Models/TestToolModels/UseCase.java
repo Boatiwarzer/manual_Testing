@@ -110,6 +110,11 @@ public class UseCase {
         return date;
     }
 
+    @Override
+    public String toString() {
+        return useCaseID + " : " + useCaseName;
+    }
+
 //    @Override
 //    public String toString() {
 //        return "UseCase{" +

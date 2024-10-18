@@ -40,6 +40,14 @@ public class UseCaseList {
         }
         return null;
     }
+    public UseCase findByUseCaseName(String useCaseName) {
+        for (UseCase useCase : useCaseList) {
+            if (useCase.getUseCaseName().equals(useCaseName)) {
+                return useCase;
+            }
+        }
+        return null;
+    }
     public boolean isUseCaseIDExist(String useCaseID) {
         for (UseCase useCase : useCaseList) {
             if (useCase.getUseCaseID().equals(useCaseID)) {

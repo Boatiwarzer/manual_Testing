@@ -74,114 +74,54 @@ public class UseCaseAddController {
     private boolean isGenerated = false;
     @FXML
     public void initialize() {
-        if (FXRouter.getData() != null) {
 //            ArrayList<Object> objects = (ArrayList<Object>) FXRouter.getData();
 //            projectName = (String) objects.get(0);
 //            directory = (String) objects.get(1);
 //            String useCaseID = (String) objects.get(2);
 
-            // อ่านข้อมูลจากไฟล์และกำหนดค่าให้กับ useCaseList
-            useCaseListDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv"); //directory, projectName + ".csv"
-            useCaseList = useCaseListDataSource.readData();
+        // อ่านข้อมูลจากไฟล์และกำหนดค่าให้กับ useCaseList
+        useCaseListDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv"); //directory, projectName + ".csv"
+        useCaseList = useCaseListDataSource.readData();
 
-            useCaseDetailListDataSource = new UseCaseDetailListFileDataSource(directory, projectName + ".csv");
-            useCaseDetailList = useCaseDetailListDataSource.readData();
+        useCaseDetailListDataSource = new UseCaseDetailListFileDataSource(directory, projectName + ".csv");
+        useCaseDetailList = useCaseDetailListDataSource.readData();
 
-//            useCase = useCaseList.findByUseCaseId(useCaseID);
-            selectedListView();
-            setData();
-            handleGenerateIDAction();
-            if (useCaseListDataSource.readData() != null && useCaseDetailListDataSource.readData() != null){
-                useCaseList = useCaseListDataSource.readData();
-                loadListView(useCaseList);
-                for (UseCase useCase : useCaseList.getUseCaseList()) {
-                    word.add(useCase.getUseCaseName());
-                }
-                searchSet();
-            }
+        clearInfo();
+        selectedComboBox();
+        selectedListView();
+        {
+            if (FXRouter.getData() != null) {
+                useCaseDetailList = (UseCaseDetailList) FXRouter.getData();
+                useCase = (UseCase) FXRouter.getData2();
 
-            // load useCaseDetail to the actorActionVBox and systemActionVBox
-            for (UseCaseDetail useCaseDetail : useCaseDetailList.getUseCaseDetailList()) {
-                if (useCaseDetail.getUseCaseID() == useCase.getUseCaseID()) {
-                    if (useCaseDetail.getAction().equals("actor")) {
-                        HBox hBox = new HBox();
-                        TextArea textArea = new TextArea();
-                        textArea.setMinSize(480, 50);
-                        textArea.setMaxSize(480, 50);
-                        textArea.setStyle("-fx-font-size: 14px;");
-                        textArea.setWrapText(true);
-                        textArea.setText(useCaseDetail.getDetail());
-                        Button deleteButton = new Button("-");
-                        deleteButton.setPrefHeight(30);
-                        deleteButton.setPrefWidth(28);
-                        deleteButton.setOnAction(event -> {
-                            actorActionVBox.getChildren().remove(hBox);
-                        });
-                        hBox.getChildren().add(textArea);
-                        hBox.getChildren().add(deleteButton);
-                        actorActionVBox.getChildren().add(hBox);
-                    } else if (useCaseDetail.getAction().equals("system")) {
-                        HBox hBox = new HBox();
-                        TextArea textArea = new TextArea();
-                        textArea.setMinSize(480, 50);
-                        textArea.setMaxSize(480, 50);
-                        textArea.setStyle("-fx-font-size: 14px;");
-                        textArea.setWrapText(true);
-                        textArea.setText(useCaseDetail.getDetail());
-                        Button deleteButton = new Button("-");
-                        deleteButton.setPrefHeight(30);
-                        deleteButton.setPrefWidth(28);
-                        deleteButton.setOnAction(event -> {
-                            systemActionVBox.getChildren().remove(hBox);
-                        });
-                        hBox.getChildren().add(textArea);
-                        hBox.getChildren().add(deleteButton);
-                        systemActionVBox.getChildren().add(hBox);
+                selectedListView();
+                setData();
+                if (useCaseListDataSource.readData() != null && useCaseDetailListDataSource.readData() != null){
+                    UseCaseList useCaseList = useCaseListDataSource.readData();
+                    loadListView(useCaseList);
+                    for (UseCase useCase : useCaseList.getUseCaseList()) {
+                        word.add(useCase.getUseCaseName());
                     }
+                    searchSet();
                 }
             }
+            else{
+                System.out.println(useCaseId);
+                if (useCaseListDataSource.readData() != null && useCaseDetailListDataSource.readData() != null){
+                    UseCaseList useCaseList = useCaseListDataSource.readData();
+                    loadListView(useCaseList);
+//                        selectedTSD();
+                    for (UseCase useCase : useCaseList.getUseCaseList()) {
+                        word.add(useCase.getUseCaseName());
+                    }
+                    searchSet();
+                }
 
+            }
         }
-
-        items = FXCollections.observableArrayList(
-                "Apple", "Banana", "Orange", "Mango", "Pineapple", "Strawberry"
-        );
-
-        preConListComboBox.setItems(items);
-        preConListComboBox.getEditor().end();
-
-        new AutoCompleteComboBoxListener<>(preConListComboBox);
-        TextField editorPre = preConListComboBox.getEditor();
-
-        preConListComboBox.setOnAction(event -> {
-            String selectedItem = preConListComboBox.getSelectionModel().getSelectedItem();
-            if (selectedItem != null) {
-                editorPre.setText(selectedItem);
-                //editor.setEditable(true);
-                editorPre.requestFocus();
-
-                Platform.runLater(editorPre::end);
-            }
-        });
-
-        postConListComboBox.setItems(items);
-        postConListComboBox.getEditor().end();
-
-        new AutoCompleteComboBoxListener<>(postConListComboBox);
-        TextField editorPost = postConListComboBox.getEditor();
-
-        postConListComboBox.setOnAction(event -> {
-            String selectedItem = postConListComboBox.getSelectionModel().getSelectedItem();
-            if (selectedItem != null) {
-                editorPost.setText(selectedItem);
-                //editor.setEditable(true);
-                editorPost.requestFocus();
-
-                Platform.runLater(editorPost::end);
-            }
-        });
-
+        System.out.println(useCaseDetailList);
     }
+
 
     private void setData(){
         useCaseId = useCase.getUseCaseID();
@@ -215,6 +155,97 @@ public class UseCaseAddController {
         if (!isGenerated) {  // ถ้ายังไม่ได้ทำงานมาก่อน
             handleGenerateIDAction();
             isGenerated = true;  // ตั้งค่าว่าทำงานแล้ว
+        }
+    }
+    private void selectedComboBox(){
+        preConListComboBox.getItems().clear();
+        preConListComboBox.setItems(FXCollections.observableArrayList("None"));
+
+        new AutoCompleteComboBoxListener<>(preConListComboBox);
+        TextField editorPre = preConListComboBox.getEditor();
+        preConListComboBox.getSelectionModel().selectFirst();
+        if (useCaseListDataSource.readData() != null){
+            useCaseList= useCaseListDataSource.readData();
+            preConCombobox();
+        }
+        preConListComboBox.setOnAction(event -> {
+            String selectedItem = preConListComboBox.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                editorPre.setText(selectedItem);
+                //editor.setEditable(true);
+                editorPre.requestFocus();
+
+                Platform.runLater(editorPre::end);
+                if (!selectedItem.equals("None")) {
+                    selectedPreConSetInfo(selectedItem);
+                }
+            }
+        });
+
+        postConListComboBox.getItems().clear();
+        postConListComboBox.setItems(FXCollections.observableArrayList("None"));
+
+        new AutoCompleteComboBoxListener<>(postConListComboBox);
+        TextField editorPost = postConListComboBox.getEditor();
+        if (useCaseListDataSource.readData() != null){
+            useCaseList= useCaseListDataSource.readData();
+            postConCombobox();
+        }
+        postConListComboBox.setOnAction(event -> {
+            String selectedItem = postConListComboBox.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                editorPost.setText(selectedItem);
+                //editor.setEditable(true);
+                editorPost.requestFocus();
+
+                Platform.runLater(editorPost::end);
+                if (!selectedItem.equals("None")) {
+                    selectedPostConSetInfo(selectedItem);
+                }
+            }
+        });
+
+//        for (Equipment equipment : equipmentList.getEquipmentList()){
+//            if (!categoryBox.getItems().contains(equipment.getType_equipment())) {
+//                categoryBox.getItems().add(equipment.getType_equipment());
+//            }
+//        }
+    }
+    private void selectedPreConSetInfo(String selectedItem) {
+        // แยกข้อมูล UseCase ID จาก selectedItem โดยใช้ split(":") เพื่อตัดข้อความก่อนเครื่องหมาย :
+        String[] data = selectedItem.split("[:,]");
+
+        // ตรวจสอบว่า data มี UseCase ID ใน index 0 หรือไม่
+        if (data.length > 0 && useCaseList.findByUseCaseName(data[0].trim()) != null) {
+            UseCase useCase = useCaseList.findByUseCaseName(data[0].trim());
+
+            // อัปเดตข้อมูล
+            onPreConArea.setText(useCase.getPreCondition());
+        }
+    }
+    private void selectedPostConSetInfo(String selectedItem) {
+        // แยกข้อมูล UseCase ID จาก selectedItem โดยใช้ split(":") เพื่อตัดข้อความก่อนเครื่องหมาย :
+        String[] data = selectedItem.split("[:,]");
+
+        // ตรวจสอบว่า data มี UseCase ID ใน index 0 หรือไม่
+        if (data.length > 0 && useCaseList.findByUseCaseName(data[0].trim()) != null) {
+            UseCase useCase = useCaseList.findByUseCaseName(data[0].trim());
+
+            // อัปเดตข้อมูล
+            onPostConArea.setText(useCase.getPostCondition());
+        }
+    }
+
+    private void preConCombobox() {
+        for (UseCase useCase : useCaseList.getUseCaseList()){
+            String pre_combobox = useCase.getUseCaseName()+ " : " + useCase.getPreCondition();
+            preConListComboBox.getItems().add(pre_combobox);
+        }
+    }
+    private void postConCombobox() {
+        for (UseCase useCase : useCaseList.getUseCaseList()){
+            String post_combobox = useCase.getUseCaseName()+ " : " + useCase.getPostCondition();
+            postConListComboBox.getItems().add(post_combobox);
         }
     }
 
@@ -293,50 +324,8 @@ public class UseCaseAddController {
             throw new RuntimeException(e);
         }
     }
-
-//    ArrayList<String> words = new ArrayList<>(
-//            Arrays.asList("test", "dog","Human", "Days of our life", "The best day",
-//                    "Friends", "Animal", "Human", "Humans", "Bear", "Life",
-//                    "This is some text", "Words", "222", "Bird", "Dog", "A few words",
-//                    "Subscribe!", "SoftwareEngineeringStudent", "You got this!!",
-//                    "Super Human", "Super", "Like")
-//    );
-//
-//    @FXML
-//    void onSearchButton(ActionEvent event) {
-//        onSearchList.getItems().clear();
-//        onSearchList.getItems().addAll(searchList(onSearchField.getText(),words));
-//    }
-    private void selectedListView() {
-        if (useCase != null){
-            onSearchList.getSelectionModel().select(useCase);
-            onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue == null) {
-                    selectedUseCase = null;
-                } else{
-                    selectedUseCase = newValue;
-                }
-            });
-
-        }else {
-            onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue == null) {
-                    selectedUseCase = null;
-                } else {
-                    selectedUseCase = newValue;
-                }
-            });
-
-        }
-    }
-
-    private void clearInfo() {
-        selectedItem = null;
-        FXRouter.setData3(null);
-    }
-
     private void searchSet() {
-        ArrayList <String> word = new ArrayList<>();
+        ArrayList<String> word = new ArrayList<>();
         for (UseCase useCase : useCaseList.getUseCaseList()) {
             word.add(useCase.getUseCaseName());
 
@@ -351,7 +340,35 @@ public class UseCaseAddController {
             }
         });
     }
+
+    private void selectedListView() {
+        if (useCase != null){
+            onSearchList.getSelectionModel().select(useCase);
+            onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue == null) {
+                    clearInfo();
+                    selectedUseCase = null;
+                } else{
+//                    onEditButton.setVisible(newValue.getUseCaseID() != null);
+//                    showInfo(newValue);
+                    selectedUseCase = newValue;
+                }
+            });
+
+        } else {
+            onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue == null) {
+                    clearInfo();
+                    selectedUseCase = null;
+                } else {
+//                    showInfo(newValue);
+                    selectedUseCase = newValue;
+                }
+            });
+        }
+    }
     private void loadListView(UseCaseList useCaseList) {
+//        onEditButton.setVisible(false);
         onSearchList.refresh();
         if (useCaseList != null){
             useCaseList.sort(new UseCaseComparable());
@@ -361,17 +378,18 @@ public class UseCaseAddController {
                 }
             }
         }else {
+//            setTable();
             clearInfo();
         }
     }
-    @FXML
-    void onSearchButton(ActionEvent event) {
-        onSearchList.getItems().clear();
-        onSearchList.getItems().addAll(searchList(onSearchField.getText(),useCaseList.getUseCaseList()));
+
+    private void clearInfo() {
+        testIDLabel.setText("-");
     }
 
     private List<UseCase> searchList(String searchWords, ArrayList<UseCase> listOfScripts) {
 
+        // Split searchWords into a list of individual words
         List<String> searchWordsArray = Arrays.asList(searchWords.trim().split("\\s+"));
 
         return listOfScripts.stream()
@@ -379,25 +397,17 @@ public class UseCaseAddController {
                         searchWordsArray.stream().allMatch(word ->
                                 useCase.getUseCaseID().toLowerCase().contains(word.toLowerCase()) ||
                                         useCase.getUseCaseName().toLowerCase().contains(word.toLowerCase())
+
                         )
                 )
                 .collect(Collectors.toList());  // Return the filtered list
     }
 
-//    private List<String> searchList(String searchWords, List<String> listOfStrings) {
-//
-//        List<String> searchWordsArray = Arrays.asList(searchWords.trim().split(" "));
-//
-//        return listOfStrings.stream().filter(input -> {
-//            return searchWordsArray.stream().allMatch(word ->
-//                    input.toLowerCase().contains(word.toLowerCase()));
-//        }).collect(Collectors.toList());
-//    }
-
-//    @Override
-//    public void initialize(URL url, ResourceBundle resourceBundle) {
-//        onSearchList.getItems().addAll(words);
-//    }
+    @FXML
+    void onSearchButton(ActionEvent event) {
+        onSearchList.getItems().clear();
+        onSearchList.getItems().addAll(searchList(onSearchField.getText(),useCaseList.getUseCaseList()));
+    }
 
     @FXML
     void onSubmitButton(ActionEvent event) {
@@ -475,7 +485,7 @@ public class UseCaseAddController {
 //        objects.add(directory);
 
 //        FXRouter.goTo("use_case", objects);
-//        FXRouter.goTo("use_case",useCase);
+//        FXRouter.goTo("use_case", useCase);
         isGenerated = false;
     }
 

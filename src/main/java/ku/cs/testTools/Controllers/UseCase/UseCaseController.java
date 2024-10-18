@@ -118,6 +118,7 @@ public class UseCaseController {
                     selectedUseCase = null;
                 } else{
                     onEditButton.setVisible(newValue.getUseCaseID() != null);
+                    clearInfo();
                     showInfo(newValue);
                     selectedUseCase = newValue;
                 }
@@ -129,6 +130,7 @@ public class UseCaseController {
                     clearInfo();
                     selectedUseCase = null;
                 } else {
+                    clearInfo();
                     showInfo(newValue);
                     selectedUseCase = newValue;
                 }
@@ -164,8 +166,8 @@ public class UseCaseController {
                 if (useCaseDetail.getAction().equals("actor")) {
                     HBox hBox = new HBox();
                     TextArea textArea = new TextArea();
-                    textArea.setMinSize(500, 50);
-                    textArea.setMaxSize(500, 50);
+                    textArea.setMinSize(505, 50);
+                    textArea.setMaxSize(505, 50);
                     textArea.setStyle("-fx-font-size: 14px;");
                     textArea.setWrapText(true);
                     textArea.setEditable(false);
@@ -175,8 +177,8 @@ public class UseCaseController {
                 } else if (useCaseDetail.getAction().equals("system")) {
                     HBox hBox = new HBox();
                     TextArea textArea = new TextArea();
-                    textArea.setMinSize(500, 50);
-                    textArea.setMaxSize(500, 50);
+                    textArea.setMinSize(505, 50);
+                    textArea.setMaxSize(505, 50);
                     textArea.setStyle("-fx-font-size: 14px;");
                     textArea.setWrapText(true);
                     textArea.setEditable(false);
@@ -186,7 +188,6 @@ public class UseCaseController {
                 }
             }
         }
-
     }
 
     private void loadListView(UseCaseList useCaseList) {
@@ -214,10 +215,12 @@ public class UseCaseController {
         infoPreConLabel.setText("");
         infoPostConLabel.setText("");
         infoNoteLabel.setText("");
-        VBox vboxActor = (VBox) actorActionScrollPane.getContent();  // ScrollPane มี VBox
-        vboxActor.getChildren().clear();  // ลบลูกทั้งหมดภายใน VBox
-        VBox vboxSystem = (VBox) systemActionScrollPane.getContent();
-        vboxSystem.getChildren().clear();
+        actorActionVBox.getChildren().clear();
+        systemActionVBox.getChildren().clear();
+//        VBox vboxActor = (VBox) actorActionScrollPane.getContent();  // ScrollPane มี VBox
+//        vboxActor.getChildren().clear();  // ลบลูกทั้งหมดภายใน VBox
+//        VBox vboxSystem = (VBox) systemActionScrollPane.getContent();
+//        vboxSystem.getChildren().clear();
     }
 
     private List<UseCase> searchList(String searchWords, ArrayList<UseCase> listOfScripts) {
