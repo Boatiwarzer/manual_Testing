@@ -90,6 +90,7 @@ public class TestScriptDetailFIleDataSource implements DataSource<TestScriptDeta
     public void writeData(TestScriptDetailList testScriptDetailList) {
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
+
         List<String> fileLines = new ArrayList<>();
 
         // อ่านข้อมูลเดิมในไฟล์ถ้ามี

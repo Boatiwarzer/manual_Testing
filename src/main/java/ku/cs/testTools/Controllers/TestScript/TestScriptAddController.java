@@ -26,10 +26,12 @@ import java.util.stream.Collectors;
 public class TestScriptAddController {
 
     @FXML
-    private Label infoDescriptLabel;
+    private TextArea infoDescriptLabel;
 
     @FXML
-    private Label infoPreconLabel;
+    private TextArea infoPreconLabel;
+    @FXML
+    private TextArea infoPostconLabel;
 
     @FXML
     private Button onAddButton;
@@ -74,7 +76,7 @@ public class TestScriptAddController {
     private TextField onTestNameField = TextFields.createClearableTextField();;
 
     @FXML
-    private TextField onTestNoteField = TextFields.createClearableTextField();;
+    private TextArea onTestNoteField;
 
     @FXML
     private ComboBox<String> onTestcaseCombobox;
@@ -631,6 +633,8 @@ public class TestScriptAddController {
                 Platform.runLater(onUsecaseCombobox.getEditor()::end);
                 if (!selectedItem.equals("None")) {
                     selectedComboBoxSetInfo(selectedItem);
+                }else {
+                    clearUsecase();
                 }
             }
 
@@ -654,7 +658,14 @@ public class TestScriptAddController {
             // อัปเดตข้อมูลใน Label
             infoPreconLabel.setText(useCase.getPreCondition());
             infoDescriptLabel.setText(useCase.getDescription());
+            infoPostconLabel.setText(useCase.getPostCondition());
         }
+    }
+    private void clearUsecase() {
+        infoPreconLabel.setText("");
+        infoDescriptLabel.setText("");
+        infoPostconLabel.setText("");
+
     }
 
     private void useCaseCombobox() {

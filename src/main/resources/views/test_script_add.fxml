@@ -44,6 +44,7 @@
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -58,16 +59,16 @@
    <center>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="700.0" prefWidth="1090.0">
       <children>
-            <VBox layoutX="15.0" layoutY="15.0" prefHeight="265.0" prefWidth="1060.0" spacing="5.0" AnchorPane.leftAnchor="15.199999999999818">
+            <VBox layoutX="15.0" layoutY="15.0" prefHeight="265.0" prefWidth="1060.0" spacing="20.0" AnchorPane.leftAnchor="15.199999999999818">
                <children>
                   <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="1350.0" spacing="30.0">
                      <children>
-                        <Label prefHeight="30.0" prefWidth="50.0" text="ชื่อ :" textAlignment="CENTER">
+                        <Label prefHeight="30.0" prefWidth="94.0" text="ชื่อ :" textAlignment="CENTER">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="onTestNameField"  prefHeight="30.0" prefWidth="300.0">
+                        <TextField fx:id="onTestNameField" prefHeight="30.0" prefWidth="388.0">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -87,7 +88,7 @@
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <Label fx:id="testDateLabel" prefHeight="30.0" prefWidth="200.0" text="00/00/0000">
+                        <Label fx:id="testDateLabel" prefHeight="30.0" prefWidth="133.0" text="00/00/0000">
                            <font>
                               <Font size="18.0" />
                            </font>
@@ -96,66 +97,66 @@
                   </HBox>
                   <HBox prefHeight="60.0" prefWidth="200.0" spacing="20.0">
                      <children>
-                        <Label prefHeight="30.0" prefWidth="120.0" text="Use Case :" textAlignment="CENTER">
+                        <Label prefHeight="30.0" prefWidth="105.0" text="Use Case :" textAlignment="CENTER">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <ComboBox fx:id="onUsecaseCombobox"  prefHeight="30.0" prefWidth="360.0" />
-                        <Label prefHeight="30.0" prefWidth="120.0" text="Test Case :" textAlignment="CENTER">
+                        <ComboBox fx:id="onUsecaseCombobox" prefHeight="30.0" prefWidth="377.0" />
+                        <Label prefHeight="30.0" prefWidth="154.0" text="  Test Case :" textAlignment="CENTER">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <ComboBox fx:id="onTestcaseCombobox"  prefHeight="30.0" prefWidth="360.0" />
+                        <ComboBox fx:id="onTestcaseCombobox" prefHeight="30.0" prefWidth="360.0" />
                      </children>
                   </HBox>
-                  <HBox prefHeight="90.0" prefWidth="200.0" spacing="20.0">
+                  <HBox prefHeight="90.0" prefWidth="1037.0" spacing="20.0">
                      <children>
-                        <Label prefHeight="30.0" prefWidth="120.0" text="Description :">
+                        <Label prefHeight="30.0" prefWidth="116.0" text="Description :">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <VBox prefHeight="90.0" prefWidth="360.0">
-                           <children>
-                              <VBox prefHeight="5.0" prefWidth="100.0" />
-                              <Label fx:id="infoDescriptLabel" alignment="TOP_LEFT" prefHeight="85.0" prefWidth="360.0" text="Label" textFill="#0055ff" wrapText="true">
-                                 <font>
-                                    <Font size="16.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </VBox>
-                        <Label prefHeight="30.0" prefWidth="120.0" text="Pre-Condition :">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </Label>
-                        <VBox prefHeight="90.0" prefWidth="360.0">
-                           <children>
-                              <VBox prefHeight="5.0" prefWidth="100.0" />
-                              <Label fx:id="infoPreconLabel" alignment="TOP_LEFT" prefHeight="85.0" prefWidth="360.0" text="Label" textFill="#0055ff" wrapText="true">
-                                 <font>
-                                    <Font size="16.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </VBox>
-                     </children>
-                  </HBox>
-                  <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
-                     <children>
-                        <Label prefHeight="30.0" prefWidth="50.0" text="Note :" textAlignment="CENTER">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </Label>
-                        <TextField fx:id="onTestNoteField"  prefHeight="30.0" prefWidth="900.0">
+                        <TextArea fx:id="infoDescriptLabel" prefHeight="71.0" prefWidth="397.0" wrapText="true">
                            <font>
                               <Font size="14.0" />
                            </font>
-                        </TextField>
+                        </TextArea>
+                        <Label prefHeight="30.0" prefWidth="168.0" text="  Pre-Condition :">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <TextArea fx:id="infoPreconLabel" prefHeight="71.0" prefWidth="360.0" wrapText="true">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </TextArea>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="83.0" prefWidth="1060.0" spacing="30.0">
+                     <children>
+                        <Label prefHeight="30.0" prefWidth="94.0" text="Note :" textAlignment="CENTER">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <TextArea fx:id="onTestNoteField" prefHeight="65.0" prefWidth="385.0" wrapText="true">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </TextArea>
+                        <Label prefHeight="30.0" prefWidth="138.0" text="Post-Condition :" textAlignment="CENTER">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <TextArea fx:id="infoPostconLabel" prefHeight="65.0" prefWidth="351.0" wrapText="true">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </TextArea>
                      </children>
                   </HBox>
                </children>
