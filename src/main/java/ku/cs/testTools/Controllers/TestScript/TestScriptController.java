@@ -1,8 +1,6 @@
 package ku.cs.testTools.Controllers.TestScript;
 
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -27,19 +25,20 @@ import java.util.stream.Collectors;
 public class TestScriptController {
 
     @FXML
-    private Label infoDescriptLabel;
+    private TextArea infoDescriptLabel;
 
     @FXML
-    private Label infoNoteLabel;
+    private TextArea infoNoteLabel;
 
     @FXML
-    private Label infoPreconLabel;
+    private TextArea infoPreconLabel;
+    @FXML
+    private TextArea infoPostconLabel;
+    @FXML
+    private ComboBox<String> infoTestcaseLabel;
 
     @FXML
-    private Label infoTestcaseLabel;
-
-    @FXML
-    private Label infoUsecaseLabel;
+    private ComboBox<String> infoUsecaseLabel ;
 
     @FXML
     private Hyperlink onClickTestcase;
@@ -81,7 +80,7 @@ public class TestScriptController {
     private Label testIDLabel;
 
     @FXML
-    private Label testNameLabel;
+    private TextField testNameLabel;
     private String projectName1 = "uc", projectName = "125", directory = "data";
     private TestScriptList testScriptList = new TestScriptList();
     private TestScript testScript = new TestScript();
@@ -96,6 +95,7 @@ public class TestScriptController {
 
     @FXML
     void initialize() {
+        setEditable();
         if (FXRouter.getData() != null) {
             testScriptList = testScriptListDataSource.readData();
             testScriptDetailList = testScriptDetailListListDataSource.readData();
@@ -124,6 +124,12 @@ public class TestScriptController {
         }
 
     }
+
+    private void setEditable() {
+        infoUsecaseLabel.setEditable(true);
+        infoTestcaseLabel.setEditable(true);
+    }
+
     private void searchSet() {
         ArrayList <String> word = new ArrayList<>();
         for (TestScript testScript : testScriptList.getTestScriptList()) {
@@ -178,11 +184,13 @@ public class TestScriptController {
         String date = testScript.getDateTS();
         testDateLabel.setText(date);
         String useCase = testScript.getUseCase();
-        infoUsecaseLabel.setText(useCase);
+        infoUsecaseLabel.getSelectionModel().select(useCase);
         String description = testScript.getDescriptionTS();
-        infoDescriptLabel.setText(description);;
+        infoDescriptLabel.setText(description);
+        String post = testScript.getPostCon();
+        infoPostconLabel.setText(post);
         String tc = testScript.getTestCase();
-        infoTestcaseLabel.setText(tc);
+        infoTestcaseLabel.getSelectionModel().select(tc);
         String preCon = testScript.getPreCon();
         infoPreconLabel.setText(preCon);
         String note = testScript.getFreeText();
@@ -249,11 +257,12 @@ public class TestScriptController {
         testIDLabel.setText("");
         testNameLabel.setText("");
         testDateLabel.setText("");
-        onClickUsecase.setText("");
+        //onClickUsecase.setText("");
         infoDescriptLabel.setText("");
-        infoTestcaseLabel.setText("");
+        //infoTestcaseLabel.setText("");
         infoPreconLabel.setText("");
         infoNoteLabel.setText("");
+        infoPostconLabel.setText("");
 
         // Optionally clear the table if needed
         onTableTestscript.getItems().clear();

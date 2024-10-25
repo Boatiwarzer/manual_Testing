@@ -498,7 +498,9 @@ public class TestScriptEditController {
             String tc = onTestcaseCombobox.getValue();
             String preCon = infoPreconLabel.getText();
             String note = onTestNoteField.getText();
-            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note);
+            String post = infoPostconLabel.getText();
+
+            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note,post);
 
             if (testScriptDetailList != null){
                 FXRouter.popup("popup_add_testscript",testScriptDetailList,testScript,null,true);

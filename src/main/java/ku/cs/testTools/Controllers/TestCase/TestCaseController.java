@@ -75,8 +75,8 @@ public class TestCaseController {
     //private ArrayList<Object> objects = (ArrayList) FXRouter.getData();
     private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
     private TestCaseDetail selectedItem;
-    private TestCase testCase;
-    private TestCase selectedTestCase;
+    private TestCase testCase = new TestCase();
+    private TestCase selectedTestCase = new TestCase();
     private static int idCounter = 1; // Counter for sequential IDs
     private static final int MAX_ID = 999; // Upper limit for IDs
     private static Set<String> usedIds = new HashSet<>(); // Set to store used IDs

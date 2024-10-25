@@ -25,6 +25,7 @@ public class TestScript {
     private String descriptionTS;
     private String testCase;
     private String preCon;
+    private String postCon;
     private String freeText;
     @OneToMany(mappedBy = "testScript")
     private List<TestScriptDetail> testScriptDetailList;
@@ -41,7 +42,7 @@ public class TestScript {
         this.freeText = freeText;
     }
 
-    public TestScript(String idTS, String nameTS, String dateTS, String descriptionTS, String preCon, String useCase, String testCase, String freeText, List<TestScriptDetail> testScriptDetailList) {
+    public TestScript(String idTS, String nameTS, String dateTS, String useCase, String descriptionTS, String testCase, String preCon,String freeText,String postCon) {
         this.idTS = idTS;
         this.nameTS = nameTS;
         this.dateTS = dateTS;
@@ -50,25 +51,8 @@ public class TestScript {
         this.testCase = testCase;
         this.preCon = preCon;
         this.freeText = freeText;
-        this.testScriptDetailList = testScriptDetailList;
-    }
+        this.postCon = postCon;
 
-    public TestScript(String idTS, String nameTS, String dateTS, String useCase, String descriptionTS, String testCase, String preCon, String freeText, String idTSDList) {
-        this.idTS = idTS;
-        this.nameTS = nameTS;
-        this.dateTS = dateTS;
-        this.useCase = useCase;
-        this.descriptionTS = descriptionTS;
-        this.testCase = testCase;
-        this.preCon = preCon;
-        this.freeText = freeText;
-        this.idTSDList = idTSDList;
-    }
-
-    public void setTime(){
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
-        this.dateTS = now.format(dtf);
     }
 
     @Override

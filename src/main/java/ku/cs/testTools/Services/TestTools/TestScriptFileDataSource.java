@@ -66,7 +66,8 @@ public class TestScriptFileDataSource implements DataSource<TestScriptList>, Man
                             data[5].trim(), // data[5]
                             data[6].trim(), // data[6]
                             data[7].trim(), // data[7]
-                            data[8].trim() // data[8]
+                            data[8].trim(),
+                            data[9].trim()// data[8]
                     );
                     testScriptList.addOrUpdateTestScript(testScript);
                 }
@@ -144,6 +145,7 @@ public class TestScriptFileDataSource implements DataSource<TestScriptList>, Man
                 + testScript.getDescriptionTS() + ","
                 + testScript.getTestCase() + ","
                 + testScript.getPreCon() + ","
-                + testScript.getFreeText();
+                + testScript.getFreeText()+ ","
+                + testScript.getPostCon();
     }
 }

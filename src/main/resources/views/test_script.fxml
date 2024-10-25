@@ -33,6 +33,7 @@
 -->
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
@@ -42,243 +43,244 @@
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="760.0" prefWidth="1360.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.testTools.Controllers.TestScript.TestScriptController">
-  <children>
-    <MenuBar VBox.vgrow="NEVER">
-      <menus>
-        <Menu mnemonicParsing="false" text="File">
-          <items>
-            <MenuItem mnemonicParsing="false" text="New" />
-            <MenuItem mnemonicParsing="false" text="Open…" />
-            <Menu mnemonicParsing="false" text="Open Recent" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Close" />
-            <MenuItem mnemonicParsing="false" text="Save" />
-            <MenuItem mnemonicParsing="false" text="Save As…" />
-            <MenuItem mnemonicParsing="false" text="Revert" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Preferences…" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Quit" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Edit">
-          <items>
-            <MenuItem mnemonicParsing="false" text="Undo" />
-            <MenuItem mnemonicParsing="false" text="Redo" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Cut" />
-            <MenuItem mnemonicParsing="false" text="Copy" />
-            <MenuItem mnemonicParsing="false" text="Paste" />
-            <MenuItem mnemonicParsing="false" text="Delete" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Select All" />
-            <MenuItem mnemonicParsing="false" text="Unselect All" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Help">
-          <items>
-            <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
-          </items>
-        </Menu>
-      </menus>
-    </MenuBar>
-      <HBox alignment="CENTER" prefHeight="30.0" prefWidth="1360.0" spacing="150.0">
+<BorderPane prefHeight="760.0" prefWidth="1360.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.testTools.Controllers.TestScript.TestScriptController">
+   <center>
+      <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="700.0" prefWidth="1090.0">
          <children>
-            <Hyperlink fx:id="onClickUsecase" onAction="#onClickUsecase" text="Use Case">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Hyperlink>
-            <Hyperlink fx:id="onClickTestflow" onAction="#onClickTestflow" text="Test Flow">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Hyperlink>
-            <Hyperlink fx:id="onClickTestcase" onAction="#onClickTestcase" text="Test Case">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Hyperlink>
-            <Hyperlink fx:id="onClickTestscript" onAction="#onClickTestscript" text="Test Script">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Hyperlink>
-            <Hyperlink fx:id="onClickTestresult" alignment="CENTER" onAction="#onClickTestresult" text="Test Result">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Hyperlink>
-         </children>
-      </HBox>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
-      <children>
-            <HBox prefHeight="740.0" prefWidth="1360.0">
+            <VBox layoutX="15.0" layoutY="15.0" prefHeight="265.0" prefWidth="1060.0" spacing="20.0" AnchorPane.leftAnchor="15.199999999999818">
                <children>
-                  <Pane layoutX="15.0" layoutY="15.0" prefHeight="700.0" prefWidth="270.0">
+                  <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="1350.0" spacing="30.0">
                      <children>
-                        <Button fx:id="onCreateButton" layoutX="15.0" layoutY="15.0" mnemonicParsing="false" onAction="#onCreateButton" prefHeight="30.0" prefWidth="110.0" text="Create">
+                        <Label prefHeight="30.0" prefWidth="94.0" text="ชื่อ :" textAlignment="CENTER">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="testNameLabel" disable="true" prefHeight="30.0" prefWidth="388.0">
                            <font>
                               <Font size="14.0" />
                            </font>
-                        </Button>
-                        <HBox layoutX="14.0" layoutY="55.0" prefHeight="30.0" prefWidth="240.0">
-                           <children>
-                              <TextField fx:id="onSearchField" prefHeight="30.0" prefWidth="200.0" promptText="Search">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </TextField>
-                              <Button fx:id="onSearchButton" mnemonicParsing="false" onAction="#onSearchButton" prefHeight="30.0" prefWidth="40.0" underline="true">
-                                 <graphic>
-                                    <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../icon/search_icon.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic>
-                              </Button>
-                           </children>
-                        </HBox>
-                        <ListView fx:id="onSearchList" layoutX="15.0" layoutY="95.0" prefHeight="560.0" prefWidth="240.0" />
-                        <Button fx:id="onEditButton" layoutX="145.0" layoutY="15.0" mnemonicParsing="false" onAction="#onEditButton" prefHeight="30.0" prefWidth="110.0" text="Edit">
+                        </TextField>
+                        <Label prefHeight="30.0" prefWidth="50.0" text="ID :">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="testIDLabel" disable="true" prefHeight="30.0" prefWidth="200.0" text="000">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label prefHeight="30.0" prefWidth="50.0" text="Date :">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="testDateLabel" disable="true" prefHeight="30.0" prefWidth="133.0" text="00/00/0000">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="60.0" prefWidth="200.0" spacing="20.0">
+                     <children>
+                        <Label prefHeight="30.0" prefWidth="105.0" text="Use Case :" textAlignment="CENTER">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <ComboBox fx:id="infoUsecaseLabel" disable="true" editable="true" prefHeight="30.0" prefWidth="377.0" />
+                        <Label prefHeight="30.0" prefWidth="154.0" text="  Test Case :" textAlignment="CENTER">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <ComboBox fx:id="infoTestcaseLabel" disable="true" editable="true" prefHeight="30.0" prefWidth="360.0" />
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="90.0" prefWidth="1037.0" spacing="20.0">
+                     <children>
+                        <Label prefHeight="30.0" prefWidth="116.0" text="Description :">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <TextArea fx:id="infoDescriptLabel" disable="true" prefHeight="71.0" prefWidth="397.0" wrapText="true">
                            <font>
                               <Font size="14.0" />
                            </font>
-                        </Button>
+                        </TextArea>
+                        <Label prefHeight="30.0" prefWidth="168.0" text="  Pre-Condition :">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <TextArea fx:id="infoPreconLabel" disable="true" prefHeight="71.0" prefWidth="360.0" wrapText="true">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </TextArea>
                      </children>
-                  </Pane>
-                  <Pane prefHeight="700.0" prefWidth="1090.0">
+                  </HBox>
+                  <HBox prefHeight="83.0" prefWidth="1060.0" spacing="30.0">
                      <children>
-                        <VBox layoutX="15.0" layoutY="15.0" prefHeight="265.0" prefWidth="1060.0" spacing="5.0">
-                           <children>
-                              <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="1350.0" spacing="30.0">
-                                 <children>
-                                    <Label prefHeight="30.0" prefWidth="50.0" text="ชื่อ :" textAlignment="CENTER">
-                                       <font>
-                                          <Font size="18.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="testNameLabel" prefHeight="30.0" prefWidth="300.0" text="test">
-                                       <font>
-                                          <Font size="18.0" />
-                                       </font>
-                                    </Label>
-                                    <Label prefHeight="30.0" prefWidth="50.0" text="ID :">
-                                       <font>
-                                          <Font size="18.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="testIDLabel" prefHeight="30.0" prefWidth="200.0" text="000">
-                                       <font>
-                                          <Font size="18.0" />
-                                       </font>
-                                    </Label>
-                                    <Label prefHeight="30.0" prefWidth="50.0" text="Date :">
-                                       <font>
-                                          <Font size="18.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="testDateLabel" prefHeight="30.0" prefWidth="200.0" text="00/00/0000">
-                                       <font>
-                                          <Font size="18.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0" spacing="360.0">
-                                 <children>
-                                    <Label prefHeight="30.0" prefWidth="100.0" text="Use Case :" textAlignment="CENTER">
-                                       <font>
-                                          <Font size="18.0" />
-                                       </font>
-                                    </Label>
-                                    <Label prefHeight="30.0" prefWidth="120.0" text="Description :">
-                                       <font>
-                                          <Font size="18.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="200.0" spacing="30.0">
-                                 <children>
-                                    <Label fx:id="infoUsecaseLabel" alignment="TOP_LEFT" prefHeight="60.0" prefWidth="430.0" text="Label" wrapText="true">
-                                       <font>
-                                          <Font size="16.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="infoDescriptLabel" alignment="TOP_LEFT" prefHeight="60.0" prefWidth="430.0" text="Label" wrapText="true">
-                                       <font>
-                                          <Font size="16.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0" spacing="360.0">
-                                 <children>
-                                    <Label prefHeight="30.0" prefWidth="100.0" text="Test Case :" textAlignment="CENTER">
-                                       <font>
-                                          <Font size="18.0" />
-                                       </font>
-                                    </Label>
-                                    <Label prefHeight="30.0" prefWidth="120.0" text="Pre-Condition :">
-                                       <font>
-                                          <Font size="18.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="200.0" spacing="30.0">
-                                 <children>
-                                    <Label fx:id="infoTestcaseLabel" alignment="TOP_LEFT" prefHeight="60.0" prefWidth="430.0" text="Label" wrapText="true">
-                                       <font>
-                                          <Font size="16.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="infoPreconLabel" alignment="TOP_LEFT" prefHeight="60.0" prefWidth="430.0" text="Label" wrapText="true">
-                                       <font>
-                                          <Font size="16.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
-                                 <children>
-                                    <Label prefHeight="30.0" prefWidth="50.0" text="Note :" textAlignment="CENTER">
-                                       <font>
-                                          <Font size="18.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="infoNoteLabel" prefHeight="30.0" prefWidth="810.0" text="Label">
-                                       <font>
-                                          <Font size="16.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </HBox>
-                           </children>
-                        </VBox>
-                        <TableView fx:id="onTableTestscript" layoutX="15.0" layoutY="335.0" prefHeight="320.0" prefWidth="1060.0">
-                           <columns>
-                              <TableColumn prefWidth="75.0" text="C1" />
-                              <TableColumn prefWidth="75.0" text="C2" />
-                           </columns>
-                        </TableView>
+                        <Label prefHeight="30.0" prefWidth="94.0" text="Note :" textAlignment="CENTER">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <TextArea fx:id="infoNoteLabel" disable="true" prefHeight="65.0" prefWidth="385.0" wrapText="true">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </TextArea>
+                        <Label prefHeight="30.0" prefWidth="138.0" text="Post-Condition :" textAlignment="CENTER">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <TextArea fx:id="infoPostconLabel" disable="true" prefHeight="65.0" prefWidth="351.0" wrapText="true">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </TextArea>
                      </children>
-                  </Pane>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox layoutX="15.199999809265137" layoutY="335.0" AnchorPane.leftAnchor="15.199999999999818" AnchorPane.rightAnchor="14.599999999999909">
+               <children>
+                  <TableView fx:id="onTableTestscript" prefHeight="320.0" prefWidth="1060.0">
+                     <columns>
+                        <TableColumn prefWidth="75.0" text="C1" />
+                        <TableColumn prefWidth="75.0" text="C2" />
+                     </columns>
+                  </TableView>
+               </children>
+            </VBox>
+            <HBox layoutX="835.0" layoutY="665.0" AnchorPane.rightAnchor="14.799999999999955" />
+         </children>
+      </AnchorPane>
+   </center>
+   <top>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <MenuBar>
+               <menus>
+                  <Menu mnemonicParsing="false" text="File">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="New" />
+                        <MenuItem mnemonicParsing="false" text="Open…" />
+                        <Menu mnemonicParsing="false" text="Open Recent" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" text="Close" />
+                        <MenuItem mnemonicParsing="false" text="Save" />
+                        <MenuItem mnemonicParsing="false" text="Save As…" />
+                        <MenuItem mnemonicParsing="false" text="Revert" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" text="Preferences…" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" text="Quit" />
+                     </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Edit">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="Undo" />
+                        <MenuItem mnemonicParsing="false" text="Redo" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" text="Cut" />
+                        <MenuItem mnemonicParsing="false" text="Copy" />
+                        <MenuItem mnemonicParsing="false" text="Paste" />
+                        <MenuItem mnemonicParsing="false" text="Delete" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" text="Select All" />
+                        <MenuItem mnemonicParsing="false" text="Unselect All" />
+                     </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Help">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
+                     </items>
+                  </Menu>
+               </menus>
+            </MenuBar>
+            <HBox alignment="CENTER" prefHeight="30.0" prefWidth="1360.0" spacing="150.0">
+               <children>
+                  <Hyperlink fx:id="onClickUsecase" onAction="#onClickUsecase" text="Use Case">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Hyperlink>
+                  <Hyperlink fx:id="onClickTestflow" onAction="#onClickTestflow" text="Test Flow">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Hyperlink>
+                  <Hyperlink fx:id="onClickTestcase" onAction="#onClickTestcase" text="Test Case">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Hyperlink>
+                  <Hyperlink fx:id="onClickTestscript" onAction="#onClickTestscript" text="Test Script">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Hyperlink>
+                  <Hyperlink fx:id="onClickTestresult" alignment="CENTER" onAction="#onClickTestresult" text="Test Result">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Hyperlink>
                </children>
             </HBox>
-      </children>
-    </AnchorPane>
-  </children>
-</VBox>
+         </children>
+      </VBox>
+   </top>
+   <left>
+      <Pane prefHeight="700.0" prefWidth="270.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox layoutX="14.0" layoutY="55.0" prefHeight="30.0" prefWidth="240.0">
+               <children>
+                  <TextField fx:id="onSearchField" prefHeight="30.0" prefWidth="200.0" promptText="Search">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <Button fx:id="onSearchButton" mnemonicParsing="false" onAction="#onSearchButton" prefHeight="30.0" prefWidth="40.0" underline="true">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../icon/search_icon.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+            </HBox>
+            <ListView fx:id="onSearchList" layoutX="15.0" layoutY="95.0" prefHeight="560.0" prefWidth="240.0" />
+            <Button fx:id="onCreateButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#onCreateButton" prefHeight="30.0" prefWidth="110.0" text="Create">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="onEditButton" layoutX="144.0" layoutY="14.0" mnemonicParsing="false" onAction="#onEditButton" prefHeight="30.0" prefWidth="110.0" text="Edit">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+         </children>
+      </Pane>
+   </left>
+</BorderPane>

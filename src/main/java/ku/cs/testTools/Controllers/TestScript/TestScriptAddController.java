@@ -555,6 +555,7 @@ public class TestScriptAddController {
         String tc = onTestcaseCombobox.getValue();
         String preCon = infoPreconLabel.getText();
         String note = onTestNoteField.getText();
+        String post = infoPostconLabel.getText();
 
         // Check if mandatory fields are empty
         if (name == null || name.isEmpty() ||
@@ -565,7 +566,7 @@ public class TestScriptAddController {
         }
 
         // Create a new TestScript object
-        testScript = new TestScript(tsId, name, date, useCase, description, tc, preCon, note);
+        testScript = new TestScript(tsId, name, date, useCase, description, tc, preCon, note,post);
         System.out.println(testScriptList.findTSById(testScript.getIdTS()));
         // Save data to files
         //DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
