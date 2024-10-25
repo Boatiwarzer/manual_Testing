@@ -128,6 +128,9 @@ public class TestScriptController {
     private void setEditable() {
         infoUsecaseLabel.setEditable(true);
         infoTestcaseLabel.setEditable(true);
+        infoUsecaseLabel.setStyle("-fx-background-color: lightgray; -fx-text-fill: black; -fx-border-color: black;");
+        infoTestcaseLabel.setStyle("-fx-background-color: lightgray; -fx-text-fill: black; -fx-border-color: black;");
+
     }
 
     private void searchSet() {
