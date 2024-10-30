@@ -285,6 +285,7 @@ public class TestScriptEditController {
     }
 
     private void clearInfo() {
+        testIDLabel.setText("");
         selectedItem = null;
         FXRouter.setData3(null);
     }

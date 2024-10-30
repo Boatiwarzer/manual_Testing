@@ -160,7 +160,7 @@
                                           <Font size="18.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="onTestNameField" onAction="#onTestNameField" prefHeight="30.0" prefWidth="300.0" promptText="TestName">
+                                    <TextField fx:id="onTestNameField"  prefHeight="30.0" prefWidth="300.0" promptText="TestName">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
@@ -203,7 +203,7 @@
                               </HBox>
                               <HBox prefHeight="60.0" prefWidth="200.0" spacing="30.0">
                                  <children>
-                                    <ComboBox fx:id="onUsecaseCombobox" onAction="#onUsecaseCombobox" prefHeight="30.0" prefWidth="430.0" />
+                                    <ComboBox fx:id="onUsecaseCombobox"  prefHeight="30.0" prefWidth="430.0" />
                                     <Label fx:id="infoDescriptLabel" alignment="TOP_LEFT" prefHeight="60.0" prefWidth="430.0" text="Label info" wrapText="true">
                                        <font>
                                           <Font size="16.0" />
@@ -218,7 +218,7 @@
                                           <Font size="18.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="onTestNoteField" onAction="#onTestNoteField" prefHeight="30.0" prefWidth="810.0" promptText="Note info">
+                                    <TextField fx:id="onTestNoteField"  prefHeight="30.0" prefWidth="810.0" promptText="Note info">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
