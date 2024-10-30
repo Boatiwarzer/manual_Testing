@@ -34,7 +34,7 @@ public class TestCaseDetailList {
         for (int i = 0; i < testCaseDetailList.size(); i++) {
             TestCaseDetail existing = testCaseDetailList.get(i);
 
-            if (existing.isId(testCaseDetail.getIdTC())) {
+            if (existing.isId(testCaseDetail.getIdTCD())) {
                 // Update existing item
                 testCaseDetailList.set(i, testCaseDetail);
                 exists = true;

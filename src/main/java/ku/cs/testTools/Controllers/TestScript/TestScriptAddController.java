@@ -478,7 +478,7 @@ public class TestScriptAddController {
             String note = onTestNoteField.getText();
             testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note);
             if (selectedItem != null){
-                FXRouter.popup("popup_delete",testScriptDetailList,testScript,selectedItem,true);
+                FXRouter.popup("popup_delete_testscript",testScriptDetailList,testScript,selectedItem,true);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

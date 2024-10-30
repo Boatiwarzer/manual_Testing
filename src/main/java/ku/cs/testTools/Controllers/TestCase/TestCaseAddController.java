@@ -464,7 +464,7 @@ public class TestCaseAddController {
             String note = onTestNoteField.getText();
             testCase = new TestCase(idTC, name, date, useCase, description,note);
             if (selectedItem != null){
-                FXRouter.popup("popup_delete",testCaseDetailList,testCase,selectedItem,true);
+                FXRouter.popup("popup_delete_testcase",testCaseDetailList,testCase,selectedItem,true);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -9,6 +9,9 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
+import ku.cs.testTools.Services.DataSource;
+import ku.cs.testTools.Services.TestTools.TestCaseDetailFileDataSource;
+import ku.cs.testTools.Services.TestTools.TestCaseFileDataSource;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -37,7 +40,6 @@ public class PopupAddTestcaseController {
     @FXML
     private Label testCaseNameLabel;
 
-    private String projectName, directory;
     private TestCaseList testCaseList = new TestCaseList();
     private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
     private TestCase testCase = new TestCase();
@@ -45,11 +47,16 @@ public class PopupAddTestcaseController {
     private String id;
     private String idTC;
     private String dateTCD;
+    private String projectName1 = "uc", projectName = "125", directory = "data";
+
+    private final DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory,projectName + ".csv");
+    private final DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
 
     @FXML
     void initialize() {
         clearInfo();
         randomId();
+        setDateTCD();
         System.out.println(FXRouter.getData3());
         System.out.println(FXRouter.getData2());
         if (FXRouter.getData() != null) {
@@ -115,6 +122,7 @@ public class PopupAddTestcaseController {
 //        }if(!password1.equals(password2)){
 //            errorLabel.setText("Password not correct");
 //        } if(signup){
+
         testCaseDetail = new TestCaseDetail(id,TsNo, Name, Type, dateTCD,idTC);
         testCaseDetailList.addOrUpdateTestCase(testCaseDetail);
         try {
