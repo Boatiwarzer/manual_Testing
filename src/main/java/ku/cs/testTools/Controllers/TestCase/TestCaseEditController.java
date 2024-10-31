@@ -568,6 +568,15 @@ public class TestCaseEditController {
 
     @FXML
     void onDeleteButton(ActionEvent event) {
+        try {
+            testCaseList.deleteTestCase(testCase);
+            testCaseListDataSource.writeData(testCaseList);
+            if (testCase != null){
+                FXRouter.popup("popup_delete_testcase",null,testCase,true);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 

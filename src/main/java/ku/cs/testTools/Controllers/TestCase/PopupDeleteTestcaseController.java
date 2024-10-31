@@ -72,7 +72,7 @@ public class PopupDeleteTestcaseController {
     void onDeleteButton(ActionEvent event) {
         try {
             if (FXRouter.getData() != null) {
-                testCaseDetail = null;
+                testCaseDetailList.deleteTestCase(testCaseDetail);
                 FXRouter.goTo("test_case_add", testCaseDetailList, testCase);
                 System.out.println(testCaseDetail);
                 Node source = (Node) event.getSource();
@@ -104,7 +104,6 @@ public class PopupDeleteTestcaseController {
     void onCancelButton(ActionEvent event) {
         try {
             if (FXRouter.getData() != null) {
-                testCaseDetailList.deleteTestCase(testCaseDetail);
                 FXRouter.goTo("test_case_add", testCaseDetailList);
                 Node source = (Node) event.getSource();
                 Stage stage = (Stage) source.getScene().getWindow();

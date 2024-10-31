@@ -51,7 +51,7 @@ public class TestCaseDetailList {
         // Iterate through the list to find the item to delete
         for (int i = 0; i < testCaseDetailList.size(); i++) {
             TestCaseDetail existing = testCaseDetailList.get(i);
-            if (existing.isId(testCaseDetail.getIdTC())) {
+            if (existing.isId(testCaseDetail.getIdTCD())) {
                 // Remove the item from the list
                 testCaseDetailList.remove(i);
                 break; // Exit after removing the first match

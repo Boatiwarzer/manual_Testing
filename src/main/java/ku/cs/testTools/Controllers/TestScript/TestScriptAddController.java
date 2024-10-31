@@ -205,6 +205,8 @@ public class TestScriptAddController {
         infoPreconLabel.setText(preCon);
         String note = testScript.getFreeText();
         onTestNoteField.setText(note);
+        String post = testScript.getPostCon();
+        infoPostconLabel.setText(post);
     }
 
     private void setButtonVisible() {
@@ -424,7 +426,8 @@ public class TestScriptAddController {
             String tc = onTestcaseCombobox.getValue();
             String preCon = infoPreconLabel.getText();
             String note = onTestNoteField.getText();
-            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note);
+            String post = infoPostconLabel.getText();
+            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note,post);
 
             if (testScriptDetailList != null){
                 FXRouter.popup("popup_add_testscript",testScriptDetailList,testScript,null,true);
@@ -452,7 +455,8 @@ public class TestScriptAddController {
             String tc = onTestcaseCombobox.getValue();
             String preCon = infoPreconLabel.getText();
             String note = onTestNoteField.getText();
-            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note);
+            String post = infoPostconLabel.getText();
+            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note,post);
             if (selectedItem != null){
                 FXRouter.popup("popup_add_testscript",testScriptDetailList,testScript,selectedItem,true);
             }
@@ -476,7 +480,8 @@ public class TestScriptAddController {
             String tc = onTestcaseCombobox.getValue();
             String preCon = infoPreconLabel.getText();
             String note = onTestNoteField.getText();
-            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note);
+            String post = infoPostconLabel.getText();
+            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note,post);
             if (selectedItem != null){
                 FXRouter.popup("popup_delete_testscript",testScriptDetailList,testScript,selectedItem,true);
             }

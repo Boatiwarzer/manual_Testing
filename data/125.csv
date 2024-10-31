@@ -8,3 +8,6 @@ testScript,TS-360,125,10-10-2024,UC-93443034704 : adadasda,test2,TC-84 : LoginTe
 testScriptDetail,TSD-864,TST,tt,None,TT,TS-949,10-10-2024
 testScript,TS-359,123,11-10-2024,UC-99610740081 : adad,test1,TC-84 : LoginTest,asda,124,tEST
 testScriptDetail,TSD-846,2,2,None,2,TS-359,11-10-2024
+testScript,TS-479,1,31-10-2024,None,1,None,1,1,1
+testScriptDetail,TSD-149,1,1,None,1,TS-479,31-10-2024
+testScriptDetail,TSD-220,1,1,None,1,TS-479,31-10-2024

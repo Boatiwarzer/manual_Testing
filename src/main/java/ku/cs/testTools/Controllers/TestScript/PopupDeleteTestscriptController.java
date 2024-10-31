@@ -66,7 +66,7 @@ public class PopupDeleteTestscriptController {
     void onDeleteButton(ActionEvent event) {
         try {
             if (FXRouter.getData() != null){
-                testScriptDetail = null;
+                testScriptDetailList.deleteTestScriptDetail(testScriptDetail);
                 FXRouter.goTo("test_script_add", testScriptDetailList, testScript);
                 System.out.println(testScriptDetail);
                 Node source = (Node) event.getSource();
@@ -100,7 +100,6 @@ public class PopupDeleteTestscriptController {
     void onCancelButton(ActionEvent event) {
         try {
             if (FXRouter.getData() != null){
-                testScriptDetailList.deleteTestScriptDetail(testScriptDetail);
                 FXRouter.goTo("test_script_add",testScriptDetailList);
                 Node source = (Node) event.getSource();
                 Stage stage = (Stage) source.getScene().getWindow();

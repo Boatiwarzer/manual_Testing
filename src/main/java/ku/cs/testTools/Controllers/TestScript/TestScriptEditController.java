@@ -601,7 +601,7 @@ public class TestScriptEditController {
         String tc = onTestcaseCombobox.getValue();
         String preCon = infoPreconLabel.getText();
         String note = onTestNoteField.getText();
-
+        String post = infoPostconLabel.getText();
         // Check if mandatory fields are empty
         if (name == null || name.isEmpty() ||
                 useCase == null || useCase.isEmpty() ||
@@ -611,7 +611,7 @@ public class TestScriptEditController {
         }
 
         // Create a new TestScript object
-        testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note);
+        testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note,post);
 
 
         // Add or update test script
@@ -636,7 +636,7 @@ public class TestScriptEditController {
             testScriptList.deleteTestScript(testScript);
             testScriptListDataSource.writeData(testScriptList);
             if (testScript != null){
-                FXRouter.popup("popup_delete",null,testScript,true);
+                FXRouter.popup("popup_delete_testscript",null,testScript,true);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
