@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TitledPane;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import ku.cs.fxrouter.FXRouter;
 
@@ -44,7 +45,49 @@ public class TestFlowController {
 
     @FXML
     private TextArea onNoteTextArea;
+    @FXML
+    private ImageView rectangleImageView;
+    @FXML
+    private ImageView squareImageView;
+    @FXML
+    private ImageView circleImageView;
+    @FXML
+    private ImageView blaclCircleImageView;
+    @FXML
+    private ImageView kiteImageView;
+    @FXML
+    private ImageView lineImageView;
+    @FXML
+    private ImageView arrowImageView;
 
+    @FXML
+    void squareDefected(ActionEvent event) {
+
+    }
+    @FXML
+    void rectangleDefected(ActionEvent event) {
+
+    }
+    @FXML
+    void circleDefected(ActionEvent event) {
+
+    }
+    @FXML
+    void blackCircleDefected(ActionEvent event) {
+
+    }
+    @FXML
+    void kiteDefected(ActionEvent event) {
+
+    }
+    @FXML
+    void arrowDefected(ActionEvent event) {
+
+    }
+    @FXML
+    void lineDefected(ActionEvent event) {
+
+    }
     @FXML
     void onClickTestcase(ActionEvent event) {
         try {

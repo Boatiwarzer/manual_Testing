@@ -36,139 +36,180 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="760.0" prefWidth="1360.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.testTools.Controllers.TestFlow.TestFlowController">
-  <children>
-    <MenuBar VBox.vgrow="NEVER">
-      <menus>
-        <Menu mnemonicParsing="false" text="File">
-          <items>
-            <MenuItem mnemonicParsing="false" text="New" />
-            <MenuItem mnemonicParsing="false" text="Open…" />
-            <Menu mnemonicParsing="false" text="Open Recent" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Close" />
-            <MenuItem mnemonicParsing="false" text="Save" />
-            <MenuItem mnemonicParsing="false" text="Save As…" />
-            <MenuItem mnemonicParsing="false" text="Revert" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Preferences…" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Quit" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Edit">
-          <items>
-            <MenuItem mnemonicParsing="false" text="Undo" />
-            <MenuItem mnemonicParsing="false" text="Redo" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Cut" />
-            <MenuItem mnemonicParsing="false" text="Copy" />
-            <MenuItem mnemonicParsing="false" text="Paste" />
-            <MenuItem mnemonicParsing="false" text="Delete" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Select All" />
-            <MenuItem mnemonicParsing="false" text="Unselect All" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Help">
-          <items>
-            <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
-          </items>
-        </Menu>
-      </menus>
-    </MenuBar>
-      <HBox alignment="CENTER" prefHeight="30.0" prefWidth="1360.0" spacing="150.0">
+<BorderPane xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.testTools.Controllers.TestFlow.TestFlowController">
+   <center>
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0">
          <children>
-            <Hyperlink fx:id="onClickUsecase" onAction="#onClickUsecase" text="Use Case">
+            <TitledPane fx:id="designTitlePane" animated="false" collapsible="false" layoutX="15.2" layoutY="15.0" prefHeight="642.0" prefWidth="1061.0" text="Design" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="29.0">
+              <content>
+                  <ScrollPane fitToHeight="true" fitToWidth="true" pannable="true">
+                     <content>
+                      <AnchorPane fx:id="onDesignArea" minHeight="0.0" minWidth="0.0" prefHeight="607.0" prefWidth="1058.0" />
+                     </content>
+                  </ScrollPane>
+              </content>
                <font>
                   <Font size="14.0" />
                </font>
-            </Hyperlink>
-            <Hyperlink fx:id="onClickTestflow" onAction="#onClickTestflow" text="Test Flow">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Hyperlink>
-            <Hyperlink fx:id="onClickTestcase" onAction="#onClickTestcase" text="Test Case">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Hyperlink>
-            <Hyperlink fx:id="onClickTestscript" onAction="#onClickTestscript" text="Test Script">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Hyperlink>
-            <Hyperlink fx:id="onClickTestresult" alignment="CENTER" onAction="#onClickTestresult" text="Test Result">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Hyperlink>
+            </TitledPane>
          </children>
-      </HBox>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+      </AnchorPane>
+   </center>
+   <top>
+      <VBox BorderPane.alignment="CENTER">
          <children>
-            <HBox prefHeight="704.0" prefWidth="1360.0">
+          <MenuBar>
+            <menus>
+              <Menu mnemonicParsing="false" text="File">
+                <items>
+                  <MenuItem mnemonicParsing="false" text="New" />
+                  <MenuItem mnemonicParsing="false" text="Open…" />
+                  <Menu mnemonicParsing="false" text="Open Recent" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" text="Close" />
+                  <MenuItem mnemonicParsing="false" text="Save" />
+                  <MenuItem mnemonicParsing="false" text="Save As…" />
+                  <MenuItem mnemonicParsing="false" text="Revert" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" text="Preferences…" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" text="Quit" />
+                </items>
+              </Menu>
+              <Menu mnemonicParsing="false" text="Edit">
+                <items>
+                  <MenuItem mnemonicParsing="false" text="Undo" />
+                  <MenuItem mnemonicParsing="false" text="Redo" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" text="Cut" />
+                  <MenuItem mnemonicParsing="false" text="Copy" />
+                  <MenuItem mnemonicParsing="false" text="Paste" />
+                  <MenuItem mnemonicParsing="false" text="Delete" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" text="Select All" />
+                  <MenuItem mnemonicParsing="false" text="Unselect All" />
+                </items>
+              </Menu>
+              <Menu mnemonicParsing="false" text="Help">
+                <items>
+                  <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
+                </items>
+              </Menu>
+            </menus>
+          </MenuBar>
+            <HBox alignment="CENTER" prefHeight="30.0" prefWidth="1360.0" spacing="150.0">
                <children>
-                  <Pane prefHeight="200.0" prefWidth="270.0">
-                     <children>
-                        <VBox layoutX="15.0" layoutY="15.0" prefHeight="674.0" prefWidth="240.0" spacing="10.0">
-                           <children>
-                              <TitledPane fx:id="componentTitlePane" animated="false" collapsible="false" prefHeight="504.0" prefWidth="240.0" text="Component">
-                                <content>
-                                  <AnchorPane fx:id="onComponentArea" minHeight="0.0" minWidth="0.0" />
-                                </content>
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </TitledPane>
-                              <TitledPane fx:id="noteTitlePane" animated="false" collapsible="false" prefHeight="160.0" prefWidth="240.0" text="Note">
-                                 <content>
-                                    <AnchorPane minHeight="0.0" minWidth="0.0">
-                                       <children>
-                                          <TextArea fx:id="onNoteTextArea" prefHeight="130.0" prefWidth="240.0" promptText="Write your note here..">
-                                             <font>
-                                                <Font size="14.0" />
-                                             </font>
-                                          </TextArea>
-                                       </children>
-                                    </AnchorPane>
-                                 </content>
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </TitledPane>
-                           </children>
-                        </VBox>
-                     </children>
-                  </Pane>
-                  <Pane prefHeight="704.0" prefWidth="1090.0">
-                     <children>
-                        <VBox layoutX="15.0" layoutY="15.0" prefHeight="674.0" prefWidth="1060.0">
-                           <children>
-                              <TitledPane fx:id="designTitlePane" animated="false" collapsible="false" prefHeight="674.0" prefWidth="1060.0" text="Design">
-                                <content>
-                                  <AnchorPane fx:id="onDesignArea" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                                </content>
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </TitledPane>
-                           </children>
-                        </VBox>
-                     </children>
-                  </Pane>
+                  <Hyperlink fx:id="onClickUsecase" onAction="#onClickUsecase" text="Use Case">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Hyperlink>
+                  <Hyperlink fx:id="onClickTestflow" onAction="#onClickTestflow" text="Test Flow">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Hyperlink>
+                  <Hyperlink fx:id="onClickTestcase" onAction="#onClickTestcase" text="Test Case">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Hyperlink>
+                  <Hyperlink fx:id="onClickTestscript" onAction="#onClickTestscript" text="Test Script">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Hyperlink>
+                  <Hyperlink fx:id="onClickTestresult" alignment="CENTER" onAction="#onClickTestresult" text="Test Result">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Hyperlink>
                </children>
             </HBox>
-         </children></AnchorPane>
-  </children>
-</VBox>
+         </children>
+      </VBox>
+   </top>
+   <left>
+      <AnchorPane BorderPane.alignment="CENTER">
+         <children>
+            <VBox layoutX="15.0" layoutY="15.0" prefHeight="674.0" prefWidth="240.0" spacing="10.0" AnchorPane.leftAnchor="15.0">
+               <children>
+                  <TitledPane fx:id="componentTitlePane" animated="false" collapsible="false" prefHeight="504.0" prefWidth="240.0" text="Component">
+                    <content>
+                      <AnchorPane fx:id="onComponentArea" minHeight="0.0" minWidth="0.0">
+                           <children>
+                              <ImageView fx:id="squareImageView" fitHeight="107.0" fitWidth="143.0" layoutX="14.0" layoutY="14.0" onDragDetected="#squareDefected" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/re-no.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fx:id="rectangleImageVIew" fitHeight="97.0" fitWidth="136.0" layoutX="113.0" layoutY="19.0" onDragDetected="#rectangleDefected" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/re.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fx:id="kiteImageView" fitHeight="95.0" fitWidth="168.0" layoutX="18.0" layoutY="204.0" onDragDetected="#kiteDefected" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/re-kite.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fx:id="blackCircleImageView" fitHeight="83.0" fitWidth="95.0" layoutX="136.0" layoutY="107.0" onDragDetected="#blackCircleDefected" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/black circle.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fx:id="circleImageView" fitHeight="65.0" fitWidth="100.0" layoutX="33.0" layoutY="116.0" onDragDetected="#circleDefected" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/circle.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fx:id="arrowImageView" fitHeight="65.0" fitWidth="100.0" layoutX="145.0" layoutY="219.0" onDragDetected="#arrowDefected" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/directional.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fx:id="lineImageView" fitHeight="65.0" fitWidth="100.0" layoutX="35.0" layoutY="317.0" onDragDetected="#lineDefected" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../images/line.png" />
+                                 </image>
+                              </ImageView>
+                           </children></AnchorPane>
+                    </content>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TitledPane>
+                  <TitledPane fx:id="noteTitlePane" animated="false" collapsible="false" prefHeight="160.0" prefWidth="240.0" text="Note">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0">
+                           <children>
+                              <TextArea fx:id="onNoteTextArea" prefHeight="130.0" prefWidth="240.0" promptText="Write your note here..">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </TextArea>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TitledPane>
+               </children>
+            </VBox>
+         </children>
+      </AnchorPane>
+   </left>
+</BorderPane>
