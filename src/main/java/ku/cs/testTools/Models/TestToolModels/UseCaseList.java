@@ -1,8 +1,6 @@
 package ku.cs.testTools.Models.TestToolModels;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
 
 import lombok.Data;
 import lombok.Getter;
@@ -30,7 +28,6 @@ public class UseCaseList {
     public int getSize() {
         return useCaseList.size();
     }
-
 
     public UseCase findByUseCaseId(String useCaseId) {
         for (UseCase useCase : useCaseList) {
@@ -66,5 +63,32 @@ public class UseCaseList {
     }
     public void sort(Comparator<UseCase> cmp) {
         Collections.sort(useCaseList, cmp);
+    }
+    public void clearUseCase(String useCaseID) {
+        useCaseList.removeIf(useCase -> useCase.getUseCaseID().equals(useCaseID));
+    }
+
+    @Override
+    public String toString() {
+    return "UseCaseList{" +
+            "useCaseList=" + useCaseList +
+            '}';
+    }
+    private List<UseCase> useCases;
+
+    public void updateUseCase(UseCase updatedUseCase) {
+        if (this.useCases == null) {
+            this.useCases = new ArrayList<>();
+            return;
+        }
+
+        for (int i = 0; i < this.useCases.size(); i++) {
+            UseCase existingUseCase = this.useCases.get(i);
+            if (existingUseCase.getUseCaseID().equals(updatedUseCase.getUseCaseID())) {
+                this.useCases.set(i, updatedUseCase);
+                return;
+            }
+        }
+
     }
 }

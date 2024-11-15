@@ -192,12 +192,12 @@
                                  <children>
                                     <HBox prefHeight="30.0" prefWidth="480.0">
                                        <children>
-                                          <Label prefHeight="30.0" prefWidth="430.0" text="Pre-Condition :" textAlignment="CENTER">
+                                          <Label prefHeight="30.0" prefWidth="180.0" text="Pre-Condition :" textAlignment="CENTER">
                                              <font>
                                                 <Font size="18.0" />
                                              </font>
                                           </Label>
-                                          <ComboBox fx:id="preConListComboBox" onAction="#preConListComboBox" prefHeight="30.0" prefWidth="30.0">
+                                          <ComboBox fx:id="preConListComboBox" editable="true" onAction="#preConListComboBox" prefHeight="30.0" prefWidth="300.0">
                                              <opaqueInsets>
                                                 <Insets />
                                              </opaqueInsets>
@@ -206,12 +206,12 @@
                                     </HBox>
                                     <HBox prefHeight="30.0" prefWidth="480.0">
                                        <children>
-                                          <Label prefHeight="30.0" prefWidth="430.0" text="Post-Condition :">
+                                          <Label prefHeight="30.0" prefWidth="180.0" text="Post-Condition :">
                                              <font>
                                                 <Font size="18.0" />
                                              </font>
                                           </Label>
-                                          <ComboBox fx:id="postConListComboBox" onAction="#postConListComboBox" prefHeight="30.0" prefWidth="30.0" />
+                                          <ComboBox fx:id="postConListComboBox" editable="true" onAction="#postConListComboBox" prefHeight="30.0" prefWidth="300.0" />
                                        </children>
                                     </HBox>
                                  </children>
@@ -296,6 +296,11 @@
                               <Font size="14.0" />
                            </font>
                         </Button>
+                        <Label fx:id="errorLabel" alignment="CENTER_RIGHT" layoutX="655.0" layoutY="655.0" prefHeight="20.0" prefWidth="400.0" textFill="RED">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
                      </children>
                   </Pane>
                </children>

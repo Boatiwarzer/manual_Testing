@@ -33,6 +33,18 @@ public class UseCase {
         this.note = note;
         this.date = date;
     }
+
+    public UseCase() {
+        this.useCaseID = useCaseID;
+        this.useCaseName = useCaseName;
+        this.actor = actor;
+        this.description = description;
+        this.preCondition = preCondition;
+        this.postCondition = postCondition;
+        this.note = note;
+        this.date = date;
+    }
+
 //    public UseCase(String useCaseID, String useCaseName, String actor, String description, String preCondition, String postCondition) {
 //        this.useCaseID = useCaseID;
 //        this.useCaseName = useCaseName;
@@ -109,17 +121,27 @@ public class UseCase {
         this.date = dateTime.format(formatter);
         return date;
     }
-
-    @Override
-    public String toString() {
-        return useCaseID + " : " + useCaseName;
+    public boolean isId(String id) {
+        return this.useCaseID.equals(id);
     }
 
 //    @Override
 //    public String toString() {
-//        return "UseCase{" +
-//                "useCaseID='" + useCaseID + '\'' +
-//                '}';
+//        return useCaseID + " : " + useCaseName;
 //    }
+
+    @Override
+    public String toString() {
+        return "UseCase{" +
+                "useCaseID='" + useCaseID + '\'' +
+                "useCaseName='" + useCaseName + '\'' +
+                "useCaseActor='" + actor + '\'' +
+                "useCaseDescript='" + description + '\'' +
+                "useCasePreCon='" + preCondition + '\'' +
+                "useCasePostCon='" + postCondition + '\'' +
+                "useCaseNote='" + note + '\'' +
+                "useCaseDate='" + date + '\'' +
+                '}';
+    }
 
 }

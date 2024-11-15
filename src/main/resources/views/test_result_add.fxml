@@ -51,6 +51,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.geometry.Insets?>
 <VBox prefHeight="760.0" prefWidth="1360.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.testTools.Controllers.TestResult.TestResultAddController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
@@ -209,6 +210,21 @@
                                  </image>
                               </ImageView>
                            </graphic>
+                        </Button>
+                        <Button fx:id="onEditListButton" mnemonicParsing="false" onAction="#onEditListButton" prefHeight="30.0" prefWidth="110.0" text="Edit">
+                             <font>
+                                 <Font size="14.0" />
+                             </font>
+                             <graphic>
+                                 <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                     <image>
+                                         <Image url="@../icon/delete_icon.png" />
+                                     </image>
+                                 </ImageView>
+                             </graphic>
+                             <HBox.margin>
+                                 <Insets right="20.0" />
+                             </HBox.margin>
                         </Button>
                         <Button fx:id="onDeleteListButton" layoutX="140.0" layoutY="110.0" mnemonicParsing="false" onAction="#onDeleteListButton" prefHeight="30.0" prefWidth="110.0" text="Delete">
                            <font>

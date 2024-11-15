@@ -99,6 +99,7 @@ public class UseCaseAddController {
                 if (useCaseListDataSource.readData() != null && useCaseDetailListDataSource.readData() != null){
                     UseCaseList useCaseList = useCaseListDataSource.readData();
                     loadListView(useCaseList);
+
                     for (UseCase useCase : useCaseList.getUseCaseList()) {
                         word.add(useCase.getUseCaseName());
                     }
@@ -110,7 +111,7 @@ public class UseCaseAddController {
                 if (useCaseListDataSource.readData() != null && useCaseDetailListDataSource.readData() != null){
                     UseCaseList useCaseList = useCaseListDataSource.readData();
                     loadListView(useCaseList);
-//                        selectedTSD();
+
                     for (UseCase useCase : useCaseList.getUseCaseList()) {
                         word.add(useCase.getUseCaseName());
                     }
@@ -146,7 +147,6 @@ public class UseCaseAddController {
         int max = 999;
         String generated = String.valueOf((int)Math.floor(Math.random() * (max - min + 1) + min));
         this.useCaseId = String.format("UC-%s", generated);
-//        this.useCaseId = random1+random2;
         testIDLabel.setText(useCaseId);
     }
 
@@ -349,8 +349,6 @@ public class UseCaseAddController {
                     clearInfo();
                     selectedUseCase = null;
                 } else{
-//                    onEditButton.setVisible(newValue.getUseCaseID() != null);
-//                    showInfo(newValue);
                     selectedUseCase = newValue;
                 }
             });
@@ -361,14 +359,12 @@ public class UseCaseAddController {
                     clearInfo();
                     selectedUseCase = null;
                 } else {
-//                    showInfo(newValue);
                     selectedUseCase = newValue;
                 }
             });
         }
     }
     private void loadListView(UseCaseList useCaseList) {
-//        onEditButton.setVisible(false);
         onSearchList.refresh();
         if (useCaseList != null){
             useCaseList.sort(new UseCaseComparable());
@@ -378,9 +374,19 @@ public class UseCaseAddController {
                 }
             }
         }else {
-//            setTable();
             clearInfo();
         }
+        onSearchList.setCellFactory(lv -> new ListCell<UseCase>() {
+            @Override
+            protected void updateItem(UseCase useCase, boolean empty) {
+                super.updateItem(useCase, empty);
+                if (empty || useCase == null) {
+                    setText(null);
+                } else {
+                    setText(useCase.getUseCaseID() + " : " + useCase.getUseCaseName());
+                }
+            }
+        });
     }
 
     private void clearInfo() {
@@ -421,7 +427,6 @@ public class UseCaseAddController {
         String ucDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
         if (useCaseList.isUseCaseIDExist(ucId)) {
-//            writeUseCaseToFile(useCase);
             errorLabel.setText("Use case ID already exists.");
             return;
         }

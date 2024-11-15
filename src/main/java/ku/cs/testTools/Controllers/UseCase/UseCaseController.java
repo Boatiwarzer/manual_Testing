@@ -9,7 +9,6 @@ import javafx.scene.layout.VBox;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.DataSource;
-import ku.cs.testTools.Services.TestScriptComparable;
 import ku.cs.testTools.Services.TestTools.UseCaseDetailListFileDataSource;
 import ku.cs.testTools.Services.TestTools.UseCaseListFileDataSource;
 import ku.cs.testTools.Services.UseCaseComparable;
@@ -47,7 +46,7 @@ public class UseCaseController {
 
     private String projectName = "uc", directory = "data", useCaseId; // directory, projectName
     private UseCase useCase;
-    private UseCase selectedUseCase;
+    private UseCase selectedUseCase = new UseCase();
     private UseCaseDetail selectedItem;
     private UseCaseList useCaseList = new UseCaseList();
     private DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv"); //= new UseCaseListFileDataSource(directory, projectName + ".csv")
@@ -62,7 +61,7 @@ public class UseCaseController {
         useCaseDetailListDataSource = new UseCaseDetailListFileDataSource(directory, projectName + ".csv");
         useCaseDetailList = useCaseDetailListDataSource.readData();
 
-
+        clearInfo();
         if (FXRouter.getData() != null) {
             useCaseList = useCaseListDataSource.readData();
             useCaseDetailList = useCaseDetailListDataSource.readData();
@@ -109,39 +108,25 @@ public class UseCaseController {
         });
     }
 
-    private void selected() {
-        if (useCase != null){
-            onSearchList.getSelectionModel().select(useCase);
-            onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue == null) {
-                    clearInfo();
-                    selectedUseCase = null;
-                } else{
-                    onEditButton.setVisible(newValue.getUseCaseID() != null);
-                    clearInfo();
-                    showInfo(newValue);
-                    selectedUseCase = newValue;
-                }
-            });
 
-        } else {
-            onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue == null) {
-                    clearInfo();
-                    selectedUseCase = null;
-                } else {
-                    clearInfo();
-                    showInfo(newValue);
-                    selectedUseCase = newValue;
-                }
-            });
-        }
+    private void selected() {
+        onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                clearInfo();
+                selectedUseCase = null;
+            } else {
+                clearInfo();
+                System.out.println("Selected UseCase ID: " + (newValue != null ? newValue.getUseCaseID() : "null"));
+                onEditButton.setVisible(newValue.getUseCaseID() != null);
+                showInfo(newValue);
+                selectedUseCase = newValue;
+            }
+        });
     }
 
     private void showInfo(UseCase useCase) {
-
-        String ucId = useCase.getUseCaseID();
-        testIDLabel.setText(ucId);
+        useCaseId = useCase.getUseCaseID();
+        testIDLabel.setText(useCaseId);
         String useCaseName = useCase.getUseCaseName();
         testNameLabel.setText(useCaseName);
         String useCaseActor = useCase.getActor();
@@ -204,23 +189,30 @@ public class UseCaseController {
 //            setTable();
             clearInfo();
         }
+        onSearchList.setCellFactory(lv -> new ListCell<UseCase>() {
+            @Override
+            protected void updateItem(UseCase useCase, boolean empty) {
+                super.updateItem(useCase, empty);
+                if (empty || useCase == null) {
+                    setText(null);
+                } else {
+                    setText(useCase.getUseCaseID() + " : " + useCase.getUseCaseName());
+                }
+            }
+        });
     }
 
     private void clearInfo() {
         // Clear all the fields by setting them to an empty string
-        testIDLabel.setText("");
-        testNameLabel.setText("");
-        testActorLabel.setText("");
+        testIDLabel.setText("-");
+        testNameLabel.setText("-");
+        testActorLabel.setText("-");
         infoDescriptLabel.setText("");
         infoPreConLabel.setText("");
         infoPostConLabel.setText("");
         infoNoteLabel.setText("");
         actorActionVBox.getChildren().clear();
         systemActionVBox.getChildren().clear();
-//        VBox vboxActor = (VBox) actorActionScrollPane.getContent();  // ScrollPane มี VBox
-//        vboxActor.getChildren().clear();  // ลบลูกทั้งหมดภายใน VBox
-//        VBox vboxSystem = (VBox) systemActionScrollPane.getContent();
-//        vboxSystem.getChildren().clear();
     }
 
     private List<UseCase> searchList(String searchWords, ArrayList<UseCase> listOfScripts) {
@@ -303,10 +295,19 @@ public class UseCaseController {
     @FXML
     void onEditButton(ActionEvent event) {
         try {
-            FXRouter.goTo("use_case_edit");
+            if (selectedUseCase != null) {
+                FXRouter.goTo("use_case_edit", selectedUseCase);
+            } else {
+                System.out.println("No selected use case to edit.");
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+//        try {
+//            FXRouter.goTo("use_case_edit", selectedUseCase);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
 }

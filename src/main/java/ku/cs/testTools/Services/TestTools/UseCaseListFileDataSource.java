@@ -10,6 +10,9 @@ import ku.cs.testTools.Services.ManageDataSource;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class UseCaseListFileDataSource implements DataSource<UseCaseList>, ManageDataSource<UseCase> {
     private String directory;
@@ -94,15 +97,24 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
         UseCaseList existingUseCaseList = readData();
 
         try {
-            writer = new FileWriter(file, StandardCharsets.UTF_8, true);
+            boolean append = true; // กำหนดค่าเริ่มต้นเป็น true
+
+            for (UseCase useCase : useCaseList.getUseCaseList()) {
+                if (existingUseCaseList.isUseCaseIDExist(useCase.getUseCaseID())) {
+                    append = false; // ถ้ามี ID อยู่แล้ว ให้ตั้ง append เป็น false เพื่อเขียนทับไฟล์เดิม
+                    break; // เจอ ID ที่ซ้ำแล้วก็ไม่ต้องวนลูปต่อ
+                }
+            }
+
+            writer = new FileWriter(file, StandardCharsets.UTF_8, append);
             buffer = new BufferedWriter(writer);
 
             //Write useCaseList to CSV
             for (UseCase useCase : useCaseList.getUseCaseList()) {
-                if (!existingUseCaseList.isUseCaseIDExist(useCase.getUseCaseID())) {
+//                if (!existingUseCaseList.isUseCaseIDExist(useCase.getUseCaseID())) {
                     buffer.write(createLine(useCase));
                     buffer.newLine();
-                }
+//                }
             }
 
             buffer.close();
@@ -110,6 +122,7 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
     }
 
     @Override
