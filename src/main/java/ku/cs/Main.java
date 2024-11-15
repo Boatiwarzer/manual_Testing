@@ -5,18 +5,31 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
+import ku.cs.testTools.Services.DatabaseConnector;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class Main extends Application {
+    Connection connection = null;
     @Override
-    public void start(Stage stage) throws IOException {
-        FXRouter.bind(this, stage, "Manual Test Tools", 1360,780);
-        configRoute();
-//        FXRouter.setTheme(1);
-//        FXRouter.popup("landing_page_tester",true);
-//        FXRouter.goTo("role");
-        FXRouter.goTo("use_case");
+    public void start(Stage stage) throws IOException, SQLException {
+        try {
+            FXRouter.bind(this, stage, "Manual Test Tools", 1360,780);
+            configRoute();
+            connection = DatabaseConnector.connect();
+//          FXRouter.setTheme(1);
+//          FXRouter.popup("landing_page_tester",true);
+//          FXRouter.goTo("role");
+            FXRouter.goTo("use_case");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Display an error message to the user or handle the exception as needed
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle FXML loading errors
+        }
     }
 
     private static void configRoute() {
@@ -49,6 +62,8 @@ public class Main extends Application {
         FXRouter.when("popup_delete_testcase", packageStr1 + "popup_delete_testcase.fxml");
         FXRouter.when("popup_delete_testresult", packageStr1 + "popup_delete_testresult.fxml");
         FXRouter.when("role", packageStr1 + "role.fxml");
+        FXRouter.when("LabelPage", packageStr1 + "label-page.fxml");
+
 //        FXRouter.when("testflow_manager", packageStr1 + "testflow_manager.fxml");
 //        FXRouter.when("testresult_manager", packageStr1 + "testresult_manager.fxml");
 
@@ -57,6 +72,14 @@ public class Main extends Application {
     private static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource(fxml + ".fxml"));
         return fxmlLoader.load();
+    }
+
+    @Override
+    public void stop() throws Exception {
+        if (connection != null && !connection.isClosed()) {
+            connection.close();
+            System.out.println("Database connection closed.");
+        }
     }
     public static void main(String[] args) {
         launch(args);

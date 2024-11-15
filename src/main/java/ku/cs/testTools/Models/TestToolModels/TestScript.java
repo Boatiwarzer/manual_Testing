@@ -27,6 +27,7 @@ public class TestScript {
     private String preCon;
     private String postCon;
     private String freeText;
+    private int position;
     @OneToMany(mappedBy = "testScript")
     private List<TestScriptDetail> testScriptDetailList;
     private String idTSDList;

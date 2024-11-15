@@ -70,4 +70,8 @@ public class TestScriptList {
     public void sort(Comparator<TestScript> cmp) {
         Collections.sort(testScriptList, cmp);
     }
+
+    public TestScript findByPositionId(int editID) {
+        return null;
+    }
 }

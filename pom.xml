@@ -62,6 +62,12 @@
             <artifactId>controlsfx</artifactId>
             <version>11.1.0</version> <!-- Ensure compatibility with JavaFX -->
         </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.4</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -92,6 +98,8 @@
                                 <javafxModule>javafx.controls</javafxModule>
                                 <javafxModule>javafx.fxml</javafxModule>
                                 <javafxModule>javafx.swing</javafxModule>
+                                <javafxModule>javafx.scene</javafxModule>
+
                             </javafxModules>
                         </configuration>
                     </execution>

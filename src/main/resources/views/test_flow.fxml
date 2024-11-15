@@ -36,7 +36,6 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TitledPane?>
@@ -45,6 +44,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -52,18 +52,12 @@
    <center>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0">
          <children>
-            <TitledPane fx:id="designTitlePane" animated="false" collapsible="false" layoutX="15.2" layoutY="15.0" prefHeight="642.0" prefWidth="1061.0" text="Design" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="29.0">
-              <content>
-                  <ScrollPane fitToHeight="true" fitToWidth="true" pannable="true">
-                     <content>
-                      <AnchorPane fx:id="onDesignArea" minHeight="0.0" minWidth="0.0" prefHeight="607.0" prefWidth="1058.0" />
-                     </content>
-                  </ScrollPane>
-              </content>
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </TitledPane>
+             <TitledPane fx:id="designTitlePane" animated="false" collapsible="false" layoutX="15.199999809265137" layoutY="15.0" prefHeight="8.0" prefWidth="1062.0" text="Design" AnchorPane.leftAnchor="15.199999809265137" AnchorPane.rightAnchor="27.199999999999818">
+                 <font>
+                     <Font size="14.0" />
+                 </font>
+             </TitledPane>
+              <Pane fx:id="onDesignArea" layoutX="15.0" layoutY="46.0" onDragDropped="#paneDragDropped" onDragOver="#paneDragOver" prefHeight="610.0" prefWidth="1062.0" style="-fx-background-color: white; -fx-border-color: silver;" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="27.199999999999818" />
          </children>
       </AnchorPane>
    </center>
@@ -150,7 +144,7 @@
                     <content>
                       <AnchorPane fx:id="onComponentArea" minHeight="0.0" minWidth="0.0">
                            <children>
-                              <ImageView fx:id="squareImageView" fitHeight="107.0" fitWidth="143.0" layoutX="14.0" layoutY="14.0" onDragDetected="#squareDefected" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="squareImageView" fitHeight="93.0" fitWidth="107.0" layoutX="14.0" layoutY="14.0" onDragDetected="#squareDefected" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../images/re-no.png" />
                                  </image>
