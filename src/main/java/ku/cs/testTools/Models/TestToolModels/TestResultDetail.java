@@ -20,28 +20,31 @@ public class TestResultDetail {
     private String idTRD;
     private String testNo;
     private String tsIdTRD;
-    private String roleTRD;
+    private String actorTRD;
     private String descriptTRD;
     private String stepsTRD;
     private String expectedTRD;
     private String actualTRD;
+    private String statusTRD;
     private String dateTRD;
     private String testerTRD;
     @ManyToOne
     private TestResult testResult;
     private String idTR;
 
-    public TestResultDetail(String idTRD, String testNo, String tsIdTRD, String roleTRD, String descriptTRD, String stepsTRD, String expectedTRD, String actualTRD, String dateTRD, String testerTRD) {
+    public TestResultDetail(String idTRD, String testNo, String tsIdTRD, String actorTRD, String descriptTRD, String stepsTRD, String expectedTRD, String actualTRD,String statusTRD, String dateTRD, String testerTRD, String idTR) {
         this.idTRD = idTRD;
         this.testNo = testNo;
         this.tsIdTRD = tsIdTRD;
-        this.roleTRD = roleTRD;
+        this.actorTRD = actorTRD;
         this.descriptTRD = descriptTRD;
         this.stepsTRD = stepsTRD;
         this.expectedTRD = expectedTRD;
         this.actualTRD = actualTRD;
+        this.statusTRD = statusTRD;
         this.dateTRD = dateTRD;
         this.testerTRD = testerTRD;
+        this.idTR = idTR;
     }
 
     @Override

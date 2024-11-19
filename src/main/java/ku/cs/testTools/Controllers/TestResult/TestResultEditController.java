@@ -1,78 +1,466 @@
 package ku.cs.testTools.Controllers.TestResult;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import ku.cs.fxrouter.FXRouter;
+import ku.cs.testTools.Models.TestToolModels.*;
+import ku.cs.testTools.Services.*;
+import ku.cs.testTools.Services.TestTools.TestCaseFileDataSource;
+import ku.cs.testTools.Services.TestTools.TestResultDetailListFileDataSource;
+import ku.cs.testTools.Services.TestTools.TestResultListFileDataSource;
+import ku.cs.testTools.Services.TestTools.UseCaseListFileDataSource;
+import org.controlsfx.control.textfield.TextFields;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class TestResultEditController {
 
     @FXML
-    private Button onAddButton;
+    private Button onAddButton, onEditListButton, onDeleteButton, onDeleteListButton, onSearchButton, onSubmitButton;
 
     @FXML
-    private Hyperlink onClickTestcase;
+    private Hyperlink onClickTestcase, onClickTestflow, onClickTestresult, onClickTestscript, onClickUsecase;
 
     @FXML
-    private Hyperlink onClickTestflow;
+    private TextField onSearchField, onTestNameField, onTestNoteField;
 
     @FXML
-    private Hyperlink onClickTestresult;
+    private ListView<TestResult> onSearchList;
 
     @FXML
-    private Hyperlink onClickTestscript;
+    private TableView<TestResultDetail> onTableTestresult;
 
     @FXML
-    private Hyperlink onClickUsecase;
+    private Label testDateLabel, testIDLabel;
+
+    private ArrayList<String> word = new ArrayList<>();
+    private String trId;
+    private String projectName = "125", directory = "data";
+    private String projectName1 = "uc";
+
+    private TestResultList testResultList = new TestResultList();
+    //private ArrayList<Object> objects = (ArrayList) FXRouter.getData();
+    private TestResultDetailList testResultDetailList = new TestResultDetailList();
+    private TestResultDetailList testResultDetailListTemp = new TestResultDetailList();
+    private TestResultDetail selectedItem;
+    private TestResult testResult;
+    private TestResult selectedTestResult;
+    private static int idCounter = 1; // Counter for sequential IDs
+    private static final int MAX_ID = 999; // Upper limit for IDs
+    private static Set<String> usedIds = new HashSet<>(); // Set to store used IDs
+    private final DataSource<TestResultList> testResultListDataSource = new TestResultListFileDataSource(directory, projectName + ".csv");
+    private final DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
 
     @FXML
-    private Button onDeleteButton;
+    void initialize() {
+//        setDate();
+        clearInfo();
+        setButtonVisible();
+        {
+            if (FXRouter.getData() != null) {
+                onTableTestresult.isFocused();
+                testResult = (TestResult) FXRouter.getData();
+                selectedTRD();
+                selectedListView();
+                setDataTR();
+                if (testResultListDataSource.readData() != null && testResultDetailListDataSource.readData() != null){
+                    TestResultList testResultListTemp = testResultListDataSource.readData();
+                    testResultDetailListTemp = testResultDetailListDataSource.readData();
+                    for (TestResultDetail testResultDetail : testResultDetailListTemp.getTestResultDetailList()) {
+                        if (testResult.getIdTR().trim().equals(testResultDetail.getIdTR().trim())){
+                            testResultDetailList.addOrUpdateTestResultDetail(testResultDetail);
+                        }
+                    }
+                    loadTable(testResultDetailList);
+                    loadListView(testResultListTemp);
+                    for (TestResult testResult : testResultListTemp.getTestResultList()) {
+                        word.add(testResult.getNameTR());
+                    }
+                    searchSet();
+                }
+            }
+            else{
+                setTable();
+                randomId();
+                System.out.println(trId);
+                if (testResultListDataSource.readData() != null && testResultDetailListDataSource.readData() != null){
+                    TestResultList testResultListTemp = testResultListDataSource.readData();
+                    loadListView(testResultListTemp);
+                    selectedTRD();
+                    for (TestResult testResult : testResultListTemp.getTestResultList()) {
+                        word.add(testResult.getNameTR());
+                    }
+                    searchSet();
+                }
 
-    @FXML
-    private Button onDeleteListButton;
+            }
+        }
+        System.out.println(testResultDetailList);
+    }
+    private void selectedListView() {
+        if (testResult != null){
+            onSearchList.getSelectionModel().select(testResult);
+            onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue == null) {
+                    selectedTestResult = null;
+                } else{
+                    selectedTestResult = newValue;
+                }
+            });
 
-    @FXML
-    private Button onSearchButton;
+        }else {
+            onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue == null) {
+                    selectedTestResult = null;
+                } else {
+                    selectedTestResult = newValue;
+                }
+            });
 
-    @FXML
-    private TextField onSearchField;
+        }
+    }
 
-    @FXML
-    private ListView<?> onSearchList;
+    private void setDataTR() {
+        trId = testResult.getIdTR();
+        testIDLabel.setText(trId);
+        String name = testResult.getNameTR();
+        onTestNameField.setText(name);
+        String date = testResult.getDateTR();
+//        testDateLabel.setText(date);
+        String note = testResult.getNoteTR();
+        onTestNoteField.setText(note);
+    }
 
-    @FXML
-    private Button onSubmitButton;
+    private void setButtonVisible() {
+        onEditListButton.setVisible(false);
+        onDeleteListButton.setVisible(false);
+    }
 
-    @FXML
-    private TableView<?> onTableTestresult;
+    private void clearInfo() {
+        testIDLabel.setText("-");
+        onTestNameField.setText("");
+        onTestNoteField.setText("");
+        selectedItem = null;
+        FXRouter.setData3(null);
+    }
+    private void searchSet() {
+        ArrayList <String> word = new ArrayList<>();
+        for (TestResult testResult : testResultList.getTestResultList()) {
+            word.add(testResult.getNameTR());
 
-    @FXML
-    private TextField onTestNameField;
+        }
+        System.out.println(word);
 
-    @FXML
-    private TextField onTestNoteField;
+        TextFields.bindAutoCompletion(onSearchField,word);
+        onSearchField.setOnKeyPressed(keyEvent -> {
+            if (Objects.requireNonNull(keyEvent.getCode()) == KeyCode.ENTER) {
+                onSearchList.getItems().clear();
+                onSearchList.getItems().addAll(searchList(onSearchField.getText(), testResultList.getTestResultList()));
+            }
+        });
+    }
+    private void loadListView(TestResultList testResultList) {
+        onSearchList.refresh();
+        if (testResultList != null){
+            testResultList.sort(new TestResultComparable());
+            for (TestResult testResult : testResultList.getTestResultList()) {
+                if (!testResult.getDateTR().equals("null")){
+                    onSearchList.getItems().add(testResult);
 
+                }
+            }
+        }else {
+            setTable();
+            clearInfo();
+        }
+    }
     @FXML
-    private Label testDateLabel;
+    void onSearchButton(ActionEvent event) {
+        onSearchList.getItems().clear();
+        onSearchList.getItems().addAll(searchList(onSearchField.getText(),testResultList.getTestResultList()));
+    }
 
-    @FXML
-    private Label testIDLabel;
+    private List<TestResult> searchList(String searchWords, ArrayList<TestResult> listOfResults) {
+
+        // Split searchWords into a list of individual words
+        List<String> searchWordsArray = Arrays.asList(searchWords.trim().split("\\s+"));
+
+        // Filter the list of TestResult objects
+        return listOfResults.stream()
+                .filter(testResult ->
+                        searchWordsArray.stream().allMatch(word ->
+                                // Check if any relevant field in TestResult contains the search word (case insensitive)
+                                testResult.getIdTR().toLowerCase().contains(word.toLowerCase()) ||
+                                        testResult.getNameTR().toLowerCase().contains(word.toLowerCase())
+
+                        )
+                )
+                .collect(Collectors.toList());  // Return the filtered list
+    }
+    public void loadTable(TestResultDetailList testResultDetailList) {
+        // Clear existing columns
+        new TableviewSet<>(onTableTestresult);
+
+        // Define column configurations
+        ArrayList<StringConfiguration> configs = new ArrayList<>();
+
+        configs.add(new StringConfiguration("title:TRD-ID.", "field:idTRD"));
+        configs.add(new StringConfiguration("title:Test No.", "field:testNo"));
+        configs.add(new StringConfiguration("title:TS-ID.", "field:tsIdTRD"));
+        configs.add(new StringConfiguration("title:Actor", "field:actorTRD"));
+        configs.add(new StringConfiguration("title:Description", "field:descriptTRD"));
+        configs.add(new StringConfiguration("title:Test Steps", "field:stepsTRD"));
+        configs.add(new StringConfiguration("title:Expected Result.", "field:expectedTRD"));
+        configs.add(new StringConfiguration("title:Actual Result.", "field:actualTRD"));
+        configs.add(new StringConfiguration("title:Status", "field:statusTRD"));
+        configs.add(new StringConfiguration("title:Date.", "field:dateTRD"));
+        configs.add(new StringConfiguration("title:Tester", "field:testerTRD"));
+
+        int index = 0;
+
+        // Create and add columns
+        for (StringConfiguration conf : configs) {
+            TableColumn<TestResultDetail, String> col = new TableColumn<>(conf.get("title"));
+            col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
+
+            // เพิ่มเงื่อนไขสำหรับ Test Steps
+            if (conf.get("field").equals("stepsTRD")) {
+                col.setCellFactory(column -> new TableCell<>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            setText(null); // ถ้าไม่มีข้อมูล ให้เว้นว่าง
+                        } else {
+                            setText(item.replace("|", "\n")); // แปลง "|" เป็น "\n" เพื่อขึ้นบรรทัดใหม่
+                        }
+                    }
+                });
+            }
+
+            // ตั้งค่าขนาดคอลัมน์สำหรับ 2 คอลัมน์แรก
+            if (index <= 1) {  // ถ้าเป็นคอลัมน์แรก
+                col.setPrefWidth(80);
+                col.setMaxWidth(80);   // จำกัดขนาดสูงสุดของคอลัมน์แรก
+                col.setMinWidth(80); // ตั้งค่าขนาดคอลัมน์แรก
+            }
+            col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
+
+            new TableColumns(col);
+            onTableTestresult.getColumns().add(col);
+            index++;
+        }
+
+        //Add items to the table
+        for (TestResultDetail testResultDetail : testResultDetailList.getTestResultDetailList()) {
+            onTableTestresult.getItems().add(testResultDetail);
+        }
+        //ObservableList<TestResultDetail> data = FXCollections.observableArrayList(testResultDetailList.getTestResultDetailList());
+        //onTableTestscript.getItems().addAll(data);
+    }
+
+    public void setTable() {
+        testResultDetailList = new TestResultDetailList();
+        onTableTestresult.getColumns().clear();
+        onTableTestresult.getItems().clear();
+        onTableTestresult.refresh();
+        onTableTestresult.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        ArrayList<StringConfiguration> configs = new ArrayList<>();
+        configs.add(new StringConfiguration("title:TRD-ID."));
+        configs.add(new StringConfiguration("title:Test No."));
+        configs.add(new StringConfiguration("title:TS-ID."));
+        configs.add(new StringConfiguration("title:Actor"));
+        configs.add(new StringConfiguration("title:Description"));
+        configs.add(new StringConfiguration("title:Test Steps"));
+        configs.add(new StringConfiguration("title:Expected Result."));
+        configs.add(new StringConfiguration("title:Actual Result."));
+        configs.add(new StringConfiguration("title:Status"));
+        configs.add(new StringConfiguration("title:Date."));
+        configs.add(new StringConfiguration("title:Tester"));
+
+
+        int index = 0;
+        for (StringConfiguration conf: configs) {
+            TableColumn<TestResultDetail, String> col = new TableColumn<>(conf.get("title"));
+            col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
+
+            // เพิ่มเงื่อนไขสำหรับ Test Steps
+            if (conf.get("field").equals("stepsTRD")) {
+                col.setCellFactory(column -> new TableCell<>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            setText(null); // ถ้าไม่มีข้อมูล ให้เว้นว่าง
+                        } else {
+                            setText(item.replace("|", "\n")); // แปลง "|" เป็น "\n" เพื่อขึ้นบรรทัดใหม่
+                        }
+                    }
+                });
+            }
+            if (index <= 1) {  // ถ้าเป็นคอลัมน์แรก
+                col.setPrefWidth(80);
+                col.setMaxWidth(80);   // จำกัดขนาดสูงสุดของคอลัมน์แรก
+                col.setMinWidth(80); // ตั้งค่าขนาดคอลัมน์แรก
+            }
+            col.setSortable(false);
+            col.setReorderable(false);
+            onTableTestresult.getColumns().add(col);
+            index++;
+
+        }
+    }
+    public void randomId(){
+        int min = 1;
+        int upperbound = 999;
+        String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
+        this.trId = String.format("TR-%s", random1);
+
+    }
+    public void generateSequentialId() {
+        // Loop until we find an unused ID
+        while (idCounter <= MAX_ID) {
+            // Generate ID with leading zeros, e.g., "001", "002", etc.
+            String sequentialId = String.format("TR-%03d", idCounter);
+
+            // Check if ID is already used
+            if (!usedIds.contains(sequentialId)) {
+                usedIds.add(sequentialId); // Add ID to the set of used IDs
+                this.trId = sequentialId; // Assign to the object's tsId field
+                idCounter++; // Increment the counter for the next ID
+                break; // Exit loop once a valid ID is found
+            }
+
+            idCounter++; // Increment the counter if ID is already used
+        }
+
+        // Reset counter if we reach the max ID to prevent overflow (optional)
+        if (idCounter > MAX_ID) {
+            idCounter = 1; // Reset the counter back to 1 if needed
+        }
+    }
+    void selectedTRD() {
+        onTableTestresult.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                selectedItem = null;
+            } else {
+                if (newValue.getIdTRD() != null){
+                    onEditListButton.setVisible(true);
+                    onDeleteListButton.setVisible(true);
+                }else {
+                    onEditListButton.setVisible(false);
+                    onDeleteListButton.setVisible(false);
+                }
+                selectedItem = newValue;
+                System.out.println(selectedItem);
+                // Optionally show information based on the new value
+                // showInfo(newValue);
+            }
+        });
+        // Listener สำหรับ focusedProperty ของ TableView
+        onTableTestresult.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) { // เมื่อ TableView สูญเสีย focus
+                // เช็คว่า focus มาจากปุ่มที่กดหรือไม่
+                if (!onEditListButton.isPressed() && !onDeleteListButton.isPressed()) {
+                    onTableTestresult.getSelectionModel().clearSelection(); // เคลียร์การเลือก
+                    //selectedItem = null; // อาจจะรีเซ็ต selectedItem
+                    onEditListButton.setVisible(false); // ซ่อนปุ่ม
+                    onDeleteListButton.setVisible(false); // ซ่อนปุ่ม
+                }
+            }
+        });
+    }
 
     @FXML
     void onAddButton(ActionEvent event) {
         try {
-            FXRouter.popup("popup_add_testresult", true);
+            String idTR = trId;
+            String nameTR = onTestNameField.getText();
+            String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            String noteTR = onTestNoteField.getText();
+            testResult = new TestResult(idTR, nameTR, dateTR, noteTR);
+
+            if (testResultDetailList != null){
+                FXRouter.popup("popup_add_testresult",testResultDetailList,testResult,null,true);
+            }else {
+                FXRouter.popup("popup_add_testresult",null,testResult,true);
+            }
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+    @FXML
+    void onEditListButton(ActionEvent event)  {
+        onEditListButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                // ทำการแก้ไข
+                // ...
+
+                // ขอ focus กลับไปที่ TableView
+                onTableTestresult.requestFocus();
+            }
+        });
+        onEditListButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                onTableTestresult.requestFocus();
+
+            }
+        });
+        try {
+            String idTR = trId;
+            String nameTR = onTestNameField.getText();
+            String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            String noteTR = onTestNoteField.getText();
+            testResult = new TestResult(idTR, nameTR, dateTR, noteTR);
+
+            if (selectedItem != null){
+                FXRouter.popup("popup_add_testresult",testResultDetailList,testResult,selectedItem,true);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    @FXML
+    void onDeleteListButton(ActionEvent event) {
+        onDeleteListButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                // ทำการลบ
+                // ...
+
+                // ขอ focus กลับไปที่ TableView
+                onTableTestresult.requestFocus();
+            }
+        });
+        try {
+            onTableTestresult.requestFocus();
+            String idTR = trId;
+            String nameTR = onTestNameField.getText();
+            String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            String noteTR = onTestNoteField.getText();
+            testResult = new TestResult(idTR, nameTR, dateTR, noteTR);
+            if (selectedItem != null){
+                FXRouter.popup("popup_delete_testresult",testResultDetailList,testResult,selectedItem,true);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
 
     @FXML
     void onClickTestcase(ActionEvent event) {
@@ -121,22 +509,54 @@ public class TestResultEditController {
 
     @FXML
     void onDeleteButton(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onDeleteListButton(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onSearchButton(ActionEvent event) {
-
+        try {
+            testResultList.deleteTestResult(testResult);
+            testResultListDataSource.writeData(testResultList);
+            if (testResult != null){
+                FXRouter.popup("popup_delete_testresult",null,testResult,true);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
     void onSubmitButton(ActionEvent event) {
+        String idTR = trId;
+        String nameTR = onTestNameField.getText();
+        String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String noteTR = onTestNoteField.getText();
 
+        // Check if mandatory fields are empty
+        if (nameTR == null || nameTR.isEmpty()) {
+            showAlert("Input Error", "Please fill in all required fields.");
+            return;
+        }
+
+        // Create a new TestScript object
+        testResult = new TestResult(idTR, nameTR, dateTR, noteTR);
+
+        // Add or update test script
+        testResultList.addOrUpdateTestResult(testResult);
+
+        // Write data to respective files
+        testResultListDataSource.writeData(testResultList);
+        testResultDetailListDataSource.writeData(testResultDetailListTemp);
+
+        // Show success message
+        showAlert("Success", "Test script saved successfully!");
+        try {
+            FXRouter.goTo("test_result",testResult);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
     @FXML

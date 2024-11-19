@@ -88,4 +88,7 @@ public class TestScriptDetail {
     public boolean isId(String id) {
         return this.idTSD.equals(id);
     }
+    public boolean isIdTS(String id) {
+        return this.idTS.equals(id);
+    }
 }

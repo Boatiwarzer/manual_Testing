@@ -86,10 +86,17 @@ public class TestResult {
         return this.idTR.equals(idTR);
     }
 
+//    @Override
+//    public String toString() {
+//        return "TestResult{" +
+//                "TestResultID='" + idTR + '\'' +
+//                "TestResultName='" + nameTR + '\'' +
+//                "TestResultDate='" + dateTR + '\'' +
+//                "TestResultNote='" + noteTR + '\'' +
+//                '}';
+//    }
     @Override
     public String toString() {
-        return "TestResult{" +
-                "TestResultID='" + idTR + '\'' +
-                '}';
-    }
+    return idTR + " : " + nameTR;
+}
 }

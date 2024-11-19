@@ -65,4 +65,11 @@ public class TestResultList {
     public void sort(Comparator<TestResult> cmp) {
         Collections.sort(testResultList, cmp);
     }
+
+//    @Override
+//    public String toString() {
+//        return "TestResultList{" +
+//                "testResultList=" + testResultList +
+//                '}';
+//    }
 }

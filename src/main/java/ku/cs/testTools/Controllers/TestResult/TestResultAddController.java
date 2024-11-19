@@ -51,15 +51,12 @@ public class TestResultAddController {
     private TestResultDetail selectedItem;
     private TestResult testResult;
     private TestResult selectedTestResult;
-    private TestCaseList testCaseList = new TestCaseList();
-    private UseCaseList useCaseList = new UseCaseList();
     private static int idCounter = 1; // Counter for sequential IDs
     private static final int MAX_ID = 999; // Upper limit for IDs
     private static Set<String> usedIds = new HashSet<>(); // Set to store used IDs
     private final DataSource<TestResultList> testResultListDataSource = new TestResultListFileDataSource(directory, projectName + ".csv");
     private final DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
-    private final DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
-    private final DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName1+".csv");
+
     @FXML
     void initialize() {
         clearInfo();
@@ -71,9 +68,9 @@ public class TestResultAddController {
                 testResultDetailList = (TestResultDetailList) FXRouter.getData();
                 loadTable(testResultDetailList);
                 testResult = (TestResult) FXRouter.getData2();
-                selectedTSD();
+                selectedTRD();
                 selectedListView();
-                setDataTS();
+                setDataTR();
                 if (testResultListDataSource.readData() != null && testResultDetailListDataSource.readData() != null){
                     TestResultList testResultList = testResultListDataSource.readData();
                     loadListView(testResultList);
@@ -90,7 +87,7 @@ public class TestResultAddController {
                 if (testResultListDataSource.readData() != null && testResultDetailListDataSource.readData() != null){
                     TestResultList testResultList = testResultListDataSource.readData();
                     loadListView(testResultList);
-                    selectedTSD();
+                    selectedTRD();
                     for (TestResult testResult : testResultList.getTestResultList()) {
                         word.add(testResult.getNameTR());
                     }
@@ -126,7 +123,7 @@ public class TestResultAddController {
         }
     }
 
-    private void setDataTS() {
+    private void setDataTR() {
         trId = testResult.getIdTR();
         testIDLabel.setText(trId);
         String name = testResult.getNameTR();
@@ -144,8 +141,8 @@ public class TestResultAddController {
 
     private void clearInfo() {
         testIDLabel.setText("-");
-        onTestNameField.setText("-");
-        onTestNoteField.setText("-");
+        onTestNameField.setText("");
+        onTestNoteField.setText("");
         selectedItem = null;
         FXRouter.setData3(null);
     }
@@ -210,14 +207,15 @@ public class TestResultAddController {
         // Define column configurations
         ArrayList<StringConfiguration> configs = new ArrayList<>();
 
-        configs.add(new StringConfiguration("title:TRD-ID.", "field:idTR"));
+        configs.add(new StringConfiguration("title:TRD-ID.", "field:idTRD"));
         configs.add(new StringConfiguration("title:Test No.", "field:testNo"));
         configs.add(new StringConfiguration("title:TS-ID.", "field:tsIdTRD"));
-        configs.add(new StringConfiguration("title:Role", "field:roleTRD"));
+        configs.add(new StringConfiguration("title:Actor", "field:actorTRD"));
         configs.add(new StringConfiguration("title:Description", "field:descriptTRD"));
         configs.add(new StringConfiguration("title:Test Steps", "field:stepsTRD"));
         configs.add(new StringConfiguration("title:Expected Result.", "field:expectedTRD"));
         configs.add(new StringConfiguration("title:Actual Result.", "field:actualTRD"));
+        configs.add(new StringConfiguration("title:Status", "field:statusTRD"));
         configs.add(new StringConfiguration("title:Date.", "field:dateTRD"));
         configs.add(new StringConfiguration("title:Tester", "field:testerTRD"));
 
@@ -257,11 +255,12 @@ public class TestResultAddController {
         configs.add(new StringConfiguration("title:TRD-ID."));
         configs.add(new StringConfiguration("title:Test No."));
         configs.add(new StringConfiguration("title:TS-ID."));
-        configs.add(new StringConfiguration("title:Role"));
+        configs.add(new StringConfiguration("title:Actor"));
         configs.add(new StringConfiguration("title:Description"));
         configs.add(new StringConfiguration("title:Test Steps"));
         configs.add(new StringConfiguration("title:Expected Result."));
         configs.add(new StringConfiguration("title:Actual Result."));
+        configs.add(new StringConfiguration("title:Status"));
         configs.add(new StringConfiguration("title:Date."));
         configs.add(new StringConfiguration("title:Tester"));
 
@@ -317,7 +316,7 @@ public class TestResultAddController {
             idCounter = 1; // Reset the counter back to 1 if needed
         }
     }
-    void selectedTSD() {
+    void selectedTRD() {
         onTableTestresult.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null) {
                 selectedItem = null;
@@ -349,22 +348,14 @@ public class TestResultAddController {
         });
     }
 
-
-
     @FXML
     void onAddButton(ActionEvent event) {
-
         try {
-            String name = onTestNameField.getText();
-            String idTS = trId;
-//            String date = testDateLabel.getText();
-//            String useCase = onUsecaseCombobox.getValue();
-//            String description = infoDescriptLabel.getText();
-//            String tc = onTestcaseCombobox.getValue();
-//            String preCon = infoPreconLabel.getText();
-//            String note = onTestNoteField.getText();
-//            String post = infoPostconLabel.getText();
-//            testResult = new TestResult(idTS, name, date, useCase, description, tc, preCon, note,post);
+            String idTR = trId;
+            String nameTR = onTestNameField.getText();
+            String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            String noteTR = onTestNoteField.getText();
+            testResult = new TestResult(idTR, nameTR, dateTR, noteTR);
 
             if (testResultDetailList != null){
                 FXRouter.popup("popup_add_testresult",testResultDetailList,testResult,null,true);
@@ -384,16 +375,12 @@ public class TestResultAddController {
         });
         onEditListButton.setOnAction(event1 -> onTableTestresult.requestFocus());
         try {
-            String name = onTestNameField.getText();
-            String idTS = trId;
-//            String date = testDateLabel.getText();
-//            String useCase = onUsecaseCombobox.getValue();
-//            String description = infoDescriptLabel.getText();
-//            String tc = onTestcaseCombobox.getValue();
-//            String preCon = infoPreconLabel.getText();
-//            String note = onTestNoteField.getText();
-//            String post = infoPostconLabel.getText();
-//            testResult = new TestResult(idTS, name, date, useCase, description, tc, preCon, note,post);
+            String idTR = trId;
+            String nameTR = onTestNameField.getText();
+            String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            String noteTR = onTestNoteField.getText();
+            testResult = new TestResult(idTR, nameTR, dateTR, noteTR);
+
             if (selectedItem != null){
                 FXRouter.popup("popup_add_testresult",testResultDetailList,testResult,selectedItem,true);
             }
@@ -409,23 +396,17 @@ public class TestResultAddController {
         });
         try {
             onTableTestresult.requestFocus();
-            String name = onTestNameField.getText();
             String idTR = trId;
-//            String date = testDateLabel.getText();
-//            String useCase = onUsecaseCombobox.getValue();
-//            String description = infoDescriptLabel.getText();
-//            String tc = onTestcaseCombobox.getValue();
-//            String preCon = infoPreconLabel.getText();
-//            String note = onTestNoteField.getText();
-//            String post = infoPostconLabel.getText();
-//            testResult = new TestResult(idTS, name, date, useCase, description, tc, preCon, note,post);
+            String nameTR = onTestNameField.getText();
+            String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            String noteTR = onTestNoteField.getText();
+            testResult = new TestResult(idTR, nameTR, dateTR, noteTR);
             if (selectedItem != null){
                 FXRouter.popup("popup_delete_testresult",testResultDetailList,testResult,selectedItem,true);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
 //    @FXML
@@ -493,8 +474,46 @@ public class TestResultAddController {
 
     @FXML
     void onSubmitButton(ActionEvent event) {
+        String idTR = trId;
+        String nameTR = onTestNameField.getText();
+        String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String noteTR = onTestNoteField.getText();
 
+        // Check if mandatory fields are empty
+        if (nameTR == null || nameTR.isEmpty()) {
+            showAlert("Input Error", "Please fill in all required fields.");
+            return;
+        }
+
+        testResult = new TestResult(idTR, nameTR, dateTR, noteTR);
+
+        // Save data to files
+        //DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+        // DataSource<TestScriptDetailList> testScriptDetailListListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+
+        // Add or update test script
+        testResultList.addOrUpdateTestResult(testResult);
+
+        // Write data to respective files
+        testResultListDataSource.writeData(testResultList);
+        testResultDetailListDataSource.writeData(testResultDetailList);
+
+        // Show success message
+        showAlert("Success", "Test script saved successfully!");
+        try {
+            FXRouter.goTo("test_result");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
 
     @FXML
     void onTestNameField(ActionEvent event) {
