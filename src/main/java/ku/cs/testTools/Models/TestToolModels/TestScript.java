@@ -32,6 +32,19 @@ public class TestScript {
     private List<TestScriptDetail> testScriptDetailList;
     private String idTSDList;
 
+    public TestScript(String idTS, String nameTS, String dateTS, String useCase, String descriptionTS, String testCase, String preCon, String postCon, String freeText, int position) {
+        this.idTS = idTS;
+        this.nameTS = nameTS;
+        this.dateTS = dateTS;
+        this.useCase = useCase;
+        this.descriptionTS = descriptionTS;
+        this.testCase = testCase;
+        this.preCon = preCon;
+        this.postCon = postCon;
+        this.freeText = freeText;
+        this.position = position;
+    }
+
     public TestScript(String idTS, String nameTS, String dateTS, String useCase, String descriptionTS, String testCase, String preCon, String freeText) {
         this.idTS = idTS;
         this.nameTS = nameTS;

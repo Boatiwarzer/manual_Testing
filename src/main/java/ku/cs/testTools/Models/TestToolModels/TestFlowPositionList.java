@@ -21,14 +21,27 @@ public class TestFlowPositionList {
 
 
     public void addPosition(TestFlowPosition position) {
-        positionList.add(position);
+        boolean exists = false;
+        for (int i = 0; i < positionList.size(); i++) {
+            TestFlowPosition existing = positionList.get(i);
+
+            if (existing.isId(position.getPositionID())) {
+                // Update existing item
+                positionList.set(i, position);
+                exists = true;
+                break;
+            }
+        }
+        if (!exists) {
+            positionList.add(position);
+        }
     }
 
     public void removePosition(TestFlowPosition position) {
         positionList.remove(position);
     }
 
-    public TestFlowPosition findByPositionId(double positionId) {
+    public TestFlowPosition findByPositionId(int positionId) {
         for (TestFlowPosition position : positionList) {
             if (position.getPositionID() == positionId) {
                 return position;
@@ -66,6 +79,8 @@ public class TestFlowPositionList {
 //        return positions;
 //    }
 
+
+
     public void updatePosition(int id, double newX, double newY) {
         for (TestFlowPosition position : positionList) {
             if (position.getPositionID() == id) {
@@ -73,6 +88,14 @@ public class TestFlowPositionList {
                 position.setYPosition(newY);
             }
         }
+    }
+    public boolean isIDExist(int ID) {
+        for (TestFlowPosition position : positionList) {
+            if (position.getPositionID() == ID) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void updateSize(int id, double newWidth, double newHeight) {

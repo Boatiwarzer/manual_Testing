@@ -2,6 +2,7 @@ package ku.cs.testTools.Models.TestToolModels;
 
 import jakarta.persistence.Entity;
 import ku.cs.testTools.Models.UsecaseModels.Actor;
+import ku.cs.testTools.Models.UsecaseModels.Position;
 import ku.cs.testTools.Services.TestScriptComparable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -71,7 +72,12 @@ public class TestScriptList {
         Collections.sort(testScriptList, cmp);
     }
 
-    public TestScript findByPositionId(int editID) {
+    public TestScript findByPositionId(int positionId) {
+        for (TestScript testScript : testScriptList) {
+            if (testScript.getPosition() == positionId) {
+                return testScript;
+            }
+        }
         return null;
     }
 }
