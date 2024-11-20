@@ -11,3 +11,8 @@ testScriptDetail,TSD-846,2,2,None,2,TS-359,11-10-2024
 testScript,TS-479,1,31-10-2024,None,1,None,1,1,1
 testScriptDetail,TSD-149,1,1,None,1,TS-479,31-10-2024
 testScriptDetail,TSD-220,1,1,None,1,TS-479,31-10-2024
+testResult,TR-115,name,2024-11-20 02:30:08,note
+testResultDetail,TRD-843,1,TS-949 : TEST,userrrrr,test2,1. tt|2. tt|,tEST,tttt,Fail,20-11-2024,Tester,TR-115
+testResultDetail,TRD-192,2,TS-949 : TEST,test,test2,1. tt|2. tt|,tEST,rrrr,Fail,20-11-2024,Tester,TR-115
+testResult,TR-540,Name,2024-11-20 09:29:00,note
+testResultDetail,TRD-475,1,TS-949 : TEST,user,test2,1. tt|2. tt|,tEST,tttt,Pass,20-11-2024,Tester,TR-540
