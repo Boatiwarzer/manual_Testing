@@ -3,8 +3,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -41,7 +40,7 @@
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="onTestNo" alignment="TOP_LEFT" onAction="#onTestNo" prefHeight="30.0" prefWidth="450.0">
+                  <TextField fx:id="onTestNo" alignment="TOP_LEFT" onKeyTyped="#GenerateDate" prefHeight="30.0" prefWidth="450.0">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -58,23 +57,9 @@
                   <ComboBox fx:id="onTestscriptIDComboBox" onAction="#onTestscriptIDComboBox" prefHeight="30.0" prefWidth="450.0" />
                </children>
             </HBox>
-            <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
-               <children>
-                  <Label prefHeight="30.0" prefWidth="120.0" text="Date">
-                     <font>
-                        <Font size="16.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="onDate" prefHeight="30.0" prefWidth="450.0" text="Label" wrapText="true">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-               </children>
-            </HBox>
             <HBox alignment="TOP_CENTER" prefHeight="60.0" prefWidth="200.0" spacing="30.0">
                <children>
-                  <Label prefHeight="30.0" prefWidth="120.0" text="Description">
+                  <Label alignment="TOP_LEFT" prefHeight="30.0" prefWidth="120.0" text="Description">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -107,12 +92,11 @@
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <TableView fx:id="onTableTeststeps" prefHeight="90.0" prefWidth="450.0">
-                    <columns>
-                      <TableColumn prefWidth="75.0" text="C1" />
-                      <TableColumn prefWidth="75.0" text="C2" />
-                    </columns>
-                  </TableView>
+                  <TextArea fx:id="onTeststeps" prefHeight="90.0" prefWidth="450.0" wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextArea>
                </children>
             </HBox>
             <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
@@ -150,11 +134,21 @@
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="onStatus" alignment="TOP_LEFT" onAction="#onStatus" prefHeight="30.0" prefWidth="450.0">
+                  <ComboBox fx:id="onStatusComboBox" onAction="#onStatus" prefHeight="30.0" prefWidth="450.0" />
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <Label prefHeight="30.0" prefWidth="120.0" text="Date">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="onDate" prefHeight="30.0" prefWidth="450.0" text="Label" wrapText="true">
                      <font>
                         <Font size="14.0" />
                      </font>
-                  </TextField>
+                  </Label>
                </children>
             </HBox>
             <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">

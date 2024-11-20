@@ -18,13 +18,13 @@ public class Main extends Application {
         try {
             FXRouter.bind(this, stage, "Manual Test Tools", 1360,780);
             configRoute();
-            connection = DatabaseConnector.connect();
+//            connection = DatabaseConnector.connect();
 //          FXRouter.setTheme(1);
 //          FXRouter.popup("landing_page_tester",true);
 //          FXRouter.goTo("role");
             FXRouter.goTo("use_case");
-        } catch (SQLException e) {
-            e.printStackTrace();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
             // Display an error message to the user or handle the exception as needed
         } catch (IOException e) {
             e.printStackTrace();

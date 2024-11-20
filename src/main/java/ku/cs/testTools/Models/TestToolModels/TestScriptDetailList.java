@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 public class TestScriptDetailList {
@@ -60,8 +62,19 @@ public class TestScriptDetailList {
         }
         return null;
     }
+    public TestScriptDetail findTSByIdTS(String id) {
+        for (TestScriptDetail testScriptDetail : testScriptDetailList) {
+            if (testScriptDetail.isIdTS(id) ) {
+                return testScriptDetail;
+            }
+        }
+        return null;
+    }
 
     public void clearItems() {
         testScriptDetailList.clear();
     }
+
+    private List<TestScriptDetail> testScriptDetail;
+
 }
