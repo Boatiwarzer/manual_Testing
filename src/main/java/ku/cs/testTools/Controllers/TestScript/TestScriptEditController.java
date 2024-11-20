@@ -96,7 +96,6 @@ public class TestScriptEditController {
     private String tsId;
     private String projectName1 = "uc", projectName = "125", directory = "data";
     private TestScriptList testScriptList = new TestScriptList();
-    //private ArrayList<Object> objects = (ArrayList) FXRouter.getData();
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
     private TestScriptDetailList testScriptDetailListTemp = new TestScriptDetailList();
     private TestScriptDetail selectedItem;

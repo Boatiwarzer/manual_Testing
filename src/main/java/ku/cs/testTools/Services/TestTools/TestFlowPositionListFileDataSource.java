@@ -1,12 +1,15 @@
 package ku.cs.testTools.Services.TestTools;
 
-import ku.cs.testTools.Models.TestToolModels.TestFlowPosition;
-import ku.cs.testTools.Models.TestToolModels.TestFlowPositionList;
+import ku.cs.testTools.Models.TestToolModels.*;
+import ku.cs.testTools.Models.UsecaseModels.UseCaseSystem;
 import ku.cs.testTools.Services.DataSource;
 import ku.cs.testTools.Services.ManageDataSource;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestFlowPositionListFileDataSource implements DataSource<TestFlowPositionList>, ManageDataSource<TestFlowPosition>{
     private String directory;
@@ -43,6 +46,7 @@ public class TestFlowPositionListFileDataSource implements DataSource<TestFlowPo
         BufferedReader buffer = null;
 
         try {
+
             reader = new FileReader(file, StandardCharsets.UTF_8);
             buffer = new BufferedReader(reader);
 
@@ -50,7 +54,7 @@ public class TestFlowPositionListFileDataSource implements DataSource<TestFlowPo
             while ((line = buffer.readLine()) != null)
             {
                 String[] data = line.split(",");
-                if (data[0].trim().equals("position")) {
+                if (data[0].trim().equals("testFlowPosition")) {
                     TestFlowPosition testFlowPosition = new TestFlowPosition(
                             Integer.parseInt(data[1].trim()), // positionID
                             Double.parseDouble(data[2].trim()), // xPosition
@@ -194,11 +198,61 @@ public class TestFlowPositionListFileDataSource implements DataSource<TestFlowPo
 //        } catch (Exception e) {
 //            throw new RuntimeException(e);
 //        }
+
+        // File writer
+        String filePath = directory + File.separator + fileName;
+        File file = new File(filePath);
+        List<String> fileLines = new ArrayList<>();
+        TestFlowPositionList existing = readData();
+        boolean append = true; // กำหนดค่าเริ่มต้นเป็น true
+
+
+        // อ่านข้อมูลเดิมในไฟล์ถ้ามี
+        if (file.exists()) {
+            try {
+                fileLines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        // อัปเดตข้อมูลที่มีอยู่แล้ว หรือเพิ่มข้อมูลใหม่
+        for (TestFlowPosition testFlowPosition : testFlowPositionList.getPositionList()) {
+            String newLine =  createLine(testFlowPosition);
+            boolean updated = false;
+            for (int i = 0; i < fileLines.size(); i++) {
+                String line = fileLines.get(i);
+                if (line.contains(String.valueOf(testFlowPosition.getPositionID()))) { // เช็คว่า ID ตรงกันหรือไม่
+                    fileLines.set(i, newLine); // เขียนทับบรรทัดเดิม
+                    updated = true;
+                    break;
+                }
+            }
+            if (!updated) {
+                fileLines.add(newLine); // เพิ่มข้อมูลใหม่ถ้าไม่เจอ ID เดิม
+            }
+        }
+
+        // เขียนข้อมูลทั้งหมดกลับไปที่ไฟล์
+        try (BufferedWriter buffer = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8, false))) { // false สำหรับเขียนทับไฟล์
+            for (String line : fileLines) {
+                buffer.write(line);
+                buffer.newLine();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
     @Override
     public String createLine(TestFlowPosition testFlowPosition) {
-        return null;
+        return "testFlowPosition,"
+                + testFlowPosition.getPositionID() + ","
+                + testFlowPosition.getFitWidth() + ","
+                + testFlowPosition.getFitHeight() + ","
+                + testFlowPosition.getXPosition() + ","
+                + testFlowPosition.getYPosition() + ","
+                + testFlowPosition.getRotation();
     }
 }

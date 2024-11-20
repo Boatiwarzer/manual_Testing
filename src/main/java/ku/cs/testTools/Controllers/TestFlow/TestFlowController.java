@@ -18,12 +18,10 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import ku.cs.fxrouter.FXRouter;
-import ku.cs.testTools.Models.TestToolModels.TestFlowPosition;
-import ku.cs.testTools.Models.TestToolModels.TestFlowPositionList;
-import ku.cs.testTools.Models.TestToolModels.TestScriptDetailList;
-import ku.cs.testTools.Models.TestToolModels.TestScriptList;
+import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Models.UsecaseModels.*;
 import ku.cs.testTools.Services.DataSource;
+import ku.cs.testTools.Services.TestTools.TestFlowPositionListFileDataSource;
 import ku.cs.testTools.Services.TestTools.TestScriptDetailFIleDataSource;
 import ku.cs.testTools.Services.TestTools.TestScriptFileDataSource;
 
@@ -81,47 +79,63 @@ public class TestFlowController {
 
     private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
     private double startX, startY;
-    private TestScriptList testScriptList;
+    private TestScriptList testScriptList = new TestScriptList();
     private TestScriptDetailList testScriptDetailList;
     private String projectName1 = "uc", projectName = "125", directory = "data";
     private ComponentPreferenceList componentPreferenceList = new ComponentPreferenceList();
     private PreferenceList preferenceList = new PreferenceList();
     private Preference preference;
     private TestFlowPosition testFlowPosition = new TestFlowPosition();
-    private final DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+    private TestScript testScript = new TestScript();
+    private DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
     private final DataSource<TestScriptDetailList> testScriptDetailListListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+    private DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
     @FXML
     void initialize() {
-        //makeDraggable(squareImageView,"s",1);
-        //loadDesignPane();
         if (FXRouter.getData() != null){
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
             String type =  (String) objects.get(2);
-            testScriptList = (TestScriptList) objects.get(3);
-            testFlowPositionList = (TestFlowPositionList) objects.get(4);
-            loadProject();
+            if (type.equals("Rectangle-curve")){
+                testScript = (TestScript) objects.get(3);
+                TestScriptList testScriptList = testScriptListDataSource.readData();
+                testScriptList.addOrUpdateTestScript(testScript);
+                testScriptListDataSource.writeData(testScriptList);
+                objects.remove(3);
+                objects.remove(2);
+            }
+            //testFlowPositionList = (TestFlowPositionList) objects.get(4);
 
         }
+        loadProject();
+        saveProject();
     }
+
+
 
     private void loadProject() {
         System.out.println(testFlowPositionList);
         System.out.println(testScriptList);
         onDesignArea.getChildren().clear();
-        onNoteTextArea.clear();
+        testFlowPositionList.clear();
+        testScriptList.clear();
+        //onNoteTextArea.clear();
 
-        // Recreate each actor
-
-        // Recreate each use case
+        testScriptList = testScriptListDataSource.readData();
+        testFlowPositionList = testFlowPositionListDataSource.readData();
         testScriptList.getTestScriptList().forEach(testScript -> {
             // Find the position of the use case
-            TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(testScript.getPosition());
+            testFlowPosition = testFlowPositionList.findByPositionId(testScript.getPosition());
             if (testFlowPosition != null) {
                 drawTestScript(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(), testScript.getNameTS(), testFlowPosition.getPositionID());
             }
         });
+    }
+    private void saveProject() {
+        testFlowPositionListDataSource.writeData(testFlowPositionList);
+        testScriptListDataSource.writeData(testScriptList);
+
     }
 
     // Draws a test script with a rectangle shape and label
@@ -142,8 +156,26 @@ public class TestFlowController {
         stackPane.setLayoutY(layoutY);
         onDesignArea.getChildren().add(stackPane);
 
-        makeDraggable(stackPane, "testScript", positionID);
+        makeDraggable(onDesignArea.getChildren().get(onDesignArea.getChildren().size() - 1), "testScript", positionID);
+        makeSelectable(onDesignArea.getChildren().get(onDesignArea.getChildren().size() - 1), "testScript", positionID);
+        stackPane.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getClickCount() == 2) {  // Check if it's a double click
+                // Send the use case details to the UseCasePage
+                ArrayList<Object> objects = new ArrayList<>();
+                objects.add(projectName);
+                objects.add(directory);
+                objects.add(positionID);
+                System.out.println(positionID);
+                try {
+                    saveProject();
+                    FXRouter.popup("popup_info_testscript", objects);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
     }
+
     private void drawTestCase(double width, double height, double layoutX, double layoutY, String label, int positionID) {
         Rectangle rectangle = new Rectangle(width, height,200,75);
         rectangle.setStyle("-fx-fill: transparent");
@@ -294,7 +326,6 @@ public class TestFlowController {
         node.setOnMousePressed(event -> {
             startX = event.getSceneX() - node.getLayoutX();
             startY = event.getSceneY() - node.getLayoutY();
-            event.consume();
         });
 
         node.setOnMouseDragged(event -> {
@@ -302,8 +333,9 @@ public class TestFlowController {
             double newY = event.getSceneY() - startY;
             node.setLayoutX(newX);
             node.setLayoutY(newY);
-            //testFlowPositionList.updatePosition(ID, newX, newY);
-            event.consume();
+            testFlowPositionList.updatePosition(ID, newX, newY);
+            saveProject();
+
         });
     }
     private Polygon createKiteShape(double centerX, double centerY, double size) {
@@ -323,7 +355,6 @@ public class TestFlowController {
     public void paneDragOver(DragEvent event) {
         if (event.getDragboard().hasString()) {
             event.acceptTransferModes(TransferMode.ANY);
-            event.consume();
         }
     }
 
@@ -361,7 +392,6 @@ public class TestFlowController {
 
             }
             event.setDropCompleted(true);
-            event.consume();
         }
     }
 
@@ -450,31 +480,26 @@ public class TestFlowController {
                         double newHeight = mouseEvent.getY() + 10;
 
                         if (newWidth > 0 && newHeight > 0) {
-                            if (Objects.equals(type, "actor")) {
-                                ((ImageView) ((VBox) node).getChildren().get(0)).setFitWidth(newWidth);
-                                ((ImageView) ((VBox) node).getChildren().get(0)).setFitHeight(newHeight);
-                                // Update the position of the actor
-                                testFlowPositionList.updatePosition(ID, node.getLayoutX(), node.getLayoutY());
-                                // Update the size of the actor
-                                testFlowPositionList.updateSize(ID, newWidth, newHeight);
-
-                            } else if (Objects.equals(type, "useCase")) {
-                                //((Rectangle) ((StackPane) node).getChildren().get(0)).setRadiusX(newWidth);
-                                //((Rectangle) ((StackPane) node).getChildren().get(0)).setRadiusY(newHeight);
-                                // Update the position of the use case
-                                testFlowPositionList.updatePosition(ID, node.getLayoutX(), node.getLayoutY());
-                                // Update the size of the use case
-                                testFlowPositionList.updateSize(ID, newWidth, newHeight);
-
-                            } else if (Objects.equals(type, "subSystem")) {
+                            if (Objects.equals(type, "Rectangle-curve")) {
                                 ((Rectangle) ((VBox) node).getChildren().get(0)).setWidth(newWidth);
                                 ((Rectangle) ((VBox) node).getChildren().get(0)).setHeight(newHeight);
-                                // Update the position of the subsystem
+                                // Update the position
                                 testFlowPositionList.updatePosition(ID, node.getLayoutX(), node.getLayoutY());
-                                // Update the size of the subsystem
+                                // Update the size
                                 testFlowPositionList.updateSize(ID, newWidth, newHeight);
+                                saveProject();
                             }
                         }
+                    }
+                }
+            });
+            node.setOnMouseReleased(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    node.setOnMouseDragged(null);
+                    saveProject();
+                    if (!Objects.equals(type, "connection")) {
+                        makeDraggable(node, type, ID);
                     }
                 }
             });
@@ -484,22 +509,6 @@ public class TestFlowController {
 
 
 
-    public void loadDesignPane() {
-        // Clear the design pane and note text area
-        onDesignArea.getChildren().clear();
-        onNoteTextArea.clear();
-
-        // Recreate each actor
-
-        // Recreate each use case
-        testScriptList.getTestScriptList().forEach(testScript -> {
-            // Find the position of the use case
-            TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(testScript.getPosition());
-            if (testFlowPosition != null) {
-                drawTestScript(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(), testScript.getNameTS(), testFlowPosition.getPositionID());
-            }
-        });
-    }
 
     @FXML
     void onClickTestcase(ActionEvent event) {

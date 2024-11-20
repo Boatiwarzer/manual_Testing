@@ -67,7 +67,8 @@ public class TestScriptFileDataSource implements DataSource<TestScriptList>, Man
                             data[6].trim(), // data[6]
                             data[7].trim(), // data[7]
                             data[8].trim(),
-                            data[9].trim()// data[8]
+                            data[9].trim(),// data[8]
+                            Integer.parseInt(data[10].trim())
                     );
                     testScriptList.addOrUpdateTestScript(testScript);
                 }
@@ -95,6 +96,8 @@ public class TestScriptFileDataSource implements DataSource<TestScriptList>, Man
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
         List<String> fileLines = new ArrayList<>();
+        boolean append = true; // กำหนดค่าเริ่มต้นเป็น true
+
 
         // อ่านข้อมูลเดิมในไฟล์ถ้ามี
         if (file.exists()) {
@@ -118,9 +121,10 @@ public class TestScriptFileDataSource implements DataSource<TestScriptList>, Man
                 }
             }
             if (!updated) {
-                fileLines.add(newLine); // เพิ่มข้อมูลใหม่ถ้าไม่เจอ ID เดิม
+                fileLines.add(newLine);
             }
         }
+
 
         // เขียนข้อมูลทั้งหมดกลับไปที่ไฟล์
         try (BufferedWriter buffer = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8, false))) { // false สำหรับเขียนทับไฟล์
@@ -146,6 +150,7 @@ public class TestScriptFileDataSource implements DataSource<TestScriptList>, Man
                 + testScript.getTestCase() + ","
                 + testScript.getPreCon() + ","
                 + testScript.getFreeText()+ ","
-                + testScript.getPostCon();
+                + testScript.getPostCon() + ","
+                + testScript.getPosition();
     }
 }
