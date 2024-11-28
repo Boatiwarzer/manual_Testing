@@ -1,7 +1,6 @@
 package ku.cs.testTools.Models.TestToolModels;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -12,8 +11,11 @@ import java.time.format.DateTimeFormatter;
 @Getter
 @Data
 @Entity
+@Table(name = "use_case")
+@NamedQuery(name = "find usecase by id", query = "Select t from UseCase t where t.useCaseID = :id")
 public class UseCase {
     @Id
+    @Access(AccessType.FIELD)
     private String useCaseID;
     private String useCaseName;
     private String actor;

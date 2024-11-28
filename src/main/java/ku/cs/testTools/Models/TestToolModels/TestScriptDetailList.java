@@ -1,6 +1,5 @@
 package ku.cs.testTools.Models.TestToolModels;
 
-import ku.cs.testTools.Services.TestTools.TestScriptDetailFIleDataSource;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

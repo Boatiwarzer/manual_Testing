@@ -8,6 +8,7 @@ module ku.cs {
     requires jakarta.persistence;
     requires modelmapper;
     requires org.controlsfx.controls; // Add this line for ControlsFX
+    requires org.hibernate.orm.core;
 
     opens ku.cs.testTools.Controllers.Home to javafx.fxml, jakarta.persistence, lombok, org.controlsfx.controls;
     opens ku.cs.testTools.Controllers.UseCase to javafx.fxml, jakarta.persistence, lombok, org.controlsfx.controls;
@@ -16,9 +17,18 @@ module ku.cs {
     opens ku.cs.testTools.Controllers.TestFlow to javafx.fxml, jakarta.persistence, lombok, org.controlsfx.controls;
     opens ku.cs.testTools.Controllers.TestResult to javafx.fxml, jakarta.persistence, lombok, org.controlsfx.controls;
     opens ku.cs.testTools.Controllers.usecasedesiner to javafx.fxml, jakarta.persistence, lombok, org.controlsfx.controls;
-    opens ku.cs.testTools.Models.TestToolModels to javafx.base, jakarta.persistence, lombok, org.controlsfx.controls;
-    opens ku.cs.testTools.Models.UsecaseModels to javafx.base, jakarta.persistence, lombok, org.controlsfx.controls;
-    opens ku.cs.testTools.Models.Manager to javafx.base, jakarta.persistence, lombok, org.controlsfx.controls;
+    opens ku.cs.testTools.Models.TestToolModels to jakarta.persistence, lombok, jakarta.transaction,jakarta.activation,jakarta.inject, org.hibernate.orm.core;
+//    opens ku.cs.testTools.Models.TestToolModels.TestCase to jakarta.persistence, lombok, org.controlsfx.controls;
+//    opens ku.cs.testTools.Models.TestToolModels.TestCaseDetail to javafx.base, jakarta.persistence, lombok, org.controlsfx.controls;
+//    opens ku.cs.testTools.Models.TestToolModels.TestScript to javafx.base, jakarta.persistence, lombok, org.controlsfx.controls;
+//    opens ku.cs.testTools.Models.TestToolModels.TestScriptDetail to javafx.base, jakarta.persistence, lombok, org.controlsfx.controls;
+//    opens ku.cs.testTools.Models.TestToolModels.TestFlowPosition to javafx.base, jakarta.persistence, lombok, org.controlsfx.controls;
+//    opens ku.cs.testTools.Models.TestToolModels.Usecase to javafx.base, jakarta.persistence, lombok, org.controlsfx.controls;
+//    opens ku.cs.testTools.Models.TestToolModels.UsecaseDetail to javafx.base, jakarta.persistence, lombok, org.controlsfx.controls;
+//    opens ku.cs.testTools.Models.TestToolModels.TestResult to javafx.base, jakarta.persistence, lombok, org.controlsfx.controls;
+//    opens ku.cs.testTools.Models.TestToolModels.TestResultDetail to javafx.base, jakarta.persistence, lombok, org.controlsfx.controls;
+    opens ku.cs.testTools.Models.UsecaseModels to jakarta.persistence, lombok, org.controlsfx.controls;
+    opens ku.cs.testTools.Models.Manager to  jakarta.persistence, lombok, org.controlsfx.controls;
 
     exports ku.cs.testTools.Controllers.Home;
     exports ku.cs.testTools.Controllers.UseCase;

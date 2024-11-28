@@ -8,8 +8,8 @@ import javafx.scene.input.KeyCode;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
-import ku.cs.testTools.Services.TestTools.TestCaseDetailFileDataSource;
-import ku.cs.testTools.Services.TestTools.TestCaseFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.TestCaseDetailFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.TestCaseFileDataSource;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.IOException;

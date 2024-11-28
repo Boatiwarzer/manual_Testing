@@ -18,7 +18,7 @@ public class Main extends Application {
         try {
             FXRouter.bind(this, stage, "Manual Test Tools", 1360,780);
             configRoute();
-//            connection = DatabaseConnector.connect();
+            connection = DatabaseConnector.connect();
 //          FXRouter.setTheme(1);
 //          FXRouter.popup("landing_page_tester",true);
 //          FXRouter.goTo("role");

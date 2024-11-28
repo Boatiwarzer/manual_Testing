@@ -9,8 +9,8 @@ import javafx.scene.layout.VBox;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.DataSource;
-import ku.cs.testTools.Services.TestTools.UseCaseDetailListFileDataSource;
-import ku.cs.testTools.Services.TestTools.UseCaseListFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.UseCaseDetailListFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.UseCaseListFileDataSource;
 import ku.cs.testTools.Services.UseCaseComparable;
 import org.controlsfx.control.textfield.TextFields;
 

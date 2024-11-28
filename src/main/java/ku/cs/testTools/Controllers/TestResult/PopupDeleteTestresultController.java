@@ -11,8 +11,8 @@ import ku.cs.testTools.Models.TestToolModels.TestResultDetail;
 import ku.cs.testTools.Models.TestToolModels.TestResultDetailList;
 import ku.cs.testTools.Models.TestToolModels.TestResultList;
 import ku.cs.testTools.Services.DataSource;
-import ku.cs.testTools.Services.TestTools.TestResultDetailListFileDataSource;
-import ku.cs.testTools.Services.TestTools.TestResultListFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.TestResultDetailListFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.TestResultListFileDataSource;
 
 import java.io.IOException;
 

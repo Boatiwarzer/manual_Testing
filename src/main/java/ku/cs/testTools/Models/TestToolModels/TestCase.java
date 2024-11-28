@@ -1,8 +1,6 @@
 package ku.cs.testTools.Models.TestToolModels;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -13,9 +11,11 @@ import java.util.Objects;
 @Setter
 @RequiredArgsConstructor
 @Entity
-@AllArgsConstructor
+@Table(name = "test_cases")
+@NamedQuery(name = "find testcase by id", query = "Select t from TestCase t where t.idTC = :id")
 public class TestCase {
     @Id
+    @Access(AccessType.FIELD)
     private String idTC;
     private String nameTC;
     private String dateTC;
@@ -25,6 +25,8 @@ public class TestCase {
     @OneToMany(mappedBy = "testCase")
     private List<TestCaseDetail> testCaseList;
     private String idTCDList;
+
+
 
     public TestCase(String idTC, String nameTC, String dateTC, String useCase, String descriptionTC, String note) {
         this.idTC = idTC;

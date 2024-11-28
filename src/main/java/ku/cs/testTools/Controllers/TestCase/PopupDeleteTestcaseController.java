@@ -1,7 +1,5 @@
 package ku.cs.testTools.Controllers.TestCase;
 
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -9,14 +7,11 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
-import ku.cs.testTools.Services.AutoCompleteComboBoxListener;
 import ku.cs.testTools.Services.DataSource;
-import ku.cs.testTools.Services.TestTools.TestCaseDetailFileDataSource;
-import ku.cs.testTools.Services.TestTools.TestCaseFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.TestCaseDetailFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.TestCaseFileDataSource;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class PopupDeleteTestcaseController {
     private TestCaseList testCaseList = new TestCaseList();

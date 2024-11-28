@@ -1,8 +1,6 @@
 package ku.cs.testTools.Models.TestToolModels;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -15,22 +13,45 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Entity
 @Data
-@AllArgsConstructor
+@Table(name = "test_scripts")
+@NamedQuery(name = "find testscript by id", query = "Select t from TestScript t where t.idTS = :id")
 public class TestScript {
     @Id
+    @Access(AccessType.FIELD)
+    @Column(name = "id_ts") // Maps to `idts` in the database
     private String idTS;
+
+    @Column(name = "name_ts") // Maps to `namets` in the database
     private String nameTS;
+
+    @Column(name = "date_ts") // Maps to `datets` in the database
     private String dateTS;
+
+    @Column(name = "use_case") // Maps to `usecase` in the database
     private String useCase;
+
+    @Column(name = "description_ts") // Maps to `descriptionts` in the database
     private String descriptionTS;
+
+    @Column(name = "test_case") // Maps to `testcase` in the database
     private String testCase;
+
+    @Column(name = "pre_con") // Maps to `precon` in the database
     private String preCon;
+
+    @Column(name = "post_con") // Maps to `postcon` in the database
     private String postCon;
+
+    @Column(name = "free_text") // Maps to `freetext` in the database
     private String freeText;
+
+    @Column(name = "position") // Maps to `position` in the database
     private int position;
-    @OneToMany(mappedBy = "testScript")
-    private List<TestScriptDetail> testScriptDetailList;
-    private String idTSDList;
+
+//    @Column(name = "idtsdlist") // Maps to `idtsdlist` in the database
+//    private String idTSDList;
+//    @OneToMany(mappedBy = "testScript")
+//    private List<TestScriptDetail> testScriptDetailList;
 
     public TestScript(String idTS, String nameTS, String dateTS, String useCase, String descriptionTS, String testCase, String preCon, String postCon, String freeText, int position) {
         this.idTS = idTS;

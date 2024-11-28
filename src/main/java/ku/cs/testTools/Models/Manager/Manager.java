@@ -1,6 +1,7 @@
 package ku.cs.testTools.Models.Manager;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.Getter;
 
@@ -11,7 +12,6 @@ import lombok.Setter;
 
 @Getter
 @Data
-@Entity
 public class Manager implements Comparable{
     private String role;
     private String name;
@@ -27,6 +27,10 @@ public class Manager implements Comparable{
         this.password = password;
         this.img = "Profile-picture/Profile_1.jpg";
         this.date = date;
+    }
+
+    public Manager() {
+
     }
 
     public void changeName(String name) {

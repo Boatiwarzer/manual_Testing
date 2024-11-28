@@ -12,14 +12,10 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
-import ku.cs.testTools.Models.UsecaseModels.*;
-import ku.cs.testTools.Models.UsecaseModels.UseCase;
-import ku.cs.testTools.Models.UsecaseModels.UseCaseList;
 import ku.cs.testTools.Services.DataSource;
-import ku.cs.testTools.Services.TestTools.TestFlowPositionListFileDataSource;
-import ku.cs.testTools.Services.TestTools.TestScriptDetailFIleDataSource;
-import ku.cs.testTools.Services.TestTools.TestScriptFileDataSource;
-import ku.cs.testTools.Services.UsecaseServices.*;
+import ku.cs.testTools.Services.DataSourceCSV.TestFlowPositionListFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.TestScriptDetailFIleDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.TestScriptFileDataSource;
 
 import java.io.IOException;
 import java.util.ArrayList;
