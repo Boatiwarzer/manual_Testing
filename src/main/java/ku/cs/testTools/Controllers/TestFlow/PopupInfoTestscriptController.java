@@ -3,10 +3,12 @@ package ku.cs.testTools.Controllers.TestFlow;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
@@ -74,7 +76,7 @@ public class PopupInfoTestscriptController {
     private TestScriptList testScriptList = new TestScriptList();
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
     private TestScript testScript = new TestScript();
-    private TestScriptDetail testScriptDetail = new TestScriptDetail();
+    private TestScriptDetail testScriptDetail;
 
     private String id;
     private int position;
@@ -89,6 +91,7 @@ public class PopupInfoTestscriptController {
     private final DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
     private final DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
     private final DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName1+".csv");
+    private String check;
     @FXML
     void initialize() {
         setDate();
@@ -101,12 +104,16 @@ public class PopupInfoTestscriptController {
                 projectName = (String) objects.get(0);
                 directory = (String) objects.get(1);
                 position = (int) objects.get(2);
-                System.out.println(testScript);
-                //String type = (String) objects.get(3);
                 onTableTestscript.isFocused();
                 selectedTSD();
                 testScriptList = testScriptListDataSource.readData();
                 testScript = testScriptList.findByPositionId(position);
+                if (objects.get(3) != null){
+                    testScript = (TestScript) objects.get(3);
+                    testScriptDetailList = (TestScriptDetailList) objects.get(4);
+                    testScriptDetail = (TestScriptDetail) objects.get(5);
+                    check = (String) objects.get(6);
+                }
                 setDataTS();
                 if (testScriptListDataSource.readData() != null && testScriptDetailListDataSource.readData() != null){
                     testScriptDetailListTemp = testScriptDetailListDataSource.readData();
@@ -323,6 +330,34 @@ public class PopupInfoTestscriptController {
 
     @FXML
     void onAddButton(ActionEvent event) {
+        String name = onTestNameCombobox.getValue();
+        String idTS = tsId;
+        String date = testDateLabel.getText();
+        String useCase = onUsecaseCombobox.getValue();
+        String description = infoDescriptLabel.getText();
+        String tc = onTestcaseCombobox.getValue();
+        String preCon = infoPreconLabel.getText();
+        String note = onTestNoteField.getText();
+        String post = infoPostconLabel.getText();
+
+        try {
+
+            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note,post,position);
+            ArrayList<Object> objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add(position);
+            objects.add(testScript);
+            objects.add(testScriptDetailList);
+            objects.add(testScriptDetail);
+            if (testScriptDetailList != null){
+                FXRouter.popup("popup_testflow_add_testscript",objects,true);
+            }
+
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
@@ -352,11 +387,79 @@ public class PopupInfoTestscriptController {
 
     @FXML
     void onDeleteListButton(ActionEvent event) {
+        onDeleteListButton.setOnMouseClicked(event1 -> {
+            // ทำการลบ
+            // ...
+
+            // ขอ focus กลับไปที่ TableView
+            onTableTestscript.requestFocus();
+        });
+        try {
+            onTableTestscript.requestFocus();
+            String name = onTestNameCombobox.getValue();
+            String idTS = tsId;
+            String date = testDateLabel.getText();
+            String useCase = onUsecaseCombobox.getValue();
+            String description = infoDescriptLabel.getText();
+            String tc = onTestcaseCombobox.getValue();
+            String preCon = infoPreconLabel.getText();
+            String note = onTestNoteField.getText();
+            String post = infoPostconLabel.getText();
+            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note,post,position);
+            ArrayList<Object> objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add(position);
+            objects.add(testScript);
+            objects.add(testScriptDetailList);
+            objects.add(selectedItem);
+            if (selectedItem != null){
+                System.out.println(testScriptDetailList);
+                System.out.println(testScript);
+                System.out.println(selectedItem);
+
+                FXRouter.popup("popup_testflow_delete_testscript",objects,true);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
     @FXML
     void onEditListButton(ActionEvent event) {
+        onEditListButton.setOnMouseClicked(event12 -> {
+            // ทำการแก้ไข
+            // ...
+
+            // ขอ focus กลับไปที่ TableView
+            onTableTestscript.requestFocus();
+        });
+        onEditListButton.setOnAction(event1 -> onTableTestscript.requestFocus());
+        ArrayList<Object> objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(position);
+        objects.add(testScript);
+        objects.add(testScriptDetailList);
+        objects.add(selectedItem);
+        try {
+            String name = onTestNameCombobox.getValue();
+            String idTS = tsId;
+            String date = testDateLabel.getText();
+            String useCase = onUsecaseCombobox.getValue();
+            String description = infoDescriptLabel.getText();
+            String tc = onTestcaseCombobox.getValue();
+            String preCon = infoPreconLabel.getText();
+            String note = onTestNoteField.getText();
+            String post = infoPostconLabel.getText();
+            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note,post,position);
+            if (selectedItem != null){
+                FXRouter.popup("popup_testflow_add_testscript",objects,true);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
@@ -383,7 +486,7 @@ public class PopupInfoTestscriptController {
 
         // Write data to respective files
         testScriptListDataSource.writeData(testScriptList);
-        testScriptDetailListDataSource.writeData(testScriptDetailListTemp);
+        testScriptDetailListDataSource.writeData(testScriptDetailList);
         ArrayList<Object>objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);

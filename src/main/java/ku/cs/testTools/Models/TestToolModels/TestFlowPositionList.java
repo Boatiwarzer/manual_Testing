@@ -1,6 +1,5 @@
 package ku.cs.testTools.Models.TestToolModels;
 
-import ku.cs.testTools.Models.UsecaseModels.Position;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;

@@ -19,7 +19,6 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
-import ku.cs.testTools.Models.UsecaseModels.*;
 import ku.cs.testTools.Services.DataSource;
 import ku.cs.testTools.Services.DataSourceCSV.TestFlowPositionListFileDataSource;
 import ku.cs.testTools.Services.DataSourceCSV.TestScriptDetailFIleDataSource;
@@ -28,6 +27,7 @@ import ku.cs.testTools.Services.DataSourceCSV.TestScriptFileDataSource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Optional;
 
 public class TestFlowController {
     @FXML
@@ -82,13 +82,10 @@ public class TestFlowController {
     private TestScriptList testScriptList = new TestScriptList();
     private TestScriptDetailList testScriptDetailList;
     private String projectName1 = "uc", projectName = "125", directory = "data";
-    private ComponentPreferenceList componentPreferenceList = new ComponentPreferenceList();
-    private PreferenceList preferenceList = new PreferenceList();
-    private Preference preference;
     private TestFlowPosition testFlowPosition = new TestFlowPosition();
     private TestScript testScript = new TestScript();
     private DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-    private final DataSource<TestScriptDetailList> testScriptDetailListListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+    private final DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
     private DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
     @FXML
     void initialize() {
@@ -120,9 +117,11 @@ public class TestFlowController {
         onDesignArea.getChildren().clear();
         testFlowPositionList.clear();
         testScriptList.clear();
+        //testScriptDetailList.clearItems();
         //onNoteTextArea.clear();
 
         testScriptList = testScriptListDataSource.readData();
+        testScriptDetailList = testScriptDetailListDataSource.readData();
         testFlowPositionList = testFlowPositionListDataSource.readData();
         testScriptList.getTestScriptList().forEach(testScript -> {
             // Find the position of the use case
@@ -135,6 +134,7 @@ public class TestFlowController {
     private void saveProject() {
         testFlowPositionListDataSource.writeData(testFlowPositionList);
         testScriptListDataSource.writeData(testScriptList);
+        testScriptDetailListDataSource.writeData(testScriptDetailList);
 
     }
 
@@ -165,10 +165,11 @@ public class TestFlowController {
                 objects.add(projectName);
                 objects.add(directory);
                 objects.add(positionID);
+                objects.add(null);
                 System.out.println(positionID);
                 try {
                     saveProject();
-                    FXRouter.popup("popup_info_testscript", objects);
+                    FXRouter.newPopup("popup_info_testscript", objects,true);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -449,60 +450,82 @@ public class TestFlowController {
 
 
     private void makeSelectable(Node node, String type, int ID) {
+
         // Create a context menu
         ContextMenu contextMenu = new ContextMenu();
 
         // Create menu items
         MenuItem resizeItem = new MenuItem("Resize");
-        MenuItem propertiesItem = new MenuItem("Properties");
+        //MenuItem propertiesItem = new MenuItem("Properties");
         MenuItem deleteItem = new MenuItem("Delete");
-
-        // Create a menu item for sending the component to a subsystem
-
-        // Add menu items to the context menu
-        if (!Objects.equals(type, "connection")) {
-            contextMenu.getItems().add(resizeItem);
-        }
-
-
-        contextMenu.getItems().add(propertiesItem);
+        contextMenu.getItems().add(resizeItem);
+        //contextMenu.getItems().add(propertiesItem);
         contextMenu.getItems().add(deleteItem);
+        node.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
+            if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
+                System.out.println("Item Right Clicked");
+                contextMenu.show(node, mouseEvent.getScreenX(), mouseEvent.getScreenY());
 
+                if (!Objects.equals(type,"connection"))
+                {
+                    makeDraggable(node, type, ID);
+                }
+            }
+        });
         //set the action for resize menu item
         resizeItem.setOnAction(e -> {
             System.out.println("Edit Clicked");
             //Make the node resizable
-            node.setOnMouseDragged(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    if (mouseEvent.isPrimaryButtonDown()) {
-                        double newWidth = mouseEvent.getX() + 10;
-                        double newHeight = mouseEvent.getY() + 10;
+            node.setOnMouseDragged(mouseEvent -> {
+                if (mouseEvent.isPrimaryButtonDown()) {
+                    double newWidth = mouseEvent.getX() + 10;
+                    double newHeight = mouseEvent.getY() + 10;
 
-                        if (newWidth > 0 && newHeight > 0) {
-                            if (Objects.equals(type, "Rectangle-curve")) {
-                                ((Rectangle) ((VBox) node).getChildren().get(0)).setWidth(newWidth);
-                                ((Rectangle) ((VBox) node).getChildren().get(0)).setHeight(newHeight);
-                                // Update the position
-                                testFlowPositionList.updatePosition(ID, node.getLayoutX(), node.getLayoutY());
-                                // Update the size
-                                testFlowPositionList.updateSize(ID, newWidth, newHeight);
-                                saveProject();
-                            }
+                    if (newWidth > 0 && newHeight > 0) {
+                        if (Objects.equals(type, "Rectangle-curve")) {
+                            ((Rectangle) ((VBox) node).getChildren().get(0)).setWidth(newWidth);
+                            ((Rectangle) ((VBox) node).getChildren().get(0)).setHeight(newHeight);
+                            // Update the position
+                            testFlowPositionList.updatePosition(ID, node.getLayoutX(), node.getLayoutY());
+                            // Update the size
+                            testFlowPositionList.updateSize(ID, newWidth, newHeight);
+                            saveProject();
                         }
                     }
                 }
             });
-            node.setOnMouseReleased(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    node.setOnMouseDragged(null);
-                    saveProject();
-                    if (!Objects.equals(type, "connection")) {
-                        makeDraggable(node, type, ID);
-                    }
+            node.setOnMouseReleased(mouseEvent -> {
+                node.setOnMouseDragged(null);
+                saveProject();
+                if (!Objects.equals(type, "connection")) {
+                    makeDraggable(node, type, ID);
                 }
             });
+        });
+        // Show the context menu
+
+        deleteItem.setOnAction(e -> {
+            // Pop up to confirm deletion
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Delete Confirmation");
+            alert.setHeaderText("Are you sure you want to delete this item?");
+            alert.setContentText("Press OK to confirm, or Cancel to go back.");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                // Remove the item from the list
+
+                if(Objects.equals(type, "testScript")) {
+                    TestScript testScript = testScriptList.findTSByPosition(ID);
+                    System.out.println("testscript : " + testScript);
+                    testScriptList.deleteTestScriptByPositionID(ID);
+                    testScriptDetailList.deleteTestScriptDetailByTestScriptID(testScript.getIdTS());
+                    testFlowPositionList.removePositionByID(ID);
+                }
+                onDesignArea.getChildren().remove(node);
+                saveProject();
+                loadProject();
+                System.out.println("Item Removed");
+            }
         });
     }
 

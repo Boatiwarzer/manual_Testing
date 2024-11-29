@@ -199,46 +199,60 @@ public class TestFlowPositionListFileDataSource implements DataSource<TestFlowPo
 //        }
 
         // File writer
+//        String filePath = directory + File.separator + fileName;
+//        File file = new File(filePath);
+//        List<String> fileLines = new ArrayList<>();
+//
+//
+//        // อ่านข้อมูลเดิมในไฟล์ถ้ามี
+//        if (file.exists()) {
+//            try {
+//                fileLines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//
+//        // อัปเดตข้อมูลที่มีอยู่แล้ว หรือเพิ่มข้อมูลใหม่
+//        for (TestFlowPosition testFlowPosition : testFlowPositionList.getPositionList()) {
+//            String newLine =  createLine(testFlowPosition);
+//            boolean updated = false;
+//            for (int i = 0; i < fileLines.size(); i++) {
+//                String line = fileLines.get(i);
+//                if (line.contains(String.valueOf(testFlowPosition.getPositionID()))) { // เช็คว่า ID ตรงกันหรือไม่
+//                    fileLines.set(i, newLine); // เขียนทับบรรทัดเดิม
+//                    updated = true;
+//                    break;
+//                }
+//            }
+//            if (!updated) {
+//                fileLines.add(newLine); // เพิ่มข้อมูลใหม่ถ้าไม่เจอ ID เดิม
+//            }
+//        }
+//
+//        // เขียนข้อมูลทั้งหมดกลับไปที่ไฟล์
+//        try (BufferedWriter buffer = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8, false))) { // false สำหรับเขียนทับไฟล์
+//            for (String line : fileLines) {
+//                buffer.write(line);
+//                buffer.newLine();
+//            }
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
-        List<String> fileLines = new ArrayList<>();
-        TestFlowPositionList existing = readData();
-        boolean append = true; // กำหนดค่าเริ่มต้นเป็น true
-
-
-        // อ่านข้อมูลเดิมในไฟล์ถ้ามี
-        if (file.exists()) {
-            try {
-                fileLines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        // อัปเดตข้อมูลที่มีอยู่แล้ว หรือเพิ่มข้อมูลใหม่
-        for (TestFlowPosition testFlowPosition : testFlowPositionList.getPositionList()) {
-            String newLine =  createLine(testFlowPosition);
-            boolean updated = false;
-            for (int i = 0; i < fileLines.size(); i++) {
-                String line = fileLines.get(i);
-                if (line.contains(String.valueOf(testFlowPosition.getPositionID()))) { // เช็คว่า ID ตรงกันหรือไม่
-                    fileLines.set(i, newLine); // เขียนทับบรรทัดเดิม
-                    updated = true;
-                    break;
-                }
-            }
-            if (!updated) {
-                fileLines.add(newLine); // เพิ่มข้อมูลใหม่ถ้าไม่เจอ ID เดิม
-            }
-        }
-
-        // เขียนข้อมูลทั้งหมดกลับไปที่ไฟล์
-        try (BufferedWriter buffer = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8, false))) { // false สำหรับเขียนทับไฟล์
-            for (String line : fileLines) {
-                buffer.write(line);
+        FileWriter writer = null;
+        BufferedWriter buffer = null;
+        try {
+            writer = new FileWriter(file, StandardCharsets.UTF_8);
+            buffer = new BufferedWriter(writer);
+            for (TestFlowPosition position : testFlowPositionList.getPositionList()) {
+                String line = createLine(position);
+                buffer.append(line);
                 buffer.newLine();
-            }
-        } catch (IOException e) {
+            }buffer.close();
+
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

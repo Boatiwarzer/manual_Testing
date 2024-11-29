@@ -632,8 +632,6 @@ public class TestScriptEditController {
     @FXML
     void onDeleteButton(ActionEvent event) {
         try {
-            testScriptList.deleteTestScript(testScript);
-            testScriptListDataSource.writeData(testScriptList);
             if (testScript != null){
                 FXRouter.popup("popup_delete_testscript",null,testScript,true);
             }

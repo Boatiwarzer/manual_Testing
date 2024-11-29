@@ -55,6 +55,7 @@ public class Main extends Application {
         FXRouter.when("test_result_edit", packageStr1 + "test_result_edit.fxml");
         FXRouter.when("popup_add_testcase", packageStr1 + "popup_add_testcase.fxml");
         FXRouter.when("popup_add_testscript", packageStr1 + "popup_add_testscript.fxml");
+        FXRouter.when("popup_testflow_add_testscript", packageStr1 + "popup_testflow_add_testscript.fxml");
         FXRouter.when("popup_add_testresult", packageStr1 + "popup_add_testresult.fxml");
         FXRouter.when("popup_info_testscript", packageStr1 + "popup_info_testscript.fxml");
         FXRouter.when("popup_info_testcase", packageStr1 + "popup_info_testcase.fxml");

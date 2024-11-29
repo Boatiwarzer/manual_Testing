@@ -52,6 +52,7 @@ public class TestScript {
 //    private String idTSDList;
 //    @OneToMany(mappedBy = "testScript")
 //    private List<TestScriptDetail> testScriptDetailList;
+    private boolean markedForDeletion = false; // ฟิลด์สำหรับระบุสถานะว่าต้องการลบหรือไม่
 
     public TestScript(String idTS, String nameTS, String dateTS, String useCase, String descriptionTS, String testCase, String preCon, String postCon, String freeText, int position) {
         this.idTS = idTS;
@@ -111,4 +112,6 @@ public class TestScript {
     public boolean isId(String id) {
         return this.idTS.equals(id);
     }
+
+
 }

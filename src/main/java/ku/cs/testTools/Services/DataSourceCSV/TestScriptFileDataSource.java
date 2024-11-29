@@ -91,8 +91,6 @@ public class TestScriptFileDataSource implements DataSource<TestScriptList>, Man
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
         List<String> fileLines = new ArrayList<>();
-        boolean append = true; // กำหนดค่าเริ่มต้นเป็น true
-
 
         // อ่านข้อมูลเดิมในไฟล์ถ้ามี
         if (file.exists()) {
@@ -103,23 +101,29 @@ public class TestScriptFileDataSource implements DataSource<TestScriptList>, Man
             }
         }
 
-        // อัปเดตข้อมูลที่มีอยู่แล้ว หรือเพิ่มข้อมูลใหม่
+        // อัปเดตข้อมูลที่มีอยู่แล้ว หรือเพิ่ม/ลบข้อมูล
         for (TestScript testScript : testScriptList.getTestScriptList()) {
             String newLine = createLine(testScript);
             boolean updated = false;
+
             for (int i = 0; i < fileLines.size(); i++) {
                 String line = fileLines.get(i);
                 if (line.contains(testScript.getIdTS())) { // เช็คว่า ID ตรงกันหรือไม่
-                    fileLines.set(i, newLine); // เขียนทับบรรทัดเดิม
-                    updated = true;
-                    break;
+                    if (testScript.isMarkedForDeletion()) { // ถ้าถูกระบุว่าควรถูกลบ
+                        fileLines.remove(i); // ลบบรรทัดออกจากรายการ
+                        updated = true;
+                        break;
+                    } else {
+                        fileLines.set(i, newLine); // เขียนทับบรรทัดเดิม
+                        updated = true;
+                        break;
+                    }
                 }
             }
-            if (!updated) {
-                fileLines.add(newLine);
+            if (!updated && !testScript.isMarkedForDeletion()) {
+                fileLines.add(newLine); // เพิ่มข้อมูลใหม่ (ถ้าไม่ได้ถูกลบ)
             }
         }
-
 
         // เขียนข้อมูลทั้งหมดกลับไปที่ไฟล์
         try (BufferedWriter buffer = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8, false))) { // false สำหรับเขียนทับไฟล์
@@ -131,6 +135,7 @@ public class TestScriptFileDataSource implements DataSource<TestScriptList>, Man
             throw new RuntimeException(e);
         }
     }
+
 
 
 

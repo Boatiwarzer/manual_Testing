@@ -16,18 +16,7 @@ module ku.cs {
     opens ku.cs.testTools.Controllers.TestScript to javafx.fxml, jakarta.persistence, lombok, org.controlsfx.controls;
     opens ku.cs.testTools.Controllers.TestFlow to javafx.fxml, jakarta.persistence, lombok, org.controlsfx.controls;
     opens ku.cs.testTools.Controllers.TestResult to javafx.fxml, jakarta.persistence, lombok, org.controlsfx.controls;
-    opens ku.cs.testTools.Controllers.usecasedesiner to javafx.fxml, jakarta.persistence, lombok, org.controlsfx.controls;
     opens ku.cs.testTools.Models.TestToolModels to jakarta.persistence, lombok, jakarta.transaction,jakarta.activation,jakarta.inject, org.hibernate.orm.core;
-//    opens ku.cs.testTools.Models.TestToolModels.TestCase to jakarta.persistence, lombok, org.controlsfx.controls;
-//    opens ku.cs.testTools.Models.TestToolModels.TestCaseDetail to javafx.base, jakarta.persistence, lombok, org.controlsfx.controls;
-//    opens ku.cs.testTools.Models.TestToolModels.TestScript to javafx.base, jakarta.persistence, lombok, org.controlsfx.controls;
-//    opens ku.cs.testTools.Models.TestToolModels.TestScriptDetail to javafx.base, jakarta.persistence, lombok, org.controlsfx.controls;
-//    opens ku.cs.testTools.Models.TestToolModels.TestFlowPosition to javafx.base, jakarta.persistence, lombok, org.controlsfx.controls;
-//    opens ku.cs.testTools.Models.TestToolModels.Usecase to javafx.base, jakarta.persistence, lombok, org.controlsfx.controls;
-//    opens ku.cs.testTools.Models.TestToolModels.UsecaseDetail to javafx.base, jakarta.persistence, lombok, org.controlsfx.controls;
-//    opens ku.cs.testTools.Models.TestToolModels.TestResult to javafx.base, jakarta.persistence, lombok, org.controlsfx.controls;
-//    opens ku.cs.testTools.Models.TestToolModels.TestResultDetail to javafx.base, jakarta.persistence, lombok, org.controlsfx.controls;
-    opens ku.cs.testTools.Models.UsecaseModels to jakarta.persistence, lombok, org.controlsfx.controls;
     opens ku.cs.testTools.Models.Manager to  jakarta.persistence, lombok, org.controlsfx.controls;
 
     exports ku.cs.testTools.Controllers.Home;
@@ -36,10 +25,8 @@ module ku.cs {
     exports ku.cs.testTools.Controllers.TestScript;
     exports ku.cs.testTools.Controllers.TestFlow;
     exports ku.cs.testTools.Controllers.TestResult;
-    exports ku.cs.testTools.Controllers.usecasedesiner;
     exports ku.cs;
     exports ku.cs.testTools.Models.TestToolModels;
-    exports ku.cs.testTools.Models.UsecaseModels;
     exports ku.cs.testTools.Models.Manager;
 
 
