@@ -122,7 +122,9 @@ public class PopupInfoTestscriptController {
                             testScriptDetailList.addOrUpdateTestScriptDetail(testScriptDetail);
                         }
                     }
-                    loadTable(testScriptDetailList);
+                    if (testScriptDetailList != null){
+                        loadTable(testScriptDetailList);
+                    }
 
                 }
             }

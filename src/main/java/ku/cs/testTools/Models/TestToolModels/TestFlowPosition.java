@@ -22,8 +22,19 @@ public class TestFlowPosition {
     private double fitWidth;
     private double fitHeight;
     private double rotation;
+    private String name;
 
-    public TestFlowPosition(int positionID, double fitWidth, double fitHeight, double xPosition, double yPosition,  double rotation) {
+    public TestFlowPosition(int positionID, double xPosition, double yPosition, double fitWidth, double fitHeight, double rotation, String name) {
+        this.positionID = positionID;
+        this.xPosition = xPosition;
+        this.yPosition = yPosition;
+        this.fitWidth = fitWidth;
+        this.fitHeight = fitHeight;
+        this.rotation = rotation;
+        this.name = name;
+    }
+
+    public TestFlowPosition(int positionID, double fitWidth, double fitHeight, double xPosition, double yPosition, double rotation) {
         this.positionID = positionID;
         this.fitWidth = fitWidth;
         this.fitHeight = fitHeight;

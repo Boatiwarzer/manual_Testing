@@ -1,22 +1,30 @@
 testFlowPosition,600,75.0,75.0,68.99999999999994,52.39999999999998,0.0
-testFlowPosition,64,75.0,75.0,28.200000000000102,113.20000000000002,0.0
+testFlowPosition,64,75.0,75.0,41.000000000000114,114.80000000000001,0.0
 testFlowPosition,520,75.0,75.0,308.2000000000001,50.0,0.0
-testFlowPosition,674,75.0,75.0,24.19999999999999,240.39999999999998,0.0
-testFlowPosition,356,75.0,75.0,266.6000000000001,138.79999999999995,0.0
+testFlowPosition,356,75.0,75.0,262.6000000000001,112.39999999999995,0.0
 testFlowPosition,647,75.0,75.0,264.2000000000001,25.200000000000074,0.0
 testFlowPosition,266,75.0,75.0,41.0,18.799999999999983,0.0
-testScript,TS-22,Login,10-10-2024,UC-99610740081 : adad,test1,None,asda,test,tEST,1
+testFlowPosition,171,75.0,75.0,557.8,46.0,0.0
+testFlowPosition,601,75.0,75.0,564.2,114.80000000000001,0.0
+testFlowPosition,525,75.0,75.0,37.80000000000007,238.00000000000006,0.0
+testFlowPosition,523,75.0,75.0,643.4000000000001,230.8,0.0
+testFlowPosition,250,429.8,304.4,75.0,75.0,0.0
+testFlowPosition,559,557.8,327.6,75.0,75.0,0.0
+testFlowPosition,433,532.2,54.0,490.2,38.19999999999999,0.0
+testScript,TS-22,Login,10-10-2024,UC-99610740081 : adad,test1,None,asda,tEST,test,1
 testScript,TS-949,TEST,10-10-2024,UC-93443034704 : adadasda,test2,TC-84 : LoginTest,2,tEST,tEST,2
-testScript,TS-360,125,10-10-2024,UC-93443034704 : adadasda,test2,TC-84 : LoginTest,2,tEST,125,3
-testScript,TS-359,123,11-10-2024,UC-99610740081 : adad,test1,TC-84 : LoginTest,asda,tEST,124,4
+testScript,TS-360,125,10-10-2024,UC-93443034704 : adadasda,test2,TC-84 : LoginTest,2,125,tEST,3
+testScript,TS-359,123,11-10-2024,UC-99610740081 : adad,test1,TC-84 : LoginTest,asda,124,tEST,4
 testScript,TS-479,1,31-10-2024,None,1,None,1,1,1,0
-testScript,TS-886,a,null,null,null,null,null,a,null,0
-testScript,TS-154,SA,null,null,null,null,null,null,b,64
-testScript,TS-611,c,null,null,null,null,null,c,null,0
+testScript,TS-886,a,null,null,null,null,null,null,a,0
+testScript,TS-154,SA,null,null,null,null,null,b,null,64
+testScript,TS-611,c,null,null,null,null,null,null,c,0
 testScript,TS-543,a,null,null,null,null,null,null,a,674
-testScript,TS-400,356,null,null,null,null,null,null,3,356
+testScript,TS-400,3564,null,null,null,null,null,null,3,356
 testScript,TS-798,Test,null,UC-956 : 1,Test,TC-84 : LoginTest,11,Test,Test,266
-testScript,TS-269,as,null,null,null,null,null,as,null,647
+testScript,TS-269,as,null,null,null,null,null,null,as,647
+testScript,TS-714,4,null,null,null,null,null,null,4,927
+testScript,TS-312,3,null,null,null,null,null,null,3,525
 testScriptDetail,TSD-846,2,2,None,2,TS-359,11-10-2024
 testScriptDetail,TSD-149,1,1,None,1,TS-479,31-10-2024
 testScriptDetail,TSD-220,1,1,None,1,TS-479,31-10-2024
@@ -24,3 +32,6 @@ testScriptDetail,TSD-586,5,5,None,5,TS-400,29-11-2024
 testScriptDetail,TSD-74,6,6,None,6,TS-400,29-11-2024
 testScriptDetail,TSD-842,7,7,None,7,TS-400,29-11-2024
 testScriptDetail,TSD-503,+,+,None,+,TS-400,29-11-2024
+testCase,TC-185,4,null,null,null,4,881,0,0
+testCase,TC-245,s,null,null,null,s,506,null,null
+testCase,TC-523,s,null,null,null,s,433,null,null

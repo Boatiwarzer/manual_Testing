@@ -85,7 +85,6 @@ public class TestCaseAddController {
     private String tcId;
     private String projectName1 = "uc", projectName = "125", directory = "data";
     private TestCaseList testCaseList = new TestCaseList();
-    //private ArrayList<Object> objects = (ArrayList) FXRouter.getData();
     private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
     private TestCaseDetail selectedItem;
     private TestCase testCase;

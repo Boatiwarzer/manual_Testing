@@ -53,7 +53,11 @@ public class TestCaseFileDataSource implements DataSource<TestCaseList>, ManageD
                             data[3].trim(), // steps
                             data[4].trim(), // inputData
                             data[5].trim(),
-                            data[6].trim()// expected
+                            data[6].trim(),// expected
+                            Integer.parseInt(data[7].trim()),
+                            data[8].trim(),
+                            data[9].trim()// expected
+
                     );
 
                     // Add the detail to the list
@@ -119,6 +123,9 @@ public class TestCaseFileDataSource implements DataSource<TestCaseList>, ManageD
                 testCase.getDateTC() + "," +
                 testCase.getUseCase() + "," +
                 testCase.getDescriptionTC() + "," +
-                testCase.getNote();
+                testCase.getNote() + "," +
+                testCase.getPosition()+ "," +
+                testCase.getPreCon() + "," +
+                testCase.getPostCon();
     }
 }

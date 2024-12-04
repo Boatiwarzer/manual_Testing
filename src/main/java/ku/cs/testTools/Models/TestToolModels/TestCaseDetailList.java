@@ -2,10 +2,10 @@ package ku.cs.testTools.Models.TestToolModels;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Iterator;
 
 @Data
 @AllArgsConstructor
@@ -16,7 +16,7 @@ public class TestCaseDetailList {
         testCaseDetailList = new ArrayList<TestCaseDetail>();
     }
 
-    public void addTestScriptDetail(TestCaseDetail testCaseDetail) {
+    public void addTestCaseDetail(TestCaseDetail testCaseDetail) {
         testCaseDetailList.add(testCaseDetail);
     }
     public TestCaseDetail findTCById(String id) {
@@ -60,5 +60,24 @@ public class TestCaseDetailList {
     }
     public void sort(Comparator<TestCaseDetail> cmp) {
         testCaseDetailList.sort(cmp);
+    }
+
+    public void deleteTestCaseDetailByTestScriptID(String id) {
+        boolean found = false;
+
+        // Use an iterator to safely remove items while iterating
+        Iterator<TestCaseDetail> iterator = testCaseDetailList.iterator();
+        while (iterator.hasNext()) {
+            TestCaseDetail existing = iterator.next();
+            if (existing.getIdTC().equals(id)) {
+                iterator.remove(); // Safely remove the item
+                found = true;
+            }
+        }
+
+        // Log or handle the case where no matching item was found
+        if (!found) {
+            System.out.println("No TestCaseDetail found with ID: " + id);
+        }
     }
 }

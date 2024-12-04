@@ -60,7 +60,8 @@ public class TestFlowPositionListFileDataSource implements DataSource<TestFlowPo
                             Double.parseDouble(data[3].trim()), // yPosition
                             Double.parseDouble(data[4].trim()), // fitWidth
                             Double.parseDouble(data[5].trim()), // fitHeight
-                            Double.parseDouble(data[6].trim()) // rotation
+                            Double.parseDouble(data[6].trim())
+                            //data[7].trim()// rotation
                             //Integer.parseInt(data[7].trim()) // subsystemID
                     );
                     testFlowPositionList.addPosition(testFlowPosition);
@@ -85,160 +86,14 @@ public class TestFlowPositionListFileDataSource implements DataSource<TestFlowPo
 
     @Override
     public void writeData(TestFlowPositionList testFlowPositionList) {
-//        // Import actorList from CSV
-//        ActorListFileDataSource actorListFileDataSource = new ActorListFileDataSource(directory, fileName);
-//        ActorList actorList = actorListFileDataSource.readData();
-//        // Import componentPreferenceList from CSV
-//        ComponentPreferenceListFileDataSource componentPreferenceListFileDataSource = new ComponentPreferenceListFileDataSource(directory, fileName);
-//        ComponentPreferenceList componentPreferenceList = componentPreferenceListFileDataSource.readData();
-//        // Import connectionList from CSV
-//        ConnectionListFileDataSource connectionListFileDataSource = new ConnectionListFileDataSource(directory, fileName);
-//        ConnectionList connectionList = connectionListFileDataSource.readData();
-//        // Import noteList from CSV
-//        NoteListFileDataSource noteListFileDataSource = new NoteListFileDataSource(directory, fileName);
-//        NoteList noteList = noteListFileDataSource.readData();
-//        // Import preferenceList from CSV
-//        PreferenceListFileDataSource preferenceListFileDataSource = new PreferenceListFileDataSource(directory, fileName);
-//        PreferenceList preferenceList = preferenceListFileDataSource.readData();
-//        // Import subsystemList from CSV
-//        SubSystemListFileDataSource subsystemListFileDataSource = new SubSystemListFileDataSource(directory, fileName);
-//        SubSystemList subsystemList = subsystemListFileDataSource.readData();
-//        // Import useCaseDetailList from CSV
-//        ku.cs.testTools.Services.UsecaseServices.UseCaseDetailListFileDataSource useCaseDetailListFileDataSource = new UseCaseDetailListFileDataSource(directory, fileName);
-//        UseCaseDetailList useCaseDetailList = useCaseDetailListFileDataSource.readData();
-//        // Import useCaseList from CSV
-//        ku.cs.testTools.Services.UsecaseServices.UseCaseListFileDataSource useCaseListFileDataSource = new UseCaseListFileDataSource(directory, fileName);
-//        UseCaseList useCaseList = useCaseListFileDataSource.readData();
-//        // Import useCaseSystemList from CSV
-//        UseCaseSystemListFileDataSource useCaseSystemListFileDataSource = new UseCaseSystemListFileDataSource(directory, fileName);
-//        UseCaseSystemList useCaseSystemList = useCaseSystemListFileDataSource.readData();
-//
-//        //File writer
-//        String filePath = directory + File.separator + fileName;
-//        File file = new File(filePath);
-//        FileWriter writer = null;
-//        BufferedWriter buffer = null;
-//        try {
-//            writer = new FileWriter(file, StandardCharsets.UTF_8);
-//            buffer = new BufferedWriter(writer);
-//
-//            // Write ActorList to CSV
-//            for (Actor actor : actorList.getActorList()) {
-//                String line = actorListFileDataSource.createLine(actor);
-//                buffer.append(line);
-//                buffer.newLine();
-//            }
-//
-//            // Write ComponentPreferenceList to CSV
-//            for (ComponentPreference componentPreference : componentPreferenceList.getComponentPreferenceList()) {
-//                String line = componentPreferenceListFileDataSource.createLine(componentPreference);
-//                buffer.append(line);
-//                buffer.newLine();
-//            }
-//
-//            // Write ConnectionList to CSV
-//            for (Connection connection : connectionList.getConnectionList()) {
-//                String line = connectionListFileDataSource.createLine(connection);
-//                buffer.append(line);
-//                buffer.newLine();
-//            }
-//
-//            // Write NoteList to CSV
-//            for (Note note : noteList.getNoteList()) {
-//                String line = noteListFileDataSource.createLine(note);
-//                buffer.append(line);
-//                buffer.newLine();
-//            }
-//
-//            // Write PositionList to CSV
-//            for (Position position : positionList.getPositionList()) {
-//                String line = createLine(position);
-//                buffer.append(line);
-//                buffer.newLine();
-//            }
-//
-//            // Write PreferenceList to CSV
-//            for (Preference preference : preferenceList.getPreferenceList()) {
-//                String line = preferenceListFileDataSource.createLine(preference);
-//                buffer.append(line);
-//                buffer.newLine();
-//            }
-//
-//            // Write subSystemList to CSV
-//            for (SubSystem subsystem : subsystemList.getSubSystemList()) {
-//                String line = subsystemListFileDataSource.createLine(subsystem);
-//                buffer.append(line);
-//                buffer.newLine();
-//            }
-//
-//            // Write UseCaseDetailList to CSV
-//            for (UseCaseDetail useCaseDetail : useCaseDetailList.getUseCaseDetailList()) {
-//                String line = useCaseDetailListFileDataSource.createLine(useCaseDetail);
-//                buffer.append(line);
-//                buffer.newLine();
-//            }
-//
-//            // Write UseCaseList to CSV
-//            for (UseCase useCase : useCaseList.getUseCaseList()) {
-//                String line = useCaseListFileDataSource.createLine(useCase);
-//                buffer.append(line);
-//                buffer.newLine();
-//            }
-//
-//            // Write UseCaseSystemList to CSV
-//            for (UseCaseSystem useCaseSystem :useCaseSystemList.getSystemList()){
-//                String line = useCaseSystemListFileDataSource.createLine(useCaseSystem);
-//                buffer.append(line);
-//                buffer.newLine();
-//            }
-//
-//            buffer.close();
-//
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-
-        // File writer
-//        String filePath = directory + File.separator + fileName;
-//        File file = new File(filePath);
-//        List<String> fileLines = new ArrayList<>();
-//
-//
-//        // อ่านข้อมูลเดิมในไฟล์ถ้ามี
-//        if (file.exists()) {
-//            try {
-//                fileLines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
-//
-//        // อัปเดตข้อมูลที่มีอยู่แล้ว หรือเพิ่มข้อมูลใหม่
-//        for (TestFlowPosition testFlowPosition : testFlowPositionList.getPositionList()) {
-//            String newLine =  createLine(testFlowPosition);
-//            boolean updated = false;
-//            for (int i = 0; i < fileLines.size(); i++) {
-//                String line = fileLines.get(i);
-//                if (line.contains(String.valueOf(testFlowPosition.getPositionID()))) { // เช็คว่า ID ตรงกันหรือไม่
-//                    fileLines.set(i, newLine); // เขียนทับบรรทัดเดิม
-//                    updated = true;
-//                    break;
-//                }
-//            }
-//            if (!updated) {
-//                fileLines.add(newLine); // เพิ่มข้อมูลใหม่ถ้าไม่เจอ ID เดิม
-//            }
-//        }
-//
-//        // เขียนข้อมูลทั้งหมดกลับไปที่ไฟล์
-//        try (BufferedWriter buffer = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8, false))) { // false สำหรับเขียนทับไฟล์
-//            for (String line : fileLines) {
-//                buffer.write(line);
-//                buffer.newLine();
-//            }
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
+        TestScriptFileDataSource testScriptListDataSource = new TestScriptFileDataSource(directory, fileName);
+        TestScriptList testScriptList = testScriptListDataSource.readData();
+        TestScriptDetailFIleDataSource testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, fileName);
+        TestScriptDetailList testScriptDetailList = testScriptDetailListDataSource.readData();
+        TestCaseFileDataSource testCaseListDataSource = new TestCaseFileDataSource(directory,fileName);
+        TestCaseList testCaseList = testCaseListDataSource.readData();
+        TestCaseDetailFileDataSource testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory,fileName);
+        TestCaseDetailList testCaseDetailList = testCaseDetailListDataSource.readData();
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
         FileWriter writer = null;
@@ -250,7 +105,29 @@ public class TestFlowPositionListFileDataSource implements DataSource<TestFlowPo
                 String line = createLine(position);
                 buffer.append(line);
                 buffer.newLine();
-            }buffer.close();
+            }
+            for (TestScript testScript : testScriptList.getTestScriptList()){
+                String line = testScriptListDataSource.createLine(testScript);
+                buffer.append(line);
+                buffer.newLine();
+            }
+            for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()){
+                String line = testScriptDetailListDataSource.createLine(testScriptDetail);
+                buffer.append(line);
+                buffer.newLine();
+            }
+            for (TestCase testCase : testCaseList.getTestCaseList()){
+                String line = testCaseListDataSource.createLine(testCase);
+                buffer.append(line);
+                buffer.newLine();
+            }
+            for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()){
+                String line = testCaseDetailListDataSource.createLine(testCaseDetail);
+                buffer.append(line);
+                buffer.newLine();
+            }
+
+            buffer.close();
 
         } catch (Exception e) {
             throw new RuntimeException(e);

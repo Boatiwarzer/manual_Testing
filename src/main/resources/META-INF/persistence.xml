@@ -12,6 +12,7 @@
         <class>ku.cs.testTools.Models.TestToolModels.TestFlowPosition</class>
         <class>ku.cs.testTools.Models.TestToolModels.UseCase</class>
         <class>ku.cs.testTools.Models.TestToolModels.UseCaseDetail</class>
+        <class>ku.cs.testTools.Models.TestToolModels.Decision</class>
 
         <properties>
 

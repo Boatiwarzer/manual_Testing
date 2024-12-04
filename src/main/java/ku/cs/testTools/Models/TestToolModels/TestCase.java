@@ -25,8 +25,34 @@ public class TestCase {
     @OneToMany(mappedBy = "testCase")
     private List<TestCaseDetail> testCaseList;
     private String idTCDList;
+    private int position;
+    @Column(name = "pre_con") // Maps to `precon` in the database
+    private String preCon;
 
+    @Column(name = "post_con") // Maps to `postcon` in the database
+    private String postCon;
 
+    public TestCase(String idTC, String nameTC, String dateTC, String useCase, String descriptionTC, String note, int position, String preCon, String postCon) {
+        this.idTC = idTC;
+        this.nameTC = nameTC;
+        this.dateTC = dateTC;
+        this.useCase = useCase;
+        this.descriptionTC = descriptionTC;
+        this.note = note;
+        this.position = position;
+        this.preCon = preCon;
+        this.postCon = postCon;
+    }
+
+    public TestCase(String idTC, String nameTC, String dateTC, String useCase, String descriptionTC, String note, int position) {
+        this.idTC = idTC;
+        this.nameTC = nameTC;
+        this.dateTC = dateTC;
+        this.useCase = useCase;
+        this.descriptionTC = descriptionTC;
+        this.note = note;
+        this.position = position;
+    }
 
     public TestCase(String idTC, String nameTC, String dateTC, String useCase, String descriptionTC, String note) {
         this.idTC = idTC;
@@ -37,15 +63,15 @@ public class TestCase {
         this.note = note;
     }
 
-    public TestCase(String idTC, String nameTC, String dateTC, String useCase, String descriptionTC, String note, String idTCDList) {
-        this.idTC = idTC;
-        this.nameTC = nameTC;
-        this.dateTC = dateTC;
-        this.useCase = useCase;
-        this.descriptionTC = descriptionTC;
-        this.note = note;
-        this.idTCDList = idTCDList;
-    }
+//    public TestCase(String idTC, String nameTC, String dateTC, String useCase, String descriptionTC, String note, String idTCDList) {
+//        this.idTC = idTC;
+//        this.nameTC = nameTC;
+//        this.dateTC = dateTC;
+//        this.useCase = useCase;
+//        this.descriptionTC = descriptionTC;
+//        this.note = note;
+//        this.idTCDList = idTCDList;
+//    }
 
     @Override
     public final boolean equals(Object o) {
