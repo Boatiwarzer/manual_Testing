@@ -19,7 +19,7 @@ public class TestResult {
     private String nameTR;
     private String dateTR;
     private String noteTR;
-
+    private String statusTR;
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;
@@ -33,11 +33,12 @@ public class TestResult {
         return getClass().hashCode();
     }
 
-    public TestResult(String idTR, String nameTR, String dateTR, String noteTR) {
+    public TestResult(String idTR, String nameTR, String dateTR, String noteTR, String statusTR) {
         this.idTR = idTR;
         this.nameTR = nameTR;
         this.dateTR = dateTR;
         this.noteTR = noteTR;
+        this.statusTR = statusTR;
     }
     public String setDateTR() {
         LocalDateTime dateTime = LocalDateTime.now();

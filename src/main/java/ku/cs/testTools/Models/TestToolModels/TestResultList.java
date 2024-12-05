@@ -12,16 +12,17 @@ import java.util.Comparator;
 @AllArgsConstructor
 public class TestResultList {
     private ArrayList<TestResult> testResultList;
+
     public TestResultList() {
         testResultList = new ArrayList<TestResult>();
     }
-
     public void addTestResult(TestResult testResult) {
         testResultList.add(testResult);
     }
     public void clear() {
         testResultList.clear();
     }
+
     public TestResult findTRById(String idTR) {
         for (TestResult testResult : testResultList) {
             if (testResult.isId(idTR) ) {

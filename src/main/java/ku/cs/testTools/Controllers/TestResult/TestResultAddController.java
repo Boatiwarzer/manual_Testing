@@ -4,6 +4,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
@@ -14,6 +16,7 @@ import ku.cs.testTools.Services.TestTools.TestResultListFileDataSource;
 import ku.cs.testTools.Services.TestTools.UseCaseListFileDataSource;
 import org.controlsfx.control.textfield.TextFields;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -212,28 +215,90 @@ public class TestResultAddController {
         configs.add(new StringConfiguration("title:TS-ID.", "field:tsIdTRD"));
         configs.add(new StringConfiguration("title:Actor", "field:actorTRD"));
         configs.add(new StringConfiguration("title:Description", "field:descriptTRD"));
+        configs.add(new StringConfiguration("title:Input Data", "field:inputdataTRD"));
         configs.add(new StringConfiguration("title:Test Steps", "field:stepsTRD"));
         configs.add(new StringConfiguration("title:Expected Result.", "field:expectedTRD"));
         configs.add(new StringConfiguration("title:Actual Result.", "field:actualTRD"));
         configs.add(new StringConfiguration("title:Status", "field:statusTRD"));
+        configs.add(new StringConfiguration("title:Priority", "field:priorityTRD"));
         configs.add(new StringConfiguration("title:Date.", "field:dateTRD"));
         configs.add(new StringConfiguration("title:Tester", "field:testerTRD"));
+        configs.add(new StringConfiguration("title:Image Result", "field:imageTRD"));
+        configs.add(new StringConfiguration("title:Approval", "field:approveTRD"));
+        configs.add(new StringConfiguration("title:Remark", "field:remarkTRD"));
 
         int index = 0;
 
         // Create and add columns
         for (StringConfiguration conf : configs) {
             TableColumn<TestResultDetail, String> col = new TableColumn<>(conf.get("title"));
-            if (index <= 1) {  // ถ้าเป็นคอลัมน์แรก
-                col.setPrefWidth(80);
-                col.setMaxWidth(80);   // จำกัดขนาดสูงสุดของคอลัมน์แรก
-                col.setMinWidth(80); // ตั้งค่าขนาดคอลัมน์แรก
-            }
             col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
 
+            // กำหนดเงื่อนไขการแสดงผลเฉพาะของคอลัมน์
+            if (conf.get("field").equals("stepsTRD")) {
+                col.setCellFactory(column -> new TableCell<>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            setText(null);
+                        } else {
+                            setText(item.replace("|", "\n"));
+                        }
+                    }
+                });
+            }
+
+            // เพิ่มคอลัมน์แสดงภาพ
+            if (conf.get("field").equals("imageTRD")) {
+                col.setCellFactory(column -> new TableCell<>() {
+                    private final ImageView imageView = new ImageView();
+
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null || item.isEmpty()) {
+                            setGraphic(null); // หากไม่มีข้อมูลให้เคลียร์กราฟิก
+                        } else {
+                            // แยก path จากข้อมูล
+                            String[] parts = item.split(" : ");
+                            String imagePath = parts.length > 1 ? parts[1] : ""; // ใช้ส่วนหลังจาก " : "
+
+                            File file = new File(imagePath);
+                            if (file.exists()) {
+                                Image image = new Image(file.toURI().toString());
+                                imageView.setImage(image);
+                                imageView.setFitWidth(160); // กำหนดความกว้าง
+                                imageView.setFitHeight(90); // กำหนดความสูง
+                                imageView.setPreserveRatio(true); // รักษาสัดส่วนภาพ
+                                setGraphic(imageView); // แสดงผลในเซลล์
+                            } else {
+                                setGraphic(null); // หาก path ไม่ถูกต้อง ให้เว้นว่าง
+                            }
+                        }
+                    }
+                });
+                col.setPrefWidth(160);
+                col.setMaxWidth(160);
+                col.setMinWidth(160);
+            }
+
+//            col.setPrefWidth(100);
+//            col.setMaxWidth(100);
+//            col.setMinWidth(100);
+//            // ตั้งค่าขนาดคอลัมน์สำหรับ 2 คอลัมน์แรก
+//            if (index <= 1) {
+//                col.setPrefWidth(100);
+//                col.setMaxWidth(100);
+//                col.setMinWidth(100);
+//            } else {
+//                col.setPrefWidth(150); // กำหนดค่าขนาดเริ่มต้น
+//            }
+//            index++;
+
+            // เพิ่มคอลัมน์ลง TableView
             new TableColumns(col);
             onTableTestresult.getColumns().add(col);
-            index++;
         }
 
         //Add items to the table
@@ -257,26 +322,33 @@ public class TestResultAddController {
         configs.add(new StringConfiguration("title:TS-ID."));
         configs.add(new StringConfiguration("title:Actor"));
         configs.add(new StringConfiguration("title:Description"));
+        configs.add(new StringConfiguration("title:Input Data"));
         configs.add(new StringConfiguration("title:Test Steps"));
         configs.add(new StringConfiguration("title:Expected Result."));
         configs.add(new StringConfiguration("title:Actual Result."));
         configs.add(new StringConfiguration("title:Status"));
+        configs.add(new StringConfiguration("title:Priority"));
         configs.add(new StringConfiguration("title:Date."));
         configs.add(new StringConfiguration("title:Tester"));
-
+        configs.add(new StringConfiguration("title:Image Result"));
+        configs.add(new StringConfiguration("title:Approval"));
+        configs.add(new StringConfiguration("title:Remark"));
 
         int index = 0;
         for (StringConfiguration conf: configs) {
             TableColumn col = new TableColumn(conf.get("title"));
-            if (index <= 1) {  // ถ้าเป็นคอลัมน์แรก
-                col.setPrefWidth(80);
-                col.setMaxWidth(80);   // จำกัดขนาดสูงสุดของคอลัมน์แรก
-                col.setMinWidth(80); // ตั้งค่าขนาดคอลัมน์แรก
-            }
+            col.setPrefWidth(100);
+            col.setMaxWidth(100);
+            col.setMinWidth(100);
+//            if (index <= 1) {  // ถ้าเป็นคอลัมน์แรก
+//                col.setPrefWidth(100);
+//                col.setMaxWidth(100);   // จำกัดขนาดสูงสุดของคอลัมน์แรก
+//                col.setMinWidth(100); // ตั้งค่าขนาดคอลัมน์แรก
+//            }
             col.setSortable(false);
             col.setReorderable(false);
             onTableTestresult.getColumns().add(col);
-            index++;
+//            index++;
 
         }
     }
@@ -355,7 +427,7 @@ public class TestResultAddController {
             String nameTR = onTestNameField.getText();
             String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             String noteTR = onTestNoteField.getText();
-            testResult = new TestResult(idTR, nameTR, dateTR, noteTR);
+            testResult = new TestResult(idTR, nameTR, dateTR, noteTR, "In Tester");
 
             if (testResultDetailList != null){
                 FXRouter.popup("popup_add_testresult",testResultDetailList,testResult,null,true);
@@ -379,7 +451,7 @@ public class TestResultAddController {
             String nameTR = onTestNameField.getText();
             String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             String noteTR = onTestNoteField.getText();
-            testResult = new TestResult(idTR, nameTR, dateTR, noteTR);
+            testResult = new TestResult(idTR, nameTR, dateTR, noteTR,"Tester In Progress");
 
             if (selectedItem != null){
                 FXRouter.popup("popup_add_testresult",testResultDetailList,testResult,selectedItem,true);
@@ -400,7 +472,7 @@ public class TestResultAddController {
             String nameTR = onTestNameField.getText();
             String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             String noteTR = onTestNoteField.getText();
-            testResult = new TestResult(idTR, nameTR, dateTR, noteTR);
+            testResult = new TestResult(idTR, nameTR, dateTR, noteTR,"Tester In Progress");
             if (selectedItem != null){
                 FXRouter.popup("popup_delete_testresult",testResultDetailList,testResult,selectedItem,true);
             }
@@ -485,10 +557,10 @@ public class TestResultAddController {
             return;
         }
 
-        testResult = new TestResult(idTR, nameTR, dateTR, noteTR);
+        testResult = new TestResult(idTR, nameTR, dateTR, noteTR, "In Tester");
 
         // Save data to files
-        //DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+        // DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
         // DataSource<TestScriptDetailList> testScriptDetailListListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
 
         // Add or update test script

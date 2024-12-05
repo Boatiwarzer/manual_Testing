@@ -63,6 +63,7 @@ public class Main extends Application {
         FXRouter.when("popup_delete_testresult", packageStr1 + "popup_delete_testresult.fxml");
         FXRouter.when("role", packageStr1 + "role.fxml");
         FXRouter.when("LabelPage", packageStr1 + "label-page.fxml");
+        FXRouter.when("test_result_ir", packageStr1 + "test_result_ir.fxml");
 
 //        FXRouter.when("testflow_manager", packageStr1 + "testflow_manager.fxml");
 //        FXRouter.when("testresult_manager", packageStr1 + "testresult_manager.fxml");

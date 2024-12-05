@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.testTools.Controllers.TestResult.IRTestresultController">
+   <children>
+      <VBox prefHeight="700.0" prefWidth="1000.0" spacing="10.0">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="80.0" prefWidth="800.0" spacing="10.0">
+               <children>
+                  <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" prefHeight="100.0" prefWidth="200.0" text="IR Report">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="IRNameLabel" alignment="BOTTOM_LEFT" contentDisplay="CENTER" prefHeight="100.0" prefWidth="400.0" text="Name">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="IRIDLabel" alignment="BOTTOM_LEFT" contentDisplay="CENTER" prefHeight="100.0" prefWidth="150.0" text="ID">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="520.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <TableView fx:id="onTableIR" prefHeight="500.0" prefWidth="900.0">
+                    <columns>
+                      <TableColumn prefWidth="75.0" text="C1" />
+                      <TableColumn prefWidth="75.0" text="C2" />
+                    </columns>
+                  </TableView>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0" spacing="50.0">
+               <children>
+                  <Button fx:id="onCloseButton" mnemonicParsing="false" onAction="#onCloseButton" prefHeight="30.0" prefWidth="80.0" text="Close">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
