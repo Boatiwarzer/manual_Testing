@@ -139,7 +139,7 @@ public class PopupAddTestresultController {
     }
 
     private void setPriority() {
-        onPriorityComboBox.setItems(FXCollections.observableArrayList("None", "Low", "Medium", "High"));
+        onPriorityComboBox.setItems(FXCollections.observableArrayList("None", "Low", "Medium", "High", "Critical"));
         onPriorityComboBox.setValue("None");
     }
 
