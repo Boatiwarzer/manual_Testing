@@ -1,22 +1,34 @@
 package ku.cs.testTools.Controllers.TestResult;
 
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
+import javafx.util.Callback;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
+import ku.cs.testTools.Services.TestTools.IRreportDetailListFileDataSource;
+import ku.cs.testTools.Services.TestTools.IRreportListFileDataSource;
 import ku.cs.testTools.Services.DataSourceCSV.TestResultListFileDataSource;
 import ku.cs.testTools.Services.DataSourceCSV.TestResultDetailListFileDataSource;
 import org.controlsfx.control.textfield.TextFields;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class TestResultController {
@@ -28,7 +40,7 @@ public class TestResultController {
     private Hyperlink onClickTestcase, onClickTestflow, onClickTestresult, onClickTestscript, onClickUsecase;
 
     @FXML
-    private Button onCreateButton, onEditButton, onSearchButton;
+    private Button onCreateButton, onEditButton, onSearchButton, onIRButton;
 
     @FXML
     private TextField onSearchField;
@@ -49,9 +61,30 @@ public class TestResultController {
     private DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv"); //= new TestResultDetailListFileDataSource(directory, projectName + ".csv")
     private ArrayList<String> word = new ArrayList<>();
 
+    private String irId;
+    private String irdId;
+    private IRreport iRreport;
+    private IRreportList iRreportList = new IRreportList();
+    private IRreportDetail selectedItem;
+    private IRreportDetailList iRreportDetailList = new IRreportDetailList();
+    private static int idCounter = 1; // Counter for sequential IDs
+    private static final int MAX_ID = 999; // Upper limit for IDs
+    private final DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
+    private final DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
+
+    @FXML
+    private TableColumn<TestResult, String> imageColumn;
+
+    @FXML
+    private TableColumn<TestResult, String> pathColumn;
+
+    private ObservableList<TestResult> imageItems = FXCollections.observableArrayList();
+
     @FXML
     void initialize() {
         clearInfo();
+        randomIdIR();
+        randomIdIRD();
         if (FXRouter.getData() != null) {
             testResultList = testResultListDataSource.readData();
             testResultDetailList = testResultDetailListDataSource.readData();
@@ -110,6 +143,7 @@ public class TestResultController {
                     clearInfo();
                     System.out.println("Selected TestResult ID: " + (newValue != null ? newValue.getIdTR() : "null"));
                     onEditButton.setVisible(newValue.getIdTR() != null);
+                    onIRButton.setVisible(newValue.getIdTR() != null);
                     showInfo(newValue);
                     selectedTestResult = newValue;
                 }
@@ -143,6 +177,7 @@ public class TestResultController {
 
     private void loadListView(TestResultList testResultList) {
         onEditButton.setVisible(false);
+        onIRButton.setVisible(false);
         onSearchList.refresh();
         if (testResultList != null){
             testResultList.sort(new TestResultComparable());
@@ -195,12 +230,17 @@ public class TestResultController {
         configs.add(new StringConfiguration("title:TS-ID.", "field:tsIdTRD"));
         configs.add(new StringConfiguration("title:Actor", "field:actorTRD"));
         configs.add(new StringConfiguration("title:Description", "field:descriptTRD"));
+        configs.add(new StringConfiguration("title:Input Data", "field:inputdataTRD"));
         configs.add(new StringConfiguration("title:Test Steps", "field:stepsTRD"));
-        configs.add(new StringConfiguration("title:Expected Result.", "field:expectedTRD"));
-        configs.add(new StringConfiguration("title:Actual Result.", "field:actualTRD"));
+        configs.add(new StringConfiguration("title:Expected Result", "field:expectedTRD"));
+        configs.add(new StringConfiguration("title:Actual Result", "field:actualTRD"));
         configs.add(new StringConfiguration("title:Status", "field:statusTRD"));
+        configs.add(new StringConfiguration("title:Priority", "field:priorityTRD"));
         configs.add(new StringConfiguration("title:Date.", "field:dateTRD"));
         configs.add(new StringConfiguration("title:Tester", "field:testerTRD"));
+        configs.add(new StringConfiguration("title:Image Result", "field:imageTRD"));
+        configs.add(new StringConfiguration("title:Approval", "field:approveTRD"));
+        configs.add(new StringConfiguration("title:Remark", "field:remarkTRD"));
 
         int index = 0;
 
@@ -209,28 +249,67 @@ public class TestResultController {
             TableColumn<TestResultDetail, String> col = new TableColumn<>(conf.get("title"));
             col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
 
-            // เพิ่มเงื่อนไขสำหรับ Test Steps
+            // กำหนดเงื่อนไขการแสดงผลเฉพาะของคอลัมน์
             if (conf.get("field").equals("stepsTRD")) {
                 col.setCellFactory(column -> new TableCell<>() {
                     @Override
                     protected void updateItem(String item, boolean empty) {
                         super.updateItem(item, empty);
                         if (empty || item == null) {
-                            setText(null); // ถ้าไม่มีข้อมูล ให้เว้นว่าง
+                            setText(null);
                         } else {
-                            setText(item.replace("|", "\n")); // แปลง "|" เป็น "\n" เพื่อขึ้นบรรทัดใหม่
+                            setText(item.replace("|", "\n"));
                         }
                     }
                 });
             }
 
-            // ตั้งค่าขนาดคอลัมน์สำหรับ 2 คอลัมน์แรก
-            if (index <= 1) {
-                col.setPrefWidth(80);
-                col.setMaxWidth(80);
-                col.setMinWidth(80);
+            // เพิ่มคอลัมน์แสดงภาพ
+            if (conf.get("field").equals("imageTRD")) {
+                col.setCellFactory(column -> new TableCell<>() {
+                    private final ImageView imageView = new ImageView();
+
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null || item.isEmpty()) {
+                            setGraphic(null); // หากไม่มีข้อมูลให้เคลียร์กราฟิก
+                        } else {
+                            // แยก path จากข้อมูล
+                            String[] parts = item.split(" : ");
+                            String imagePath = parts.length > 1 ? parts[1] : ""; // ใช้ส่วนหลังจาก " : "
+
+                            File file = new File(imagePath);
+                            if (file.exists()) {
+                                Image image = new Image(file.toURI().toString());
+                                imageView.setImage(image);
+                                imageView.setFitWidth(160); // กำหนดความกว้าง
+                                imageView.setFitHeight(90); // กำหนดความสูง
+                                imageView.setPreserveRatio(true); // รักษาสัดส่วนภาพ
+                                setGraphic(imageView); // แสดงผลในเซลล์
+                            } else {
+                                setGraphic(null); // หาก path ไม่ถูกต้อง ให้เว้นว่าง
+                            }
+                        }
+                    }
+                });
+                col.setPrefWidth(160);
+                col.setMaxWidth(160);
+                col.setMinWidth(160);
             }
-            index++;
+//            col.setPrefWidth(100);
+//            col.setMaxWidth(100);
+//            col.setMinWidth(100);
+
+//            // ตั้งค่าขนาดคอลัมน์สำหรับ 2 คอลัมน์แรก
+//            if (index <= 1) {
+//                col.setPrefWidth(100);
+//                col.setMaxWidth(100);
+//                col.setMinWidth(100);
+//            } else {
+//                col.setPrefWidth(150); // กำหนดค่าขนาดเริ่มต้น
+//            }
+//            index++;
 
             // เพิ่มคอลัมน์ลง TableView
             new TableColumns(col);
@@ -259,26 +338,33 @@ public class TestResultController {
         configs.add(new StringConfiguration("title:TS-ID."));
         configs.add(new StringConfiguration("title:Actor"));
         configs.add(new StringConfiguration("title:Description"));
+        configs.add(new StringConfiguration("title:Input Data"));
         configs.add(new StringConfiguration("title:Test Steps"));
         configs.add(new StringConfiguration("title:Expected Result."));
         configs.add(new StringConfiguration("title:Actual Result."));
         configs.add(new StringConfiguration("title:Status"));
+        configs.add(new StringConfiguration("title:Priority"));
         configs.add(new StringConfiguration("title:Date."));
         configs.add(new StringConfiguration("title:Tester"));
-
+        configs.add(new StringConfiguration("title:Image Result"));
+        configs.add(new StringConfiguration("title:Approval"));
+        configs.add(new StringConfiguration("title:Remark"));
 
         int index = 0;
         for (StringConfiguration conf: configs) {
             TableColumn col = new TableColumn(conf.get("title"));
-            if (index <= 1) {  // ถ้าเป็นคอลัมน์แรก
-                col.setPrefWidth(80);
-                col.setMaxWidth(80);   // จำกัดขนาดสูงสุดของคอลัมน์แรก
-                col.setMinWidth(80); // ตั้งค่าขนาดคอลัมน์แรก
-            }
+            col.setPrefWidth(100);
+            col.setMaxWidth(100);
+            col.setMinWidth(100);
+//            if (index <= 1) {  // ถ้าเป็นคอลัมน์แรก
+//                col.setPrefWidth(100);
+//                col.setMaxWidth(100);   // จำกัดขนาดสูงสุดของคอลัมน์แรก
+//                col.setMinWidth(100); // ตั้งค่าขนาดคอลัมน์แรก
+//            }
             col.setSortable(false);
             col.setReorderable(false);
             onTableTestresult.getColumns().add(col);
-            index++;
+//            index++;
 
         }
     }
@@ -344,6 +430,118 @@ public class TestResultController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void randomIdIR(){
+        int min = 1;
+        int upperbound = 999;
+        String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
+        this.irId = String.format("IR-%s", random1);
+    }
+
+    public void randomIdIRD(){
+        int min = 1;
+        int upperbound = 999;
+        String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
+        this.irdId = String.format("IRD-%s", random1);
+    }
+
+    @FXML
+    void onIRButton(ActionEvent event) {
+        String idIR = irId;
+        String nameIR = testNameLabel.getText();
+        String dateIR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+        // Check if mandatory fields are empty
+        if (nameIR == null || nameIR.isEmpty()) {
+            showAlert("Input Error", "Please fill in all required fields.");
+            return;
+        }
+
+        iRreport = new IRreport(idIR, nameIR, dateIR);
+
+        String idTR = testIDLabel.getText();
+//        String
+//
+//        String idIRD = irdId;
+//        String testerIRD = "Tester";
+//        String tsIdIRD =
+//
+//        this.idIRD = idIRD;
+//        this.testerIRD = testerIRD;
+//        this.tsIdIRD = tsIdIRD;
+//        this.inputdataIRD = inputdataIRD;
+//        this.descriptIRD = descriptIRD;
+//        this.conditionIRD = conditionIRD;
+//        this.imageIRD = imageIRD;
+//        this.priorityIRD = priorityIRD;
+//        this.rcaIRD = rcaIRD;
+//        this.managerIRD = managerIRD;
+//        this.statusIRD = statusIRD;
+//        this.remarkIRD = remarkIRD;
+//        this.idIR = idIR;
+//
+//        String IdTS = onTestscriptIDComboBox.getValue();
+//
+//        String[] parts = IdTS.split(" : "); // แยกข้อความตาม " : "
+//        String result = parts[0]; // ดึงส่วนแรกออกมา
+//        System.out.println(result);
+//
+//        String date = onDate.getText();
+//        String descript = onDescription.getText();
+//        String actor = onActor.getText();
+//        String inputdata = onInputdataComboBox.getValue();
+//        String teststeps = onTeststeps.getText();;
+//        String expected = onExpected.getText();
+//        String actual = onActual.getText();
+//        String status = onStatusComboBox.getValue();
+//        String priority = onPriorityComboBox.getValue();
+//        String tester = onTester.getText();
+//        String image = onImage.getText();
+//        handleSaveAction();
+//        testResultDetail = new TestResultDetail(id, TrNo, IdTS, actor, descript, inputdata, teststeps, expected, actual, status, priority, date, tester, image, "Waiting", "Remark", idTR);
+//        testResultDetailList.addOrUpdateTestResultDetail(testResultDetail);
+//
+//        try {
+//            testResultDetail = null;
+//            clearInfo();
+//            FXRouter.goTo("test_result_add",testResultDetailList,testResult);
+//            System.out.println(testResultDetail);
+//            Node source = (Node) event.getSource();
+//            Stage stage = (Stage) source.getScene().getWindow();
+//            stage.close();
+//            System.out.println(testResultDetailList);
+//        } catch (IOException e) {
+//            System.err.println("ไปที่หน้า home ไม่ได้");
+//            System.err.println("ให้ตรวจสอบการกำหนด route");
+//        }
+//
+//        // Save data to files
+//        // DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+//        // DataSource<TestScriptDetailList> testScriptDetailListListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+//
+//        // Add or update test script
+//        iRreportList.addOrUpdateIRreport(iRreport);
+//
+//        // Write data to respective files
+//        iRreportListDataSource.writeData(iRreportList);
+//        iRreportDetailListDataSource.writeData(iRreportDetailList);
+//
+//        // Show success message
+//        showAlert("Success", "IR Report saved successfully!");
+        try {
+            FXRouter.popup("test_result_ir");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
     @FXML

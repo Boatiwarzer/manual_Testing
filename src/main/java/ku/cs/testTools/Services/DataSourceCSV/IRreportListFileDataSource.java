@@ -1,7 +1,7 @@
-package ku.cs.testTools.Services.DataSourceCSV;
+package ku.cs.testTools.Services.TestTools;
 
-import ku.cs.testTools.Models.TestToolModels.TestResult;
-import ku.cs.testTools.Models.TestToolModels.TestResultList;
+import ku.cs.testTools.Models.TestToolModels.IRreport;
+import ku.cs.testTools.Models.TestToolModels.IRreportList;
 import ku.cs.testTools.Services.DataSource;
 import ku.cs.testTools.Services.ManageDataSource;
 
@@ -11,11 +11,11 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestResultListFileDataSource implements DataSource<TestResultList>, ManageDataSource<TestResult> {
+public class IRreportListFileDataSource implements DataSource<IRreportList>, ManageDataSource<IRreport> {
     private String directory;
     private String fileName;
 
-    public TestResultListFileDataSource(String directory, String fileName) {
+    public IRreportListFileDataSource(String directory, String fileName) {
         this.directory = directory;
         this.fileName = fileName;
         checkFileIsExisted();
@@ -39,8 +39,8 @@ public class TestResultListFileDataSource implements DataSource<TestResultList>,
     }
 
     @Override
-    public TestResultList readData() {
-        TestResultList testResultList = new TestResultList();
+    public IRreportList readData() {
+        IRreportList iRreportList = new IRreportList();
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
         FileReader reader = null;
@@ -53,15 +53,13 @@ public class TestResultListFileDataSource implements DataSource<TestResultList>,
             String line = "";
             while ((line = buffer.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data[0].trim().equals("testResult")) {
-                    TestResult testResult = new TestResult(
+                if (data[0].trim().equals("iRreport")) {
+                    IRreport iRreport = new IRreport(
                             data[1].trim(), // data[1]
                             data[2].trim(), // data[2]
-                            data[3].trim(), // data[3]
-                            data[4].trim(), // data[4]
-                            data[5].trim()  // data[5]
+                            data[3].trim()  // data[3]
                     );
-                    testResultList.addOrUpdateTestResult(testResult);
+                    iRreportList.addOrUpdateIRreport(iRreport);
                 }
             }
         } catch (Exception e) {
@@ -79,10 +77,10 @@ public class TestResultListFileDataSource implements DataSource<TestResultList>,
             }
         }
 
-        return testResultList;
+        return iRreportList;
     }
     @Override
-    public void writeData(TestResultList testResultList) {
+    public void writeData(IRreportList iRreportList) {
         // File writer
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
@@ -98,12 +96,12 @@ public class TestResultListFileDataSource implements DataSource<TestResultList>,
         }
 
         // อัปเดตข้อมูลที่มีอยู่แล้ว หรือเพิ่มข้อมูลใหม่
-        for (TestResult testResult : testResultList.getTestResultList()) {
-            String newLine = createLine(testResult);
+        for (IRreport iRreport : iRreportList.getIRreportList()) {
+            String newLine = createLine(iRreport);
             boolean updated = false;
             for (int i = 0; i < fileLines.size(); i++) {
                 String line = fileLines.get(i);
-                if (line.contains(testResult.getIdTR())) { // เช็คว่า ID ตรงกันหรือไม่
+                if (line.contains(iRreport.getIdIR())) { // เช็คว่า ID ตรงกันหรือไม่
                     fileLines.set(i, newLine); // เขียนทับบรรทัดเดิม
                     updated = true;
                     break;
@@ -126,12 +124,10 @@ public class TestResultListFileDataSource implements DataSource<TestResultList>,
     }
 
     @Override
-    public String createLine(TestResult testResult) {
-        return "testResult,"
-                + testResult.getIdTR() + ","
-                + testResult.getNameTR() + ","
-                + testResult.getDateTR() + ","
-                + testResult.getNoteTR() + ","
-                + testResult.getStatusTR();
+    public String createLine(IRreport iRreport) {
+        return "iRreport,"
+                + iRreport.getIdIR() + ","
+                + iRreport.getNameIR() + ","
+                + iRreport.getDateIR();
     }
 }
