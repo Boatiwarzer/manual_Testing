@@ -1,6 +1,5 @@
 package ku.cs.testTools.Models.TestToolModels;
 
-import ku.cs.testTools.Models.UsecaseModels.Position;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -49,6 +48,20 @@ public class TestFlowPositionList {
         }
         return null;
     }
+    public TestFlowPosition findByPositionHaveName(String name) {
+        if (positionList == null || name == null) {
+            return null; // Return early if inputs are invalid
+        }
+
+        for (TestFlowPosition position : positionList) {
+            String positionName = position.getName();
+            if (!positionName.equals("null") && positionName.equals(name)) {
+                return position;
+            }
+        }
+        return null;
+    }
+
 
     public double findLastPositionId() {
         double lastPositionId = 0;

@@ -8,6 +8,7 @@ module ku.cs {
     requires jakarta.persistence;
     requires modelmapper;
     requires org.controlsfx.controls; // Add this line for ControlsFX
+    requires org.hibernate.orm.core;
 
     opens ku.cs.testTools.Controllers.Home to javafx.fxml, jakarta.persistence, lombok, org.controlsfx.controls;
     opens ku.cs.testTools.Controllers.UseCase to javafx.fxml, jakarta.persistence, lombok, org.controlsfx.controls;
@@ -15,10 +16,8 @@ module ku.cs {
     opens ku.cs.testTools.Controllers.TestScript to javafx.fxml, jakarta.persistence, lombok, org.controlsfx.controls;
     opens ku.cs.testTools.Controllers.TestFlow to javafx.fxml, jakarta.persistence, lombok, org.controlsfx.controls;
     opens ku.cs.testTools.Controllers.TestResult to javafx.fxml, jakarta.persistence, lombok, org.controlsfx.controls;
-    opens ku.cs.testTools.Controllers.usecasedesiner to javafx.fxml, jakarta.persistence, lombok, org.controlsfx.controls;
-    opens ku.cs.testTools.Models.TestToolModels to javafx.base, jakarta.persistence, lombok, org.controlsfx.controls;
-    opens ku.cs.testTools.Models.UsecaseModels to javafx.base, jakarta.persistence, lombok, org.controlsfx.controls;
-    opens ku.cs.testTools.Models.Manager to javafx.base, jakarta.persistence, lombok, org.controlsfx.controls;
+    opens ku.cs.testTools.Models.TestToolModels to jakarta.persistence, lombok, jakarta.transaction,jakarta.activation,jakarta.inject, org.hibernate.orm.core;
+    opens ku.cs.testTools.Models.Manager to  jakarta.persistence, lombok, org.controlsfx.controls;
 
     exports ku.cs.testTools.Controllers.Home;
     exports ku.cs.testTools.Controllers.UseCase;
@@ -26,10 +25,8 @@ module ku.cs {
     exports ku.cs.testTools.Controllers.TestScript;
     exports ku.cs.testTools.Controllers.TestFlow;
     exports ku.cs.testTools.Controllers.TestResult;
-    exports ku.cs.testTools.Controllers.usecasedesiner;
     exports ku.cs;
     exports ku.cs.testTools.Models.TestToolModels;
-    exports ku.cs.testTools.Models.UsecaseModels;
     exports ku.cs.testTools.Models.Manager;
 
 

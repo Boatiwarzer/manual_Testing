@@ -1,8 +1,6 @@
 package ku.cs.testTools.Models.TestToolModels;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Objects;
@@ -13,16 +11,18 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Entity
 @Data
-@AllArgsConstructor
+@Table(name = "test_scripts_detail")
+@NamedQuery(name = "find testscriptdetail by id", query = "Select t from TestScriptDetail t where t.idTSD = :id")
 public class TestScriptDetail {
     @Id
+    @Access(AccessType.FIELD)
     private String idTSD;
     private String testNo;
     private String steps;
     private String inputData;
     private String expected;
-    @ManyToOne
-    private TestScript testScript;
+//    @ManyToOne
+//    private TestScript testScript;
     private String idTS;
     private String dateTSD;
 
@@ -44,14 +44,6 @@ public class TestScriptDetail {
         this.expected = expected;
     }
 
-    public TestScriptDetail(String idTSD, String testNo, String steps, String inputData, String expected, TestScript testScript) {
-        this.idTSD = idTSD;
-        this.testNo = testNo;
-        this.steps = steps;
-        this.inputData = inputData;
-        this.expected = expected;
-        this.testScript = testScript;
-    }
 
     public TestScriptDetail(String idTSD, String testNo, String steps, String inputData, String expected, String idTS) {
         this.idTSD = idTSD;
@@ -62,15 +54,6 @@ public class TestScriptDetail {
         this.idTS = idTS;
     }
 
-    public TestScriptDetail(String idTSD, String testNo, String steps, String inputData, String expected, TestScript testScript, String idTS) {
-        this.idTSD = idTSD;
-        this.testNo = testNo;
-        this.steps = steps;
-        this.inputData = inputData;
-        this.expected = expected;
-        this.testScript = testScript;
-        this.idTS = idTS;
-    }
 
     @Override
     public final boolean equals(Object o) {

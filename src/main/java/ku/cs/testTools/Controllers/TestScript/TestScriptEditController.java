@@ -12,10 +12,10 @@ import javafx.scene.input.MouseEvent;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
-import ku.cs.testTools.Services.TestTools.TestCaseFileDataSource;
-import ku.cs.testTools.Services.TestTools.TestScriptDetailFIleDataSource;
-import ku.cs.testTools.Services.TestTools.TestScriptFileDataSource;
-import ku.cs.testTools.Services.TestTools.UseCaseListFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.TestCaseFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.TestScriptDetailFIleDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.TestScriptFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.UseCaseListFileDataSource;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.IOException;
@@ -632,8 +632,6 @@ public class TestScriptEditController {
     @FXML
     void onDeleteButton(ActionEvent event) {
         try {
-            testScriptList.deleteTestScript(testScript);
-            testScriptListDataSource.writeData(testScriptList);
             if (testScript != null){
                 FXRouter.popup("popup_delete_testscript",null,testScript,true);
             }

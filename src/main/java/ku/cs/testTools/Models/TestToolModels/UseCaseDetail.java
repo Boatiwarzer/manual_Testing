@@ -1,7 +1,6 @@
 package ku.cs.testTools.Models.TestToolModels;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,8 +9,11 @@ import lombok.Setter;
 @Data
 @Entity
 @Getter
+@Table(name = "use_case_detail")
+@NamedQuery(name = "find usecasedetail by id", query = "Select t from UseCaseDetail t where t.useCaseID = :id")
 public class UseCaseDetail {
-//    @Id
+    @Id
+    @Access(AccessType.FIELD)
     private String useCaseID;
     private String action;
     private int number;
@@ -22,6 +24,10 @@ public class UseCaseDetail {
         this.action = action;
         this.number = number;
         this.detail = detail;
+    }
+
+    public UseCaseDetail() {
+
     }
 
     public String getUseCaseID() {

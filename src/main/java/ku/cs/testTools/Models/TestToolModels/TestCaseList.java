@@ -72,5 +72,39 @@ public class TestCaseList {
     }
 
 
+    public TestCase findByPositionId(int positionId) {
+        for (TestCase testCase : testCaseList) {
+            if (testCase.getPosition() == positionId) {
+                return testCase;
+            }
+        }
+        return null;
+    }
+    public void deleteTestCaseByPositionID(int id) {
+        boolean found = false;
 
+        // Iterate through the list to find and remove the item with the matching position ID
+        for (int i = 0; i < testCaseList.size(); i++) {
+            TestCase existing = testCaseList.get(i);
+            if (existing.getPosition() == id) {
+                testCaseList.remove(i);
+                found = true;
+                break;
+            }
+        }
+
+        // Log or handle the case where no matching item was found
+        if (!found) {
+            System.out.println("No TestScript found with position ID: " + id);
+        }
+    }
+
+    public TestCase findTCByPosition(int id) {
+        for (TestCase testCase : testCaseList) {
+            if (testCase.getPosition() == id ) {
+                return testCase;
+            }
+        }
+        return null;
+    }
 }

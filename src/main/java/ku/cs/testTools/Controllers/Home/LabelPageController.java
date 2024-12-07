@@ -12,14 +12,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
-import ku.cs.testTools.Models.UsecaseModels.*;
-import ku.cs.testTools.Models.UsecaseModels.UseCase;
-import ku.cs.testTools.Models.UsecaseModels.UseCaseList;
 import ku.cs.testTools.Services.DataSource;
-import ku.cs.testTools.Services.TestTools.TestFlowPositionListFileDataSource;
-import ku.cs.testTools.Services.TestTools.TestScriptDetailFIleDataSource;
-import ku.cs.testTools.Services.TestTools.TestScriptFileDataSource;
-import ku.cs.testTools.Services.UsecaseServices.*;
+import ku.cs.testTools.Services.DataSourceCSV.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,10 +38,16 @@ public class LabelPageController {
     private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
     private TestScript testScript = new TestScript();
     private TestScriptList testScriptList = new TestScriptList();
+    private TestCaseList testCaseList = new TestCaseList();
+    private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
+    private TestCaseDetail testCaseDetail;
+    private TestCase testCase = new TestCase();
     private final DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+    private final DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory,projectName + ".csv");
+    private final DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory,projectName + ".csv");
 
     private int id;
-    private String tsId;
+    private String objectID;
     @FXML
     void initialize() {
         if (FXRouter.getData() != null) {
@@ -62,6 +62,16 @@ public class LabelPageController {
             if (Objects.equals(type, "Rectangle-curve")) {
                 labelTextField.setPrefWidth(130.0);
                 testScriptList = testScriptListDataSource.readData();
+                testFlowPositionList = testFlowPositionListDataSource.readData();
+
+            }else if (Objects.equals(type, "Rectangle")){
+                labelTextField.setPrefWidth(130.0);
+                testCaseList = testCaseListDataSource.readData();
+                testFlowPositionList = testFlowPositionListDataSource.readData();
+
+            } else if (Objects.equals(type, "Kite")){
+                noteTextArea.setVisible(false);
+                labelTextField.setPrefWidth(130.0);
                 testFlowPositionList = testFlowPositionListDataSource.readData();
 
             }
@@ -124,13 +134,26 @@ public class LabelPageController {
         if (type.equals("Rectangle-curve")){
             randomIdTS();
             randomId();
-            testScript = new TestScript(tsId,label,null,null,null,null,null,null,note,id);
-           testFlowPosition = new TestFlowPosition(id,width,height,layoutX,layoutY,0);
-           testFlowPositionList.addPosition(testFlowPosition);
-            //testScriptListDataSource.writeData(testScriptList);
+            testScript = new TestScript(objectID,label,null,null,null,null,null,null,note,id);
+            testFlowPosition = new TestFlowPosition(id,width,height,layoutX,layoutY,0,null);
+            testFlowPositionList.addPosition(testFlowPosition);
             testFlowPositionListDataSource.writeData(testFlowPositionList);
-           objects.add(testScript);
-           //objects.add(testFlowPositionList);
+            objects.add(testScript);
+        }else if (type.equals("Rectangle")){
+            randomIdTC();
+            randomId();
+            testCase = new TestCase(objectID,label,null,null,null,note,id,null,null);
+            testFlowPosition = new TestFlowPosition(id,width,height,layoutX,layoutY,0,null);
+            testFlowPositionList.addPosition(testFlowPosition);
+            testFlowPositionListDataSource.writeData(testFlowPositionList);
+            objects.add(testCase);
+
+        }else if (type.equals("Kite")){
+            randomId();
+            testFlowPosition = new TestFlowPosition(id,width,height,layoutX,layoutY,0,label);
+            testFlowPositionList.addPosition(testFlowPosition);
+            testFlowPositionListDataSource.writeData(testFlowPositionList);
+
         }
             FXRouter.goTo("test_flow", objects);
 
@@ -143,14 +166,20 @@ public class LabelPageController {
     private void randomId() {
         int min = 1;
         int upperbound = 999;
-        int random1 = ((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
-        this.id = random1;
+        this.id = ((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
     }
     public void randomIdTS(){
         int min = 1;
         int upperbound = 999;
         String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
-        this.tsId = String.format("TS-%s", random1);
+        this.objectID = String.format("TS-%s", random1);
+
+    }
+    public void randomIdTC(){
+        int min = 1;
+        int upperbound = 999;
+        String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
+        this.objectID = String.format("TC-%s", random1);
 
     }
 }

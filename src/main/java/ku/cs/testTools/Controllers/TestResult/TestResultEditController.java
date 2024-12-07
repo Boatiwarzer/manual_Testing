@@ -12,10 +12,8 @@ import javafx.scene.input.MouseEvent;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
-import ku.cs.testTools.Services.TestTools.TestCaseFileDataSource;
-import ku.cs.testTools.Services.TestTools.TestResultDetailListFileDataSource;
-import ku.cs.testTools.Services.TestTools.TestResultListFileDataSource;
-import ku.cs.testTools.Services.TestTools.UseCaseListFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.TestResultDetailListFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.TestResultListFileDataSource;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.File;

@@ -11,8 +11,8 @@ import ku.cs.testTools.Models.TestToolModels.TestScriptDetail;
 import ku.cs.testTools.Models.TestToolModels.TestScriptDetailList;
 import ku.cs.testTools.Models.TestToolModels.TestScriptList;
 import ku.cs.testTools.Services.DataSource;
-import ku.cs.testTools.Services.TestTools.TestScriptDetailFIleDataSource;
-import ku.cs.testTools.Services.TestTools.TestScriptFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.TestScriptDetailFIleDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.TestScriptFileDataSource;
 
 import java.io.IOException;
 
@@ -48,13 +48,10 @@ public class PopupDeleteTestscriptController {
 
         }else {
             if (FXRouter.getData2() != null){
-                if (testScriptListDataSource.readData() != null && testScriptDetailListListDataSource.readData() != null) {
-                    testScriptList = testScriptListDataSource.readData();
-                    testScriptDetailListTemp = testScriptDetailListListDataSource.readData();
-                    testScript = (TestScript) FXRouter.getData2();
+                testScriptList = testScriptListDataSource.readData();
+                testScriptDetailListTemp = testScriptDetailListListDataSource.readData();
+                testScript = (TestScript) FXRouter.getData2();
 
-
-                }
 
             }
 
@@ -77,12 +74,15 @@ public class PopupDeleteTestscriptController {
             else {
                 for (TestScriptDetail testScriptDetail : testScriptDetailListTemp.getTestScriptDetailList()) {
                     if (testScript.getIdTS().trim().equals(testScriptDetail.getIdTS().trim())){
-                        testScriptDetailList.deleteTestScriptDetail(testScriptDetail);
+                        testScriptDetailListTemp.deleteTestScriptDetail(testScriptDetail);
                     }
                 }
+                System.out.println(testScriptList);
+                System.out.println(testScript);
                 testScriptList.deleteTestScript(testScript);
+                System.out.println(testScriptList);
                 testScriptListDataSource.writeData(testScriptList);
-                testScriptDetailListListDataSource.writeData(testScriptDetailList);
+                //testScriptDetailListListDataSource.writeData(testScriptDetailListTemp);
                 FXRouter.goTo("test_script");
                 Node source = (Node) event.getSource();
                 Stage stage = (Stage) source.getScene().getWindow();

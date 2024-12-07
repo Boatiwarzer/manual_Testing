@@ -1,7 +1,6 @@
 package ku.cs.testTools.Controllers.TestFlow;
 
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -19,15 +18,13 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
-import ku.cs.testTools.Models.UsecaseModels.*;
 import ku.cs.testTools.Services.DataSource;
-import ku.cs.testTools.Services.TestTools.TestFlowPositionListFileDataSource;
-import ku.cs.testTools.Services.TestTools.TestScriptDetailFIleDataSource;
-import ku.cs.testTools.Services.TestTools.TestScriptFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Optional;
 
 public class TestFlowController {
     @FXML
@@ -78,18 +75,27 @@ public class TestFlowController {
     private ImageView arrowImageView;
 
     private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
+
     private double startX, startY;
     private TestScriptList testScriptList = new TestScriptList();
     private TestScriptDetailList testScriptDetailList;
     private String projectName1 = "uc", projectName = "125", directory = "data";
-    private ComponentPreferenceList componentPreferenceList = new ComponentPreferenceList();
-    private PreferenceList preferenceList = new PreferenceList();
-    private Preference preference;
-    private TestFlowPosition testFlowPosition = new TestFlowPosition();
+    private TestFlowPosition testFlowTSPosition = new TestFlowPosition();
+    private TestFlowPosition testFlowTCPosition = new TestFlowPosition();
+    private TestFlowPosition testFlowPositionOther = new TestFlowPosition();
+
     private TestScript testScript = new TestScript();
-    private DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-    private final DataSource<TestScriptDetailList> testScriptDetailListListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-    private DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+    private TestCaseList testCaseList = new TestCaseList();
+    private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
+    private TestCaseDetail testCaseDetail;
+    private TestCase testCase = new TestCase();
+    private final DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+    private final DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+    private final DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+    private final DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory,projectName + ".csv");
+    private final DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory,projectName + ".csv");
+    private int id;
+
     @FXML
     void initialize() {
         if (FXRouter.getData() != null){
@@ -99,13 +105,22 @@ public class TestFlowController {
             String type =  (String) objects.get(2);
             if (type.equals("Rectangle-curve")){
                 testScript = (TestScript) objects.get(3);
-                TestScriptList testScriptList = testScriptListDataSource.readData();
+                loadProject();
                 testScriptList.addOrUpdateTestScript(testScript);
-                testScriptListDataSource.writeData(testScriptList);
+                saveProject(testScriptList);
                 objects.remove(3);
                 objects.remove(2);
+            }else if (type.equals("Rectangle")){
+                testCase = (TestCase) objects.get(3);
+                loadProject();
+                testCaseList.addOrUpdateTestCase(testCase);
+                saveProject(testCaseList);
+                objects.remove(3);
+                objects.remove(2);
+            }else if (type.equals("Kite")) {
+                //objects.remove(3);
+                //objects.remove(2);
             }
-            //testFlowPositionList = (TestFlowPositionList) objects.get(4);
 
         }
         loadProject();
@@ -120,21 +135,58 @@ public class TestFlowController {
         onDesignArea.getChildren().clear();
         testFlowPositionList.clear();
         testScriptList.clear();
+        testCaseList.clear();
+        //testScriptDetailList.clearItems();
         //onNoteTextArea.clear();
 
         testScriptList = testScriptListDataSource.readData();
+        testScriptDetailList = testScriptDetailListDataSource.readData();
+        testCaseList = testCaseListDataSource.readData();
         testFlowPositionList = testFlowPositionListDataSource.readData();
+
         testScriptList.getTestScriptList().forEach(testScript -> {
             // Find the position of the use case
-            testFlowPosition = testFlowPositionList.findByPositionId(testScript.getPosition());
-            if (testFlowPosition != null) {
-                drawTestScript(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(), testScript.getNameTS(), testFlowPosition.getPositionID());
+            testFlowTSPosition = testFlowPositionList.findByPositionId(testScript.getPosition());
+            if (testFlowTSPosition != null) {
+                drawTestScript(testFlowTSPosition.getFitWidth(), testFlowTSPosition.getFitHeight(), testFlowTSPosition.getXPosition(), testFlowTSPosition.getYPosition(), testScript.getNameTS(), testFlowTSPosition.getPositionID());
             }
         });
+        testCaseList.getTestCaseList().forEach(testCase -> {
+            // Find the position of the use case
+            testFlowTCPosition = testFlowPositionList.findByPositionId(testCase.getPosition());
+            if (testFlowTCPosition != null) {
+                drawTestCase(testFlowTCPosition.getFitWidth(), testFlowTCPosition.getFitHeight(), testFlowTCPosition.getXPosition(), testFlowTCPosition.getYPosition(), testCase.getNameTC(), testFlowTCPosition.getPositionID());
+            }
+        });
+//        testFlowPositionList.getPositionList().forEach(testFlowPosition -> {
+//            testFlowPositionOther = testFlowPositionList.findByPositionHaveName(testFlowPosition.getName());
+//            if (testFlowPositionOther != null){
+//                drawDecision(testFlowTCPosition.getFitWidth(), testFlowTCPosition.getFitHeight(), testFlowTCPosition.getXPosition(), testFlowTCPosition.getYPosition(), testFlowPosition.getName(), testFlowTCPosition.getPositionID());
+//            }
+//        });
     }
     private void saveProject() {
         testFlowPositionListDataSource.writeData(testFlowPositionList);
         testScriptListDataSource.writeData(testScriptList);
+        testScriptDetailListDataSource.writeData(testScriptDetailList);
+        testCaseListDataSource.writeData(testCaseList);
+        //testCaseDetailListDataSource.writeData(testCaseDetailList);
+
+    }
+    private void saveProject(TestScriptList testScriptList) {
+        testFlowPositionListDataSource.writeData(testFlowPositionList);
+        testScriptListDataSource.writeData(testScriptList);
+        testScriptDetailListDataSource.writeData(testScriptDetailList);
+        testCaseListDataSource.writeData(testCaseList);
+        //testCaseDetailListDataSource.writeData(testCaseDetailList);
+
+    }
+    private void saveProject(TestCaseList testCaseList) {
+        testFlowPositionListDataSource.writeData(testFlowPositionList);
+        testScriptListDataSource.writeData(testScriptList);
+        testScriptDetailListDataSource.writeData(testScriptDetailList);
+        testCaseListDataSource.writeData(testCaseList);
+        //testCaseDetailListDataSource.writeData(testCaseDetailList);
 
     }
 
@@ -165,10 +217,11 @@ public class TestFlowController {
                 objects.add(projectName);
                 objects.add(directory);
                 objects.add(positionID);
+                objects.add(null);
                 System.out.println(positionID);
                 try {
                     saveProject();
-                    FXRouter.popup("popup_info_testscript", objects);
+                    FXRouter.newPopup("popup_info_testscript", objects,true);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -179,19 +232,37 @@ public class TestFlowController {
     private void drawTestCase(double width, double height, double layoutX, double layoutY, String label, int positionID) {
         Rectangle rectangle = new Rectangle(width, height,200,75);
         rectangle.setStyle("-fx-fill: transparent");
-        Label testScriptName = new Label(label);
+        Label testCaseName = new Label(label);
 
         rectangle.setStroke(Color.BLACK);
         rectangle.setStrokeWidth(0.2);
 
 
-        StackPane stackPane = new StackPane(rectangle, testScriptName);
+        StackPane stackPane = new StackPane(rectangle, testCaseName);
         stackPane.setAlignment(Pos.CENTER);
         stackPane.setLayoutX(layoutX);
         stackPane.setLayoutY(layoutY);
         onDesignArea.getChildren().add(stackPane);
 
-        makeDraggable(stackPane, "testCase", positionID);
+        makeDraggable(onDesignArea.getChildren().get(onDesignArea.getChildren().size() - 1), "testCase", positionID);
+        makeSelectable(onDesignArea.getChildren().get(onDesignArea.getChildren().size() - 1), "testCase", positionID);
+        stackPane.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getClickCount() == 2) {  // Check if it's a double click
+                // Send the use case details to the UseCasePage
+                ArrayList<Object> objects = new ArrayList<>();
+                objects.add(projectName);
+                objects.add(directory);
+                objects.add(positionID);
+                objects.add(null);
+                System.out.println(positionID);
+                try {
+                    saveProject();
+                    FXRouter.newPopup("popup_info_testcase", objects,true);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
     }
     private void drawStart(double width, double height, double layoutX, double layoutY, String label, int positionID) {
         Circle circle = new Circle(width, height,15);
@@ -232,20 +303,20 @@ public class TestFlowController {
         Polygon polygon = createKiteShape(width, height,75);
 
         polygon.setStyle("-fx-fill: transparent");
-        Label decison = new Label(label);
+        Label decision = new Label(label);
         polygon.setFill(Color.BLACK);
 
         polygon.setStroke(Color.BLACK);
         polygon.setStrokeWidth(0.2);
 
 
-        StackPane stackPane = new StackPane(polygon, decison);
+        StackPane stackPane = new StackPane(polygon, decision);
         stackPane.setAlignment(Pos.CENTER);
         stackPane.setLayoutX(layoutX);
         stackPane.setLayoutY(layoutY);
         onDesignArea.getChildren().add(stackPane);
-
-        makeDraggable(stackPane, "end", positionID);
+        makeDraggable(onDesignArea.getChildren().get(onDesignArea.getChildren().size() - 1), "decision", positionID);
+        makeSelectable(onDesignArea.getChildren().get(onDesignArea.getChildren().size() - 1), "decision", positionID);
     }private void drawArrow(double width, double height, double layoutX, double layoutY, String label, int positionID) {
     }public void drawLine(int connectionID, double startX, double startY, double endX, double endY, String label,
                           String arrowHead, String lineType, String arrowTail) {
@@ -373,16 +444,36 @@ public class TestFlowController {
                 //drawTestScript(75,75,event.getX()-75,event.getY()-75,"",0);
 
             } else if (event.getDragboard().getString().equals("Rectangle")) {
-                drawTestCase(75,75,event.getX()-75,event.getY()-75,"tc",1);
+                //drawTestCase(75,75,event.getX()-75,event.getY()-75,"tc",1);
+                ArrayList<Object> objects = new ArrayList<>();
+                objects.add(projectName);
+                objects.add(directory);
+                objects.add("Rectangle");
+                objects.add(75.0);
+                objects.add(75.0);
+                objects.add(event.getX());
+                objects.add(event.getY());
+                FXRouter.popup("LabelPage", objects);
                 
             } else if (event.getDragboard().getString().equals("Circle")) {
-                drawStart(75,75,event.getX()-75,event.getY()-75,"tc",1);
+                randomId();
+                drawStart(75,75,event.getX()-75,event.getY()-75,"tc",id);
 
             }else if (event.getDragboard().getString().equals("BlackCircle")) {
+                randomId();
                 drawEnd(75,75,event.getX()-75,event.getY()-75,"tc",1);
 
             }else if (event.getDragboard().getString().equals("Kite")) {
-                drawDecision(75,75,event.getX()-75,event.getY()-75,"tc",1);
+                //drawDecision(75,75,event.getX()-75,event.getY()-75,"tc",1);
+                ArrayList<Object> objects = new ArrayList<>();
+                objects.add(projectName);
+                objects.add(directory);
+                objects.add("Kite");
+                objects.add(75.0);
+                objects.add(75.0);
+                objects.add(event.getX());
+                objects.add(event.getY());
+                FXRouter.popup("LabelPage", objects);
 
             }else if (event.getDragboard().getString().equals("Arrow")) {
                 drawArrow(75,75,event.getX()-75,event.getY()-75,"tc",1);
@@ -395,6 +486,11 @@ public class TestFlowController {
         }
     }
 
+    private void randomId() {
+        int min = 1;
+        int upperbound = 999;
+        this.id = ((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
+    }
 
 
     @FXML
@@ -449,60 +545,97 @@ public class TestFlowController {
 
 
     private void makeSelectable(Node node, String type, int ID) {
+
         // Create a context menu
         ContextMenu contextMenu = new ContextMenu();
 
         // Create menu items
         MenuItem resizeItem = new MenuItem("Resize");
-        MenuItem propertiesItem = new MenuItem("Properties");
+        //MenuItem propertiesItem = new MenuItem("Properties");
         MenuItem deleteItem = new MenuItem("Delete");
-
-        // Create a menu item for sending the component to a subsystem
-
-        // Add menu items to the context menu
-        if (!Objects.equals(type, "connection")) {
-            contextMenu.getItems().add(resizeItem);
-        }
-
-
-        contextMenu.getItems().add(propertiesItem);
+        contextMenu.getItems().add(resizeItem);
+        //contextMenu.getItems().add(propertiesItem);
         contextMenu.getItems().add(deleteItem);
+        node.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
+            if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
+                System.out.println("Item Right Clicked");
+                contextMenu.show(node, mouseEvent.getScreenX(), mouseEvent.getScreenY());
 
+                if (!Objects.equals(type,"connection"))
+                {
+                    makeDraggable(node, type, ID);
+                }
+            }
+        });
         //set the action for resize menu item
         resizeItem.setOnAction(e -> {
             System.out.println("Edit Clicked");
             //Make the node resizable
-            node.setOnMouseDragged(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    if (mouseEvent.isPrimaryButtonDown()) {
-                        double newWidth = mouseEvent.getX() + 10;
-                        double newHeight = mouseEvent.getY() + 10;
+            node.setOnMouseDragged(mouseEvent -> {
+                if (mouseEvent.isPrimaryButtonDown()) {
+                    double newWidth = mouseEvent.getX() + 10;
+                    double newHeight = mouseEvent.getY() + 10;
 
-                        if (newWidth > 0 && newHeight > 0) {
-                            if (Objects.equals(type, "Rectangle-curve")) {
-                                ((Rectangle) ((VBox) node).getChildren().get(0)).setWidth(newWidth);
-                                ((Rectangle) ((VBox) node).getChildren().get(0)).setHeight(newHeight);
-                                // Update the position
-                                testFlowPositionList.updatePosition(ID, node.getLayoutX(), node.getLayoutY());
-                                // Update the size
-                                testFlowPositionList.updateSize(ID, newWidth, newHeight);
-                                saveProject();
-                            }
+                    if (newWidth > 0 && newHeight > 0) {
+                        if (Objects.equals(type, "Rectangle-curve")) {
+                            ((Rectangle) ((VBox) node).getChildren().get(0)).setWidth(newWidth);
+                            ((Rectangle) ((VBox) node).getChildren().get(0)).setHeight(newHeight);
+                            // Update the position
+                            testFlowPositionList.updatePosition(ID, node.getLayoutX(), node.getLayoutY());
+                            // Update the size
+                            testFlowPositionList.updateSize(ID, newWidth, newHeight);
+                            saveProject();
+                        }else if (Objects.equals(type, "Rectangle")){
+                            ((Rectangle) ((VBox) node).getChildren().get(0)).setWidth(newWidth);
+                            ((Rectangle) ((VBox) node).getChildren().get(0)).setHeight(newHeight);
+                            // Update the position
+                            testFlowPositionList.updatePosition(ID, node.getLayoutX(), node.getLayoutY());
+                            // Update the size
+                            testFlowPositionList.updateSize(ID, newWidth, newHeight);
+                            saveProject();
+
                         }
                     }
                 }
             });
-            node.setOnMouseReleased(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    node.setOnMouseDragged(null);
-                    saveProject();
-                    if (!Objects.equals(type, "connection")) {
-                        makeDraggable(node, type, ID);
-                    }
+            node.setOnMouseReleased(mouseEvent -> {
+                node.setOnMouseDragged(null);
+                saveProject();
+                if (!Objects.equals(type, "connection")) {
+                    makeDraggable(node, type, ID);
                 }
             });
+        });
+        // Show the context menu
+
+        deleteItem.setOnAction(e -> {
+            // Pop up to confirm deletion
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Delete Confirmation");
+            alert.setHeaderText("Are you sure you want to delete this item?");
+            alert.setContentText("Press OK to confirm, or Cancel to go back.");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                // Remove the item from the list
+
+                if(Objects.equals(type, "testScript")) {
+                    TestScript testScript = testScriptList.findTSByPosition(ID);
+                    System.out.println("testscript : " + testScript);
+                    testScriptList.deleteTestScriptByPositionID(ID);
+                    testScriptDetailList.deleteTestScriptDetailByTestScriptID(testScript.getIdTS());
+                    testFlowPositionList.removePositionByID(ID);
+                }else if (Objects.equals(type, "testCase")){
+                    TestCase testCase = testCaseList.findTCByPosition(ID);
+                    System.out.println("testcase : " + testScript);
+                    testCaseList.deleteTestCaseByPositionID(ID);
+                    testCaseDetailList.deleteTestCaseDetailByTestScriptID(testCase.getIdTC());
+                    testFlowPositionList.removePositionByID(ID);
+                }
+                onDesignArea.getChildren().remove(node);
+                saveProject();
+                loadProject();
+                System.out.println("Item Removed");
+            }
         });
     }
 

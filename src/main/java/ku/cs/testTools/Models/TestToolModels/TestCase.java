@@ -1,8 +1,6 @@
 package ku.cs.testTools.Models.TestToolModels;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -13,9 +11,11 @@ import java.util.Objects;
 @Setter
 @RequiredArgsConstructor
 @Entity
-@AllArgsConstructor
+@Table(name = "test_cases")
+@NamedQuery(name = "find testcase by id", query = "Select t from TestCase t where t.idTC = :id")
 public class TestCase {
     @Id
+    @Access(AccessType.FIELD)
     private String idTC;
     private String nameTC;
     private String dateTC;
@@ -25,6 +25,34 @@ public class TestCase {
     @OneToMany(mappedBy = "testCase")
     private List<TestCaseDetail> testCaseList;
     private String idTCDList;
+    private int position;
+    @Column(name = "pre_con") // Maps to `precon` in the database
+    private String preCon;
+
+    @Column(name = "post_con") // Maps to `postcon` in the database
+    private String postCon;
+
+    public TestCase(String idTC, String nameTC, String dateTC, String useCase, String descriptionTC, String note, int position, String preCon, String postCon) {
+        this.idTC = idTC;
+        this.nameTC = nameTC;
+        this.dateTC = dateTC;
+        this.useCase = useCase;
+        this.descriptionTC = descriptionTC;
+        this.note = note;
+        this.position = position;
+        this.preCon = preCon;
+        this.postCon = postCon;
+    }
+
+    public TestCase(String idTC, String nameTC, String dateTC, String useCase, String descriptionTC, String note, int position) {
+        this.idTC = idTC;
+        this.nameTC = nameTC;
+        this.dateTC = dateTC;
+        this.useCase = useCase;
+        this.descriptionTC = descriptionTC;
+        this.note = note;
+        this.position = position;
+    }
 
     public TestCase(String idTC, String nameTC, String dateTC, String useCase, String descriptionTC, String note) {
         this.idTC = idTC;
@@ -35,15 +63,15 @@ public class TestCase {
         this.note = note;
     }
 
-    public TestCase(String idTC, String nameTC, String dateTC, String useCase, String descriptionTC, String note, String idTCDList) {
-        this.idTC = idTC;
-        this.nameTC = nameTC;
-        this.dateTC = dateTC;
-        this.useCase = useCase;
-        this.descriptionTC = descriptionTC;
-        this.note = note;
-        this.idTCDList = idTCDList;
-    }
+//    public TestCase(String idTC, String nameTC, String dateTC, String useCase, String descriptionTC, String note, String idTCDList) {
+//        this.idTC = idTC;
+//        this.nameTC = nameTC;
+//        this.dateTC = dateTC;
+//        this.useCase = useCase;
+//        this.descriptionTC = descriptionTC;
+//        this.note = note;
+//        this.idTCDList = idTCDList;
+//    }
 
     @Override
     public final boolean equals(Object o) {

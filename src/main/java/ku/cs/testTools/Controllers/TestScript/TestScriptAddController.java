@@ -10,11 +10,9 @@ import javafx.scene.input.KeyCode;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
-import ku.cs.testTools.Services.TestTools.TestCaseFileDataSource;
-import ku.cs.testTools.Services.TestTools.TestScriptDetailFIleDataSource;
-import ku.cs.testTools.Services.TestTools.TestScriptFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.*;
 
-import ku.cs.testTools.Services.TestTools.UseCaseListFileDataSource;
+import ku.cs.testTools.Services.Repository.TestScriptRepository;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.IOException;
@@ -450,13 +448,14 @@ public class TestScriptAddController {
             String name = onTestNameField.getText();
             String idTS = tsId;
             String date = testDateLabel.getText();
+            LocalDateTime now  = LocalDateTime.now();
             String useCase = onUsecaseCombobox.getValue();
             String description = infoDescriptLabel.getText();
             String tc = onTestcaseCombobox.getValue();
             String preCon = infoPreconLabel.getText();
             String note = onTestNoteField.getText();
             String post = infoPostconLabel.getText();
-            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note,post);
+            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note,post,0);
             if (selectedItem != null){
                 FXRouter.popup("popup_add_testscript",testScriptDetailList,testScript,selectedItem,true);
             }
@@ -571,8 +570,11 @@ public class TestScriptAddController {
         }
 
         // Create a new TestScript object
+        TestScriptRepository testScriptRepository = new TestScriptRepository();
         testScript = new TestScript(tsId, name, date, useCase, description, tc, preCon, note,post);
-        System.out.println(testScriptList.findTSById(testScript.getIdTS()));
+        System.out.println(testScript);
+        System.out.println(testScriptRepository);
+        testScriptRepository.addTestScript(testScript);
         // Save data to files
         //DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
        // DataSource<TestScriptDetailList> testScriptDetailListListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");

@@ -6,7 +6,6 @@ import lombok.Data;
 
 import java.util.*;
 @Data
-@Entity
 public class ManagerList {
     private ArrayList<Manager> managers;
 

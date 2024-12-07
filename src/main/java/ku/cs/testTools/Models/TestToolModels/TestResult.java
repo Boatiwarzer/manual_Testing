@@ -1,7 +1,6 @@
 package ku.cs.testTools.Models.TestToolModels;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -13,8 +12,11 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @Entity
+@Table(name = "test_results")
+@NamedQuery(name = "find testresults by id", query = "Select t from TestResult t where t.idTR = :id")
 public class TestResult {
     @Id
+    @Access(AccessType.FIELD)
     private String idTR;
     private String nameTR;
     private String dateTR;

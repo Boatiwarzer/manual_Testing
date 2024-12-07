@@ -203,6 +203,12 @@ public class FXRouter {
         route.data3 = data3;
         popupNewRoute(route, focus);
     }
+    public static void newPopup(String routeLabel, Object data, boolean focus) throws IOException {
+        RouteScene route = (RouteScene)routes.get(routeLabel);
+        route.data = data;
+        popupNewRouteAndClose(route, focus);
+
+    }
 
     public static void loadNewRoute(RouteScene route) throws IOException {
         currentRoute = route;
@@ -227,9 +233,7 @@ public class FXRouter {
         routeAnimation(resource);
 
         //when close the window, close the application
-        window.setOnCloseRequest(e ->{
-            System.exit(0);
-        });
+
     }
 
     public static void popupNewRoute(RouteScene route) throws IOException {
@@ -290,6 +294,55 @@ public class FXRouter {
             stage.close();
         });
     }
+    private static Stage previousStage; // ตัวแปรสำหรับเก็บ Stage ของ popup ก่อนหน้า
+
+    public static void popupNewRouteAndClose(RouteScene route, boolean focus) throws IOException {
+        currentRoute = route;
+        String scenePath = "/" + route.scenePath;
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation((new Object() {}).getClass().getResource(scenePath));
+        Parent resource = fxmlLoader.load((new Object() {}).getClass().getResource(scenePath));
+        // ปิด Stage ก่อนหน้าถ้ามี
+        if (previousStage != null ) {
+            previousStage.close();
+        }
+
+        // สร้าง Stage ใหม่
+        Stage stage = new Stage();
+        Scene scene = new Scene(resource);
+
+        // ตั้งค่า Modality
+        if (focus) {
+            stage.initModality(Modality.APPLICATION_MODAL);
+        } else {
+            stage.initModality(Modality.NONE);
+        }
+
+        // ตั้งธีม
+        if (themeType == 1) {
+            scene.getStylesheets().clear();
+            scene.getStylesheets().setAll((new Object() {}).getClass().getResource("/style/light-mode.css").toExternalForm());
+        } else if (themeType == 2) {
+            scene.getStylesheets().clear();
+            scene.getStylesheets().setAll((new Object() {}).getClass().getResource("/style/dark-mode.css").toExternalForm());
+        }
+
+        // กำหนด Title และแสดง Stage ใหม่
+        stage.setTitle(route.windowTitle);
+        stage.setScene(scene);
+        stage.show();
+
+        // บันทึก Stage ปัจจุบันใน previousStage
+        previousStage = stage;
+        // เพิ่ม Animation
+        routeAnimation(resource);
+
+        // ตั้งค่าให้ปิดโปรแกรมเมื่อกดปิดหน้าต่างหลัก
+        stage.setOnCloseRequest(e -> {
+            stage.close();
+        });
+    }
+
 
 
     public static void startFrom(String routeLabel) throws Exception {
@@ -337,8 +390,7 @@ public class FXRouter {
             currentRoute.data = data;
     }
 
-    public static void closePopup() {
-    }
+
 
     public static Stage getStage() {
         return window;

@@ -1,8 +1,6 @@
 package ku.cs.testTools.Models.TestToolModels;
 
 import jakarta.persistence.Entity;
-import ku.cs.testTools.Models.UsecaseModels.Actor;
-import ku.cs.testTools.Models.UsecaseModels.Position;
 import ku.cs.testTools.Services.TestScriptComparable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,6 +33,14 @@ public class TestScriptList {
         }
         return null;
     }
+    public TestScript findTSByPosition(int id) {
+        for (TestScript testScript : testScriptList) {
+            if (testScript.getPosition() == id ) {
+                return testScript;
+            }
+        }
+        return null;
+    }
     public void addOrUpdateTestScript(TestScript testScript) {
         boolean exists = false;
 
@@ -62,6 +68,7 @@ public class TestScriptList {
             TestScript existing = testScriptList.get(i);
             if (existing.isId(testScript.getIdTS())) {
                 // Remove the item from the list
+                existing.setMarkedForDeletion(true);
                 testScriptList.remove(i);
                 break; // Exit after removing the first match
             }
@@ -80,4 +87,24 @@ public class TestScriptList {
         }
         return null;
     }
+
+    public void deleteTestScriptByPositionID(int id) {
+        boolean found = false;
+
+        // Iterate through the list to find and remove the item with the matching position ID
+        for (int i = 0; i < testScriptList.size(); i++) {
+            TestScript existing = testScriptList.get(i);
+            if (existing.getPosition() == id) {
+                testScriptList.remove(i);
+                found = true;
+                break;
+            }
+        }
+
+        // Log or handle the case where no matching item was found
+        if (!found) {
+            System.out.println("No TestScript found with position ID: " + id);
+        }
+    }
+
 }

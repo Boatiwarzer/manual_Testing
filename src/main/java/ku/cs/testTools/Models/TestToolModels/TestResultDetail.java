@@ -1,8 +1,6 @@
 package ku.cs.testTools.Models.TestToolModels;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -15,8 +13,11 @@ import java.util.Objects;
 @Entity
 @Data
 @AllArgsConstructor
+@Table(name = "test_result_detail")
+@NamedQuery(name = "find testresultdetail by id", query = "Select t from TestResultDetail t where t.idTRD = :id")
 public class TestResultDetail {
     @Id
+    @Access(AccessType.FIELD)
     private String idTRD;
     private String testNo;
     private String tsIdTRD;
