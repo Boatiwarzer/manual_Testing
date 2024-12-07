@@ -1,7 +1,6 @@
 package ku.cs.testTools.Services.DataSourceCSV;
 
-import ku.cs.testTools.Models.TestToolModels.UseCase;
-import ku.cs.testTools.Models.TestToolModels.UseCaseList;
+import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.DataSource;
 import ku.cs.testTools.Services.ManageDataSource;
 
@@ -83,40 +82,94 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
 
     @Override
     public void writeData(UseCaseList useCaseList) {
-        //File writer
+        TestFlowPositionListFileDataSource testFlowPositionListFileDataSource = new TestFlowPositionListFileDataSource(directory,fileName);
+        TestFlowPositionList testFlowPositionList = testFlowPositionListFileDataSource.readData();
+        TestScriptFileDataSource testScriptListDataSource = new TestScriptFileDataSource(directory, fileName);
+        TestScriptList testScriptList = testScriptListDataSource.readData();
+        TestScriptDetailFIleDataSource testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, fileName);
+        TestScriptDetailList testScriptDetailList = testScriptDetailListDataSource.readData();
+        TestCaseFileDataSource testCaseListDataSource = new TestCaseFileDataSource(directory,fileName);
+        TestCaseList testCaseList = testCaseListDataSource.readData();
+        TestCaseDetailFileDataSource testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory,fileName);
+        TestCaseDetailList testCaseDetailList = testCaseDetailListDataSource.readData();
+        UseCaseDetailListFileDataSource useCaseDetailListFileDataSource = new UseCaseDetailListFileDataSource(directory,fileName);
+        UseCaseDetailList useCaseDetailList = useCaseDetailListFileDataSource.readData();
+        TestResultListFileDataSource testResultListFileDataSource = new TestResultListFileDataSource(directory,fileName);
+        TestResultList testResultList = testResultListFileDataSource.readData();
+        TestResultDetailListFileDataSource testResultDetailListFileDataSource = new TestResultDetailListFileDataSource(directory,fileName);
+        TestResultDetailList testResultDetailList = testResultDetailListFileDataSource.readData();
+        IRreportListFileDataSource iRreportListFileDataSource = new IRreportListFileDataSource(directory,fileName);
+        IRreportList iRreportList = iRreportListFileDataSource.readData();
+        IRreportDetailListFileDataSource iRreportDetailListFileDataSource = new IRreportDetailListFileDataSource(directory,fileName);
+        IRreportDetailList iRreportDetailList = iRreportDetailListFileDataSource.readData();
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
         FileWriter writer = null;
         BufferedWriter buffer = null;
-        UseCaseList existingUseCaseList = readData();
-
         try {
-            boolean append = true; // กำหนดค่าเริ่มต้นเป็น true
-
-            for (UseCase useCase : useCaseList.getUseCaseList()) {
-                if (existingUseCaseList.isUseCaseIDExist(useCase.getUseCaseID())) {
-                    append = false; // ถ้ามี ID อยู่แล้ว ให้ตั้ง append เป็น false เพื่อเขียนทับไฟล์เดิม
-                    break; // เจอ ID ที่ซ้ำแล้วก็ไม่ต้องวนลูปต่อ
-                }
-            }
-
-            writer = new FileWriter(file, StandardCharsets.UTF_8, append);
+            writer = new FileWriter(file, StandardCharsets.UTF_8);
             buffer = new BufferedWriter(writer);
-
-            //Write useCaseList to CSV
-            for (UseCase useCase : useCaseList.getUseCaseList()) {
-//                if (!existingUseCaseList.isUseCaseIDExist(useCase.getUseCaseID())) {
-                    buffer.write(createLine(useCase));
-                    buffer.newLine();
-//                }
+            for (TestFlowPosition position : testFlowPositionList.getPositionList()) {
+                String line = testFlowPositionListFileDataSource.createLine(position);
+                buffer.append(line);
+                buffer.newLine();
+            }
+            for (TestScript testScript : testScriptList.getTestScriptList()){
+                String line = testScriptListDataSource.createLine(testScript);
+                buffer.append(line);
+                buffer.newLine();
+            }
+            for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()){
+                String line = testScriptDetailListDataSource.createLine(testScriptDetail);
+                buffer.append(line);
+                buffer.newLine();
+            }
+            for (TestCase testCase : testCaseList.getTestCaseList()){
+                String line = testCaseListDataSource.createLine(testCase);
+                buffer.append(line);
+                buffer.newLine();
+            }
+            for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()){
+                String line = testCaseDetailListDataSource.createLine(testCaseDetail);
+                buffer.append(line);
+                buffer.newLine();
+            }
+            for (UseCase useCase : useCaseList.getUseCaseList()){
+                String line = createLine(useCase);
+                buffer.append(line);
+                buffer.newLine();
+            }
+            for (UseCaseDetail useCaseDetail : useCaseDetailList.getUseCaseDetailList()){
+                String line = useCaseDetailListFileDataSource.createLine(useCaseDetail);
+                buffer.append(line);
+                buffer.newLine();
+            }
+            for (TestResult testResult : testResultList.getTestResultList()){
+                String line = testResultListFileDataSource.createLine(testResult);
+                buffer.append(line);
+                buffer.newLine();
+            }
+            for (TestResultDetail testResultDetail : testResultDetailList.getTestResultDetailList()){
+                String line = testResultDetailListFileDataSource.createLine(testResultDetail);
+                buffer.append(line);
+                buffer.newLine();
+            }
+            for (IRreport iRreport : iRreportList.getIRreportList()){
+                String line = iRreportListFileDataSource.createLine(iRreport);
+                buffer.append(line);
+                buffer.newLine();
+            }
+            for (IRreportDetail iRreportDetail : iRreportDetailList.getIRreportDetailList()){
+                String line = iRreportDetailListFileDataSource.createLine(iRreportDetail);
+                buffer.append(line);
+                buffer.newLine();
             }
 
             buffer.close();
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
     }
 
     @Override

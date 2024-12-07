@@ -98,6 +98,14 @@ public class TestFlowPositionListFileDataSource implements DataSource<TestFlowPo
         UseCaseList useCaseList = useCaseListFileDataSource.readData();
         UseCaseDetailListFileDataSource useCaseDetailListFileDataSource = new UseCaseDetailListFileDataSource(directory,fileName);
         UseCaseDetailList useCaseDetailList = useCaseDetailListFileDataSource.readData();
+        TestResultListFileDataSource testResultListFileDataSource = new TestResultListFileDataSource(directory,fileName);
+        TestResultList testResultList = testResultListFileDataSource.readData();
+        TestResultDetailListFileDataSource testResultDetailListFileDataSource = new TestResultDetailListFileDataSource(directory,fileName);
+        TestResultDetailList testResultDetailList = testResultDetailListFileDataSource.readData();
+        IRreportListFileDataSource iRreportListFileDataSource = new IRreportListFileDataSource(directory,fileName);
+        IRreportList iRreportList = iRreportListFileDataSource.readData();
+        IRreportDetailListFileDataSource iRreportDetailListFileDataSource = new IRreportDetailListFileDataSource(directory,fileName);
+        IRreportDetailList iRreportDetailList = iRreportDetailListFileDataSource.readData();
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
         FileWriter writer = null;
@@ -137,6 +145,26 @@ public class TestFlowPositionListFileDataSource implements DataSource<TestFlowPo
             }
             for (UseCaseDetail useCaseDetail : useCaseDetailList.getUseCaseDetailList()){
                 String line = useCaseDetailListFileDataSource.createLine(useCaseDetail);
+                buffer.append(line);
+                buffer.newLine();
+            }
+            for (TestResult testResult : testResultList.getTestResultList()){
+                String line = testResultListFileDataSource.createLine(testResult);
+                buffer.append(line);
+                buffer.newLine();
+            }
+            for (TestResultDetail testResultDetail : testResultDetailList.getTestResultDetailList()){
+                String line = testResultDetailListFileDataSource.createLine(testResultDetail);
+                buffer.append(line);
+                buffer.newLine();
+            }
+            for (IRreport iRreport : iRreportList.getIRreportList()){
+                String line = iRreportListFileDataSource.createLine(iRreport);
+                buffer.append(line);
+                buffer.newLine();
+            }
+            for (IRreportDetail iRreportDetail : iRreportDetailList.getIRreportDetailList()){
+                String line = iRreportDetailListFileDataSource.createLine(iRreportDetail);
                 buffer.append(line);
                 buffer.newLine();
             }
