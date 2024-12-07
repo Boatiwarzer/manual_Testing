@@ -87,51 +87,64 @@ public class TestScriptFileDataSource implements DataSource<TestScriptList>, Man
     }
     @Override
     public void writeData(TestScriptList testScriptList) {
-        // File writer
+        TestFlowPositionListFileDataSource testFlowPositionListFileDataSource = new TestFlowPositionListFileDataSource(directory,fileName);
+        TestFlowPositionList testFlowPositionList = testFlowPositionListFileDataSource.readData();
+        TestScriptDetailFIleDataSource testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, fileName);
+        TestScriptDetailList testScriptDetailList = testScriptDetailListDataSource.readData();
+        TestCaseFileDataSource testCaseListDataSource = new TestCaseFileDataSource(directory,fileName);
+        TestCaseList testCaseList = testCaseListDataSource.readData();
+        TestCaseDetailFileDataSource testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory,fileName);
+        TestCaseDetailList testCaseDetailList = testCaseDetailListDataSource.readData();
+        UseCaseListFileDataSource useCaseListFileDataSource = new UseCaseListFileDataSource(directory,fileName);
+        UseCaseList useCaseList = useCaseListFileDataSource.readData();
+        UseCaseDetailListFileDataSource useCaseDetailListFileDataSource = new UseCaseDetailListFileDataSource(directory,fileName);
+        UseCaseDetailList useCaseDetailList = useCaseDetailListFileDataSource.readData();
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
-        List<String> fileLines = new ArrayList<>();
-
-        // อ่านข้อมูลเดิมในไฟล์ถ้ามี
-        if (file.exists()) {
-            try {
-                fileLines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        // อัปเดตข้อมูลที่มีอยู่แล้ว หรือเพิ่ม/ลบข้อมูล
-        for (TestScript testScript : testScriptList.getTestScriptList()) {
-            String newLine = createLine(testScript);
-            boolean updated = false;
-
-            for (int i = 0; i < fileLines.size(); i++) {
-                String line = fileLines.get(i);
-                if (line.contains(testScript.getIdTS())) { // เช็คว่า ID ตรงกันหรือไม่
-                    if (testScript.isMarkedForDeletion()) { // ถ้าถูกระบุว่าควรถูกลบ
-                        fileLines.remove(i); // ลบบรรทัดออกจากรายการ
-                        updated = true;
-                        break;
-                    } else {
-                        fileLines.set(i, newLine); // เขียนทับบรรทัดเดิม
-                        updated = true;
-                        break;
-                    }
-                }
-            }
-            if (!updated && !testScript.isMarkedForDeletion()) {
-                fileLines.add(newLine); // เพิ่มข้อมูลใหม่ (ถ้าไม่ได้ถูกลบ)
-            }
-        }
-
-        // เขียนข้อมูลทั้งหมดกลับไปที่ไฟล์
-        try (BufferedWriter buffer = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8, false))) { // false สำหรับเขียนทับไฟล์
-            for (String line : fileLines) {
-                buffer.write(line);
+        FileWriter writer = null;
+        BufferedWriter buffer = null;
+        try {
+            writer = new FileWriter(file, StandardCharsets.UTF_8);
+            buffer = new BufferedWriter(writer);
+            for (TestFlowPosition position : testFlowPositionList.getPositionList()) {
+                String line = testFlowPositionListFileDataSource.createLine(position);
+                buffer.append(line);
                 buffer.newLine();
             }
-        } catch (IOException e) {
+            for (TestScript testScript : testScriptList.getTestScriptList()){
+                String line = createLine(testScript);
+                buffer.append(line);
+                buffer.newLine();
+            }
+            for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()){
+                String line = testScriptDetailListDataSource.createLine(testScriptDetail);
+                buffer.append(line);
+                buffer.newLine();
+            }
+            for (TestCase testCase : testCaseList.getTestCaseList()){
+                String line = testCaseListDataSource.createLine(testCase);
+                buffer.append(line);
+                buffer.newLine();
+            }
+            for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()){
+                String line = testCaseDetailListDataSource.createLine(testCaseDetail);
+                buffer.append(line);
+                buffer.newLine();
+            }
+            for (UseCase useCase : useCaseList.getUseCaseList()){
+                String line = useCaseListFileDataSource.createLine(useCase);
+                buffer.append(line);
+                buffer.newLine();
+            }
+            for (UseCaseDetail useCaseDetail : useCaseDetailList.getUseCaseDetailList()){
+                String line = useCaseDetailListFileDataSource.createLine(useCaseDetail);
+                buffer.append(line);
+                buffer.newLine();
+            }
+
+            buffer.close();
+
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

@@ -94,6 +94,10 @@ public class TestFlowPositionListFileDataSource implements DataSource<TestFlowPo
         TestCaseList testCaseList = testCaseListDataSource.readData();
         TestCaseDetailFileDataSource testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory,fileName);
         TestCaseDetailList testCaseDetailList = testCaseDetailListDataSource.readData();
+        UseCaseListFileDataSource useCaseListFileDataSource = new UseCaseListFileDataSource(directory,fileName);
+        UseCaseList useCaseList = useCaseListFileDataSource.readData();
+        UseCaseDetailListFileDataSource useCaseDetailListFileDataSource = new UseCaseDetailListFileDataSource(directory,fileName);
+        UseCaseDetailList useCaseDetailList = useCaseDetailListFileDataSource.readData();
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
         FileWriter writer = null;
@@ -123,6 +127,16 @@ public class TestFlowPositionListFileDataSource implements DataSource<TestFlowPo
             }
             for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()){
                 String line = testCaseDetailListDataSource.createLine(testCaseDetail);
+                buffer.append(line);
+                buffer.newLine();
+            }
+            for (UseCase useCase : useCaseList.getUseCaseList()){
+                String line = useCaseListFileDataSource.createLine(useCase);
+                buffer.append(line);
+                buffer.newLine();
+            }
+            for (UseCaseDetail useCaseDetail : useCaseDetailList.getUseCaseDetailList()){
+                String line = useCaseDetailListFileDataSource.createLine(useCaseDetail);
                 buffer.append(line);
                 buffer.newLine();
             }
