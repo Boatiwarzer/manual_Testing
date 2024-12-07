@@ -10,8 +10,8 @@ import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.DataSource;
 import ku.cs.testTools.Services.StringConfiguration;
-import ku.cs.testTools.Services.TestTools.IRreportDetailListFileDataSource;
-import ku.cs.testTools.Services.TestTools.IRreportListFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.IRreportDetailListFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.IRreportListFileDataSource;
 
 import java.util.ArrayList;
 

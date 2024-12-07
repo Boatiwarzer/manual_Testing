@@ -32,8 +32,11 @@ testScriptDetail,TSD-503,+,+,None,+,TS-400,29-11-2024
 testCase,TC-185,4,null,null,null,4,881,0,0
 testCase,TC-245,s,null,null,null,s,506,null,null
 testCase,TC-967,11,null,null,null,1,388,null,null
-testCaseDetail,,1,1,1,05-12-2024,null
+testCase,TC-586,1,07-12-2024,None,Label,1,0,null,null
+testCase,TC-633,2,07-12-2024,None,Label,2,0,null,null
 useCase,UC-956,1,11,1,11,1,1,2024-11-11 13:45:19
 useCase,UC-166,qwer,qwer,qwer,qwer,qwer,qwer,2024-11-28 21:31:22
 useCaseDetail,UC-166,actor,1,qwer
 useCaseDetail,UC-166,system,1,qerq
+testResult,TR-781,1,2024-12-07 18:13:32,1,In Tester
+testResultDetail,TRD-817,1,TS-22 : Login,,test1,null,,test,1,Pass,Medium,07-12-2024,Tester,undefined - Imgur.jpg : C:\Users\wizar\Pictures\Image_ManaualTesttools\undefined - Imgur.jpg,Waiting,Remark,TR-781

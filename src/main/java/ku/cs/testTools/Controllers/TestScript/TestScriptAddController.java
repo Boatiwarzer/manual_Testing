@@ -121,6 +121,7 @@ public class TestScriptAddController {
             if (FXRouter.getData() != null) {
                 onTableTestscript.isFocused();
                 testScriptDetailList = (TestScriptDetailList) FXRouter.getData();
+                testScriptDetailList = (TestScriptDetailList) FXRouter.getData();
                 loadTable(testScriptDetailList);
                 testScript = (TestScript) FXRouter.getData2();
                 selectedTSD();
@@ -574,7 +575,7 @@ public class TestScriptAddController {
         testScript = new TestScript(tsId, name, date, useCase, description, tc, preCon, note,post);
         System.out.println(testScript);
         System.out.println(testScriptRepository);
-        testScriptRepository.addTestScript(testScript);
+        //testScriptRepository.addTestScript(testScript);
         // Save data to files
         //DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
        // DataSource<TestScriptDetailList> testScriptDetailListListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
