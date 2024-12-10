@@ -211,6 +211,7 @@ public class TestResultAddController {
         configs.add(new StringConfiguration("title:TRD-ID.", "field:idTRD"));
         configs.add(new StringConfiguration("title:Test No.", "field:testNo"));
         configs.add(new StringConfiguration("title:TS-ID.", "field:tsIdTRD"));
+        configs.add(new StringConfiguration("title:TC-ID.", "field:tcIdTRD"));
         configs.add(new StringConfiguration("title:Actor", "field:actorTRD"));
         configs.add(new StringConfiguration("title:Description", "field:descriptTRD"));
         configs.add(new StringConfiguration("title:Input Data", "field:inputdataTRD"));
@@ -242,6 +243,20 @@ public class TestResultAddController {
                             setText(null);
                         } else {
                             setText(item.replace("|", "\n"));
+                        }
+                    }
+                });
+            }
+
+            if (conf.get("field").equals("inputdataTRD")) {
+                col.setCellFactory(column -> new TableCell<>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            setText(null);
+                        } else {
+                            setText(item.replace("|", ", "));
                         }
                     }
                 });
@@ -318,6 +333,7 @@ public class TestResultAddController {
         configs.add(new StringConfiguration("title:TRD-ID."));
         configs.add(new StringConfiguration("title:Test No."));
         configs.add(new StringConfiguration("title:TS-ID."));
+        configs.add(new StringConfiguration("title:TC-ID."));
         configs.add(new StringConfiguration("title:Actor"));
         configs.add(new StringConfiguration("title:Description"));
         configs.add(new StringConfiguration("title:Input Data"));
@@ -449,7 +465,7 @@ public class TestResultAddController {
             String nameTR = onTestNameField.getText();
             String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             String noteTR = onTestNoteField.getText();
-            testResult = new TestResult(idTR, nameTR, dateTR, noteTR,"Tester In Progress");
+            testResult = new TestResult(idTR, nameTR, dateTR, noteTR,"In Tester");
 
             if (selectedItem != null){
                 FXRouter.popup("popup_add_testresult",testResultDetailList,testResult,selectedItem,true);
@@ -470,7 +486,7 @@ public class TestResultAddController {
             String nameTR = onTestNameField.getText();
             String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             String noteTR = onTestNoteField.getText();
-            testResult = new TestResult(idTR, nameTR, dateTR, noteTR,"Tester In Progress");
+            testResult = new TestResult(idTR, nameTR, dateTR, noteTR,"In Tester");
             if (selectedItem != null){
                 FXRouter.popup("popup_delete_testresult",testResultDetailList,testResult,selectedItem,true);
             }

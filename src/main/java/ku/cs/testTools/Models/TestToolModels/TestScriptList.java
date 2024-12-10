@@ -25,6 +25,7 @@ public class TestScriptList {
     public void clear() {
         testScriptList.clear();
     }
+
     public TestScript findTSById(String id) {
         for (TestScript testScript : testScriptList) {
             if (testScript.isId(id) ) {
@@ -33,6 +34,16 @@ public class TestScriptList {
         }
         return null;
     }
+
+    public TestScript findByTestScriptId(String id) {
+        for (TestScript testScript : testScriptList) {
+            if (testScript.getIdTS().equals(id)) {
+                return testScript;
+            }
+        }
+        return null;
+    }
+
     public TestScript findTSByPosition(int id) {
         for (TestScript testScript : testScriptList) {
             if (testScript.getPosition() == id ) {

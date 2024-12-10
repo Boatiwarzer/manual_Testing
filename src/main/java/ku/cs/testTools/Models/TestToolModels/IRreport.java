@@ -21,6 +21,7 @@ public class IRreport {
     private String idIR;
     private String nameIR;
     private String dateIR;
+    private String trIR;
 
     @Override
     public final boolean equals(Object o) {
@@ -35,10 +36,11 @@ public class IRreport {
         return getClass().hashCode();
     }
 
-    public IRreport(String idIR, String nameIR, String dateIR) {
+    public IRreport(String idIR, String nameIR, String dateIR, String trIR) {
         this.idIR = idIR;
         this.nameIR = nameIR;
         this.dateIR = dateIR;
+        this.trIR = trIR;
     }
 
     public boolean isId(String idIR) {

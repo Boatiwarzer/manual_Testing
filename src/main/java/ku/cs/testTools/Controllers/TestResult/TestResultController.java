@@ -1,29 +1,28 @@
 package ku.cs.testTools.Controllers.TestResult;
 
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
-import ku.cs.testTools.Services.TestTools.IRreportDetailListFileDataSource;
-import ku.cs.testTools.Services.TestTools.IRreportListFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.IRreportDetailListFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.IRreportListFileDataSource;
 import ku.cs.testTools.Services.DataSourceCSV.TestResultListFileDataSource;
 import ku.cs.testTools.Services.DataSourceCSV.TestResultDetailListFileDataSource;
 import org.controlsfx.control.textfield.TextFields;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -65,8 +64,10 @@ public class TestResultController {
     private String irdId;
     private IRreport iRreport;
     private IRreportList iRreportList = new IRreportList();
-    private IRreportDetail selectedItem;
+    private IRreportDetail iRreportDetail = new IRreportDetail();
     private IRreportDetailList iRreportDetailList = new IRreportDetailList();
+    private TestScript testScript = new TestScript();
+    private TestScriptList testScriptList = new TestScriptList();
     private static int idCounter = 1; // Counter for sequential IDs
     private static final int MAX_ID = 999; // Upper limit for IDs
     private final DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
@@ -228,6 +229,7 @@ public class TestResultController {
         configs.add(new StringConfiguration("title:TRD-ID.", "field:idTRD"));
         configs.add(new StringConfiguration("title:Test No.", "field:testNo"));
         configs.add(new StringConfiguration("title:TS-ID.", "field:tsIdTRD"));
+        configs.add(new StringConfiguration("title:TC-ID.", "field:tcIdTRD"));
         configs.add(new StringConfiguration("title:Actor", "field:actorTRD"));
         configs.add(new StringConfiguration("title:Description", "field:descriptTRD"));
         configs.add(new StringConfiguration("title:Input Data", "field:inputdataTRD"));
@@ -259,6 +261,20 @@ public class TestResultController {
                             setText(null);
                         } else {
                             setText(item.replace("|", "\n"));
+                        }
+                    }
+                });
+            }
+
+            if (conf.get("field").equals("inputdataTRD")) {
+                col.setCellFactory(column -> new TableCell<>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            setText(null);
+                        } else {
+                            setText(item.replace("|", ", "));
                         }
                     }
                 });
@@ -336,6 +352,7 @@ public class TestResultController {
         configs.add(new StringConfiguration("title:TRD-ID."));
         configs.add(new StringConfiguration("title:Test No."));
         configs.add(new StringConfiguration("title:TS-ID."));
+        configs.add(new StringConfiguration("title:TC-ID."));
         configs.add(new StringConfiguration("title:Actor"));
         configs.add(new StringConfiguration("title:Description"));
         configs.add(new StringConfiguration("title:Input Data"));
@@ -448,60 +465,92 @@ public class TestResultController {
 
     @FXML
     void onIRButton(ActionEvent event) {
-        String idIR = irId;
-        String nameIR = testNameLabel.getText();
-        String dateIR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-
-        // Check if mandatory fields are empty
-        if (nameIR == null || nameIR.isEmpty()) {
-            showAlert("Input Error", "Please fill in all required fields.");
-            return;
-        }
-
-        iRreport = new IRreport(idIR, nameIR, dateIR);
 
         String idTR = testIDLabel.getText();
-//        String
+
+        if (iRreportList.isIdTRExist(idTR)) { // สำหรับ CSV
+            System.out.println("ID " + idTR + " already exists in the file.");
+        } else {
+            System.out.println("ID " + idTR + " does not exist in the file.");
+            String idIR = irId;
+            String nameIR = testNameLabel.getText();
+            String dateIR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+            iRreport = new IRreport(idIR, nameIR, dateIR, idTR);
+            iRreportList.addOrUpdateIRreport(iRreport);
+            List<TestResultDetail> trdList = testResultDetailList.findAllTRinTRDById(idTR.trim());
+            for (TestResultDetail trd : trdList) {
+                System.out.println("trd " + trd);
+            }
+
+//            List<TestResultDetail> testResultDetails = new ArrayList<>();
+            List<TestResultDetail> failedResult = trdList.stream()
+                    .filter(faildetail -> faildetail.getIdTR().equals(idTR) && faildetail.getStatusTRD().equals("Fail"))
+                    .collect(Collectors.toList());
+            System.out.println("failedResult: " + failedResult);
+
+            int counter = 1;
+            for (TestResultDetail detail : failedResult) {
+                randomIdIRD();
+                String irID = irdId;
+                String testNo = String.format("%d", counter);
+                counter++; // เพิ่มค่าตัวนับ
+
+                String testerIRD = "Tester";
+                String tsIdIRD = detail.getTsIdTRD();
+                String tcIdIRD = detail.getTcIdTRD();
+                System.out.println("tsId " + tsIdIRD);
+                String descriptIRD = detail.getDescriptTRD();
+
+//                String[] parts = tsIdIRD.split(" : "); // แยกข้อความตาม " : "
+//                String tsId = parts[0]; // ดึงส่วนแรกออกมา
+//                System.out.println("tsIDpart "+tsId);
+//                TestScript con = testScriptList.findByTestScriptId(tsId.trim());
+//                System.out.println("con " + con);
 //
-//        String idIRD = irdId;
-//        String testerIRD = "Tester";
-//        String tsIdIRD =
+//                String conditionIRD = con.getPreCon();
+
+                String conditionIRD = detail.getExpectedTRD();
+                String imageIRD = detail.getImageTRD();
+                String priorityIRD = detail.getPriorityTRD();
+                String rcaIRD = "";
+                String managerIRD = "";
+                String statusIRD = "In Manager";
+                String remarkIRD = "";
+
+                iRreportDetail = new IRreportDetail(irID, testNo, testerIRD, tsIdIRD, tcIdIRD, descriptIRD, conditionIRD, imageIRD, priorityIRD, rcaIRD, managerIRD, statusIRD, remarkIRD, irId);
+                iRreportDetailList.addOrUpdateIRreportDetail(iRreportDetail);
+            }
+            iRreportListDataSource.writeData(iRreportList);
+            iRreportDetailListDataSource.writeData(iRreportDetailList);
+        }
+//            ObservableList<TestResultDetail> allRecords = FXCollections.observableArrayList();
 //
-//        this.idIRD = idIRD;
-//        this.testerIRD = testerIRD;
-//        this.tsIdIRD = tsIdIRD;
-//        this.inputdataIRD = inputdataIRD;
-//        this.descriptIRD = descriptIRD;
-//        this.conditionIRD = conditionIRD;
-//        this.imageIRD = imageIRD;
-//        this.priorityIRD = priorityIRD;
-//        this.rcaIRD = rcaIRD;
-//        this.managerIRD = managerIRD;
-//        this.statusIRD = statusIRD;
-//        this.remarkIRD = remarkIRD;
-//        this.idIR = idIR;
+//            ObservableList<TestResultDetail> filteredRecords = allRecords.filtered(record ->
+//                    record.getIdTR().equals(idTR) && record.getStatusTRD().equals("Fail")
+//            );
+//            try {
+//                FXMLLoader loader = new FXMLLoader(getClass().getResource("SecondScene.fxml"));
+//                Parent root = loader.load();
 //
-//        String IdTS = onTestscriptIDComboBox.getValue();
+//                IRTestresultController iRTestresultController = loader.getController();
+//                iRTestresultController.setData(filteredRecords); // ส่งข้อมูลไปยังหน้าที่สอง
 //
-//        String[] parts = IdTS.split(" : "); // แยกข้อความตาม " : "
-//        String result = parts[0]; // ดึงส่วนแรกออกมา
-//        System.out.println(result);
+//                Stage stage = new Stage();
+//                stage.setScene(new Scene(root));
+//                stage.show();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+
+
+//        if (statusIRD.equals()) {
 //
-//        String date = onDate.getText();
-//        String descript = onDescription.getText();
-//        String actor = onActor.getText();
-//        String inputdata = onInputdataComboBox.getValue();
-//        String teststeps = onTeststeps.getText();;
-//        String expected = onExpected.getText();
-//        String actual = onActual.getText();
-//        String status = onStatusComboBox.getValue();
-//        String priority = onPriorityComboBox.getValue();
-//        String tester = onTester.getText();
-//        String image = onImage.getText();
-//        handleSaveAction();
-//        testResultDetail = new TestResultDetail(id, TrNo, IdTS, actor, descript, inputdata, teststeps, expected, actual, status, priority, date, tester, image, "Waiting", "Remark", idTR);
-//        testResultDetailList.addOrUpdateTestResultDetail(testResultDetail);
-//
+//        }
+
+
+
+
 //        try {
 //            testResultDetail = null;
 //            clearInfo();
@@ -515,20 +564,17 @@ public class TestResultController {
 //            System.err.println("ไปที่หน้า home ไม่ได้");
 //            System.err.println("ให้ตรวจสอบการกำหนด route");
 //        }
-//
-//        // Save data to files
-//        // DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-//        // DataSource<TestScriptDetailList> testScriptDetailListListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-//
-//        // Add or update test script
-//        iRreportList.addOrUpdateIRreport(iRreport);
-//
-//        // Write data to respective files
+
+        // Save data to files
+        // DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+        // DataSource<TestScriptDetailList> testScriptDetailListListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+
+        // Write data to respective files
 //        iRreportListDataSource.writeData(iRreportList);
 //        iRreportDetailListDataSource.writeData(iRreportDetailList);
-//
-//        // Show success message
-//        showAlert("Success", "IR Report saved successfully!");
+
+        // Show success message
+        showAlert("Success", "IR Report saved successfully!");
         try {
             FXRouter.popup("test_result_ir");
         } catch (IOException e) {
