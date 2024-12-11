@@ -45,7 +45,8 @@ public class LabelPageController {
     private final DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
     private final DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory,projectName + ".csv");
     private final DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory,projectName + ".csv");
-
+    private final DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+    private ConnectionList connectionList = new ConnectionList();
     private int id;
     private String objectID;
     @FXML
@@ -70,9 +71,9 @@ public class LabelPageController {
                 testFlowPositionList = testFlowPositionListDataSource.readData();
 
             } else if (Objects.equals(type, "Kite")){
-                noteTextArea.setVisible(false);
                 labelTextField.setPrefWidth(130.0);
                 testFlowPositionList = testFlowPositionListDataSource.readData();
+                connectionList = connectionListDataSource.readData();
 
             }
 //                if (testScriptList.findByPositionId(editID) != null) {
@@ -135,24 +136,30 @@ public class LabelPageController {
             randomIdTS();
             randomId();
             testScript = new TestScript(objectID,label,null,null,null,null,null,null,note,id);
-            testFlowPosition = new TestFlowPosition(id,width,height,layoutX,layoutY,0,null);
+            testScriptList.addOrUpdateTestScript(testScript);
+            testFlowPosition = new TestFlowPosition(id,width,height,layoutX,layoutY,0,"testscript");
             testFlowPositionList.addPosition(testFlowPosition);
             testFlowPositionListDataSource.writeData(testFlowPositionList);
-            objects.add(testScript);
+            testScriptListDataSource.writeData(testScriptList);
+            //objects.add(testScript);
         }else if (type.equals("Rectangle")){
             randomIdTC();
             randomId();
             testCase = new TestCase(objectID,label,null,null,null,note,id,null,null);
-            testFlowPosition = new TestFlowPosition(id,width,height,layoutX,layoutY,0,null);
+            testCaseList.addOrUpdateTestCase(testCase);
+            testFlowPosition = new TestFlowPosition(id,width,height,layoutX,layoutY,0,"testcase");
             testFlowPositionList.addPosition(testFlowPosition);
             testFlowPositionListDataSource.writeData(testFlowPositionList);
-            objects.add(testCase);
+            testCaseListDataSource.writeData(testCaseList);
+            //objects.add(testCase);
 
         }else if (type.equals("Kite")){
-            randomId();
-            testFlowPosition = new TestFlowPosition(id,width,height,layoutX,layoutY,0,label);
+            Connection connection = new Connection(connectionList.findLastConnectionID() + 1,width,height,layoutX,layoutY, label, "none", "none", "none","!@#$%^&*()_+","decision");
+            connectionList.addOrUpdate(connection);
+            testFlowPosition = new TestFlowPosition(connectionList.findLastConnectionID(),width,height,layoutX,layoutY,0,"decision");
             testFlowPositionList.addPosition(testFlowPosition);
             testFlowPositionListDataSource.writeData(testFlowPositionList);
+            connectionListDataSource.writeData(connectionList);
 
         }
             FXRouter.goTo("test_flow", objects);
@@ -162,6 +169,25 @@ public class LabelPageController {
             Stage stage = (Stage) source.getScene().getWindow();
             stage.close();
         }
+    }
+    public void addToConnectionList(double startX, double startY, double endX, double endY, String label,
+                                    String arrowHead, String lineType, String arrowTail,String type) {
+        // Save the connection
+        Connection connection = new Connection(
+                connectionList.findLastConnectionID() + 1,  // connectionID
+                startX,  // startX
+                startY,  // startY
+                endX,  // endX
+                endY,  // endY
+                label,  // label
+                arrowHead,  // arrowHead
+                lineType,  // lineType
+                arrowTail,  // arrowTail
+                "!@#$%^&*()_+",//note
+                type); //type
+        connectionList.addConnection(connection);
+
+
     }
     private void randomId() {
         int min = 1;

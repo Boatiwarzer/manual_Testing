@@ -33,13 +33,7 @@ public class TestCaseDetail {
 
     }
 
-    public TestCaseDetail(String idTCD, String testNo, String nameTCD, String variableTCD, String idTC) {
-        this.idTCD = idTCD;
-        this.testNo = testNo;
-        this.nameTCD = nameTCD;
-        this.variableTCD = variableTCD;
-        this.idTC = idTC;
-    }
+
 
     @Override
     public final boolean equals(Object o) {
