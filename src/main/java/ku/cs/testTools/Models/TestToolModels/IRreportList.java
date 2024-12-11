@@ -51,6 +51,15 @@ public class IRreportList {
         }
     }
 
+    public boolean isIdTRExist(String idTR) {
+        for (IRreport iRreport : iRreportList) {
+            if (iRreport.getTrIR().equals(idTR)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void deleteIRreport(IRreport iRreport) {
         // Iterate through the list to find the item to delete
         for (int i = 0; i < iRreportList.size(); i++) {

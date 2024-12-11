@@ -2,9 +2,10 @@ package ku.cs.testTools.Models.TestToolModels;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.List;
+
 @AllArgsConstructor
 @Data
 public class TestResultDetailList {
@@ -54,13 +55,31 @@ public class TestResultDetailList {
     }
 
     // เมธอดนี้จะต้องถูกย้ายไปยัง TestResultDetailFIleDataSource
-    public TestResultDetail findTSById(String id) {
+    public TestResultDetail findTRDById(String id) {
         for (TestResultDetail testResultDetail : testResultDetailList) {
             if (testResultDetail.isId(id) ) {
                 return testResultDetail;
             }
         }
         return null;
+    }
+
+    public TestResultDetail findTRinTRDById(String id) {
+        for (TestResultDetail testResultDetail : testResultDetailList) {
+            if (testResultDetail.isIdTR(id) ) {
+                return testResultDetail;
+            }
+        }
+        return null;
+    }
+    public List<TestResultDetail> findAllTRinTRDById(String idTR) {
+        List<TestResultDetail> result = new ArrayList<>();
+        for (TestResultDetail trd : testResultDetailList) {
+            if (trd.getIdTR().equals(idTR)) {
+                result.add(trd);
+            }
+        }
+        return result;
     }
 
     public void clearItems() {

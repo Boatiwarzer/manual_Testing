@@ -42,7 +42,7 @@ public class PopupDeleteTestresultController {
             idTR = testResult.getIdTR();
             if (FXRouter.getData3() != null){
                 testResultDetail = (TestResultDetail) FXRouter.getData3();
-                testResultDetailList.findTSById(testResultDetail.getIdTRD());
+                testResultDetailList.findTRDById(testResultDetail.getIdTRD());
                 id = testResultDetail.getIdTRD();
             }
 

@@ -72,7 +72,8 @@ public class IRreportDetailListFileDataSource implements DataSource<IRreportDeta
                             data[10].trim(),
                             data[11].trim(),
                             data[12].trim(),
-                            data[13].trim()
+                            data[13].trim(),
+                            data[14].trim()
                     );
 
                     // Add the detail to the list
@@ -189,17 +190,18 @@ public class IRreportDetailListFileDataSource implements DataSource<IRreportDeta
     public String createLine(IRreportDetail iRreportDetail) {
         return "iRreportDetail," +
                 iRreportDetail.getIdIRD() + "," +
+                iRreportDetail.getTestNoIRD() + "," +
                 iRreportDetail.getTesterIRD() + "," +
-                iRreportDetail. getTsIdIRD() + "," +
-                iRreportDetail. getInputdataIRD() + "," +
-                iRreportDetail. getDescriptIRD() + "," +
-                iRreportDetail. getConditionIRD() + "," +
-                iRreportDetail. getImageIRD() + "," +
-                iRreportDetail. getPriorityIRD() + "," +
-                iRreportDetail. getRcaIRD() + "," +
-                iRreportDetail. getManagerIRD() + "," +
-                iRreportDetail. getStatusIRD() + "," +
-                iRreportDetail. getRemarkIRD() + "," +
+                iRreportDetail.getTsIdIRD() + "," +
+                iRreportDetail.getTcIdIRD() + "," +
+                iRreportDetail.getDescriptIRD() + "," +
+                iRreportDetail.getConditionIRD() + "," +
+                iRreportDetail.getImageIRD() + "," +
+                iRreportDetail.getPriorityIRD() + "," +
+                iRreportDetail.getRcaIRD() + "," +
+                iRreportDetail.getManagerIRD() + "," +
+                iRreportDetail.getStatusIRD() + "," +
+                iRreportDetail.getRemarkIRD() + "," +
                 iRreportDetail.getIdIR();
     }
 }

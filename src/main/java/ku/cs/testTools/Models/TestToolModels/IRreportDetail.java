@@ -17,9 +17,10 @@ import java.util.Objects;
 public class IRreportDetail {
     @Id
     private String idIRD;
+    private String testNoIRD;
     private String testerIRD;
     private String tsIdIRD;
-    private String inputdataIRD;
+    private String tcIdIRD;
     private String descriptIRD;
     private String conditionIRD;
     private String imageIRD;
@@ -32,11 +33,12 @@ public class IRreportDetail {
     private IRreport iRreport;
     private String idIR;
 
-    public IRreportDetail(String idIRD, String testerIRD, String tsIdIRD, String inputdataIRD, String descriptIRD, String conditionIRD, String imageIRD, String priorityIRD, String rcaIRD, String managerIRD, String statusIRD, String remarkIRD, String idIR) {
+    public IRreportDetail(String idIRD, String testNoIRD, String testerIRD, String tsIdIRD, String tcIdIRD, String descriptIRD, String conditionIRD, String imageIRD, String priorityIRD, String rcaIRD, String managerIRD, String statusIRD, String remarkIRD, String idIR) {
         this.idIRD = idIRD;
+        this.testNoIRD = testNoIRD;
         this.testerIRD = testerIRD;
         this.tsIdIRD = tsIdIRD;
-        this.inputdataIRD = inputdataIRD;
+        this.tcIdIRD = tcIdIRD;
         this.descriptIRD = descriptIRD;
         this.conditionIRD = conditionIRD;
         this.imageIRD = imageIRD;

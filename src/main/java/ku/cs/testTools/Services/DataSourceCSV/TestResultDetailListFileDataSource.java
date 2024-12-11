@@ -76,7 +76,8 @@ public class TestResultDetailListFileDataSource implements DataSource<TestResult
                             data[14].trim(),
                             data[15].trim(),
                             data[16].trim(),
-                            data[17].trim()
+                            data[17].trim(),
+                            data[18].trim()
                     );
 
                     // Add the detail to the list
@@ -197,9 +198,10 @@ public class TestResultDetailListFileDataSource implements DataSource<TestResult
                 testResultDetail.getIdTRD() + "," +
                 testResultDetail.getTestNo() + "," +
                 testResultDetail.getTsIdTRD() + "," +
+                testResultDetail.getTcIdTRD() + "," +
                 testResultDetail.getActorTRD() + "," +
                 testResultDetail.getDescriptTRD() + "," +
-                testResultDetail.getInputdataTRD() + "," +
+                testResultDetail.getInputdataTRD() .replace(", ", "|") + "," +
                 testResultDetail.getStepsTRD().replace("\n", "|") + "," +
                 testResultDetail.getExpectedTRD() + "," +
                 testResultDetail.getActualTRD() + "," +

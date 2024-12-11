@@ -21,6 +21,7 @@ public class TestResultDetail {
     private String idTRD;
     private String testNo;
     private String tsIdTRD;
+    private String tcIdTRD;
     private String actorTRD;
     private String descriptTRD;
     private String inputdataTRD;
@@ -38,10 +39,11 @@ public class TestResultDetail {
     private TestResult testResult;
     private String idTR;
 
-    public TestResultDetail(String idTRD, String testNo, String tsIdTRD, String actorTRD, String descriptTRD, String inputdataTRD, String stepsTRD, String expectedTRD, String actualTRD,String statusTRD, String priorityTRD, String dateTRD, String testerTRD, String imageTRD, String approveTRD, String remarkTRD, String idTR) {
+    public TestResultDetail(String idTRD, String testNo, String tsIdTRD, String tcIdTRD, String actorTRD, String descriptTRD, String inputdataTRD, String stepsTRD, String expectedTRD, String actualTRD,String statusTRD, String priorityTRD, String dateTRD, String testerTRD, String imageTRD, String approveTRD, String remarkTRD, String idTR) {
         this.idTRD = idTRD;
         this.testNo = testNo;
         this.tsIdTRD = tsIdTRD;
+        this.tcIdTRD = tcIdTRD;
         this.actorTRD = actorTRD;
         this.descriptTRD = descriptTRD;
         this.inputdataTRD = inputdataTRD;
@@ -73,5 +75,9 @@ public class TestResultDetail {
 
     public boolean isId(String id) {
         return this.idTRD.equals(id);
+    }
+
+    public boolean isIdTR(String id) {
+        return this.idTR.equals(id);
     }
 }
