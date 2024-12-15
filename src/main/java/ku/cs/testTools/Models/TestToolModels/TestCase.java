@@ -44,24 +44,7 @@ public class TestCase {
         this.postCon = postCon;
     }
 
-    public TestCase(String idTC, String nameTC, String dateTC, String useCase, String descriptionTC, String note, int position) {
-        this.idTC = idTC;
-        this.nameTC = nameTC;
-        this.dateTC = dateTC;
-        this.useCase = useCase;
-        this.descriptionTC = descriptionTC;
-        this.note = note;
-        this.position = position;
-    }
 
-    public TestCase(String idTC, String nameTC, String dateTC, String useCase, String descriptionTC, String note) {
-        this.idTC = idTC;
-        this.nameTC = nameTC;
-        this.dateTC = dateTC;
-        this.useCase = useCase;
-        this.descriptionTC = descriptionTC;
-        this.note = note;
-    }
 
 //    public TestCase(String idTC, String nameTC, String dateTC, String useCase, String descriptionTC, String note, String idTCDList) {
 //        this.idTC = idTC;
