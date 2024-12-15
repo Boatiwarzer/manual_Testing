@@ -1,42 +1,17 @@
-testFlowPosition,600,75.0,75.0,68.99999999999994,52.39999999999998,0.0
-testFlowPosition,64,75.0,75.0,97.80000000000013,515.6000000000001,0.0
-testFlowPosition,520,75.0,75.0,308.2000000000001,50.0,0.0
-testFlowPosition,356,75.0,75.0,92.2000000000001,417.1999999999999,0.0
-testFlowPosition,266,75.0,75.0,171.3999999999998,215.60000000000002,0.0
-testFlowPosition,171,75.0,75.0,557.8,46.0,0.0
-testFlowPosition,601,75.0,75.0,564.2,114.80000000000001,0.0
-testFlowPosition,523,75.0,75.0,643.4000000000001,230.8,0.0
-testFlowPosition,250,429.8,304.4,75.0,75.0,0.0
-testFlowPosition,559,557.8,327.6,75.0,75.0,0.0
-testFlowPosition,783,110.60000000000002,298.8,75.0,75.0,0.0
-testFlowPosition,388,255.40000000000003,83.6,168.60000000000002,93.40000000000003,0.0
-testScript,TS-22,Login,10-10-2024,UC-99610740081 : adad,test1,None,asda,test,tEST,1
-testScript,TS-949,TEST,10-10-2024,UC-93443034704 : adadasda,test2,TC-84 : LoginTest,2,tEST,tEST,2
-testScript,TS-360,125,10-10-2024,UC-93443034704 : adadasda,test2,TC-84 : LoginTest,2,tEST,125,3
-testScript,TS-359,123,11-10-2024,UC-99610740081 : adad,test1,TC-84 : LoginTest,asda,tEST,124,4
-testScript,TS-479,1,31-10-2024,None,1,None,1,1,1,0
-testScript,TS-886,a,null,null,null,null,null,a,null,0
-testScript,TS-154,SA,null,null,null,null,null,null,b,64
-testScript,TS-611,c,null,null,null,null,null,c,null,0
-testScript,TS-543,a,null,null,null,null,null,a,null,674
-testScript,TS-400,3564,null,null,null,null,null,3,null,356
-testScript,TS-798,Test,null,UC-956 : 1,Test,TC-84 : LoginTest,11,Test,Test,266
-testScript,TS-714,4,null,null,null,null,null,4,null,927
-testScriptDetail,TSD-846,2,2,None,2,TS-359,11-10-2024
-testScriptDetail,TSD-149,1,1,None,1,TS-479,31-10-2024
-testScriptDetail,TSD-220,1,1,None,1,TS-479,31-10-2024
-testScriptDetail,TSD-586,5,5,None,5,TS-400,29-11-2024
-testScriptDetail,TSD-74,6,6,None,6,TS-400,29-11-2024
-testScriptDetail,TSD-842,7,7,None,7,TS-400,29-11-2024
-testScriptDetail,TSD-503,+,+,None,+,TS-400,29-11-2024
-testCase,TC-185,4,null,null,null,4,881,0,0
-testCase,TC-245,s,null,null,null,s,506,null,null
-testCase,TC-967,11,null,null,null,1,388,null,null
-testCase,TC-586,1,07-12-2024,None,Label,1,0,null,null
-testCase,TC-633,2,07-12-2024,None,Label,2,0,null,null
-useCase,UC-956,1,11,1,11,1,1,2024-11-11 13:45:19
-useCase,UC-166,qwer,qwer,qwer,qwer,qwer,qwer,2024-11-28 21:31:22
-useCaseDetail,UC-166,actor,1,qwer
-useCaseDetail,UC-166,system,1,qerq
-testResult,TR-781,1,2024-12-07 18:13:32,1,In Tester
-testResultDetail,TRD-817,1,TS-22 : Login,,test1,null,,test,1,Pass,Medium,07-12-2024,Tester,undefined - Imgur.jpg : C:\Users\wizar\Pictures\Image_ManaualTesttools\undefined - Imgur.jpg,Waiting,Remark,TR-781
+testFlowPosition,1,321.8,359.5999999999999,75.0,75.0,0.0,decision
+testFlowPosition,2,335.0,24.600000000000023,255.59999999999997,-40.19999999999999,0.0,start
+testFlowPosition,119,249.39999999999998,103.0,334.59999999999997,109.19999999999999,0.0,testcase
+testFlowPosition,195,255.8,245.40000000000003,360.2,216.39999999999998,0.0,testscript
+testFlowPosition,522,250.20000000000005,462.19999999999993,338.59999999999997,480.4,0.0,testcase
+testFlowPosition,237,75.0,75.0,671.4000000000001,108.4,0.0,testcase
+testFlowPosition,399,247.80000000000007,103.80000000000001,323.40000000000003,134.8,0.0,testcase
+testFlowPosition,7,338.2,506.20000000000005,270.00000000000006,508.6,0.0,end
+connection,1,75.0,75.0,211.40000000000003,127.6,Pass,none,none,none,!@#$%^&*()_+,decision
+connection,2,285.59999999999997,79.80000000000001,375.59999999999997,-10.199999999999989,Start,none,none,none,!@#$%^&*()_+,start
+connection,3,349.8,100.4,350.59999999999997,54.80000000000001,Arrow,open,solid,none,!@#$%^&*()_+,line
+connection,4,353.00000000000006,245.2,352.2,182.0,Arrow,open,solid,none,!@#$%^&*()_+,line
+connection,5,358.59999999999997,357.2,354.59999999999997,322.8,Line,none,solid,none,!@#$%^&*()_+,line
+connection,7,300.00000000000006,628.6,390.00000000000006,538.6,End,none,none,none,!@#$%^&*()_+,end
+connection,8,355.40000000000003,508.4,358.59999999999997,438.79999999999995,Line,none,solid,none,!@#$%^&*()_+,line
+testScript,TS-395,s,null,null,null,null,null,s,null,195
+testCase,TC-434,4,null,null,null,4,399,null,null

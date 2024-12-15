@@ -48,18 +48,16 @@ public class PopupTestFlowAddTestcaseController {
     private String id;
     private String idTC;
     private String dateTCD;
-    private String projectName1 = "uc", projectName = "125", directory = "data";
-
-    private final DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory,projectName + ".csv");
-    private final DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
     private String idTS;
     private String date;
     private int position;
+    private String projectName, directory;
+
     @FXML
     void initialize() {
+        clearInfo();
         randomId();
         setDateTCD();
-        clearInfo();
 
         if (FXRouter.getData() != null) {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
@@ -68,7 +66,7 @@ public class PopupTestFlowAddTestcaseController {
             position = (int) objects.get(2);
             testCase = (TestCase) objects.get(3);
             testCaseDetailList = (TestCaseDetailList) objects.get(4);
-            idTS = testCase.getIdTC();
+            idTC = testCase.getIdTC();
             if (objects.get(5) != null){
                 testCaseDetail = (TestCaseDetail) objects.get(5);
                 testCaseDetailList.findTCById(testCaseDetail.getIdTCD());
@@ -127,7 +125,7 @@ public class PopupTestFlowAddTestcaseController {
 //            errorLabel.setText("Password not correct");
 //        } if(signup){
 
-        testCaseDetail = new TestCaseDetail(id,TsNo, Name, Type, dateTCD,idTC);
+        testCaseDetail = new TestCaseDetail(id, TsNo, Name, Type, dateTCD, idTC);
         testCaseDetailList.addOrUpdateTestCase(testCaseDetail);
         try {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
@@ -138,24 +136,27 @@ public class PopupTestFlowAddTestcaseController {
             objects.add(testCaseDetailList);
             objects.add(testCaseDetail);
             objects.add("1");
-            FXRouter.newPopup("popup_info_testcase",objects,true);
+            FXRouter.newPopup("popup_info_testcase", objects, true);
             System.out.println(testCaseDetail);
             Node source = (Node) event.getSource();
             Stage stage = (Stage) source.getScene().getWindow();
             stage.close();
             System.out.println(testCaseDetailList);
-        } catch (IOException e) {
-            System.err.println("ไปที่หน้า home ไม่ได้");
-            System.err.println("ให้ตรวจสอบการกำหนด route");
-        }
+//        } catch (IOException e) {
+//            System.err.println("ไปที่หน้า home ไม่ได้");
+//            System.err.println("ให้ตรวจสอบการกำหนด route");
+//        }
 //        }else{
 //            errorLabel.setText("Username is Available");
 //
 //        }
 
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    private void setDateTCD() {
+        private void setDateTCD() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         LocalDateTime now = LocalDateTime.now();
         dateTCD = now.format(dtf);

@@ -113,6 +113,8 @@ public class TestResultDetailListFileDataSource implements DataSource<TestResult
         IRreportList iRreportList = iRreportListFileDataSource.readData();
         IRreportDetailListFileDataSource iRreportDetailListFileDataSource = new IRreportDetailListFileDataSource(directory,fileName);
         IRreportDetailList iRreportDetailList = iRreportDetailListFileDataSource.readData();
+        ConnectionListFileDataSource connectionListFileDataSource = new ConnectionListFileDataSource(directory, fileName);
+        ConnectionList connectionList = connectionListFileDataSource.readData();
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
 //        List<String> fileLines = new ArrayList<>();
@@ -164,6 +166,11 @@ public class TestResultDetailListFileDataSource implements DataSource<TestResult
 //            }
             for (TestFlowPosition position : testFlowPositionList.getPositionList()) {
                 String line = testFlowPositionListFileDataSource.createLine(position);
+                buffer.append(line);
+                buffer.newLine();
+            }
+            for (Connection connection : connectionList.getConnectionList()) {
+                String line = connectionListFileDataSource.createLine(connection);
                 buffer.append(line);
                 buffer.newLine();
             }

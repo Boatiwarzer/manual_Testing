@@ -105,6 +105,8 @@ public class TestScriptDetailFIleDataSource implements DataSource<TestScriptDeta
         IRreportList iRreportList = iRreportListFileDataSource.readData();
         IRreportDetailListFileDataSource iRreportDetailListFileDataSource = new IRreportDetailListFileDataSource(directory,fileName);
         IRreportDetailList iRreportDetailList = iRreportDetailListFileDataSource.readData();
+        ConnectionListFileDataSource connectionListFileDataSource = new ConnectionListFileDataSource(directory, fileName);
+        ConnectionList connectionList = connectionListFileDataSource.readData();
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
         FileWriter writer = null;
@@ -114,6 +116,11 @@ public class TestScriptDetailFIleDataSource implements DataSource<TestScriptDeta
             buffer = new BufferedWriter(writer);
             for (TestFlowPosition position : testFlowPositionList.getPositionList()) {
                 String line = testFlowPositionListFileDataSource.createLine(position);
+                buffer.append(line);
+                buffer.newLine();
+            }
+            for (Connection connection : connectionList.getConnectionList()) {
+                String line = connectionListFileDataSource.createLine(connection);
                 buffer.append(line);
                 buffer.newLine();
             }

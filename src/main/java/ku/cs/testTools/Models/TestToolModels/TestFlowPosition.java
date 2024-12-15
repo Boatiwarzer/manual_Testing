@@ -1,7 +1,6 @@
 package ku.cs.testTools.Models.TestToolModels;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -22,27 +21,24 @@ public class TestFlowPosition {
     private double fitWidth;
     private double fitHeight;
     private double rotation;
-    private String name;
+    private String type;
 
-    public TestFlowPosition(int positionID, double xPosition, double yPosition, double fitWidth, double fitHeight, double rotation, String name) {
+    public TestFlowPosition(int positionID, double xPosition, double yPosition, double fitWidth, double fitHeight, double rotation, String type) {
         this.positionID = positionID;
         this.xPosition = xPosition;
         this.yPosition = yPosition;
         this.fitWidth = fitWidth;
         this.fitHeight = fitHeight;
         this.rotation = rotation;
-        this.name = name;
+        this.type = type;
     }
 
-    public TestFlowPosition(int positionID, double fitWidth, double fitHeight, double xPosition, double yPosition, double rotation) {
-        this.positionID = positionID;
-        this.fitWidth = fitWidth;
-        this.fitHeight = fitHeight;
-        this.xPosition = xPosition;
-        this.yPosition = yPosition;
-        this.rotation = rotation;
-    }
+
     public boolean isId(int id) {
         return this.positionID == id;
     }
+    public boolean isType(String type) {
+        return this.type.equals(type);
+    }
+
 }

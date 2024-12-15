@@ -60,7 +60,8 @@ public class TestFlowPositionListFileDataSource implements DataSource<TestFlowPo
                             Double.parseDouble(data[3].trim()), // yPosition
                             Double.parseDouble(data[4].trim()), // fitWidth
                             Double.parseDouble(data[5].trim()), // fitHeight
-                            Double.parseDouble(data[6].trim())
+                            Double.parseDouble(data[6].trim()),
+                            data[7].trim()
                             //data[7].trim()// rotation
                             //Integer.parseInt(data[7].trim()) // subsystemID
                     );
@@ -106,6 +107,8 @@ public class TestFlowPositionListFileDataSource implements DataSource<TestFlowPo
         IRreportList iRreportList = iRreportListFileDataSource.readData();
         IRreportDetailListFileDataSource iRreportDetailListFileDataSource = new IRreportDetailListFileDataSource(directory,fileName);
         IRreportDetailList iRreportDetailList = iRreportDetailListFileDataSource.readData();
+        ConnectionListFileDataSource connectionListFileDataSource = new ConnectionListFileDataSource(directory, fileName);
+        ConnectionList connectionList = connectionListFileDataSource.readData();
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
         FileWriter writer = null;
@@ -115,6 +118,11 @@ public class TestFlowPositionListFileDataSource implements DataSource<TestFlowPo
             buffer = new BufferedWriter(writer);
             for (TestFlowPosition position : testFlowPositionList.getPositionList()) {
                 String line = createLine(position);
+                buffer.append(line);
+                buffer.newLine();
+            }
+            for (Connection connection : connectionList.getConnectionList()) {
+                String line = connectionListFileDataSource.createLine(connection);
                 buffer.append(line);
                 buffer.newLine();
             }
@@ -185,6 +193,7 @@ public class TestFlowPositionListFileDataSource implements DataSource<TestFlowPo
                 + testFlowPosition.getFitHeight() + ","
                 + testFlowPosition.getXPosition() + ","
                 + testFlowPosition.getYPosition() + ","
-                + testFlowPosition.getRotation();
+                + testFlowPosition.getRotation() + ","
+                + testFlowPosition.getType();
     }
 }

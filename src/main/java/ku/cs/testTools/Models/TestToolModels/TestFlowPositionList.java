@@ -48,20 +48,82 @@ public class TestFlowPositionList {
         }
         return null;
     }
-    public TestFlowPosition findByPositionHaveName(String name) {
-        if (positionList == null || name == null) {
-            return null; // Return early if inputs are invalid
+    public TestFlowPosition findByPositionTypeStart(String name) {
+        for (TestFlowPosition position : positionList) {
+            String type = position.getType();
+            if (type.equals(name) && type.equals("start")) {
+                return position;
+            }
         }
+        return null;
+    }
+    public TestFlowPosition findByPositionTypeDecision(String name) {
+
 
         for (TestFlowPosition position : positionList) {
-            String positionName = position.getName();
-            if (!positionName.equals("null") && positionName.equals(name)) {
+            String type = position.getType();
+            if (type.equals(name) && type.equals("decision")) {
+                return position;
+            }
+        }
+        return null;
+    }
+    public TestFlowPosition findByPositionTypeTestCase(String name) {
+
+
+        for (TestFlowPosition position : positionList) {
+            String type = position.getType();
+            if (type.equals(name) && type.equals("testcase")) {
+                return position;
+            }
+        }
+        return null;
+    }
+    public TestFlowPosition findByPositionTypeTestScript(String name) {
+
+
+        for (TestFlowPosition position : positionList) {
+            String type = position.getType();
+            if (type.equals(name) && type.equals("testscript")) {
                 return position;
             }
         }
         return null;
     }
 
+    public TestFlowPosition findByPositionTypeEnd(String name) {
+
+        for (TestFlowPosition position : positionList) {
+            String type = position.getType();
+            if (type.equals(name) && type.equals("end")) {
+                return position;
+            }
+        }
+        return null;
+    }
+    public TestFlowPosition findByPositionTypeArrow(String name) {
+
+        for (TestFlowPosition position : positionList) {
+            String type = position.getType();
+            if (type.equals(name) && type.equals("arrow")) {
+                return position;
+            }
+        }
+        return null;
+    }
+    public TestFlowPosition findByPositionTypeLine(String name) {
+        if (positionList == null || name == null) {
+            return null; // Return early if inputs are invalid
+        }
+
+        for (TestFlowPosition position : positionList) {
+            String type = position.getType();
+            if (type.equals(name) && type.equals("line")) {
+                return position;
+            }
+        }
+        return null;
+    }
 
     public double findLastPositionId() {
         double lastPositionId = 0;

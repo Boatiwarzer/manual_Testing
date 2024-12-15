@@ -102,6 +102,8 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
         IRreportList iRreportList = iRreportListFileDataSource.readData();
         IRreportDetailListFileDataSource iRreportDetailListFileDataSource = new IRreportDetailListFileDataSource(directory,fileName);
         IRreportDetailList iRreportDetailList = iRreportDetailListFileDataSource.readData();
+        ConnectionListFileDataSource connectionListFileDataSource = new ConnectionListFileDataSource(directory, fileName);
+        ConnectionList connectionList = connectionListFileDataSource.readData();
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
         FileWriter writer = null;
@@ -133,6 +135,11 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
             }
             for (TestFlowPosition position : testFlowPositionList.getPositionList()) {
                 String line = testFlowPositionListFileDataSource.createLine(position);
+                buffer.append(line);
+                buffer.newLine();
+            }
+            for (Connection connection : connectionList.getConnectionList()) {
+                String line = connectionListFileDataSource.createLine(connection);
                 buffer.append(line);
                 buffer.newLine();
             }

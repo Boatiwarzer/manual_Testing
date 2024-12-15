@@ -6,19 +6,17 @@ import ku.cs.testTools.Services.ManageDataSource;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
 
-public class TestCaseFileDataSource implements DataSource<TestCaseList>, ManageDataSource<TestCase> {
+public class ConnectionListFileDataSource implements DataSource<ConnectionList>, ManageDataSource<Connection> {
     private String directory;
     private String fileName;
 
-    public TestCaseFileDataSource(String directory, String fileName) {
+    public ConnectionListFileDataSource(String directory, String fileName) {
         this.directory = directory;
         this.fileName = fileName;
         checkFileIsExisted();
     }
+
     private void checkFileIsExisted() {
         File file = new File(directory);
         if (!file.exists()) {
@@ -36,49 +34,65 @@ public class TestCaseFileDataSource implements DataSource<TestCaseList>, ManageD
         }
     }
     @Override
-    public TestCaseList readData() {
-        TestCaseList testCaseList = new TestCaseList();
+    public ConnectionList readData() {
+        ConnectionList connectionList = new ConnectionList();
         String filePath = directory + File.separator + fileName;
+        File file = new File(filePath);
+        FileReader reader = null;
+        BufferedReader buffer = null;
 
-        try (BufferedReader buffer = new BufferedReader(new FileReader(filePath, StandardCharsets.UTF_8))) {
-            String line;
+        try {
+
+            reader = new FileReader(file, StandardCharsets.UTF_8);
+            buffer = new BufferedReader(reader);
+
+            String line = "";
             while ((line = buffer.readLine()) != null) {
                 String[] data = line.split(",");
-
-                if (data[0].trim().equals("testCase")) {
-                    // Create the TestScriptDetail object
-                    TestCase testCase = new TestCase(
-                            data[1].trim(), // idTSD
-                            data[2].trim(), // testNo
-                            data[3].trim(), // steps
-                            data[4].trim(), // inputData
-                            data[5].trim(),
-                            data[6].trim(),// expected
-                            Integer.parseInt(data[7].trim()),
-                            data[8].trim(),
-                            data[9].trim()// expected
-
+                if (data[0].trim().equals("connection")) {
+                    Connection connection = new Connection(
+                            Integer.parseInt(data[1].trim()), // connectionID
+                            Double.parseDouble(data[2].trim()), // startX
+                            Double.parseDouble(data[3].trim()), // startY
+                            Double.parseDouble(data[4].trim()), // endX
+                            Double.parseDouble(data[5].trim()), // endY
+                            data[6].trim(), // label
+                            data[7].trim(), // arrowHead
+                            data[8].trim(), // lineType
+                            data[9].trim(), // arrowTail
+                            data[10].trim(), // note
+                            data[11].trim() // type
                     );
-
-                    // Add the detail to the list
-                    testCaseList.addOrUpdateTestCase(testCase);
+                    connectionList.addOrUpdate(connection);
                 }
             }
-        } catch (IOException e) {
-            throw new RuntimeException("Error reading data", e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }finally {
+            try {
+                if (buffer != null) {
+                    buffer.close();
+                }
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
-
-        return testCaseList;
+        return connectionList;
     }
 
     @Override
-    public void writeData(TestCaseList testCaseList) {
+    public void writeData(ConnectionList connectionList) {
         TestFlowPositionListFileDataSource testFlowPositionListFileDataSource = new TestFlowPositionListFileDataSource(directory,fileName);
         TestFlowPositionList testFlowPositionList = testFlowPositionListFileDataSource.readData();
         TestScriptFileDataSource testScriptListDataSource = new TestScriptFileDataSource(directory, fileName);
         TestScriptList testScriptList = testScriptListDataSource.readData();
         TestScriptDetailFIleDataSource testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, fileName);
         TestScriptDetailList testScriptDetailList = testScriptDetailListDataSource.readData();
+        TestCaseFileDataSource testCaseListDataSource = new TestCaseFileDataSource(directory,fileName);
+        TestCaseList testCaseList = testCaseListDataSource.readData();
         TestCaseDetailFileDataSource testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory,fileName);
         TestCaseDetailList testCaseDetailList = testCaseDetailListDataSource.readData();
         UseCaseListFileDataSource useCaseListFileDataSource = new UseCaseListFileDataSource(directory,fileName);
@@ -93,8 +107,6 @@ public class TestCaseFileDataSource implements DataSource<TestCaseList>, ManageD
         IRreportList iRreportList = iRreportListFileDataSource.readData();
         IRreportDetailListFileDataSource iRreportDetailListFileDataSource = new IRreportDetailListFileDataSource(directory,fileName);
         IRreportDetailList iRreportDetailList = iRreportDetailListFileDataSource.readData();
-        ConnectionListFileDataSource connectionListFileDataSource = new ConnectionListFileDataSource(directory, fileName);
-        ConnectionList connectionList = connectionListFileDataSource.readData();
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
         FileWriter writer = null;
@@ -108,7 +120,7 @@ public class TestCaseFileDataSource implements DataSource<TestCaseList>, ManageD
                 buffer.newLine();
             }
             for (Connection connection : connectionList.getConnectionList()) {
-                String line = connectionListFileDataSource.createLine(connection);
+                String line = createLine(connection);
                 buffer.append(line);
                 buffer.newLine();
             }
@@ -123,7 +135,7 @@ public class TestCaseFileDataSource implements DataSource<TestCaseList>, ManageD
                 buffer.newLine();
             }
             for (TestCase testCase : testCaseList.getTestCaseList()){
-                String line = createLine(testCase);
+                String line = testCaseListDataSource.createLine(testCase);
                 buffer.append(line);
                 buffer.newLine();
             }
@@ -168,20 +180,23 @@ public class TestCaseFileDataSource implements DataSource<TestCaseList>, ManageD
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
     }
-
-
     @Override
-    public String createLine(TestCase testCase) {
-        return "testCase," +
-                testCase.getIdTC() + "," +
-                testCase.getNameTC() + "," +
-                testCase.getDateTC() + "," +
-                testCase.getUseCase() + "," +
-                testCase.getDescriptionTC() + "," +
-                testCase.getNote() + "," +
-                testCase.getPosition()+ "," +
-                testCase.getPreCon() + "," +
-                testCase.getPostCon();
+    public String createLine(Connection connection) {
+        return "connection,"
+                + connection.getConnectionID() + ","
+                + connection.getStartX() + ","
+                + connection.getStartY() + ","
+                + connection.getEndX() + ","
+                + connection.getEndY() + ","
+                + connection.getLabel() + ","
+                + connection.getArrowHead() + ","
+                + connection.getLineType() + ","
+                + connection.getArrowTail() + ","
+                + connection.getNote() + ","
+                + connection.getType();
     }
+
+
 }

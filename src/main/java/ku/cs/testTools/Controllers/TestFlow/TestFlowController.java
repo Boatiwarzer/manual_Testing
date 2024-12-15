@@ -16,6 +16,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Rotate;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.DataSource;
@@ -81,19 +82,21 @@ public class TestFlowController {
     private TestScriptDetailList testScriptDetailList;
     private String projectName1 = "uc", projectName = "125", directory = "data";
     private TestFlowPosition testFlowTSPosition = new TestFlowPosition();
-    private TestFlowPosition testFlowTCPosition = new TestFlowPosition();
-    private TestFlowPosition testFlowPositionOther = new TestFlowPosition();
+    private TestFlowPosition testFlowPosition = new TestFlowPosition();
 
     private TestScript testScript = new TestScript();
     private TestCaseList testCaseList = new TestCaseList();
     private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
     private TestCaseDetail testCaseDetail;
     private TestCase testCase = new TestCase();
+    private ConnectionList connectionList = new ConnectionList();
+    private Connection connection = new Connection();
     private final DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
     private final DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
     private final DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
     private final DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory,projectName + ".csv");
     private final DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory,projectName + ".csv");
+    private final DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
     private int id;
 
     @FXML
@@ -103,24 +106,7 @@ public class TestFlowController {
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
             String type =  (String) objects.get(2);
-            if (type.equals("Rectangle-curve")){
-                testScript = (TestScript) objects.get(3);
-                loadProject();
-                testScriptList.addOrUpdateTestScript(testScript);
-                saveProject(testScriptList);
-                objects.remove(3);
-                objects.remove(2);
-            }else if (type.equals("Rectangle")){
-                testCase = (TestCase) objects.get(3);
-                loadProject();
-                testCaseList.addOrUpdateTestCase(testCase);
-                saveProject(testCaseList);
-                objects.remove(3);
-                objects.remove(2);
-            }else if (type.equals("Kite")) {
-                //objects.remove(3);
-                //objects.remove(2);
-            }
+
 
         }
         loadProject();
@@ -142,22 +128,56 @@ public class TestFlowController {
         testScriptList = testScriptListDataSource.readData();
         testScriptDetailList = testScriptDetailListDataSource.readData();
         testCaseList = testCaseListDataSource.readData();
+        testCaseDetailList = testCaseDetailListDataSource.readData();
         testFlowPositionList = testFlowPositionListDataSource.readData();
+        connectionList = connectionListDataSource.readData();
 
         testScriptList.getTestScriptList().forEach(testScript -> {
             // Find the position of the use case
-            testFlowTSPosition = testFlowPositionList.findByPositionId(testScript.getPosition());
+            TestFlowPosition testFlowTSPosition = testFlowPositionList.findByPositionId(testScript.getPosition());
             if (testFlowTSPosition != null) {
                 drawTestScript(testFlowTSPosition.getFitWidth(), testFlowTSPosition.getFitHeight(), testFlowTSPosition.getXPosition(), testFlowTSPosition.getYPosition(), testScript.getNameTS(), testFlowTSPosition.getPositionID());
             }
         });
         testCaseList.getTestCaseList().forEach(testCase -> {
             // Find the position of the use case
-            testFlowTCPosition = testFlowPositionList.findByPositionId(testCase.getPosition());
-            if (testFlowTCPosition != null) {
-                drawTestCase(testFlowTCPosition.getFitWidth(), testFlowTCPosition.getFitHeight(), testFlowTCPosition.getXPosition(), testFlowTCPosition.getYPosition(), testCase.getNameTC(), testFlowTCPosition.getPositionID());
+            TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(testCase.getPosition());
+            if (testFlowPosition != null) {
+                drawTestCase(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(), testCase.getNameTC(), testFlowPosition.getPositionID());
             }
         });
+        connectionList.getConnectionList().forEach(connection -> {
+            String type = connection.getType();
+            if (type.equals("line")) {
+                drawLine(connection.getConnectionID(), connection.getStartX(), connection.getStartY(), connection.getEndX(), connection.getEndY(), connection.getLabel(), connection.getArrowHead(), connection.getLineType(), connection.getArrowTail());
+            } else if (type.equals("arrow")) {
+                drawLine(connection.getConnectionID(), connection.getStartX(), connection.getStartY(), connection.getEndX(), connection.getEndY(), connection.getLabel(), connection.getArrowHead(), connection.getLineType(), connection.getArrowTail());
+
+            }
+        });
+
+        connectionList.getConnectionList().forEach(connection -> {
+             TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(connection.getConnectionID());
+            if (testFlowPosition != null){
+                if (testFlowPosition.getType().equals("start")) {
+                    drawStart(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(), "start", testFlowPosition.getPositionID());
+                } else if (testFlowPosition.getType().equals("end")) {
+                    drawEnd(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(), "end", testFlowPosition.getPositionID());
+
+                } else if (testFlowPosition.getType().equals("decision")) {
+                    drawDecision(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(), connection.getLabel(), testFlowPosition.getPositionID());
+
+                }
+            }
+
+        });
+//        connectionList.getConnectionList().forEach(connection -> {
+//            TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionTypeEnd(connection.getType());
+//
+//            if (testFlowPosition != null) {
+//                drawEnd(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(), testCase.getNameTC(), testFlowPosition.getPositionID());
+//            }
+//        });
 //        testFlowPositionList.getPositionList().forEach(testFlowPosition -> {
 //            testFlowPositionOther = testFlowPositionList.findByPositionHaveName(testFlowPosition.getName());
 //            if (testFlowPositionOther != null){
@@ -170,7 +190,8 @@ public class TestFlowController {
         testScriptListDataSource.writeData(testScriptList);
         testScriptDetailListDataSource.writeData(testScriptDetailList);
         testCaseListDataSource.writeData(testCaseList);
-        //testCaseDetailListDataSource.writeData(testCaseDetailList);
+        testCaseDetailListDataSource.writeData(testCaseDetailList);
+        connectionListDataSource.writeData(connectionList);
 
     }
     private void saveProject(TestScriptList testScriptList) {
@@ -178,7 +199,9 @@ public class TestFlowController {
         testScriptListDataSource.writeData(testScriptList);
         testScriptDetailListDataSource.writeData(testScriptDetailList);
         testCaseListDataSource.writeData(testCaseList);
-        //testCaseDetailListDataSource.writeData(testCaseDetailList);
+        testCaseDetailListDataSource.writeData(testCaseDetailList);
+        connectionListDataSource.writeData(connectionList);
+
 
     }
     private void saveProject(TestCaseList testCaseList) {
@@ -186,7 +209,8 @@ public class TestFlowController {
         testScriptListDataSource.writeData(testScriptList);
         testScriptDetailListDataSource.writeData(testScriptDetailList);
         testCaseListDataSource.writeData(testCaseList);
-        //testCaseDetailListDataSource.writeData(testCaseDetailList);
+        testCaseDetailListDataSource.writeData(testCaseDetailList);
+        connectionListDataSource.writeData(connectionList);
 
     }
 
@@ -279,8 +303,9 @@ public class TestFlowController {
         stackPane.setLayoutX(layoutX);
         stackPane.setLayoutY(layoutY);
         onDesignArea.getChildren().add(stackPane);
-
-        makeDraggable(stackPane, "start", positionID);
+        makeDraggable(onDesignArea.getChildren().get(onDesignArea.getChildren().size() - 1), "start", positionID);
+        makeSelectable(onDesignArea.getChildren().get(onDesignArea.getChildren().size() - 1), "start", positionID);
+        saveProject();
     }private void drawEnd(double width, double height, double layoutX, double layoutY, String label, int positionID) {
         Circle circle = new Circle(width, height,15);
 
@@ -297,8 +322,9 @@ public class TestFlowController {
         stackPane.setLayoutX(layoutX);
         stackPane.setLayoutY(layoutY);
         onDesignArea.getChildren().add(stackPane);
-
-        makeDraggable(stackPane, "end", positionID);
+        makeDraggable(onDesignArea.getChildren().get(onDesignArea.getChildren().size() - 1), "end", positionID);
+        makeSelectable(onDesignArea.getChildren().get(onDesignArea.getChildren().size() - 1), "end", positionID);
+        saveProject();
     }private void drawDecision(double width, double height, double layoutX, double layoutY, String label, int positionID) {
         Polygon polygon = createKiteShape(width, height,75);
 
@@ -317,8 +343,10 @@ public class TestFlowController {
         onDesignArea.getChildren().add(stackPane);
         makeDraggable(onDesignArea.getChildren().get(onDesignArea.getChildren().size() - 1), "decision", positionID);
         makeSelectable(onDesignArea.getChildren().get(onDesignArea.getChildren().size() - 1), "decision", positionID);
-    }private void drawArrow(double width, double height, double layoutX, double layoutY, String label, int positionID) {
-    }public void drawLine(int connectionID, double startX, double startY, double endX, double endY, String label,
+        saveProject();
+    }
+    
+    public void drawLine(int connectionID, double startX, double startY, double endX, double endY, String label,
                           String arrowHead, String lineType, String arrowTail) {
         // Create a new line
         Line line = new Line();
@@ -333,65 +361,189 @@ public class TestFlowController {
         }
 
         // Create Start and End points of the line
-//        Circle startPoint = createDraggablePoint(line.getStartX(), line.getStartY());
-//        Circle endPoint = createDraggablePoint(line.getEndX(), line.getEndY());
-//
-//        // Add arrow to the start and end points of the line
-//        Label arrowHeadPolygon = createDraggableArrow(line, true, arrowHead);
-//        Label arrowTailPolygon = createDraggableArrow(line, false, arrowTail);
-//
-//        // Add mouse Event handlers for dragging
-//        startPoint.setOnMouseDragged(e -> handlePointMouseDragged(e, line, true, label, arrowHead, arrowTail));
-//        endPoint.setOnMouseDragged(e -> handlePointMouseDragged(e, line, false, label, arrowHead, arrowTail));
-//
-//        // Add mouse Event handlers for releasing
-//        startPoint.setOnMouseReleased(e -> handlePointMouseReleased(e, line, connectionID, label, arrowHead, arrowTail));
-//        endPoint.setOnMouseReleased(e -> handlePointMouseReleased(e, line, connectionID, label, arrowHead, arrowTail));
-//
-//        // Add label to the line
-//        Label addLabel = createLabel(label, (line.getStartX() + line.getEndX()) / 2, (line.getStartY() + line.getEndY()) / 2);
-//        if (Objects.equals(label, "!@#$%^&*()_+") || (Objects.equals(label, "Generalization")) || (Objects.equals(label, "Association"))) {
-//            addLabel.setVisible(false);
-//        }
+        Circle startPoint = createDraggablePoint(line.getStartX(), line.getStartY());
+        Circle endPoint = createDraggablePoint(line.getEndX(), line.getEndY());
 
-        // find component preference
-//        if (componentPreferenceList.isPreferenceExist(connectionID, "connection")) {
-//            ComponentPreference componentPreference = componentPreferenceList.findByIDAndType(connectionID, "connection");
-//            addLabel.setTextFill(componentPreference.getFontColor());
-//            line.setStroke(componentPreference.getStrokeColor());
-//            line.setStrokeWidth(componentPreference.getStrokeWidth());
-//        } else {
-//            addLabel.setTextFill(preference.getFontColor());
-//            line.setStroke(preference.getStrokeColor());
-//            line.setStrokeWidth(preference.getStrokeWidth());
-//        }
-//
-//        // Add the line to the designPane
-//        designPane.getChildren().addAll(startPoint, endPoint, arrowHeadPolygon, arrowTailPolygon, addLabel, line);
-//
-//        // make line selectable
-//        makeSelectable(designPane.getChildren().get(designPane.getChildren().size() - 1), "connection", connectionID);
+        // Add arrow to the start and end points of the line
+        Label arrowHeadPolygon = createDraggableArrow(line, true, arrowHead);
+        Label arrowTailPolygon = createDraggableArrow(line, false, arrowTail);
 
-        // double click to open the connection page
-//        line.setOnMouseClicked(new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent mouseEvent) {
-//                if (mouseEvent.getClickCount() == 2) {  // Check if it's a double click
-//                    // Send the connection details to the ConnectionPage
-//                    ArrayList<Object> objects = new ArrayList<>();
-//                    objects.add(projectName);
-//                    objects.add(directory);
-//                    objects.add(subSystemID);
-//                    objects.add(connectionID);
-//                    try {
-//                        saveProject();
-//                        FXRouter.popup("ConnectionPage", objects);
-//                    } catch (IOException e) {
-//                        throw new RuntimeException(e);
-//                    }
+        // Add mouse Event handlers for dragging
+        startPoint.setOnMouseDragged(e -> handlePointMouseDragged(e, line, true, label, arrowHead, arrowTail));
+        endPoint.setOnMouseDragged(e -> handlePointMouseDragged(e, line, false, label, arrowHead, arrowTail));
+
+        // Add mouse Event handlers for releasing
+        startPoint.setOnMouseReleased(e -> handlePointMouseReleased(e, line, connectionID, label, arrowHead, arrowTail));
+        endPoint.setOnMouseReleased(e -> handlePointMouseReleased(e, line, connectionID, label, arrowHead, arrowTail));
+
+        // Add label to the line
+        Label addLabel = createLabel(label, (line.getStartX() + line.getEndX()) / 2, (line.getStartY() + line.getEndY()) / 2);
+
+
+
+
+        // Add the line to the onDesignArea
+        onDesignArea.getChildren().addAll(startPoint, endPoint, arrowHeadPolygon, arrowTailPolygon, addLabel, line);
+
+        // make line selectable
+        makeSelectable(onDesignArea.getChildren().get(onDesignArea.getChildren().size() - 1), "line", connectionID);
+        saveProject();
+        //        line.setOnMouseClicked(mouseEvent -> {
+//            if (mouseEvent.getClickCount() == 2) {  // Check if it's a double click
+//                // Send the connection details to the ConnectionPage
+//                ArrayList<Object> objects = new ArrayList<>();
+//                objects.add(projectName);
+//                objects.add(directory);
+//                objects.add(connectionID);
+//                try {
+//                    saveProject();
+//                    FXRouter.popup("ConnectionPage", objects);
+//                } catch (IOException e) {
+//                    throw new RuntimeException(e);
 //                }
 //            }
 //        });
+    }
+    public Label createLabel(String text, double x, double y) {
+        Label label = new Label(text);
+        label.setLayoutX(x);
+        label.setLayoutY(y);
+        label.setDisable(true);
+        return label;
+    }
+    public void handlePointMouseDragged(MouseEvent event, Line line, Boolean startPoint, String label, String arrowHead, String arrowTail) {
+        // remove the arrowHead and arrowTail
+        for (Node arrow : onDesignArea.getChildren()) {
+            if (arrow instanceof Label) {
+                if (arrow.getLayoutX() == line.getStartX() - 5 && arrow.getLayoutY() == line.getStartY() - 5) {
+                    onDesignArea.getChildren().remove(arrow);
+                } else if (arrow.getLayoutX() == line.getEndX() - 5 && arrow.getLayoutY() == line.getEndY() - 5) {
+                    onDesignArea.getChildren().remove(arrow);
+                }
+            }
+        }
+
+        // remove the label
+        for (Node labelNode : onDesignArea.getChildren()) {
+            if (labelNode instanceof Label) {
+                if (labelNode.getLayoutX() == (line.getStartX() + line.getEndX()) / 2 && labelNode.getLayoutY() == (line.getStartY() + line.getEndY()) / 2) {
+                    onDesignArea.getChildren().remove(labelNode);
+                }
+            }
+        }
+
+        Circle point = (Circle) event.getSource();
+        if (startPoint) {
+            line.setStartX(event.getX());
+            line.setStartY(event.getY());
+        } else {
+            line.setEndX(event.getX());
+            line.setEndY(event.getY());
+        }
+        point.setCenterX(event.getX());
+        point.setCenterY(event.getY());
+
+    }
+
+    public void handlePointMouseReleased(MouseEvent event, Line line, int connectionID, String label, String arrowHead, String arrowTail) {
+        // Add the arrowHead and arrowTail
+        Label arrowHeadPolygon = createDraggableArrow(line, true, arrowHead);
+        Label arrowTailPolygon = createDraggableArrow(line, false, arrowTail);
+
+        // Add the label
+        Label addLabel = createLabel(label, (line.getStartX() + line.getEndX()) / 2, (line.getStartY() + line.getEndY()) / 2);
+        if (Objects.equals(label, "!@#$%^&*()_+") || (Objects.equals(label, "Generalization")) || (Objects.equals(label, "Association"))) {
+            addLabel.setVisible(false);
+        }
+
+        // Add the arrowHead and arrowTail to the onDesignArea
+        onDesignArea.getChildren().addAll(arrowHeadPolygon, arrowTailPolygon, addLabel);
+
+        // Update the connection
+        connectionList.updateConnection(connectionID, line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
+        saveProject();
+    }
+
+    public Circle createDraggablePoint(double x, double y) {
+        Circle point = new Circle(x,y, 5, Color.RED);
+        point.setStrokeWidth(0);
+        point.setCenterX(x);
+        point.setCenterY(y);
+        return point;
+    }
+
+    public Label createDraggableArrow(Line line, boolean head, String arrowType) {
+        // if arrowType is none set the arrow to invisible
+        if (Objects.equals(arrowType, "none")) {
+            Label arrow = new Label("!@#$%^&*()_+");
+            arrow.setDisable(true);
+            arrow.setVisible(false);
+            return arrow;
+        } else if (Objects.equals(arrowType, "close")){
+            if (head) {
+                Label arrow = new Label("⨞");
+                arrow.setLayoutX(line.getStartX() - 5);
+                arrow.setLayoutY(line.getStartY() - 5);
+                arrow.setDisable(true);
+
+                // set center of rotation to the center of the arrow
+                arrow.setRotationAxis(Rotate.Z_AXIS);
+
+                // set rotation
+                double angle = Math.toDegrees(Math.atan2((line.getEndY() - line.getStartY()), (line.getEndX() - line.getStartX())));
+                arrow.setRotate(angle);
+
+                return arrow;
+            } else {
+                Label arrow = new Label("▷");
+                arrow.setLayoutX(line.getEndX() - 5);
+                arrow.setLayoutY(line.getEndY() - 5);
+                arrow.setDisable(true);
+
+                // set center of rotation to the center of the arrow
+                arrow.setRotationAxis(Rotate.Z_AXIS);
+
+                // set rotation
+                double angle = Math.toDegrees(Math.atan2((line.getEndY() - line.getStartY()), (line.getEndX() - line.getStartX())));
+                arrow.setRotate(angle + 180);
+
+                return arrow;
+            }
+        } else if (Objects.equals(arrowType, "open")){
+            if (head) {
+                Label arrow = new Label(">");
+                arrow.setLayoutX(line.getStartX() - 5);
+                arrow.setLayoutY(line.getStartY() - 5);
+                arrow.setDisable(true);
+
+                // set center of rotation to the center of the arrow
+                arrow.setRotationAxis(Rotate.Z_AXIS);
+
+                // set rotation
+                double angle = Math.toDegrees(Math.atan2((line.getEndY() - line.getStartY()), (line.getEndX() - line.getStartX())));
+                arrow.setRotate(angle);
+
+                return arrow;
+            } else {
+                Label arrow = new Label("<");
+                arrow.setLayoutX(line.getEndX() - 5);
+                arrow.setLayoutY(line.getEndY() - 5);
+                arrow.setDisable(true);
+
+                // set center of rotation to the center of the arrow
+                arrow.setRotationAxis(Rotate.Z_AXIS);
+
+                // set rotation
+                double angle = Math.toDegrees(Math.atan2((line.getEndY() - line.getStartY()), (line.getEndX() - line.getStartX())));
+                arrow.setRotate(angle + 180);
+
+                return arrow;
+            }
+        } else {
+            System.out.println("Invalid arrow type");
+            return null;
+
+        }
     }
     private void makeDraggable(Node node, String type, int ID) {
         node.setOnMousePressed(event -> {
@@ -456,15 +608,22 @@ public class TestFlowController {
                 FXRouter.popup("LabelPage", objects);
                 
             } else if (event.getDragboard().getString().equals("Circle")) {
-                randomId();
-                drawStart(75,75,event.getX()-75,event.getY()-75,"tc",id);
+                addToConnectionList(event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Start", "none", "none", "none","start");
+                TestFlowPosition testFlowPosition = new TestFlowPosition(connectionList.findLastConnectionID(),75,75,event.getX()-75,event.getY()-75,0,"start");
+                testFlowPositionList.addPosition(testFlowPosition);
+                drawStart(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(), testCase.getNameTC(), testFlowPosition.getPositionID());
+                saveProject();
+                loadProject();
 
             }else if (event.getDragboard().getString().equals("BlackCircle")) {
-                randomId();
-                drawEnd(75,75,event.getX()-75,event.getY()-75,"tc",1);
+                addToConnectionList(event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "End", "none", "none", "none","end");
+                TestFlowPosition testFlowPosition = new TestFlowPosition(connectionList.findLastConnectionID(),75,75,event.getX()-75,event.getY()-75,0,"end");
+                testFlowPositionList.addPosition(testFlowPosition);
+                drawEnd(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(), testCase.getNameTC(), testFlowPosition.getPositionID());
+                saveProject();
+                loadProject();
 
             }else if (event.getDragboard().getString().equals("Kite")) {
-                //drawDecision(75,75,event.getX()-75,event.getY()-75,"tc",1);
                 ArrayList<Object> objects = new ArrayList<>();
                 objects.add(projectName);
                 objects.add(directory);
@@ -476,14 +635,36 @@ public class TestFlowController {
                 FXRouter.popup("LabelPage", objects);
 
             }else if (event.getDragboard().getString().equals("Arrow")) {
-                drawArrow(75,75,event.getX()-75,event.getY()-75,"tc",1);
-
+                addToConnectionList(event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Arrow", "open", "solid", "none","line");
+                drawLine(connectionList.findLastConnectionID(), event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Association", "open", "dash", "none");
+                saveProject();
+                loadProject();
             }else if (event.getDragboard().getString().equals("Line")) {
-                //drawLine(75,75,event.getX()-75,event.getY()-75,"tc",1);
-
+                addToConnectionList(event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Line", "none", "solid", "none","line");
+                drawLine(connectionList.findLastConnectionID(), event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Association", "none", "solid", "none");
+                saveProject();
+                loadProject();
             }
             event.setDropCompleted(true);
         }
+    }
+    public void addToConnectionList(double startX, double startY, double endX, double endY, String label,
+                                    String arrowHead, String lineType, String arrowTail,String type) {
+        // Save the connection
+        Connection connection = new Connection(
+                connectionList.findLastConnectionID() + 1,  // connectionID
+                startX,  // startX
+                startY,  // startY
+                endX,  // endX
+                endY,  // endY
+                label,  // label
+                arrowHead,  // arrowHead
+                lineType,  // lineType
+                arrowTail,  // arrowTail
+                "!@#$%^&*()_+",//note
+                type); //type
+        connectionList.addConnection(connection);
+        saveProject();
     }
 
     private void randomId() {
@@ -629,6 +810,21 @@ public class TestFlowController {
                     System.out.println("testcase : " + testScript);
                     testCaseList.deleteTestCaseByPositionID(ID);
                     testCaseDetailList.deleteTestCaseDetailByTestScriptID(testCase.getIdTC());
+                    testFlowPositionList.removePositionByID(ID);
+                }else if (Objects.equals(type, "decision")){
+                    connectionList.deleteDecisionByID(ID);
+                    testFlowPositionList.removePositionByID(ID);
+                }else if (Objects.equals(type, "start")){
+                    connectionList.deleteDecisionByID(ID);
+                    testFlowPositionList.removePositionByID(ID);
+                }else if (Objects.equals(type, "end")){
+                    connectionList.deleteDecisionByID(ID);
+                    testFlowPositionList.removePositionByID(ID);
+                }else if (Objects.equals(type, "line")){
+                    connectionList.deleteDecisionByID(ID);
+                    testFlowPositionList.removePositionByID(ID);
+                }else if (Objects.equals(type, "arrow")){
+                    connectionList.deleteDecisionByID(ID);
                     testFlowPositionList.removePositionByID(ID);
                 }
                 onDesignArea.getChildren().remove(node);
