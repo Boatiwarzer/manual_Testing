@@ -13,15 +13,13 @@ import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
-import ku.cs.testTools.Services.DataSourceCSV.TestCaseFileDataSource;
-import ku.cs.testTools.Services.DataSourceCSV.TestScriptDetailFIleDataSource;
-import ku.cs.testTools.Services.DataSourceCSV.TestScriptFileDataSource;
-import ku.cs.testTools.Services.DataSourceCSV.UseCaseListFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.*;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class PopupInfoTestscriptController {
 
@@ -86,12 +84,17 @@ public class PopupInfoTestscriptController {
     private TestScript selectedTestScript;
     private TestCaseList testCaseList = new TestCaseList();
     private UseCaseList useCaseList = new UseCaseList();
+    private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
+    private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
     private TestScriptDetailList testScriptDetailListTemp = new TestScriptDetailList();
     private final DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
     private final DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
     private final DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
     private final DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName1+".csv");
-    private String check;
+    private final DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+    private final DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory,projectName + ".csv");
+    private final DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+
     @FXML
     void initialize() {
         setDate();
@@ -106,13 +109,12 @@ public class PopupInfoTestscriptController {
                 position = (int) objects.get(2);
                 onTableTestscript.isFocused();
                 selectedTSD();
-                testScriptList = testScriptListDataSource.readData();
+                loadProject();
                 testScript = testScriptList.findByPositionId(position);
                 if (objects.get(3) != null){
                     testScript = (TestScript) objects.get(3);
                     testScriptDetailList = (TestScriptDetailList) objects.get(4);
                     testScriptDetail = (TestScriptDetail) objects.get(5);
-                    check = (String) objects.get(6);
                 }
                 setDataTS();
                 if (testScriptListDataSource.readData() != null && testScriptDetailListDataSource.readData() != null){
@@ -139,6 +141,26 @@ public class PopupInfoTestscriptController {
             }
         }
         System.out.println(testScriptDetailList);
+
+    }
+
+    private void loadProject() {
+        testScriptList = testScriptListDataSource.readData();
+        testScriptDetailListTemp = testScriptDetailListDataSource.readData();
+        testCaseList = testCaseListDataSource.readData();
+        testCaseDetailList = testCaseDetailListDataSource.readData();
+        testFlowPositionList = testFlowPositionListDataSource.readData();
+        useCaseList = useCaseListDataSource.readData();
+        ConnectionList connectionList = connectionListDataSource.readData();
+
+    }
+    private void saveProject() {
+        testFlowPositionListDataSource.writeData(testFlowPositionList);
+        testScriptListDataSource.writeData(testScriptList);
+        testScriptDetailListDataSource.writeData(testScriptDetailList);
+        //testCaseListDataSource.writeData(testCaseList);
+       // testCaseDetailListDataSource.writeData(testCaseDetailList);
+        //useCaseListDataSource.writeData(useCaseList);
 
     }
 
@@ -344,7 +366,7 @@ public class PopupInfoTestscriptController {
 
         try {
 
-            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note,post,position);
+            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post,note,position);
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
@@ -367,14 +389,13 @@ public class PopupInfoTestscriptController {
     void onCancelButton(ActionEvent event) {
         try {
             ArrayList<Object> objects = new ArrayList<>();
-            objects.add(testScriptDetailList);
-            objects.add(testScript);
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add("none");
             FXRouter.goTo("test_flow", objects);
-            System.out.println(testScriptDetail);
             Node source = (Node) event.getSource();
             Stage stage = (Stage) source.getScene().getWindow();
             stage.close();
-            System.out.println(testScriptDetailList);
         } catch (IOException e) {
             System.err.println("ไปที่หน้า home ไม่ได้");
             System.err.println("ให้ตรวจสอบการกำหนด route");
@@ -384,6 +405,40 @@ public class PopupInfoTestscriptController {
 
     @FXML
     void onDeleteButton(ActionEvent event) {
+        // Pop up to confirm deletion
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete Confirmation");
+        alert.setHeaderText("Are you sure you want to delete this item?");
+        alert.setContentText("Press OK to confirm, or Cancel to go back.");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+            DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+            DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");            // Remove the item from the list
+            TestScriptList testScriptList = testScriptListDataSource.readData();
+            TestScriptDetailList testScriptDetailList = testScriptDetailListDataSource.readData();
+            TestFlowPositionList testFlowPositionList = testFlowPositionListDataSource.readData();
+            TestScript testScript = testScriptList.findTSByPosition(position);
+            System.out.println("testscript : " + testScript);
+            testScriptList.deleteTestScriptByPositionID(position);
+            testScriptDetailList.deleteTestScriptDetailByTestScriptID(testScript.getIdTS());
+            testFlowPositionList.removePositionByID(position);
+
+            try {
+                ArrayList<Object> objects = new ArrayList<>();
+                objects.add(projectName);
+                objects.add(directory);
+                objects.add("none");
+                FXRouter.goTo("test_flow", objects);
+                Node source = (Node) event.getSource();
+                Stage stage = (Stage) source.getScene().getWindow();
+                stage.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+
+        }
 
     }
 
@@ -407,7 +462,7 @@ public class PopupInfoTestscriptController {
             String preCon = infoPreconLabel.getText();
             String note = onTestNoteField.getText();
             String post = infoPostconLabel.getText();
-            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note,post,position);
+            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, post,note,position);
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
@@ -455,7 +510,7 @@ public class PopupInfoTestscriptController {
             String preCon = infoPreconLabel.getText();
             String note = onTestNoteField.getText();
             String post = infoPostconLabel.getText();
-            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note,post,position);
+            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, post,note,position);
             if (selectedItem != null){
                 FXRouter.popup("popup_testflow_add_testscript",objects,true);
             }
@@ -480,22 +535,22 @@ public class PopupInfoTestscriptController {
 
 
         // Create a new TestScript object
-        testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note,post,position);
+        testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post, note,position);
 
 
         // Add or update test script
         testScriptList.addOrUpdateTestScript(testScript);
 
         // Write data to respective files
-        testScriptListDataSource.writeData(testScriptList);
-        testScriptDetailListDataSource.writeData(testScriptDetailList);
+
+        // Show success message
+        showAlert("Success", "Test script saved successfully!");
+        saveProject();
+        loadProject();
         ArrayList<Object>objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
         objects.add("d");
-
-        // Show success message
-        showAlert("Success", "Test script saved successfully!");
         try {
             FXRouter.goTo("test_flow",objects);
         } catch (IOException e) {

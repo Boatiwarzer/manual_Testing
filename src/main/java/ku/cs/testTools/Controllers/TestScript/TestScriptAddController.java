@@ -140,7 +140,7 @@ public class TestScriptAddController {
                 randomId();
                 System.out.println(tsId);
                 if (testScriptListDataSource.readData() != null && testScriptDetailListDataSource.readData() != null){
-                    TestScriptList testScriptList = testScriptListDataSource.readData();
+                    testScriptList = testScriptListDataSource.readData();
                     loadListView(testScriptList);
                     selectedTSD();
                     for (TestScript testScript : testScriptList.getTestScriptList()) {
@@ -551,45 +551,42 @@ public class TestScriptAddController {
 
     @FXML
     void onSubmitButton(ActionEvent event) {
-        // Validate fields
-        String name = onTestNameField.getText();
-        String date = testDateLabel.getText();
-        String useCase = onUsecaseCombobox.getValue();
-        String description = infoDescriptLabel.getText();
-        String tc = onTestcaseCombobox.getValue();
-        String preCon = infoPreconLabel.getText();
-        String note = onTestNoteField.getText();
-        String post = infoPostconLabel.getText();
 
-        // Check if mandatory fields are empty
-        if (name == null || name.isEmpty() ||
-                useCase == null || useCase.isEmpty() ||
-                tc == null || tc.isEmpty()) {
-            showAlert("Input Error", "Please fill in all required fields.");
-            return;
-        }
-
-        // Create a new TestScript object
-//        TestScriptRepository testScriptRepository = new TestScriptRepository();
-        testScript = new TestScript(tsId, name, date, useCase, description, tc, preCon, note,post);
-        System.out.println(testScript);
-//        System.out.println(testScriptRepository);
-//        testScriptRepository.addTestScript(testScript);
-        // Save data to files
-        //DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-       // DataSource<TestScriptDetailList> testScriptDetailListListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-
-        // Add or update test script
-        testScriptList.addOrUpdateTestScript(testScript);
-
-        // Write data to respective files
-        testScriptListDataSource.writeData(testScriptList);
-        testScriptDetailListDataSource.writeData(testScriptDetailList);
-
-        // Show success message
-        showAlert("Success", "Test script saved successfully!");
         try {
-            FXRouter.goTo("test_script");
+            // Validate fields
+            String tsId = this.tsId;
+            String name = onTestNameField.getText();
+            String date = testDateLabel.getText();
+            String useCase = onUsecaseCombobox.getValue();
+            String description = infoDescriptLabel.getText();
+            String tc = onTestcaseCombobox.getValue();
+            String preCon = infoPreconLabel.getText();
+            String note = onTestNoteField.getText();
+            String post = infoPostconLabel.getText();
+
+            // Check if mandatory fields are empty
+//            if (name == null || name.isEmpty() ||
+//                    useCase == null || useCase.isEmpty() ||
+//                    tc == null || tc.isEmpty()) {
+//                showAlert("Input Error", "Please fill in all required fields.");
+//                return;
+//            }
+
+//         TestScriptRepository testScriptRepository = new TestScriptRepository();
+            testScript = new TestScript(tsId, name, date, useCase, description, tc, preCon, note,post,0);
+            System.out.println(testScript);
+
+
+            // Add or update test script
+            testScriptList.addOrUpdateTestScript(testScript);
+
+            // Write data to respective files
+            testScriptListDataSource.writeData(testScriptList);
+            testScriptDetailListDataSource.writeData(testScriptDetailList);
+
+            // Show success message
+            showAlert("Success", "Test script saved successfully!");
+            FXRouter.goTo("test_script",testScript,true);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

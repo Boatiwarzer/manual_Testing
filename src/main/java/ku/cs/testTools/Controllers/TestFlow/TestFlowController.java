@@ -80,10 +80,7 @@ public class TestFlowController {
     private double startX, startY;
     private TestScriptList testScriptList = new TestScriptList();
     private TestScriptDetailList testScriptDetailList;
-    private String projectName1 = "uc", projectName = "125", directory = "data";
-    private TestFlowPosition testFlowTSPosition = new TestFlowPosition();
-    private TestFlowPosition testFlowPosition = new TestFlowPosition();
-
+    private String projectName = "125", directory = "data";
     private TestScript testScript = new TestScript();
     private TestCaseList testCaseList = new TestCaseList();
     private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
@@ -106,11 +103,13 @@ public class TestFlowController {
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
             String type =  (String) objects.get(2);
-
-
+            loadProject();
+            saveProject();
+        }else {
+            loadProject();
+            saveProject();
         }
-        loadProject();
-        saveProject();
+
     }
 
 
@@ -122,6 +121,7 @@ public class TestFlowController {
         testFlowPositionList.clear();
         testScriptList.clear();
         testCaseList.clear();
+
         //testScriptDetailList.clearItems();
         //onNoteTextArea.clear();
 
@@ -171,40 +171,8 @@ public class TestFlowController {
             }
 
         });
-//        connectionList.getConnectionList().forEach(connection -> {
-//            TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionTypeEnd(connection.getType());
-//
-//            if (testFlowPosition != null) {
-//                drawEnd(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(), testCase.getNameTC(), testFlowPosition.getPositionID());
-//            }
-//        });
-//        testFlowPositionList.getPositionList().forEach(testFlowPosition -> {
-//            testFlowPositionOther = testFlowPositionList.findByPositionHaveName(testFlowPosition.getName());
-//            if (testFlowPositionOther != null){
-//                drawDecision(testFlowTCPosition.getFitWidth(), testFlowTCPosition.getFitHeight(), testFlowTCPosition.getXPosition(), testFlowTCPosition.getYPosition(), testFlowPosition.getName(), testFlowTCPosition.getPositionID());
-//            }
-//        });
     }
     private void saveProject() {
-        testFlowPositionListDataSource.writeData(testFlowPositionList);
-        testScriptListDataSource.writeData(testScriptList);
-        testScriptDetailListDataSource.writeData(testScriptDetailList);
-        testCaseListDataSource.writeData(testCaseList);
-        testCaseDetailListDataSource.writeData(testCaseDetailList);
-        connectionListDataSource.writeData(connectionList);
-
-    }
-    private void saveProject(TestScriptList testScriptList) {
-        testFlowPositionListDataSource.writeData(testFlowPositionList);
-        testScriptListDataSource.writeData(testScriptList);
-        testScriptDetailListDataSource.writeData(testScriptDetailList);
-        testCaseListDataSource.writeData(testCaseList);
-        testCaseDetailListDataSource.writeData(testCaseDetailList);
-        connectionListDataSource.writeData(connectionList);
-
-
-    }
-    private void saveProject(TestCaseList testCaseList) {
         testFlowPositionListDataSource.writeData(testFlowPositionList);
         testScriptListDataSource.writeData(testScriptList);
         testScriptDetailListDataSource.writeData(testScriptDetailList);

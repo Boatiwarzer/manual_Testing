@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Optional;
 
 public class PopupInfoTestcaseController {
     @FXML
@@ -70,7 +72,7 @@ public class PopupInfoTestcaseController {
 //    private TestScriptDetail testScriptDetail;
     private TestCaseDetail testCaseDetail;
     private TestCaseDetail selectedItem;
-
+    private TestFlowPositionList testFlowPositionList;
     private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
     private TestCaseDetailList testCaseDetailListTemp;
 
@@ -90,8 +92,10 @@ public class PopupInfoTestcaseController {
 //    private final DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
     private final DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
     private final DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
-
+    private final DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+    private final DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
     private final DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName1+".csv");
+    private final DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
     private String check;
     @FXML
     void initialize() {
@@ -106,7 +110,7 @@ public class PopupInfoTestcaseController {
                 position = (int) objects.get(2);
                 onTableTestCase.isFocused();
                 selectedTCD();
-                testCaseList = testCaseListDataSource.readData();
+                loadProject();
                 testCase = testCaseList.findByPositionId(position);
                 if (objects.get(3) != null){
                     testCase = (TestCase) objects.get(3);
@@ -139,6 +143,20 @@ public class PopupInfoTestcaseController {
             }
         }
         System.out.println(testCaseDetailList);
+
+    }
+
+    private void loadProject() {
+        testCaseList = testCaseListDataSource.readData();
+        testCaseDetailListTemp = testCaseDetailListDataSource.readData();
+        testFlowPositionList = testFlowPositionListDataSource.readData();
+        useCaseList = useCaseListDataSource.readData();
+    }
+    private void saveProject() {
+        testFlowPositionListDataSource.writeData(testFlowPositionList);
+        testCaseListDataSource.writeData(testCaseList);
+        testCaseDetailListDataSource.writeData(testCaseDetailList);
+        useCaseListDataSource.writeData(useCaseList);
 
     }
 
@@ -336,14 +354,13 @@ public class PopupInfoTestcaseController {
     void onCancelButton(ActionEvent event) {
         try {
             ArrayList<Object> objects = new ArrayList<>();
-            objects.add(testCaseDetailList);
-            objects.add(testCase);
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add("none");
             FXRouter.goTo("test_flow", objects);
-            System.out.println(testCaseDetail);
             Node source = (Node) event.getSource();
             Stage stage = (Stage) source.getScene().getWindow();
             stage.close();
-            System.out.println(testCaseDetailList);
         } catch (IOException e) {
             System.err.println("ไปที่หน้า home ไม่ได้");
             System.err.println("ให้ตรวจสอบการกำหนด route");
@@ -353,6 +370,40 @@ public class PopupInfoTestcaseController {
 
     @FXML
     void onDeleteButton(ActionEvent event) {
+        // Pop up to confirm deletion
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete Confirmation");
+        alert.setHeaderText("Are you sure you want to delete this item?");
+        alert.setContentText("Press OK to confirm, or Cancel to go back.");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory,projectName + ".csv");
+            DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory,projectName + ".csv");
+            DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");            // Remove the item from the list
+            TestCaseList testCaseList = testCaseListDataSource.readData();
+            TestCaseDetailList testCaseDetailList = testCaseDetailListDataSource.readData();
+            TestFlowPositionList testFlowPositionList = testFlowPositionListDataSource.readData();
+            TestCase testCase = testCaseList.findTCByPosition(position);
+            System.out.println("testcase : " + testCase);
+            testCaseList.deleteTestCaseByPositionID(position);
+            testCaseDetailList.deleteTestCaseDetailByTestScriptID(testCase.getIdTC());
+            testFlowPositionList.removePositionByID(position);
+
+            try {
+                ArrayList<Object> objects = new ArrayList<>();
+                objects.add(projectName);
+                objects.add(directory);
+                objects.add("none");
+                FXRouter.goTo("test_flow", objects);
+                Node source = (Node) event.getSource();
+                Stage stage = (Stage) source.getScene().getWindow();
+                stage.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+
+        }
 
     }
 
@@ -436,7 +487,7 @@ public class PopupInfoTestcaseController {
     void onSubmitButton(ActionEvent event) {
         // Validate fields
         String name = onTestNameCombobox.getValue();
-        String idTS = tsId;
+        String idTC = tsId;
         String date = testDateLabel.getText();
         String useCase = onUsecaseCombobox.getValue();
         String description = infoDescriptLabel.getText();
@@ -446,15 +497,14 @@ public class PopupInfoTestcaseController {
 
 
         // Create a new TestScript object
-        testCase = new TestCase(idTS, name, date, useCase, description,note,position,preCon,post);
+        testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post);
 
 
         // Add or update test script
         testCaseList.addOrUpdateTestCase(testCase);
-
         // Write data to respective files
-        testCaseListDataSource.writeData(testCaseList);
-        testCaseDetailListDataSource.writeData(testCaseDetailList);
+        saveProject();
+        loadProject();
         ArrayList<Object>objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
@@ -462,8 +512,12 @@ public class PopupInfoTestcaseController {
 
         // Show success message
         showAlert("Success", "Test case saved successfully!");
+
         try {
             FXRouter.goTo("test_flow",objects);
+            Node source = (Node) event.getSource();
+            Stage stage = (Stage) source.getScene().getWindow();
+            stage.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
