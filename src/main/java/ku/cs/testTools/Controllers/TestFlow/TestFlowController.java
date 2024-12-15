@@ -121,6 +121,7 @@ public class TestFlowController {
         testFlowPositionList.clear();
         testScriptList.clear();
         testCaseList.clear();
+        connectionList.clear();
 
         //testScriptDetailList.clearItems();
         //onNoteTextArea.clear();
