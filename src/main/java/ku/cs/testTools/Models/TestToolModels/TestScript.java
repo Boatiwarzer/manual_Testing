@@ -67,29 +67,6 @@ public class TestScript {
         this.position = position;
     }
 
-    public TestScript(String idTS, String nameTS, String dateTS, String useCase, String descriptionTS, String testCase, String preCon, String freeText) {
-        this.idTS = idTS;
-        this.nameTS = nameTS;
-        this.dateTS = dateTS;
-        this.useCase = useCase;
-        this.descriptionTS = descriptionTS;
-        this.testCase = testCase;
-        this.preCon = preCon;
-        this.freeText = freeText;
-    }
-
-    public TestScript(String idTS, String nameTS, String dateTS, String useCase, String descriptionTS, String testCase, String preCon,String freeText,String postCon) {
-        this.idTS = idTS;
-        this.nameTS = nameTS;
-        this.dateTS = dateTS;
-        this.useCase = useCase;
-        this.descriptionTS = descriptionTS;
-        this.testCase = testCase;
-        this.preCon = preCon;
-        this.freeText = freeText;
-        this.postCon = postCon;
-
-    }
 
     @Override
     public final boolean equals(Object o) {

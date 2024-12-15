@@ -502,7 +502,7 @@ public class TestScriptEditController {
             String note = onTestNoteField.getText();
             String post = infoPostconLabel.getText();
 
-            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note,post);
+            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note,post,0);
 
             if (testScriptDetailList != null){
                 FXRouter.popup("popup_add_testscript",testScriptDetailList,testScript,null,true);
@@ -544,7 +544,7 @@ public class TestScriptEditController {
             String preCon = infoPreconLabel.getText();
             String note = onTestNoteField.getText();
             String post = infoPostconLabel.getText();
-            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note,post);
+            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note,post,0);
             if (selectedItem != null){
                 FXRouter.popup("popup_add_testscript",testScriptDetailList,testScript,selectedItem,true);
             }
@@ -576,7 +576,7 @@ public class TestScriptEditController {
             String preCon = infoPreconLabel.getText();
             String note = onTestNoteField.getText();
             String post = infoPostconLabel.getText();
-            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note,post);
+            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note,post,0);
             if (selectedItem != null){
                 System.out.println(testScriptDetailList);
                 System.out.println(testScript);
@@ -610,7 +610,7 @@ public class TestScriptEditController {
         }
 
         // Create a new TestScript object
-        testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note,post);
+        testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note,post,0);
 
 
         // Add or update test script
