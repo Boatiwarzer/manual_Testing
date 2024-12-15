@@ -117,11 +117,53 @@ public class TestResultDetailListFileDataSource implements DataSource<TestResult
         ConnectionList connectionList = connectionListFileDataSource.readData();
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
+//        List<String> fileLines = new ArrayList<>();
+//        // อ่านข้อมูลเดิมในไฟล์ถ้ามี
+//        boolean append = true;
+//        if (file.exists()) {
+//            try {
+//                fileLines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//        // อัปเดตข้อมูลที่มีอยู่แล้ว หรือเพิ่มข้อมูลใหม่
+//        writer = new FileWriter(file, StandardCharsets.UTF_8, append);
+//        buffer = new BufferedWriter(writer);
+//        for (TestResultDetail testResultDetail : testResultDetailList.getTestResultDetailList()) {
+//            String newLine = createLine(testResultDetail);
+//            append = false;
+//            for (int i = 0; i < fileLines.size(); i++) {
+//                String line = fileLines.get(i);
+//                if (line.contains(testResultDetail.getIdTRD())) { // เช็คว่า ID ตรงกันหรือไม่
+//                    fileLines.set(i, newLine); // เขียนทับบรรทัดเดิม
+//                    append = true;
+//                    break;
+//                }
+//            }
+//            if (!append) {
+//                fileLines.add(newLine); // เพิ่มข้อมูลใหม่ถ้าไม่เจอ ID เดิม
+//            }
+//        }
+//        try (BufferedWriter buffer1 = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8, false))) { // false สำหรับเขียนทับไฟล์ทั้งหมด
+//            for (String line : fileLines) {
+//                buffer1.write(line);
+//                buffer1.newLine();
+//            }
+//        } catch (IOException e){
+//            throw new RuntimeException(e);
+//        }
         FileWriter writer = null;
         BufferedWriter buffer = null;
         try {
-            writer = new FileWriter(file, StandardCharsets.UTF_8);
-            buffer = new BufferedWriter(writer);
+
+//            for (TestResultDetail testResultDetail : testResultDetailList.getTestResultDetailList()){
+//                buffer.write(String.join(System.lineSeparator(), fileLines));
+//                buffer.newLine();
+////                String line = createLine(testResultDetail);
+////                buffer.append(line);
+////                buffer.newLine();
+//            }
             for (TestFlowPosition position : testFlowPositionList.getPositionList()) {
                 String line = testFlowPositionListFileDataSource.createLine(position);
                 buffer.append(line);
@@ -167,11 +209,6 @@ public class TestResultDetailListFileDataSource implements DataSource<TestResult
                 buffer.append(line);
                 buffer.newLine();
             }
-            for (TestResultDetail testResultDetail : testResultDetailList.getTestResultDetailList()){
-                String line = createLine(testResultDetail);
-                buffer.append(line);
-                buffer.newLine();
-            }
             for (IRreport iRreport : iRreportList.getIRreportList()){
                 String line = iRreportListFileDataSource.createLine(iRreport);
                 buffer.append(line);
@@ -188,8 +225,6 @@ public class TestResultDetailListFileDataSource implements DataSource<TestResult
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-
     }
 
     @Override
