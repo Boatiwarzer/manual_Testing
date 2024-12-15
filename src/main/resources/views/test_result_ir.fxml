@@ -49,6 +49,11 @@
                         <Font size="14.0" />
                      </font>
                   </Button>
+                  <Button fx:id="onExportButton" mnemonicParsing="false" onAction="#onExportButton" prefHeight="30.0" prefWidth="120.0" text="Export to Excel">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
                </children>
             </HBox>
          </children>

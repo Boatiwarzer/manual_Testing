@@ -17,10 +17,7 @@ import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
-import ku.cs.testTools.Services.DataSourceCSV.IRreportDetailListFileDataSource;
-import ku.cs.testTools.Services.DataSourceCSV.IRreportListFileDataSource;
-import ku.cs.testTools.Services.DataSourceCSV.TestResultListFileDataSource;
-import ku.cs.testTools.Services.DataSourceCSV.TestResultDetailListFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.*;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.File;
@@ -63,11 +60,14 @@ public class TestResultController {
     private String irId;
     private String irdId;
     private IRreport iRreport;
+    private IRreport selectedIRreport = new IRreport();
     private IRreportList iRreportList = new IRreportList();
     private IRreportDetail iRreportDetail = new IRreportDetail();
     private IRreportDetailList iRreportDetailList = new IRreportDetailList();
     private TestScript testScript = new TestScript();
     private TestScriptList testScriptList = new TestScriptList();
+    private final DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+    private final DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
     private static int idCounter = 1; // Counter for sequential IDs
     private static final int MAX_ID = 999; // Upper limit for IDs
     private final DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
@@ -465,6 +465,8 @@ public class TestResultController {
 
     @FXML
     void onIRButton(ActionEvent event) {
+        testScriptList = testScriptListDataSource.readData();
+        iRreportList =iRreportListDataSource.readData();
 
         String idTR = testIDLabel.getText();
 
@@ -483,7 +485,6 @@ public class TestResultController {
                 System.out.println("trd " + trd);
             }
 
-//            List<TestResultDetail> testResultDetails = new ArrayList<>();
             List<TestResultDetail> failedResult = trdList.stream()
                     .filter(faildetail -> faildetail.getIdTR().equals(idTR) && faildetail.getStatusTRD().equals("Fail"))
                     .collect(Collectors.toList());
@@ -495,22 +496,19 @@ public class TestResultController {
                 String irID = irdId;
                 String testNo = String.format("%d", counter);
                 counter++; // เพิ่มค่าตัวนับ
-
                 String testerIRD = "Tester";
                 String tsIdIRD = detail.getTsIdTRD();
                 String tcIdIRD = detail.getTcIdTRD();
                 System.out.println("tsId " + tsIdIRD);
                 String descriptIRD = detail.getDescriptTRD();
 
-//                String[] parts = tsIdIRD.split(" : "); // แยกข้อความตาม " : "
-//                String tsId = parts[0]; // ดึงส่วนแรกออกมา
-//                System.out.println("tsIDpart "+tsId);
-//                TestScript con = testScriptList.findByTestScriptId(tsId.trim());
-//                System.out.println("con " + con);
-//
-//                String conditionIRD = con.getPreCon();
+                String selectedId = tsIdIRD; // ดึง ID จาก ComboBox
+                String[] parts = selectedId.split(" : "); // แยกข้อความตาม " : "
+                String tsId = parts[0]; // ดึงส่วนแรกออกมา
+                TestScript selectedCon = testScriptList.findByTestScriptId(tsId.trim());
+                System.out.println("con " + selectedCon);
 
-                String conditionIRD = detail.getExpectedTRD();
+                String conditionIRD = selectedCon.getPreCon();
                 String imageIRD = detail.getImageTRD();
                 String priorityIRD = detail.getPriorityTRD();
                 String rcaIRD = "";
@@ -524,59 +522,29 @@ public class TestResultController {
             iRreportListDataSource.writeData(iRreportList);
             iRreportDetailListDataSource.writeData(iRreportDetailList);
         }
-//            ObservableList<TestResultDetail> allRecords = FXCollections.observableArrayList();
-//
-//            ObservableList<TestResultDetail> filteredRecords = allRecords.filtered(record ->
-//                    record.getIdTR().equals(idTR) && record.getStatusTRD().equals("Fail")
-//            );
-//            try {
-//                FXMLLoader loader = new FXMLLoader(getClass().getResource("SecondScene.fxml"));
-//                Parent root = loader.load();
-//
-//                IRTestresultController iRTestresultController = loader.getController();
-//                iRTestresultController.setData(filteredRecords); // ส่งข้อมูลไปยังหน้าที่สอง
-//
-//                Stage stage = new Stage();
-//                stage.setScene(new Scene(root));
-//                stage.show();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-
 
 //        if (statusIRD.equals()) {
 //
 //        }
 
 
-
-
-//        try {
-//            testResultDetail = null;
-//            clearInfo();
-//            FXRouter.goTo("test_result_add",testResultDetailList,testResult);
-//            System.out.println(testResultDetail);
-//            Node source = (Node) event.getSource();
-//            Stage stage = (Stage) source.getScene().getWindow();
-//            stage.close();
-//            System.out.println(testResultDetailList);
-//        } catch (IOException e) {
-//            System.err.println("ไปที่หน้า home ไม่ได้");
-//            System.err.println("ให้ตรวจสอบการกำหนด route");
-//        }
-
         // Save data to files
         // DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
         // DataSource<TestScriptDetailList> testScriptDetailListListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
 
-        // Write data to respective files
-//        iRreportListDataSource.writeData(iRreportList);
-//        iRreportDetailListDataSource.writeData(iRreportDetailList);
-
         // Show success message
         showAlert("Success", "IR Report saved successfully!");
         try {
-            FXRouter.popup("test_result_ir");
+//            FXRouter.popup("test_result_ir");
+            IRreportDetailList iRreportDetailList = iRreportDetailListDataSource.readData();
+            IRreportList iRreportList = iRreportListDataSource.readData();
+            // โหลด FXML ของ Popup
+            HashMap<String, Object> params = new HashMap<>();
+            params.put("iRreportDetailList", iRreportDetailList);
+            params.put("iRreportList", iRreportList);
+
+            // เปิด Popup ด้วย FXRouter
+            FXRouter.popup("test_result_ir", params);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
