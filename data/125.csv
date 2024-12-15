@@ -1,17 +1,15 @@
-testFlowPosition,1,321.8,359.5999999999999,75.0,75.0,0.0,decision
-testFlowPosition,2,335.0,24.600000000000023,255.59999999999997,-40.19999999999999,0.0,start
-testFlowPosition,119,249.39999999999998,103.0,334.59999999999997,109.19999999999999,0.0,testcase
-testFlowPosition,195,255.8,245.40000000000003,360.2,216.39999999999998,0.0,testscript
-testFlowPosition,522,250.20000000000005,462.19999999999993,338.59999999999997,480.4,0.0,testcase
-testFlowPosition,237,75.0,75.0,671.4000000000001,108.4,0.0,testcase
-testFlowPosition,399,247.80000000000007,103.80000000000001,323.40000000000003,134.8,0.0,testcase
-testFlowPosition,7,338.2,506.20000000000005,270.00000000000006,508.6,0.0,end
-connection,1,75.0,75.0,211.40000000000003,127.6,Pass,none,none,none,!@#$%^&*()_+,decision
-connection,2,285.59999999999997,79.80000000000001,375.59999999999997,-10.199999999999989,Start,none,none,none,!@#$%^&*()_+,start
-connection,3,349.8,100.4,350.59999999999997,54.80000000000001,Arrow,open,solid,none,!@#$%^&*()_+,line
-connection,4,353.00000000000006,245.2,352.2,182.0,Arrow,open,solid,none,!@#$%^&*()_+,line
-connection,5,358.59999999999997,357.2,354.59999999999997,322.8,Line,none,solid,none,!@#$%^&*()_+,line
-connection,7,300.00000000000006,628.6,390.00000000000006,538.6,End,none,none,none,!@#$%^&*()_+,end
-connection,8,355.40000000000003,508.4,358.59999999999997,438.79999999999995,Line,none,solid,none,!@#$%^&*()_+,line
-testScript,TS-395,s,null,null,null,null,null,s,null,195
-testCase,TC-434,4,null,null,null,4,399,null,null
+testScript,TS-23,ts,10-12-2024,UC-973 : usecase,ucDescript,TC-545 : tc,ucPrecon,tsNote,ucPost,0
+testScriptDetail,TSD-290,1,type username,None,can type,TS-23,10-12-2024
+testScriptDetail,TSD-143,2,type paaword,None,can type,TS-23,10-12-2024
+testCase,TC-545,tc,10-12-2024,UC-973 : usecase,ucDescript,tcNote,0,null,null
+useCase,UC-973,usecase,actor usecase,ucDescript,ucPrecon,ucPost,ucNote,2024-12-10 21:27:51
+useCaseDetail,UC-973,actor,1,subActor
+useCaseDetail,UC-973,system,1,subSystem
+testResult,TR-686,tr,2024-12-11 01:06:08,trNote,In Tester
+testResultDetail,TRD-907,1,TS-23 : ts,TC-545 : tc,actor usecase,ucDescript,type username|type paaword,1. type username|2. type paaword|,ucPost,uuuccc,Fail,Low,10-12-2024,Tester,1234.jpg : C:\Users\MSI\Pictures\Image_ManaualTesttools\1234.jpg,Waiting,Remark,TR-686
+testResultDetail,TRD-219,2,TS-23 : ts,TC-545 : tc,actor usecase,ucDescript,type username|type paaword,1. type username|2. type paaword|,ucPost,ucccc,Fail,Medium,10-12-2024,Tester,lofi-cafe-digital-art--4k-wallpaper.jpg : C:\Users\MSI\Pictures\Image_ManaualTesttools\lofi-cafe-digital-art--4k-wallpaper.jpg,Waiting,Remark,TR-686
+testResultDetail,TRD-153,3,TS-23 : ts,TC-545 : tc,actor usecase,ucDescript,type username|type paaword,1. type username|2. type paaword|,ucPost,ucPost,Pass,None,10-12-2024,Tester,...,Waiting,Remark,TR-686
+testResultDetail,TRD-203,4,TS-23 : ts,TC-545 : tc,actor usecase,ucDescript,type username|type paaword,1. type username|2. type paaword|,ucPost,4444,Fail,High,11-12-2024,Tester,...,Waiting,Remark,TR-686
+iRreport,IR-882,tr,2024-12-11 00:11:16,TR-686
+iRreportDetail,IRD-61,1,Tester,TS-23 : ts,TC-545 : tc,ucDescript,ucPrecon,1234.jpg : C:\Users\MSI\Pictures\Image_ManaualTesttools\1234.jpg,Low,,,In Manager,,IR-882
+iRreportDetail,IRD-169,2,Tester,TS-23 : ts,TC-545 : tc,ucDescript,ucPrecon,lofi-cafe-digital-art--4k-wallpaper.jpg : C:\Users\MSI\Pictures\Image_ManaualTesttools\lofi-cafe-digital-art--4k-wallpaper.jpg,Medium,,,In Manager,,IR-882
