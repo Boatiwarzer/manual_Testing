@@ -70,7 +70,7 @@ public class PopupInfoTestscriptController {
 
     @FXML
     private Label testIDLabel;
-    private String projectName1 = "uc", projectName = "125", directory = "data";
+    private String projectName = "125", directory = "data";
     private TestScriptList testScriptList = new TestScriptList();
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
     private TestScript testScript = new TestScript();
@@ -87,13 +87,6 @@ public class PopupInfoTestscriptController {
     private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
     private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
     private TestScriptDetailList testScriptDetailListTemp = new TestScriptDetailList();
-    private final DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-    private final DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-    private final DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
-    private final DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName1+".csv");
-    private final DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
-    private final DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory,projectName + ".csv");
-    private final DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
     private ConnectionList connectionList;
     @FXML
     void initialize() {
@@ -117,8 +110,6 @@ public class PopupInfoTestscriptController {
                     testScriptDetail = (TestScriptDetail) objects.get(5);
                 }
                 setDataTS();
-                if (testScriptListDataSource.readData() != null && testScriptDetailListDataSource.readData() != null){
-                    testScriptDetailListTemp = testScriptDetailListDataSource.readData();
                     for (TestScriptDetail testScriptDetail : testScriptDetailListTemp.getTestScriptDetailList()) {
                         if (testScript.getIdTS().trim().equals(testScriptDetail.getIdTS().trim())){
                             testScriptDetailList.addOrUpdateTestScriptDetail(testScriptDetail);
@@ -126,17 +117,16 @@ public class PopupInfoTestscriptController {
                     }
                     if (testScriptDetailList != null){
                         loadTable(testScriptDetailList);
-                    }
+
 
                 }
             }
             else{
                 setTable();
                 System.out.println(tsId);
-                if (testScriptListDataSource.readData() != null && testScriptDetailListDataSource.readData() != null){
-                    selectedTSD();
+                selectedTSD();
 
-                }
+
 
             }
         }
@@ -149,7 +139,7 @@ public class PopupInfoTestscriptController {
         DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
         DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
         DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName1+".csv");
+        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
         DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
         DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
 
@@ -167,7 +157,7 @@ public class PopupInfoTestscriptController {
         DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
         DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
         DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName1+".csv");
+        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
         DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
         DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
         testFlowPositionListDataSource.writeData(testFlowPositionList);
@@ -285,11 +275,9 @@ public class PopupInfoTestscriptController {
         onTestcaseCombobox.setItems(FXCollections.observableArrayList("None"));
         new AutoCompleteComboBoxListener<>(onTestcaseCombobox);
         onTestcaseCombobox.getSelectionModel().selectFirst();
-        if (testCaseListDataSource.readData() != null){
-            testCaseList = testCaseListDataSource.readData();
-            testCaseCombobox();
+        testCaseCombobox();
 
-        }
+
         onTestcaseCombobox.setOnAction(event -> {
             String selectedItem = onTestcaseCombobox.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
@@ -303,10 +291,8 @@ public class PopupInfoTestscriptController {
         onUsecaseCombobox.setItems(FXCollections.observableArrayList("None"));
         new AutoCompleteComboBoxListener<>(onUsecaseCombobox);
         onUsecaseCombobox.getSelectionModel().selectFirst();
-        if (useCaseListDataSource.readData() != null){
-            useCaseList= useCaseListDataSource.readData();
-            useCaseCombobox();
-        }
+        useCaseCombobox();
+
         onUsecaseCombobox.setOnAction(event -> {
             String selectedItem = onUsecaseCombobox.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {

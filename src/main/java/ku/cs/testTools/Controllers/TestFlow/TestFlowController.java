@@ -104,9 +104,18 @@ public class TestFlowController {
         }
         loadProject();
         saveProject();
+        onDesignArea.setOnKeyPressed((KeyEvent event) -> {
+            // ตรวจสอบว่าเป็นการกด Ctrl + Z
+            if (event.isControlDown() && event.getCode() == KeyCode.Z) {
+                // ถ้ากด Ctrl + Z, เรียกใช้ฟังก์ชัน Undo
+                undoAction();
+            }
+        });
 
     }
 
+    private void undoAction() {
+    }
 
 
     private void loadProject() {
@@ -336,50 +345,96 @@ public class TestFlowController {
         makeSelectable(onDesignArea.getChildren().get(onDesignArea.getChildren().size() - 1), "decision", positionID);
         saveProject();
     }
-    
+
     public void drawLine(int connectionID, double startX, double startY, double endX, double endY, String label,
-                          String arrowHead, String lineType, String arrowTail) {
-        // Create a new line
+                         String arrowHead, String lineType, String arrowTail) {
+
+        // สร้างเส้น
         Line line = new Line();
         line.setStartX(startX);
         line.setStartY(startY);
         line.setEndX(endX);
         line.setEndY(endY);
-        line.setStrokeWidth(1);
+        line.setStrokeWidth(2);
+        line.setPickOnBounds(false);
+        Rectangle clickArea = new Rectangle();
+        clickArea.setX(Math.min(startX, endX));
+        clickArea.setY(Math.min(startY, endY));
+        clickArea.setWidth(Math.abs(endX - startX) + 6.5);
+        clickArea.setHeight(Math.abs(endY - startY) + 6.5);
+        clickArea.setFill(Color.TRANSPARENT);
+        clickArea.setStrokeWidth(0);
+        clickArea.setPickOnBounds(false);
 
-        if (Objects.equals(lineType, "dash")){
+// ทำให้ Rectangle คลิกได้
+        clickArea.setOnMouseClicked(line::fireEvent);
+
+// เพิ่ม Rectangle ลงใน onDesignArea
+        onDesignArea.getChildren().add(clickArea);
+
+
+        if (Objects.equals(lineType, "dash")) {
             line.setStyle("-fx-stroke-dash-array: 10 10;");
         }
 
-        // Create Start and End points of the line
-        Circle startPoint = createDraggablePoint(line.getStartX(), line.getStartY());
-        Circle endPoint = createDraggablePoint(line.getEndX(), line.getEndY());
+        // สร้าง Start และ End points ของเส้น
+        Circle startPoint = createDraggablePoint(startX, startY);
+        Circle endPoint = createDraggablePoint(endX, endY);
 
-        // Add arrow to the start and end points of the line
+        // เพิ่ม arrow ที่ปลายเส้น
         Label arrowHeadPolygon = createDraggableArrow(line, true, arrowHead);
         Label arrowTailPolygon = createDraggableArrow(line, false, arrowTail);
 
-        // Add mouse Event handlers for dragging
-        startPoint.setOnMouseDragged(e -> handlePointMouseDragged(e, line, true, label, arrowHead, arrowTail));
-        endPoint.setOnMouseDragged(e -> handlePointMouseDragged(e, line, false, label, arrowHead, arrowTail));
+        // เพิ่ม Event handlers สำหรับลาก startPoint
+        startPoint.setOnMouseDragged(e -> {
+            startPoint.setVisible(true);
+            startPoint.setFill(Color.DARKRED);
+            handlePointMouseDragged(e, line, true, label, arrowHead, arrowTail);
+        });
 
-        // Add mouse Event handlers for releasing
-        startPoint.setOnMouseReleased(e -> handlePointMouseReleased(e, line, connectionID, label, arrowHead, arrowTail));
-        endPoint.setOnMouseReleased(e -> handlePointMouseReleased(e, line, connectionID, label, arrowHead, arrowTail));
+        // เพิ่ม Event handlers สำหรับลาก endPoint
+        endPoint.setOnMouseDragged(e -> {
+            endPoint.setVisible(true);
+            endPoint.setFill(Color.DARKRED);
+            handlePointMouseDragged(e, line, false, label, arrowHead, arrowTail);
+        });
 
-        // Add label to the line
-        Label addLabel = createLabel(label, (line.getStartX() + line.getEndX()) / 2, (line.getStartY() + line.getEndY()) / 2);
+        // Event handler สำหรับปล่อย startPoint
+        startPoint.setOnMouseReleased(e -> {
+            startPoint.setVisible(true);
+            startPoint.setFill(Color.hsb(0, 0.5, 1.0));
+            handlePointMouseReleased(e, line, connectionID, label, arrowHead, arrowTail);
+        });
 
+        // Event handler สำหรับปล่อย endPoint
+        endPoint.setOnMouseReleased(e -> {
+            endPoint.setVisible(true);
+            endPoint.setFill(Color.hsb(0, 0.5, 1.0));
+            handlePointMouseReleased(e, line, connectionID, label, arrowHead, arrowTail);
+        });
 
+        // เพิ่มองค์ประกอบทั้งหมดลงใน onDesignArea
+        onDesignArea.getChildren().addAll(line, startPoint, endPoint, arrowHeadPolygon, arrowTailPolygon);
 
-
-        // Add the line to the onDesignArea
-        onDesignArea.getChildren().addAll(startPoint, endPoint, arrowHeadPolygon, arrowTailPolygon, addLabel, line);
-
-        // make line selectable
-        makeSelectable(onDesignArea.getChildren().get(onDesignArea.getChildren().size() - 1), "line", connectionID);
+        // ทำให้เส้นสามารถเลือกได้
+        makeSelectable(line, "line", connectionID);
         saveProject();
-        //        line.setOnMouseClicked(mouseEvent -> {
+
+        // Event handler สำหรับคลิกที่เส้นเพื่อแสดงจุด
+        line.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getClickCount() == 1) {
+                startPoint.setVisible(true);
+                endPoint.setVisible(true);
+            }
+        });
+        // ตั้ง event handler สำหรับการคลิกที่พื้นที่อื่นๆ บน onDesignArea
+
+
+    }
+
+
+
+    //        line.setOnMouseClicked(mouseEvent -> {
 //            if (mouseEvent.getClickCount() == 2) {  // Check if it's a double click
 //                // Send the connection details to the ConnectionPage
 //                ArrayList<Object> objects = new ArrayList<>();
@@ -394,15 +449,15 @@ public class TestFlowController {
 //                }
 //            }
 //        });
-    }
-    public Label createLabel(String text, double x, double y) {
-        Label label = new Label(text);
-        label.setLayoutX(x);
-        label.setLayoutY(y);
-        label.setDisable(true);
-        return label;
-    }
-    public void handlePointMouseDragged(MouseEvent event, Line line, Boolean startPoint, String label, String arrowHead, String arrowTail) {
+
+//    public Label createLabel(String text, double x, double y) {
+//        Label label = new Label(text);
+//        label.setLayoutX(x);
+//        label.setLayoutY(y);
+//        label.setDisable(true);
+//        return label;
+//    }
+    public void handlePointMouseDragged(MouseEvent event, Line line, Boolean startPoints, String label, String arrowHead, String arrowTail) {
         // remove the arrowHead and arrowTail
         for (Node arrow : onDesignArea.getChildren()) {
             if (arrow instanceof Label) {
@@ -424,7 +479,7 @@ public class TestFlowController {
         }
 
         Circle point = (Circle) event.getSource();
-        if (startPoint) {
+        if (startPoints) {
             line.setStartX(event.getX());
             line.setStartY(event.getY());
         } else {
@@ -442,13 +497,13 @@ public class TestFlowController {
         Label arrowTailPolygon = createDraggableArrow(line, false, arrowTail);
 
         // Add the label
-        Label addLabel = createLabel(label, (line.getStartX() + line.getEndX()) / 2, (line.getStartY() + line.getEndY()) / 2);
-        if (Objects.equals(label, "!@#$%^&*()_+") || (Objects.equals(label, "Generalization")) || (Objects.equals(label, "Association"))) {
-            addLabel.setVisible(false);
-        }
+//        Label addLabel = createLabel(label, (line.getStartX() + line.getEndX()) / 2, (line.getStartY() + line.getEndY()) / 2);
+//        if (Objects.equals(label, "!@#$%^&*()_+") || (Objects.equals(label, "Generalization")) || (Objects.equals(label, "Association"))) {
+//            addLabel.setVisible(false);
+//        }
 
         // Add the arrowHead and arrowTail to the onDesignArea
-        onDesignArea.getChildren().addAll(arrowHeadPolygon, arrowTailPolygon, addLabel);
+        onDesignArea.getChildren().addAll(arrowHeadPolygon, arrowTailPolygon);
 
         // Update the connection
         connectionList.updateConnection(connectionID, line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
@@ -456,10 +511,11 @@ public class TestFlowController {
     }
 
     public Circle createDraggablePoint(double x, double y) {
-        Circle point = new Circle(x,y, 5, Color.RED);
+        Circle point = new Circle(x,y, 5, Color.hsb(0, 0.5, 1.0));
         point.setStrokeWidth(0);
         point.setCenterX(x);
         point.setCenterY(y);
+        point.setVisible(false);
         return point;
     }
 
@@ -623,12 +679,12 @@ public class TestFlowController {
                 FXRouter.popup("LabelPage", objects);
 
             }else if (event.getDragboard().getString().equals("Arrow")) {
-                addToConnectionList(event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Arrow", "open", "solid", "none","line");
-                drawLine(connectionList.findLastConnectionID(), event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Association", "open", "dash", "none");
+                addToConnectionList(event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Arrow", "none", "line", "open","line");
+                drawLine(connectionList.findLastConnectionID(), event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Association", "open", "line", "none");
                 saveProject();
             }else if (event.getDragboard().getString().equals("Line")) {
-                addToConnectionList(event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Line", "none", "solid", "none","line");
-                drawLine(connectionList.findLastConnectionID(), event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Association", "none", "solid", "none");
+                addToConnectionList(event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Line", "none", "line", "none","line");
+                drawLine(connectionList.findLastConnectionID(), event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Association", "none", "line", "none");
                 saveProject();
             }
             event.setDropCompleted(true);
