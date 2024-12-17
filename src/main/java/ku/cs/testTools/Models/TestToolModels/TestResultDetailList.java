@@ -6,7 +6,6 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 
-@AllArgsConstructor
 @Data
 public class TestResultDetailList {
     private ArrayList<TestResultDetail> testResultDetailList;

@@ -7,9 +7,7 @@ import lombok.Getter;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-@Getter
 @Data
-@AllArgsConstructor
 public class TestFlowPositionList {
     private  ArrayList<TestFlowPosition> positionList;
 
@@ -18,29 +16,40 @@ public class TestFlowPositionList {
     }
 
 
-
     public void addPosition(TestFlowPosition position) {
-        boolean exists = false;
-        for (int i = 0; i < positionList.size(); i++) {
-            TestFlowPosition existing = positionList.get(i);
-
-            if (existing.isId(position.getPositionID())) {
-                // Update existing item
-                positionList.set(i, position);
-                exists = true;
-                break;
-            }
-        }
-        if (!exists) {
-            positionList.add(position);
-        }
+        positionList.add(position);
     }
+
+//    public void addPosition(TestFlowPosition position) {
+//        boolean exists = false;
+//        for (int i = 0; i < positionList.size(); i++) {
+//            TestFlowPosition existing = positionList.get(i);
+//
+//            if (existing.isId(position.getPositionID())) {
+//                // Update existing item
+//                positionList.set(i, position);
+//                exists = true;
+//                break;
+//            }
+//        }
+//        if (!exists) {
+//            positionList.add(position);
+//        }
+//    }
 
     public void removePosition(TestFlowPosition position) {
         positionList.remove(position);
     }
 
     public TestFlowPosition findByPositionId(int positionId) {
+        for (TestFlowPosition position : positionList) {
+            if (position.getPositionID() == positionId) {
+                return position;
+            }
+        }
+        return null;
+    }
+    public TestFlowPosition findPositionById(int positionId) {
         for (TestFlowPosition position : positionList) {
             if (position.getPositionID() == positionId) {
                 return position;

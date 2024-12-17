@@ -11,7 +11,6 @@ import java.util.Collections;
 import java.util.Comparator;
 
 @Data
-@AllArgsConstructor
 public class TestScriptList {
     private ArrayList<TestScript> testScriptList;
 

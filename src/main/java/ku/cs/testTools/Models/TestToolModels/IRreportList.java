@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.Comparator;
 
 @Data
-@AllArgsConstructor
 public class IRreportList {
     private ArrayList<IRreport> iRreportList;
 

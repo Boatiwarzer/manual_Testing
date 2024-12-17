@@ -206,8 +206,6 @@ public class PopupInfoTestscriptController {
         testIDLabel.setText(tsId);
         String name = testScript.getNameTS();
         onTestNameCombobox.getSelectionModel().select(name);
-        String date = testScript.getDateTS();
-        testDateLabel.setText(date);
         String useCase = testScript.getUseCase();
         onUsecaseCombobox.getSelectionModel().select(useCase);
         String description = testScript.getDescriptionTS();
@@ -553,6 +551,9 @@ public class PopupInfoTestscriptController {
         objects.add("d");
         try {
             FXRouter.goTo("test_flow",objects);
+            Node source = (Node) event.getSource();
+            Stage stage = (Stage) source.getScene().getWindow();
+            stage.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

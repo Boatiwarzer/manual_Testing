@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 @Data
-@AllArgsConstructor
 public class ConnectionList {
     private ArrayList<Connection> connectionList;
 

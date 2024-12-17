@@ -8,7 +8,6 @@ import java.util.Iterator;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
 public class TestScriptDetailList {
     private ArrayList<TestScriptDetail> testScriptDetailList;
 
