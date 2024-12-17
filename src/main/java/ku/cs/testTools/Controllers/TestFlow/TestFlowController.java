@@ -160,14 +160,13 @@ public class TestFlowController {
         connectionList.getConnectionList().forEach(connection -> {
              TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(connection.getConnectionID());
             if (testFlowPosition != null){
-                if (testFlowPosition.getType().equals("start")) {
-                    drawStart(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(), "start", testFlowPosition.getPositionID());
-                } else if (testFlowPosition.getType().equals("end")) {
-                    drawEnd(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(), "end", testFlowPosition.getPositionID());
-
-                } else if (testFlowPosition.getType().equals("decision")) {
-                    drawDecision(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(), connection.getLabel(), testFlowPosition.getPositionID());
-
+                switch (testFlowPosition.getType()) {
+                    case "start" ->
+                            drawStart(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(), "start", testFlowPosition.getPositionID());
+                    case "end" ->
+                            drawEnd(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(), "end", testFlowPosition.getPositionID());
+                    case "decision" ->
+                            drawDecision(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(), connection.getLabel(), testFlowPosition.getPositionID());
                 }
             }
 
@@ -275,7 +274,8 @@ public class TestFlowController {
         makeDraggable(onDesignArea.getChildren().get(onDesignArea.getChildren().size() - 1), "start", positionID);
         makeSelectable(onDesignArea.getChildren().get(onDesignArea.getChildren().size() - 1), "start", positionID);
         saveProject();
-    }private void drawEnd(double width, double height, double layoutX, double layoutY, String label, int positionID) {
+    }
+    private void drawEnd(double width, double height, double layoutX, double layoutY, String label, int positionID) {
         Circle circle = new Circle(width, height,15);
 
         circle.setStyle("-fx-fill: transparent");

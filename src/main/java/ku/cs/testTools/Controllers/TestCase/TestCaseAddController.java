@@ -412,7 +412,9 @@ public class TestCaseAddController {
             String useCase = onUsecaseCombobox.getValue();
             String description = infoDescriptLabel.getText();
             String note = onTestNoteField.getText();
-            testCase = new TestCase(idTC, name, date, useCase, description,note);
+            //String preCon = infoPreconLabel.getText();
+           // String post = infoPostconLabel.getText();
+            testCase = new TestCase(idTC, name, date, useCase, description,note,0,"preCon","post");
             if (selectedItem != null){
                 FXRouter.popup("popup_add_testcase",testCaseDetailList,testCase,selectedItem,true);
             }
@@ -431,7 +433,9 @@ public class TestCaseAddController {
             String useCase = onUsecaseCombobox.getValue();
             String description = infoDescriptLabel.getText();
             String note = onTestNoteField.getText();
-            testCase = new TestCase(idTC, name, date, useCase, description,note);
+            //String preCon = infoPreconLabel.getText();
+            //String post = infoPostconLabel.getText();
+            testCase = new TestCase(idTC, name, date, useCase, description,note,0,"preCon","post");
 
             if (testCaseDetailList != null){
                 FXRouter.popup("popup_add_testcase",testCaseDetailList,testCase,null,true);
@@ -457,8 +461,10 @@ public class TestCaseAddController {
             String date = testDateLabel.getText();
             String useCase = onUsecaseCombobox.getValue();
             String description = infoDescriptLabel.getText();
-            String note = onTestNoteField.getText();
-            testCase = new TestCase(idTC, name, date, useCase, description,note);
+            String notes = onTestNoteField.getText();
+            //String preCon = infoPreconLabel.getText();
+            //String post = infoPostconLabel.getText();
+            testCase = new TestCase(idTC, name, date, useCase, description,notes,0,"preCon","post");
             if (selectedItem != null){
                 FXRouter.popup("popup_delete_testcase",testCaseDetailList,testCase,selectedItem,true);
             }
@@ -478,7 +484,7 @@ public class TestCaseAddController {
             String useCase = onUsecaseCombobox.getValue();
             String description = infoDescriptLabel.getText();
             String note = onTestNoteField.getText();
-            testCase = new TestCase(idTC, name, date, useCase, description,note);
+            testCase = new TestCase(idTC, name, date, useCase, description,note,0,"preCon","post");
 
             testCaseList.addOrUpdateTestCase(testCase);
 
