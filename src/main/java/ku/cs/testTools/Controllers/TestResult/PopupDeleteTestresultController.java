@@ -19,10 +19,7 @@ import java.io.IOException;
 public class PopupDeleteTestresultController {
 
     @FXML
-    private Button onCancelButton;
-
-    @FXML
-    private Button onDeleteButton;
+    private Button onCancelButton, onDeleteButton;
 
     private TestResultList testResultList = new TestResultList();
     private TestResultDetailList testResultDetailList = new TestResultDetailList();
@@ -85,8 +82,7 @@ public class PopupDeleteTestresultController {
                 Stage stage = (Stage) source.getScene().getWindow();
                 stage.close();
                 System.out.println(testResultDetailList);
-            }
-            else {
+            } else {
                 for (TestResultDetail testResultDetail : testResultDetailListTemp.getTestResultDetailList()) {
                     if (testResult.getIdTR().trim().equals(testResultDetail.getIdTR().trim())){
                         testResultDetailList.deleteTestResultDetail(testResultDetail);

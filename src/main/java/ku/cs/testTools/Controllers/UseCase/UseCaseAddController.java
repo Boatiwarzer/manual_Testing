@@ -57,7 +57,7 @@ public class UseCaseAddController {
     @FXML
     private Label testIDLabel, errorLabel;
 
-    private String projectName = "uc", directory = "data", useCaseId; // directory, projectName
+    private String projectName = "125", directory = "data", useCaseId; // directory, projectName
     private UseCase useCase;
     private UseCase selectedUseCase;
     private UseCaseDetail selectedItem;
@@ -181,6 +181,7 @@ public class UseCaseAddController {
 
         postConListComboBox.getItems().clear();
         postConListComboBox.setItems(FXCollections.observableArrayList("None"));
+        postConListComboBox.getSelectionModel().selectFirst();
 
         new AutoCompleteComboBoxListener<>(postConListComboBox);
         TextField editorPost = postConListComboBox.getEditor();
@@ -188,7 +189,7 @@ public class UseCaseAddController {
             useCaseList= useCaseListDataSource.readData();
             postConCombobox();
         }
-        postConListComboBox.setOnAction(event -> {
+        postConListComboBox.setOnAction(event1 -> {
             String selectedItem = postConListComboBox.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
                 editorPost.setText(selectedItem);
@@ -414,81 +415,87 @@ public class UseCaseAddController {
 
     @FXML
     void onSubmitButton(ActionEvent event) {
-        String ucId = testIDLabel.getText();
-        String ucName = onTestNameField.getText();
-        String ucActor = onTestActorField.getText();
-        String ucDescript = onDescriptArea.getText();
-        String ucPreCon = onPreConArea.getText();
-        String ucPostCon = onPostConArea.getText();
-        String ucNote = onTestNoteArea.getText();
-        String ucDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+//        FXRouter.goTo("use_case", objects);
+        try {
+            String ucId = testIDLabel.getText();
+            String ucName = onTestNameField.getText();
+            String ucActor = onTestActorField.getText();
+            String ucDescript = onDescriptArea.getText();
+            String ucPreCon = onPreConArea.getText();
+            String ucPostCon = onPostConArea.getText();
+            String ucNote = onTestNoteArea.getText();
+            String ucDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
-        if (useCaseList.isUseCaseIDExist(ucId)) {
-            errorLabel.setText("Use case ID already exists.");
-            return;
-        }
-
-        if (!ucName.isEmpty() && !ucActor.isEmpty() && !ucDescript.isEmpty() && !ucPreCon.isEmpty() && !ucPostCon.isEmpty()) {
-            if (!useCaseList.isUseCaseNameExist(ucName)) {
-                UseCase newUseCase = new UseCase(
-                        ucId,
-                        ucName,
-                        ucActor,
-                        ucDescript,
-                        ucPreCon,
-                        ucPostCon,
-                        ucNote.isEmpty() ? "None" : ucNote,
-                        ucDate
-                );
-
-                useCaseList.addUseCase(newUseCase);
-                useCaseListDataSource.writeData(useCaseList);
-                errorLabel.setText("Use case added successfully!");
-            } else {
-                errorLabel.setText("Use case name already exists.");
+            if (useCaseList.isUseCaseIDExist(ucId)) {
+                errorLabel.setText("Use case ID already exists.");
+                return;
             }
-        } else {
-            errorLabel.setText("Please fill in all required fields.");
-        }
+
+            if (!ucName.isEmpty() && !ucActor.isEmpty() && !ucDescript.isEmpty() && !ucPreCon.isEmpty() && !ucPostCon.isEmpty()) {
+                if (!useCaseList.isUseCaseNameExist(ucName)) {
+                    UseCase newUseCase = new UseCase(
+                            ucId,
+                            ucName,
+                            ucActor,
+                            ucDescript,
+                            ucPreCon,
+                            ucPostCon,
+                            ucNote.isEmpty() ? "None" : ucNote,
+                            ucDate
+                    );
+
+                    useCaseList.addUseCase(newUseCase);
+                    useCaseListDataSource.writeData(useCaseList);
+                    errorLabel.setText("Use case added successfully!");
+                } else {
+                    errorLabel.setText("Use case name already exists.");
+                }
+            } else {
+                errorLabel.setText("Please fill in all required fields.");
+            }
 
 //        useCaseDetailList.clearUseCaseDetail(ucId);
-        // Get the text from the textAreas in the actorActionVBox and write them to the useCaseDetailList
-        int actorNumber = 1;
-        for (Node node : actorActionVBox.getChildren()) {
-            HBox hBox = (HBox) node;
-            TextArea textArea = (TextArea) hBox.getChildren().get(0);
-            if (!textArea.getText().isEmpty()) {
-                UseCaseDetail useCaseDetail = new UseCaseDetail(ucId, "actor", actorNumber, textArea.getText());
-                useCaseDetailList.addUseCaseDetail(useCaseDetail);
-                actorNumber++;
+            // Get the text from the textAreas in the actorActionVBox and write them to the useCaseDetailList
+            int actorNumber = 1;
+            for (Node node : actorActionVBox.getChildren()) {
+                HBox hBox = (HBox) node;
+                TextArea textArea = (TextArea) hBox.getChildren().get(0);
+                if (!textArea.getText().isEmpty()) {
+                    UseCaseDetail useCaseDetail = new UseCaseDetail(ucId, "actor", actorNumber, textArea.getText());
+                    useCaseDetailList.addUseCaseDetail(useCaseDetail);
+                    actorNumber++;
+                }
             }
-        }
 
-        // Get the text from the textAreas in the systemActionVBox and write them to the useCaseDetailList
-        int systemNumber = 1;
-        for (Node node : systemActionVBox.getChildren()) {
-            HBox hBox = (HBox) node;
-            TextArea textArea = (TextArea) hBox.getChildren().get(0);
-            if (!textArea.getText().isEmpty()) {
-                UseCaseDetail useCaseDetail = new UseCaseDetail(ucId, "system", systemNumber, textArea.getText());
-                useCaseDetailList.addUseCaseDetail(useCaseDetail);
-                systemNumber++;
+            // Get the text from the textAreas in the systemActionVBox and write them to the useCaseDetailList
+            int systemNumber = 1;
+            for (Node node : systemActionVBox.getChildren()) {
+                HBox hBox = (HBox) node;
+                TextArea textArea = (TextArea) hBox.getChildren().get(0);
+                if (!textArea.getText().isEmpty()) {
+                    UseCaseDetail useCaseDetail = new UseCaseDetail(ucId, "system", systemNumber, textArea.getText());
+                    useCaseDetailList.addUseCaseDetail(useCaseDetail);
+                    systemNumber++;
+                }
             }
+
+            useCaseDetailListDataSource.writeData(useCaseDetailList);
+            isGenerated = false;
+            showAlert("Success", "Test case saved successfully!");
+
+            FXRouter.goTo("use_case");
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+    }
 
-        useCaseDetailListDataSource.writeData(useCaseDetailList);
-
-//        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv");
-//        DataSource<UseCaseDetailList> useCaseDetailListDataSource = new UseCaseDetailListFileDataSource(directory, projectName + ".csv");
-
-        // send the project name and directory to HomePage
-//        ArrayList<Object> objects = new ArrayList<>();
-//        objects.add(projectName);
-//        objects.add(directory);
-
-//        FXRouter.goTo("use_case", objects);
-//        FXRouter.goTo("use_case", useCase);
-        isGenerated = false;
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
 //    private void updateID() {

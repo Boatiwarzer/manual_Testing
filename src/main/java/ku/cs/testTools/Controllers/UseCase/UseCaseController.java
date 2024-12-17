@@ -44,7 +44,7 @@ public class UseCaseController {
     @FXML
     private ListView<UseCase> onSearchList;
 
-    private String projectName = "uc", directory = "data", useCaseId; // directory, projectName
+    private String projectName = "125", directory = "data", useCaseId; // directory, projectName
     private UseCase useCase;
     private UseCase selectedUseCase = new UseCase();
     private UseCaseDetail selectedItem;

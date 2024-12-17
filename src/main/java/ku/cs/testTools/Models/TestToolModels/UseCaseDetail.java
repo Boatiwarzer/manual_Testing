@@ -61,4 +61,8 @@ public class UseCaseDetail {
     public void setDetail(String detail) {
         this.detail = detail;
     }
+
+    public boolean isId(String id) {
+        return this.useCaseID.equals(id);
+    }
 }
