@@ -135,6 +135,11 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
                 buffer.append(line);
                 buffer.newLine();
             }
+            for (Connection connection : connectionList.getConnectionList()) {
+                String line = connectionListFileDataSource.createLine(connection);
+                buffer.append(line);
+                buffer.newLine();
+            }
             for (TestScript testScript : testScriptList.getTestScriptList()){
                 String line = testScriptListDataSource.createLine(testScript);
                 buffer.append(line);

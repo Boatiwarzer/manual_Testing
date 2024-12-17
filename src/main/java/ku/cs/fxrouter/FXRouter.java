@@ -193,11 +193,6 @@ public class FXRouter {
     }
     public static void popup(String routeLabel, Object data, Object data2, Object data3, boolean focus) throws IOException {
         RouteScene route = (RouteScene)routes.get(routeLabel);
-//        if (currentRoute != null) {
-//            for (String key : currentRoute.state.keySet()) {
-//                route.setState(key, currentRoute.getState(key));
-//            }
-//        }
         route.data = data;
         route.data2 = data2;
         route.data3 = data3;

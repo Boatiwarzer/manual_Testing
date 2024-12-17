@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.Comparator;
 
 @Data
-@AllArgsConstructor
 public class TestResultList {
     private ArrayList<TestResult> testResultList;
 

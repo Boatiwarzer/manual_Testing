@@ -75,6 +75,9 @@ public class PopupInfoTestcaseController {
     private TestFlowPositionList testFlowPositionList;
     private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
     private TestCaseDetailList testCaseDetailListTemp;
+    private TestScriptList testScriptList;
+    private TestScriptDetailList testScriptDetailList;
+    private ConnectionList connectionList;
 
     private TestCase testCase;
     private TestCase selectedTestCase;
@@ -88,15 +91,9 @@ public class PopupInfoTestcaseController {
     private TestCaseList testCaseList = new TestCaseList();
     private UseCaseList useCaseList = new UseCaseList();
 //    private TestScriptDetailList testScriptDetailListTemp = new TestScriptDetailList();
-//    private final DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-//    private final DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-    private final DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
-    private final DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
-    private final DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-    private final DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-    private final DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName1+".csv");
-    private final DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
-    private String check;
+//    DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+//    DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+
     @FXML
     void initialize() {
         setDate();
@@ -116,11 +113,9 @@ public class PopupInfoTestcaseController {
                     testCase = (TestCase) objects.get(3);
                     testCaseDetailList = (TestCaseDetailList) objects.get(4);
                     testCaseDetail = (TestCaseDetail) objects.get(5);
-                    check = (String) objects.get(6);
                 }
                 setDataTC();
-                if (testCaseListDataSource.readData() != null && testCaseDetailListDataSource.readData() != null){
-                    testCaseDetailListTemp = testCaseDetailListDataSource.readData();
+                    //testCaseDetailListTemp = testCaseDetailListDataSource.readData();
                     for (TestCaseDetail testCaseDetail : testCaseDetailListTemp.getTestCaseDetailList()) {
                         if (testCase.getIdTC().trim().equals(testCaseDetail.getIdTC().trim())){
                             testCaseDetailList.addOrUpdateTestCase(testCaseDetail);
@@ -130,15 +125,14 @@ public class PopupInfoTestcaseController {
                         loadTable(testCaseDetailList);
                     }
 
-                }
+
             }
             else{
                 setTable();
                 System.out.println(tsId);
-                if (testCaseListDataSource.readData() != null && testCaseDetailListDataSource.readData() != null){
                     selectedTCD();
 
-                }
+
 
             }
         }
@@ -147,16 +141,37 @@ public class PopupInfoTestcaseController {
     }
 
     private void loadProject() {
+        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
+        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName1+".csv");
+        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+
+        testScriptList = testScriptListDataSource.readData();
+        testScriptDetailList = testScriptDetailListDataSource.readData();
         testCaseList = testCaseListDataSource.readData();
         testCaseDetailListTemp = testCaseDetailListDataSource.readData();
         testFlowPositionList = testFlowPositionListDataSource.readData();
+        connectionList = connectionListDataSource.readData();
         useCaseList = useCaseListDataSource.readData();
     }
     private void saveProject() {
+        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
+        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName1+".csv");
+        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
         testFlowPositionListDataSource.writeData(testFlowPositionList);
+        testScriptListDataSource.writeData(testScriptList);
+        testScriptDetailListDataSource.writeData(testScriptDetailList);
         testCaseListDataSource.writeData(testCaseList);
         testCaseDetailListDataSource.writeData(testCaseDetailList);
-        useCaseListDataSource.writeData(useCaseList);
+        connectionListDataSource.writeData(connectionList);
+        //useCaseListDataSource.writeData(useCaseList);
 
     }
 
@@ -201,8 +216,7 @@ public class PopupInfoTestcaseController {
         testIDLabel.setText(tsId);
         String name = testCase.getNameTC();
         onTestNameCombobox.getSelectionModel().select(name);
-        String date = testCase.getDateTC();
-        testDateLabel.setText(date);
+        //testDateLabel.setText(date);
         String useCase = testCase.getUseCase();
         onUsecaseCombobox.getSelectionModel().select(useCase);
         String description = testCase.getDescriptionTC();
@@ -265,10 +279,9 @@ public class PopupInfoTestcaseController {
         onUsecaseCombobox.setItems(FXCollections.observableArrayList("None"));
         new AutoCompleteComboBoxListener<>(onUsecaseCombobox);
         onUsecaseCombobox.getSelectionModel().selectFirst();
-        if (useCaseListDataSource.readData() != null){
-            useCaseList= useCaseListDataSource.readData();
-            useCaseCombobox();
-        }
+        loadProject();
+        useCaseCombobox();
+
         onUsecaseCombobox.setOnAction(event -> {
             String selectedItem = onUsecaseCombobox.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
@@ -485,35 +498,36 @@ public class PopupInfoTestcaseController {
 
     @FXML
     void onSubmitButton(ActionEvent event) {
-        // Validate fields
-        String name = onTestNameCombobox.getValue();
-        String idTC = tsId;
-        String date = testDateLabel.getText();
-        String useCase = onUsecaseCombobox.getValue();
-        String description = infoDescriptLabel.getText();
-        String preCon = infoPreconLabel.getText();
-        String note = onTestNoteField.getText();
-        String post = infoPostconLabel.getText();
-
-
-        // Create a new TestScript object
-        testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post);
-
-
-        // Add or update test script
-        testCaseList.addOrUpdateTestCase(testCase);
-        // Write data to respective files
-        saveProject();
-        loadProject();
-        ArrayList<Object>objects = new ArrayList<>();
-        objects.add(projectName);
-        objects.add(directory);
-        objects.add("d");
-
-        // Show success message
-        showAlert("Success", "Test case saved successfully!");
-
         try {
+            // Validate fields
+            String name = onTestNameCombobox.getValue();
+            String idTC = tsId;
+            String date = testDateLabel.getText();
+            String useCase = onUsecaseCombobox.getValue();
+            String description = infoDescriptLabel.getText();
+            String preCon = infoPreconLabel.getText();
+            String note = onTestNoteField.getText();
+            String post = infoPostconLabel.getText();
+
+            testCase = testCaseList.findTCById(idTC);
+            // Create a new TestScript object
+            testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post);
+
+
+            // Add or update test script
+            testCaseList.addOrUpdateTestCase(testCase);
+            TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(position);
+            testFlowPositionList.addPosition(testFlowPosition);
+            // Write data to respective files
+            saveProject();
+            loadProject();
+            ArrayList<Object>objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add("d");
+
+            // Show success message
+            showAlert("Success", "Test case saved successfully!");
             FXRouter.goTo("test_flow",objects);
             Node source = (Node) event.getSource();
             Stage stage = (Stage) source.getScene().getWindow();

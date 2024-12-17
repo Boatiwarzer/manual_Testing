@@ -8,7 +8,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 @Data
-@AllArgsConstructor
 public class TestCaseDetailList {
     private ArrayList<TestCaseDetail> testCaseDetailList;
 

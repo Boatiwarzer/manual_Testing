@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 @Data
-@AllArgsConstructor
 public class IDTestList {
     private ArrayList<IDTest> idTestList;
 
