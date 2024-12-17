@@ -57,7 +57,7 @@ public class UseCaseEditController {
     private Label testIDLabel, errorLabel;;
 
     private UseCase selectedUseCase;
-    private String projectName = "uc", directory = "data", useCaseId; // directory, projectName
+    private String projectName = "125", directory = "data", useCaseId; // directory, projectName
     private UseCase useCase;
     private UseCaseDetail selectedItem;
     private UseCaseList useCaseList = new UseCaseList();
@@ -264,6 +264,7 @@ public class UseCaseEditController {
 
         postConListComboBox.getItems().clear();
         postConListComboBox.setItems(FXCollections.observableArrayList("None"));
+        postConListComboBox.getSelectionModel().selectFirst();
 
         new AutoCompleteComboBoxListener<>(postConListComboBox);
         TextField editorPost = postConListComboBox.getEditor();
@@ -397,16 +398,17 @@ public class UseCaseEditController {
     }
     @FXML
     void onSubmitButton(ActionEvent event) {
-        String ucId = testIDLabel.getText();
-        String ucName = onTestNameField.getText();
-        String ucActor = onTestActorField.getText();
-        String ucDescript = onDescriptArea.getText();
-        String ucPreCon = onPreConArea.getText();
-        String ucPostCon = onPostConArea.getText();
-        String ucNote = onTestNoteArea.getText();
-        String ucDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        System.out.println("submit "+ucId);
-        System.out.println("find "+useCaseList.findByUseCaseId(ucId));
+        try {
+            String ucId = testIDLabel.getText();
+            String ucName = onTestNameField.getText();
+            String ucActor = onTestActorField.getText();
+            String ucDescript = onDescriptArea.getText();
+            String ucPreCon = onPreConArea.getText();
+            String ucPostCon = onPostConArea.getText();
+            String ucNote = onTestNoteArea.getText();
+            String ucDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            System.out.println("submit "+ucId);
+            System.out.println("find "+useCaseList.findByUseCaseId(ucId));
 
 //        if (useCaseList.findByUseCaseId(ucId) != null) {
 //            useCaseList.findByUseCaseId(ucId).setUseCaseName(ucName);
@@ -473,11 +475,21 @@ public class UseCaseEditController {
 
             useCaseListDataSource.writeData(useCaseList);
             useCaseDetailListDataSource.writeData(useCaseDetailList);
-            errorLabel.setText("Use case added successfully!");
-//        } else {
-//            System.out.println("usecase null");
-//        }
+            showAlert("Success", "Test case saved successfully!");
 
+            FXRouter.goTo("use_case");
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
     @FXML
@@ -529,14 +541,51 @@ public class UseCaseEditController {
     void onDeleteButton(ActionEvent event) {
         String ucId = testIDLabel.getText();
         try {
-            if (ucId != null){
-                useCaseList.clearUseCase(ucId);
-                useCaseDetailList.clearUseCaseDetail(ucId);
-                useCaseListDataSource.writeData(useCaseList);
-                useCaseDetailListDataSource.writeData(useCaseDetailList);
-                FXRouter.goTo("use_case");
+            if (ucId != null) {
+                // เพิ่ม Popup ยืนยันการลบ
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Delete Confirmation");
+                alert.setHeaderText("Are you sure you want to delete this item?");
+                alert.setContentText("Press OK to confirm, or Cancel to go back.");
+
+                // แสดง Popup และรอการตอบกลับจากผู้ใช้
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.isPresent() && result.get() == ButtonType.OK) {
+//                    for (UseCaseDetail useCaseDetail : useCaseDetailList.getUseCaseDetailList()) {
+//                        if (useCase.getUseCaseID().trim().equals(useCaseDetail.getUseCaseID().trim())) {
+//                            useCaseDetailList.deleteUseCaseDetail(useCaseDetail);
+//                        }
+//                    }
+//                    for (UseCase useCase : useCaseList.getUseCaseList()) {
+//                        if (ucId.equals(useCase.getUseCaseID().trim())) {
+//                            useCaseList.deleteUseCase(useCase);
+//                        }
+//                    }
+
+//                    UseCase uc = useCaseList.findByUseCaseId(ucId.trim());
+//                    useCaseList.deleteUseCase(uc);
+//                    for (UseCaseDetail useCaseDetail : useCaseDetailList.getUseCaseDetailList()) {
+//                        if (uc.equals(useCaseDetail.getUseCaseID().trim())) {
+//                            useCaseDetailList.deleteUseCaseDetail(useCaseDetail);
+//                        }
+//                    }
+
+//                    UseCaseDetail ucd = useCaseDetailList.findByUseCaseId(ucId.trim());
+//                    useCaseDetailList.deleteUseCaseDetail(ucd);
+//                    useCaseList.deleteUseCase(useCase);
+
+                    useCaseList.clearUseCase(ucId);
+                    useCaseDetailList.clearUseCaseDetail(ucId);
+                    useCaseListDataSource.writeData(useCaseList);
+                    useCaseDetailListDataSource.writeData(useCaseDetailList);
+
+                    FXRouter.goTo("use_case");
+                } else {
+                    // หากผู้ใช้กดยกเลิก
+                    errorLabel.setText("Delete action was canceled.");
+                }
             } else {
-                errorLabel.setText("Can not delete this usecse.");
+                errorLabel.setText("Cannot delete this use case.");
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

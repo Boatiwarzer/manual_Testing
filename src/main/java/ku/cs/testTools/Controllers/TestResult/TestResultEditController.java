@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
@@ -63,7 +64,6 @@ public class TestResultEditController {
 
     @FXML
     void initialize() {
-//        setDate();
         clearInfo();
         setButtonVisible();
         {
@@ -75,6 +75,7 @@ public class TestResultEditController {
                 setDataTR();
                 if (testResultListDataSource.readData() != null && testResultDetailListDataSource.readData() != null){
                     TestResultList testResultListTemp = testResultListDataSource.readData();
+                    testResultList = testResultListDataSource.readData();
                     testResultDetailListTemp = testResultDetailListDataSource.readData();
                     for (TestResultDetail testResultDetail : testResultDetailListTemp.getTestResultDetailList()) {
                         if (testResult.getIdTR().trim().equals(testResultDetail.getIdTR().trim())){
@@ -82,8 +83,8 @@ public class TestResultEditController {
                         }
                     }
                     loadTable(testResultDetailList);
-                    loadListView(testResultListTemp);
-                    for (TestResult testResult : testResultListTemp.getTestResultList()) {
+                    loadListView(testResultList);
+                    for (TestResult testResult : testResultList.getTestResultList()) {
                         word.add(testResult.getNameTR());
                     }
                     searchSet();
@@ -199,7 +200,6 @@ public class TestResultEditController {
         return listOfResults.stream()
                 .filter(testResult ->
                         searchWordsArray.stream().allMatch(word ->
-                                // Check if any relevant field in TestResult contains the search word (case insensitive)
                                 testResult.getIdTR().toLowerCase().contains(word.toLowerCase()) ||
                                         testResult.getNameTR().toLowerCase().contains(word.toLowerCase())
 
@@ -231,8 +231,6 @@ public class TestResultEditController {
         configs.add(new StringConfiguration("title:Image Result", "field:imageTRD"));
         configs.add(new StringConfiguration("title:Approval", "field:approveTRD"));
         configs.add(new StringConfiguration("title:Remark", "field:remarkTRD"));
-
-        int index = 0;
 
         // Create and add columns
         for (StringConfiguration conf : configs) {
@@ -301,25 +299,37 @@ public class TestResultEditController {
                 col.setMaxWidth(160);
                 col.setMinWidth(160);
             }
+            if (!conf.get("field").equals("imageTRD")) {
+                col.setCellFactory(tc -> {
+                    TableCell<TestResultDetail, String> cell = new TableCell<>() {
+                        private final Text text = new Text();
+
+                        @Override
+                        protected void updateItem(String item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (empty || item == null) {
+                                setGraphic(null);
+                            } else {
+                                text.setText(item);
+                                text.wrappingWidthProperty().bind(tc.widthProperty().subtract(10));
+                                setGraphic(text);
+                            }
+                        }
+                    };
+//                    cell.setStyle("-fx-alignment: top-left; -fx-padding: 5px;");
+                    return cell;
+                });
+            }
 
 //            col.setPrefWidth(100);
 //            col.setMaxWidth(100);
 //            col.setMinWidth(100);
 
-//            // ตั้งค่าขนาดคอลัมน์สำหรับ 2 คอลัมน์แรก
-//            if (index <= 1) {
-//                col.setPrefWidth(100);
-//                col.setMaxWidth(100);
-//                col.setMinWidth(100);
-//            } else {
-//                col.setPrefWidth(150); // กำหนดค่าขนาดเริ่มต้น
-//            }
-//            index++;
-
             // เพิ่มคอลัมน์ลง TableView
             new TableColumns(col);
             onTableTestresult.getColumns().add(col);
         }
+        onTableTestresult.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
         //Add items to the table
         for (TestResultDetail testResultDetail : testResultDetailList.getTestResultDetailList()) {
@@ -334,7 +344,7 @@ public class TestResultEditController {
         onTableTestresult.getColumns().clear();
         onTableTestresult.getItems().clear();
         onTableTestresult.refresh();
-        onTableTestresult.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+//        onTableTestresult.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         ArrayList<StringConfiguration> configs = new ArrayList<>();
         configs.add(new StringConfiguration("title:TRD-ID."));
@@ -355,24 +365,18 @@ public class TestResultEditController {
         configs.add(new StringConfiguration("title:Approval"));
         configs.add(new StringConfiguration("title:Remark"));
 
-        int index = 0;
         for (StringConfiguration conf: configs) {
             TableColumn<TestResultDetail, String> col = new TableColumn<>(conf.get("title"));
             col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
-            col.setPrefWidth(100);
-            col.setMaxWidth(100);
-            col.setMinWidth(100);
-//            if (index <= 1) {  // ถ้าเป็นคอลัมน์แรก
-//                col.setPrefWidth(100);
-//                col.setMaxWidth(100);   // จำกัดขนาดสูงสุดของคอลัมน์แรก
-//                col.setMinWidth(100); // ตั้งค่าขนาดคอลัมน์แรก
-//            }
+//            col.setPrefWidth(100);
+//            col.setMaxWidth(100);
+//            col.setMinWidth(100);
             col.setSortable(false);
             col.setReorderable(false);
             onTableTestresult.getColumns().add(col);
-//            index++;
 
         }
+        onTableTestresult.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
     }
     public void randomId(){
         int min = 1;
@@ -456,15 +460,8 @@ public class TestResultEditController {
     }
     @FXML
     void onEditListButton(ActionEvent event)  {
-        onEditListButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                // ทำการแก้ไข
-                // ...
-
-                // ขอ focus กลับไปที่ TableView
-                onTableTestresult.requestFocus();
-            }
+        onEditListButton.setOnMouseClicked(event1 -> {
+            onTableTestresult.requestFocus();
         });
         onEditListButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -489,16 +486,15 @@ public class TestResultEditController {
     }
     @FXML
     void onDeleteListButton(ActionEvent event) {
-        onDeleteListButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                // ทำการลบ
-                // ...
-
-                // ขอ focus กลับไปที่ TableView
-                onTableTestresult.requestFocus();
-            }
+        onDeleteListButton.setOnMouseClicked(event1 -> {
+            onTableTestresult.requestFocus();
         });
+//        onDeleteListButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent event) {
+//                onTableTestresult.requestFocus();
+//            }
+//        });
         try {
             onTableTestresult.requestFocus();
             String idTR = trId;
@@ -576,31 +572,56 @@ public class TestResultEditController {
 
     @FXML
     void onSubmitButton(ActionEvent event) {
-        String idTR = trId;
-        String nameTR = onTestNameField.getText();
-        String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        String noteTR = onTestNoteField.getText();
+//        String idTR = trId;
+//        String nameTR = onTestNameField.getText();
+//        String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+//        String noteTR = onTestNoteField.getText();
+//
+//        // Check if mandatory fields are empty
+//        if (nameTR == null || nameTR.isEmpty()) {
+//            showAlert("Input Error", "Please fill in all required fields.");
+//            return;
+//        }
+//
+//        // Create a new TestScript object
+//        testResult = new TestResult(idTR, nameTR, dateTR, noteTR,"In Tester");
+//
+//        // Add or update test script
+//        testResultList.addOrUpdateTestResult(testResult);
+//
+//        // Write data to respective files
+//        testResultListDataSource.writeData(testResultList);
+//        testResultDetailListDataSource.writeData(testResultDetailListTemp);
+//
+//        // Show success message
+//        showAlert("Success", "Test script saved successfully!");
+//        try {
+//            FXRouter.goTo("test_result",testResult);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
 
-        // Check if mandatory fields are empty
-        if (nameTR == null || nameTR.isEmpty()) {
-            showAlert("Input Error", "Please fill in all required fields.");
-            return;
-        }
-
-        // Create a new TestScript object
-        testResult = new TestResult(idTR, nameTR, dateTR, noteTR,"In Tester");
-
-        // Add or update test script
-        testResultList.addOrUpdateTestResult(testResult);
-
-        // Write data to respective files
-        testResultListDataSource.writeData(testResultList);
-        testResultDetailListDataSource.writeData(testResultDetailListTemp);
-
-        // Show success message
-        showAlert("Success", "Test script saved successfully!");
         try {
-            FXRouter.goTo("test_result",testResult);
+            String idTR = trId;
+            String nameTR = onTestNameField.getText();
+            String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            String noteTR = onTestNoteField.getText();
+            testResult = new TestResult(idTR, nameTR, dateTR, noteTR,"In Tester");
+
+            if (nameTR == null || nameTR.isEmpty()) {
+                showAlert("Input Error", "Please fill in all required fields.");
+                return;
+            }
+
+            testResultList.addOrUpdateTestResult(testResult);
+
+            // Write data to respective files
+            testResultListDataSource.writeData(testResultList);
+            testResultDetailListDataSource.writeData(testResultDetailList);
+            showAlert("Success", "Test case saved successfully!");
+
+            FXRouter.goTo("test_result",testResult,true);
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

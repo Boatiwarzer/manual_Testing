@@ -41,15 +41,11 @@ public class TestResultListFileDataSource implements DataSource<TestResultList>,
     public TestResultList readData() {
         TestResultList testResultList = new TestResultList();
         String filePath = directory + File.separator + fileName;
-        File file = new File(filePath);
-        FileReader reader = null;
-        BufferedReader buffer = null;
 
-        try {
-            reader = new FileReader(file, StandardCharsets.UTF_8);
-            buffer = new BufferedReader(reader);
-
-            String line = "";
+        try (BufferedReader buffer = new BufferedReader(new FileReader(filePath, StandardCharsets.UTF_8))){
+//            reader = new FileReader(file, StandardCharsets.UTF_8);
+//            buffer = new BufferedReader(reader);
+            String line;
             while ((line = buffer.readLine()) != null) {
                 String[] data = line.split(",");
                 if (data[0].trim().equals("testResult")) {
@@ -65,19 +61,19 @@ public class TestResultListFileDataSource implements DataSource<TestResultList>,
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
-        } finally {
-            try {
-                if (buffer != null) {
-                    buffer.close();
-                }
-                if (reader != null) {
-                    reader.close();
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
         }
-
+//        finally {
+//            try {
+//                if (buffer != null) {
+//                    buffer.close();
+//                }
+//                if (reader != null) {
+//                    reader.close();
+//                }
+//            } catch (Exception e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
         return testResultList;
     }
     @Override
@@ -104,91 +100,16 @@ public class TestResultListFileDataSource implements DataSource<TestResultList>,
         IRreportDetailList iRreportDetailList = iRreportDetailListFileDataSource.readData();
         ConnectionListFileDataSource connectionListFileDataSource = new ConnectionListFileDataSource(directory, fileName);
         ConnectionList connectionList = connectionListFileDataSource.readData();
+
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
-        TestResultList existingTestResultList = readData();
-//        List<String> fileLines = new ArrayList<>();
-//        // อ่านข้อมูลเดิมในไฟล์ถ้ามี
-//        if (file.exists()) {
-//            try {
-//                fileLines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
-//        // อัปเดตข้อมูลที่มีอยู่แล้ว หรือเพิ่มข้อมูลใหม่
-//        for (TestResult testResult : testResultList.getTestResultList()) {
-//            String newLine = createLine(testResult);
-//            boolean updated = false;
-//            for (int i = 0; i < fileLines.size(); i++) {
-//                String line = fileLines.get(i);
-//                if (line.contains(testResult.getIdTR())) { // เช็คว่า ID ตรงกันหรือไม่
-//                    fileLines.set(i, newLine); // เขียนทับบรรทัดเดิม
-//                    updated = true;
-//                    break;
-//                }
-//            }
-//            if (!updated) {
-//                fileLines.add(newLine); // เพิ่มข้อมูลใหม่ถ้าไม่เจอ ID เดิม
-//            }
-//        }
-//        // เขียนข้อมูลทั้งหมดกลับไปที่ไฟล์
-//        try (BufferedWriter buffer = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8, false))) { // false สำหรับเขียนทับไฟล์
-//            for (String line : fileLines) {
-//                buffer.write(line);
-//                buffer.newLine();
-//            }
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-
+//        TestResultList existingTestResultList = readData();
         FileWriter writer = null;
         BufferedWriter buffer = null;
         try {
-            List<String> fileLines = new ArrayList<>();
-            // อ่านข้อมูลเดิมในไฟล์ถ้ามี
-            boolean append = true;
-            if (file.exists()) {
-                try {
-                    fileLines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            // อัปเดตข้อมูลที่มีอยู่แล้ว หรือเพิ่มข้อมูลใหม่
 
-            writer = new FileWriter(file, StandardCharsets.UTF_8, append);
+            writer = new FileWriter(file, StandardCharsets.UTF_8);
             buffer = new BufferedWriter(writer);
-//            for (TestResult testResult : testResultList.getTestResultList()){
-//                buffer.write(String.join(System.lineSeparator(), fileLines));
-//                buffer.newLine();
-////                String line = createLine(testResult);
-////                buffer.append(line);
-////                buffer.newLine();
-//            }
-            for (TestResult testResult : testResultList.getTestResultList()) {
-                String newLine = createLine(testResult);
-                append = false;
-                for (int i = 0; i < fileLines.size(); i++) {
-                    String line = fileLines.get(i);
-                    if (line.contains(testResult.getIdTR())) { // เช็คว่า ID ตรงกันหรือไม่
-                        fileLines.set(i, newLine); // เขียนทับบรรทัดเดิม
-                        append = true;
-                        break;
-                    }
-                }
-                if (!append) {
-                    fileLines.add(newLine); // เพิ่มข้อมูลใหม่ถ้าไม่เจอ ID เดิม
-                }
-            }
-            try (BufferedWriter buffer1 = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8, false))) { // false สำหรับเขียนทับไฟล์
-                for (String line : fileLines) {
-                    buffer1.write(line);
-                    buffer1.newLine();
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
             for (TestFlowPosition position : testFlowPositionList.getPositionList()) {
                 String line = testFlowPositionListFileDataSource.createLine(position);
                 buffer.append(line);
@@ -229,6 +150,11 @@ public class TestResultListFileDataSource implements DataSource<TestResultList>,
                 buffer.append(line);
                 buffer.newLine();
             }
+            for (TestResult testResult : testResultList.getTestResultList()){
+                String line = createLine(testResult);
+                buffer.append(line);
+                buffer.newLine();
+            }
             for (TestResultDetail testResultDetail : testResultDetailList.getTestResultDetailList()){
                 String line = testResultDetailListFileDataSource.createLine(testResultDetail);
                 buffer.append(line);
@@ -261,4 +187,49 @@ public class TestResultListFileDataSource implements DataSource<TestResultList>,
                 + testResult.getNoteTR() + ","
                 + testResult.getStatusTR();
     }
+
+    //            List<String> fileLines = new ArrayList<>();
+//            // อ่านข้อมูลเดิมในไฟล์ถ้ามี
+//            boolean append = true;
+//            if (file.exists()) {
+//                try {
+//                    fileLines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
+//                } catch (IOException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            }
+    // อัปเดตข้อมูลที่มีอยู่แล้ว หรือเพิ่มข้อมูลใหม่
+
+//            writer = new FileWriter(file, StandardCharsets.UTF_8, append);
+//            buffer = new BufferedWriter(writer);
+//            for (TestResult testResult : testResultList.getTestResultList()){
+//                buffer.write(String.join(System.lineSeparator(), fileLines));
+//                buffer.newLine();
+////                String line = createLine(testResult);
+////                buffer.append(line);
+////                buffer.newLine();
+//            }
+//            for (TestResult testResult : testResultList.getTestResultList()) {
+//                String newLine = createLine(testResult);
+//                append = false;
+//                for (int i = 0; i < fileLines.size(); i++) {
+//                    String line = fileLines.get(i);
+//                    if (line.contains(testResult.getIdTR())) { // เช็คว่า ID ตรงกันหรือไม่
+//                        fileLines.set(i, newLine); // เขียนทับบรรทัดเดิม
+//                        append = true;
+//                        break;
+//                    }
+//                }
+//                if (!append) {
+//                    fileLines.add(newLine); // เพิ่มข้อมูลใหม่ถ้าไม่เจอ ID เดิม
+//                }
+//            }
+//            try (BufferedWriter buffer1 = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8, false))) { // false สำหรับเขียนทับไฟล์
+//                for (String line : fileLines) {
+//                    buffer1.write(line);
+//                    buffer1.newLine();
+//                }
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
 }

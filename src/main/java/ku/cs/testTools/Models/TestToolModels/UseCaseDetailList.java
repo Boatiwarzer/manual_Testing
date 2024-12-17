@@ -67,4 +67,15 @@ public class UseCaseDetailList {
         }
         return false; // ถ้าไม่มี detail ซ้ำ ให้ return false
     }
+    public void deleteUseCaseDetail(UseCaseDetail useCaseDetail) {
+        // Iterate through the list to find the item to delete
+        for (int i = 0; i < useCaseDetailList.size(); i++) {
+            UseCaseDetail existing = useCaseDetailList.get(i);
+            if (existing.isId(useCaseDetail.getUseCaseID())) {
+                // Remove the item from the list
+                useCaseDetailList.remove(i);
+                break; // Exit after removing the first match
+            }
+        }
+    }
 }

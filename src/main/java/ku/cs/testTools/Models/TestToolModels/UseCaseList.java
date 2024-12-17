@@ -64,6 +64,7 @@ public class UseCaseList {
     public void sort(Comparator<UseCase> cmp) {
         Collections.sort(useCaseList, cmp);
     }
+
     public void clearUseCase(String useCaseID) {
         useCaseList.removeIf(useCase -> useCase.getUseCaseID().equals(useCaseID));
     }
@@ -90,5 +91,16 @@ public class UseCaseList {
             }
         }
 
+    }
+    public void deleteUseCase(UseCase useCase) {
+        // Iterate through the list to find the item to delete
+        for (int i = 0; i < useCaseList.size(); i++) {
+            UseCase existing = useCaseList.get(i);
+            if (existing.isId(useCase.getUseCaseID())) {
+                // Remove the item from the list
+                useCaseList.remove(i);
+                break; // Exit after removing the first match
+            }
+        }
     }
 }

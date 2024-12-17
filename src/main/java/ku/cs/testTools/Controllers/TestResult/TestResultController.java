@@ -13,6 +13,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
@@ -244,8 +245,6 @@ public class TestResultController {
         configs.add(new StringConfiguration("title:Approval", "field:approveTRD"));
         configs.add(new StringConfiguration("title:Remark", "field:remarkTRD"));
 
-        int index = 0;
-
         // Create and add columns
         for (StringConfiguration conf : configs) {
             TableColumn<TestResultDetail, String> col = new TableColumn<>(conf.get("title"));
@@ -313,24 +312,36 @@ public class TestResultController {
                 col.setMaxWidth(160);
                 col.setMinWidth(160);
             }
+            if (!conf.get("field").equals("imageTRD")) {
+                col.setCellFactory(tc -> {
+                    TableCell<TestResultDetail, String> cell = new TableCell<>() {
+                        private final Text text = new Text();
+
+                        @Override
+                        protected void updateItem(String item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (empty || item == null) {
+                                setGraphic(null);
+                            } else {
+                                text.setText(item);
+                                text.wrappingWidthProperty().bind(tc.widthProperty().subtract(10));
+                                setGraphic(text);
+                            }
+                        }
+                    };
+//                    cell.setStyle("-fx-alignment: top-left; -fx-padding: 5px;");
+                    return cell;
+                });
+            }
 //            col.setPrefWidth(100);
 //            col.setMaxWidth(100);
 //            col.setMinWidth(100);
-
-//            // ตั้งค่าขนาดคอลัมน์สำหรับ 2 คอลัมน์แรก
-//            if (index <= 1) {
-//                col.setPrefWidth(100);
-//                col.setMaxWidth(100);
-//                col.setMinWidth(100);
-//            } else {
-//                col.setPrefWidth(150); // กำหนดค่าขนาดเริ่มต้น
-//            }
-//            index++;
 
             // เพิ่มคอลัมน์ลง TableView
             new TableColumns(col);
             onTableTestresult.getColumns().add(col);
         }
+        onTableTestresult.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
         //Add items to the table
         for (TestResultDetail testResultDetail : testResultDetailList.getTestResultDetailList()) {
@@ -346,7 +357,7 @@ public class TestResultController {
         onTableTestresult.getColumns().clear();
         onTableTestresult.getItems().clear();
         onTableTestresult.refresh();
-        onTableTestresult.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+//        onTableTestresult.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         ArrayList<StringConfiguration> configs = new ArrayList<>();
         configs.add(new StringConfiguration("title:TRD-ID."));
@@ -367,23 +378,16 @@ public class TestResultController {
         configs.add(new StringConfiguration("title:Approval"));
         configs.add(new StringConfiguration("title:Remark"));
 
-        int index = 0;
         for (StringConfiguration conf: configs) {
             TableColumn col = new TableColumn(conf.get("title"));
-            col.setPrefWidth(100);
-            col.setMaxWidth(100);
-            col.setMinWidth(100);
-//            if (index <= 1) {  // ถ้าเป็นคอลัมน์แรก
-//                col.setPrefWidth(100);
-//                col.setMaxWidth(100);   // จำกัดขนาดสูงสุดของคอลัมน์แรก
-//                col.setMinWidth(100); // ตั้งค่าขนาดคอลัมน์แรก
-//            }
+//            col.setPrefWidth(100);
+//            col.setMaxWidth(100);
+//            col.setMinWidth(100);
             col.setSortable(false);
             col.setReorderable(false);
             onTableTestresult.getColumns().add(col);
-//            index++;
-
         }
+        onTableTestresult.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
     }
 
     @FXML

@@ -48,6 +48,7 @@ public class TestResult {
         this.dateTR = dateTime.format(formatter);
         return dateTR;
     }
+    private boolean markedForDeletion = false;
 //    @Override
 //    public final int hashCode() {
 //        return getClass().hashCode();

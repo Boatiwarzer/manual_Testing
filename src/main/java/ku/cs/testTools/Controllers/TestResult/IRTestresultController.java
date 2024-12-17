@@ -18,6 +18,7 @@ import ku.cs.testTools.Services.DataSource;
 import ku.cs.testTools.Services.StringConfiguration;
 import ku.cs.testTools.Services.DataSourceCSV.IRreportDetailListFileDataSource;
 import ku.cs.testTools.Services.DataSourceCSV.IRreportListFileDataSource;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -26,6 +27,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -186,37 +189,58 @@ public class IRTestresultController {
         stage.close();
     }
 
-    public void saveToExcel(Stage stage, List<IRreportDetail> irReportDetails) {
-        // สร้าง FileChooser สำหรับเลือกตำแหน่งไฟล์ที่ต้องการบันทึก
+    public void saveToExcel(Stage stage, List<IRreportDetail> irReportDetails, String csvFileName) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files", "*.xlsx"));
+        fileChooser.setTitle("Save Excel File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files (*.xlsx)", "*.xlsx"));
 
-        // ให้ผู้ใช้เลือกตำแหน่งและชื่อไฟล์
-        File selectedFile = fileChooser.showSaveDialog(stage);
+        // เปิดหน้าต่างให้ผู้ใช้เลือกตำแหน่งไฟล์
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Excel files (*.xlsx)", "*.xlsx");
+        fileChooser.getExtensionFilters().add(extFilter);
+        java.io.File file = fileChooser.showSaveDialog(stage);
 
-        if (selectedFile != null) {
-            String filePath = selectedFile.getAbsolutePath();
-            if (!filePath.endsWith(".xlsx")) {
-                filePath += ".xlsx"; // ถ้าไฟล์ไม่มีนามสกุล .xlsx ก็จะเพิ่มให้
-            }
-
-            // เรียกฟังก์ชันบันทึกข้อมูลลงในไฟล์ Excel
+        if (file != null) {
             try {
-                exportToExcel(filePath, irReportDetails);
+                exportToExcel(file.getAbsolutePath(), irReportDetails, csvFileName);
             } catch (IOException e) {
-                e.printStackTrace(); // หรือแสดงข้อความแสดงข้อผิดพลาด
+                e.printStackTrace();
             }
         }
     }
 
+    public void saveAsExcel(ActionEvent event) {
+        Stage stage = (Stage) onTableIR.getScene().getWindow();
+        List<IRreportDetail> irReportDetails = onTableIR.getItems();
+        String csvFileName = "your_csv_file_name.csv"; // แทนด้วยชื่อไฟล์ CSV ที่คุณต้องการ
+        saveToExcel(stage, irReportDetails, "example.csv");
+    }
+
 //     ฟังก์ชันสำหรับบันทึกข้อมูลลงไฟล์ Excel
-    public void exportToExcel(String filePath, List<IRreportDetail> irReportDetails) throws IOException {
+    public void exportToExcel(String filePath, List<IRreportDetail> irReportDetails, String csvFileName) throws IOException {
         // สร้าง Workbook และ Sheet
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("IR Report Details");
 
-        // สร้างแถวแรกสำหรับหัวข้อ (header)
-        Row headerRow = sheet.createRow(0);
+        // ส่วน Meta Data
+        int currentRow = 0; // ตัวแปรติดตาม row ปัจจุบันใน Excel
+
+        // เพิ่มวันเวลา Export
+        Row exportTimeRow = sheet.createRow(currentRow++);
+        Cell exportTimeCell = exportTimeRow.createCell(0);
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        exportTimeCell.setCellValue("Export Date and Time: " + now.format(formatter));
+
+        // เพิ่มชื่อไฟล์ CSV
+        Row csvFileNameRow = sheet.createRow(currentRow++);
+        Cell csvFileNameCell = csvFileNameRow.createCell(0);
+        csvFileNameCell.setCellValue("Source CSV File: " + csvFileName);
+
+        // เว้นแถวก่อนเริ่มหัวข้อข้อมูลตาราง
+        currentRow++;
+
+        // สร้างหัวข้อคอลัมน์ (Header Row)
+        Row headerRow = sheet.createRow(currentRow++);
         String[] columns = {
                 "IR ID", "Test No.", "Tester", "TS ID", "TC ID", "Description", "Condition",
                 "Image", "Priority", "RCA", "Review By", "Status", "Remark"
@@ -228,9 +252,8 @@ public class IRTestresultController {
         }
 
         // เพิ่มข้อมูลจาก irReportDetails ในแต่ละแถว
-        int rowNum = 1;
         for (IRreportDetail detail : irReportDetails) {
-            Row row = sheet.createRow(rowNum++);
+            Row row = sheet.createRow(currentRow++);
             row.createCell(0).setCellValue(detail.getIdIR());
             row.createCell(1).setCellValue(detail.getTestNoIRD());
             row.createCell(2).setCellValue(detail.getTesterIRD());
@@ -246,7 +269,7 @@ public class IRTestresultController {
             row.createCell(12).setCellValue(detail.getRemarkIRD());
         }
 
-        // เขียนไฟล์ Excel ไปที่ตำแหน่งที่ผู้ใช้เลือก
+        // เขียนไฟล์ Excel ไปยังตำแหน่งที่ผู้ใช้เลือก
         try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
             workbook.write(fileOut);
         }
@@ -262,9 +285,10 @@ public class IRTestresultController {
 
         // ดึงข้อมูลจาก TableView โดยใช้ getItems()
         List<IRreportDetail> irReportDetails = onTableIR.getItems();
+        String csvFileName = "example.csv";
 
         // เรียกฟังก์ชัน saveAsExcel
-        saveToExcel(stage, irReportDetails);
+        saveToExcel(stage, irReportDetails, csvFileName);
     }
 
 }

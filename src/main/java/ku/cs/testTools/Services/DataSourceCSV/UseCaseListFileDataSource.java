@@ -108,7 +108,7 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
         File file = new File(filePath);
         FileWriter writer = null;
         BufferedWriter buffer = null;
-        UseCaseList existingUseCaseList = readData();
+//        UseCaseList existingUseCaseList = readData();
         try {
 //            boolean append = false; // กำหนดค่าเริ่มต้นเป็น true
 //            for (UseCase useCase : useCaseList.getUseCaseList()) {
@@ -119,27 +119,19 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
 //            }
 //            writer = new FileWriter(file, StandardCharsets.UTF_8, append);
 //            buffer = new BufferedWriter(writer);
-            boolean append = true; // กำหนดค่าเริ่มต้นเป็น true
-            for (UseCase useCase : useCaseList.getUseCaseList()) {
-                if (existingUseCaseList.isUseCaseIDExist(useCase.getUseCaseID())) {
-                    append = false; // ถ้ามี ID อยู่แล้ว ให้ตั้ง append เป็น false เพื่อเขียนทับไฟล์เดิม
-                    break; // เจอ ID ที่ซ้ำแล้วก็ไม่ต้องวนลูปต่อ
-                }
-            }
-            writer = new FileWriter(file, StandardCharsets.UTF_8, append);
+//            boolean append = true; // กำหนดค่าเริ่มต้นเป็น true
+//            for (UseCase useCase : useCaseList.getUseCaseList()) {
+//                if (existingUseCaseList.isUseCaseIDExist(useCase.getUseCaseID())) {
+//                    append = false; // ถ้ามี ID อยู่แล้ว ให้ตั้ง append เป็น false เพื่อเขียนทับไฟล์เดิม
+//                    break; // เจอ ID ที่ซ้ำแล้วก็ไม่ต้องวนลูปต่อ
+//                }
+//            }
+//            writer = new FileWriter(file, StandardCharsets.UTF_8, append);
+            writer = new FileWriter(file, StandardCharsets.UTF_8);
             buffer = new BufferedWriter(writer);
             //Write useCaseList to CSV
-            for (UseCase useCase : useCaseList.getUseCaseList()) {
-                buffer.write(createLine(useCase));
-                buffer.newLine();
-            }
             for (TestFlowPosition position : testFlowPositionList.getPositionList()) {
                 String line = testFlowPositionListFileDataSource.createLine(position);
-                buffer.append(line);
-                buffer.newLine();
-            }
-            for (Connection connection : connectionList.getConnectionList()) {
-                String line = connectionListFileDataSource.createLine(connection);
                 buffer.append(line);
                 buffer.newLine();
             }
@@ -160,6 +152,11 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
             }
             for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()){
                 String line = testCaseDetailListDataSource.createLine(testCaseDetail);
+                buffer.append(line);
+                buffer.newLine();
+            }
+            for (UseCase useCase : useCaseList.getUseCaseList()){
+                String line = createLine(useCase);
                 buffer.append(line);
                 buffer.newLine();
             }
@@ -191,95 +188,9 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
 
             buffer.close();
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
-//        try {
-//            UseCaseList existingUseCaseList = readData();
-//            try {
-//                boolean append = true; // กำหนดค่าเริ่มต้นเป็น true
-//                for (UseCase useCase : useCaseList.getUseCaseList()) {
-//                    if (existingUseCaseList.isUseCaseIDExist(useCase.getUseCaseID())) {
-//                        append = false; // ถ้ามี ID อยู่แล้ว ให้ตั้ง append เป็น false เพื่อเขียนทับไฟล์เดิม
-//                        break; // เจอ ID ที่ซ้ำแล้วก็ไม่ต้องวนลูปต่อ
-//                    }
-//                }
-//                writer = new FileWriter(file, StandardCharsets.UTF_8, append);
-//                buffer = new BufferedWriter(writer);
-//                //Write useCaseList to CSV
-//                for (UseCase useCase : useCaseList.getUseCaseList()) {
-//                    buffer.write(createLine(useCase));
-//                    buffer.newLine();
-//                }
-//
-//                buffer.close();
-//
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//            writer = new FileWriter(file, StandardCharsets.UTF_8);
-//            buffer = new BufferedWriter(writer);
-//            for (TestFlowPosition position : testFlowPositionList.getPositionList()) {
-//                String line = testFlowPositionListFileDataSource.createLine(position);
-//                buffer.append(line);
-//                buffer.newLine();
-//            }
-//            for (TestScript testScript : testScriptList.getTestScriptList()){
-//                String line = testScriptListDataSource.createLine(testScript);
-//                buffer.append(line);
-//                buffer.newLine();
-//            }
-//            for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()){
-//                String line = testScriptDetailListDataSource.createLine(testScriptDetail);
-//                buffer.append(line);
-//                buffer.newLine();
-//            }
-//            for (TestCase testCase : testCaseList.getTestCaseList()){
-//                String line = testCaseListDataSource.createLine(testCase);
-//                buffer.append(line);
-//                buffer.newLine();
-//            }
-//            for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()){
-//                String line = testCaseDetailListDataSource.createLine(testCaseDetail);
-//                buffer.append(line);
-//                buffer.newLine();
-//            }
-//            for (UseCase useCase : useCaseList.getUseCaseList()){
-//                String line = createLine(useCase);
-//                buffer.append(line);
-//                buffer.newLine();
-//            }
-//            for (UseCaseDetail useCaseDetail : useCaseDetailList.getUseCaseDetailList()){
-//                String line = useCaseDetailListFileDataSource.createLine(useCaseDetail);
-//                buffer.append(line);
-//                buffer.newLine();
-//            }
-//            for (TestResult testResult : testResultList.getTestResultList()){
-//                String line = testResultListFileDataSource.createLine(testResult);
-//                buffer.append(line);
-//                buffer.newLine();
-//            }
-//            for (TestResultDetail testResultDetail : testResultDetailList.getTestResultDetailList()){
-//                String line = testResultDetailListFileDataSource.createLine(testResultDetail);
-//                buffer.append(line);
-//                buffer.newLine();
-//            }
-//            for (IRreport iRreport : iRreportList.getIRreportList()){
-//                String line = iRreportListFileDataSource.createLine(iRreport);
-//                buffer.append(line);
-//                buffer.newLine();
-//            }
-//            for (IRreportDetail iRreportDetail : iRreportDetailList.getIRreportDetailList()){
-//                String line = iRreportDetailListFileDataSource.createLine(iRreportDetail);
-//                buffer.append(line);
-//                buffer.newLine();
-//            }
-//
-//            buffer.close();
-//
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
     }
 
     @Override
