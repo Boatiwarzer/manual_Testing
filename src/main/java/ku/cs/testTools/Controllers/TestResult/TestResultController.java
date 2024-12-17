@@ -245,21 +245,53 @@ public class TestResultController {
         configs.add(new StringConfiguration("title:Approval", "field:approveTRD"));
         configs.add(new StringConfiguration("title:Remark", "field:remarkTRD"));
 
+        int index = 0;
         // Create and add columns
         for (StringConfiguration conf : configs) {
             TableColumn<TestResultDetail, String> col = new TableColumn<>(conf.get("title"));
             col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
+            if (index != 14 && index <= 16) {  // ถ้าเป็นคอลัมน์แรก
+                col.setPrefWidth(100);
+                col.setMaxWidth(100);   // จำกัดขนาดสูงสุดของคอลัมน์แรก
+                col.setMinWidth(100); // ตั้งค่าขนาดคอลัมน์แรก
+            }
+            col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
+            index++;
+            if (!conf.get("field").equals("imageTRD")) {
+                col.setCellFactory(tc -> {
+                    TableCell<TestResultDetail, String> cell = new TableCell<>() {
+                        private final Text text = new Text();
 
+                        @Override
+                        protected void updateItem(String item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (empty || item == null) {
+                                setGraphic(null);
+                            } else {
+                                text.setText(item);
+                                text.wrappingWidthProperty().bind(tc.widthProperty().subtract(10));
+                                setGraphic(text);
+                            }
+                        }
+                    };
+//                    cell.setStyle("-fx-alignment: top-left; -fx-padding: 5px;");
+                    return cell;
+                });
+            }
             // กำหนดเงื่อนไขการแสดงผลเฉพาะของคอลัมน์
             if (conf.get("field").equals("stepsTRD")) {
                 col.setCellFactory(column -> new TableCell<>() {
+                    private final Text text = new Text();
                     @Override
                     protected void updateItem(String item, boolean empty) {
                         super.updateItem(item, empty);
                         if (empty || item == null) {
-                            setText(null);
+                            setGraphic(null);
                         } else {
-                            setText(item.replace("|", "\n"));
+//                            setText(item.replace("|", "\n"));
+                            text.setText(item.replace("|", "\n"));
+                            text.wrappingWidthProperty().bind(column.widthProperty().subtract(10)); // ตั้งค่าการห่อข้อความตามขนาดคอลัมน์
+                            setGraphic(text); // แสดงผล Text Node แทนข้อความธรรมดา
                         }
                     }
                 });
@@ -267,13 +299,17 @@ public class TestResultController {
 
             if (conf.get("field").equals("inputdataTRD")) {
                 col.setCellFactory(column -> new TableCell<>() {
+                    private final Text text = new Text();
                     @Override
                     protected void updateItem(String item, boolean empty) {
                         super.updateItem(item, empty);
                         if (empty || item == null) {
-                            setText(null);
+                            setGraphic(null);
                         } else {
-                            setText(item.replace("|", ", "));
+//                            setText(item.replace("|", ", "));
+                            text.setText(item.replace("|", ", "));
+                            text.wrappingWidthProperty().bind(column.widthProperty().subtract(10)); // ตั้งค่าการห่อข้อความตามขนาดคอลัมน์
+                            setGraphic(text); // แสดงผล Text Node
                         }
                     }
                 });
@@ -312,27 +348,7 @@ public class TestResultController {
                 col.setMaxWidth(160);
                 col.setMinWidth(160);
             }
-            if (!conf.get("field").equals("imageTRD")) {
-                col.setCellFactory(tc -> {
-                    TableCell<TestResultDetail, String> cell = new TableCell<>() {
-                        private final Text text = new Text();
 
-                        @Override
-                        protected void updateItem(String item, boolean empty) {
-                            super.updateItem(item, empty);
-                            if (empty || item == null) {
-                                setGraphic(null);
-                            } else {
-                                text.setText(item);
-                                text.wrappingWidthProperty().bind(tc.widthProperty().subtract(10));
-                                setGraphic(text);
-                            }
-                        }
-                    };
-//                    cell.setStyle("-fx-alignment: top-left; -fx-padding: 5px;");
-                    return cell;
-                });
-            }
 //            col.setPrefWidth(100);
 //            col.setMaxWidth(100);
 //            col.setMinWidth(100);
@@ -380,9 +396,9 @@ public class TestResultController {
 
         for (StringConfiguration conf: configs) {
             TableColumn col = new TableColumn(conf.get("title"));
-//            col.setPrefWidth(100);
-//            col.setMaxWidth(100);
-//            col.setMinWidth(100);
+            col.setPrefWidth(100);
+            col.setMaxWidth(100);
+            col.setMinWidth(100);
             col.setSortable(false);
             col.setReorderable(false);
             onTableTestresult.getColumns().add(col);

@@ -27,9 +27,9 @@ import java.util.*;
 public class PopupAddTestresultController {
 
     @FXML
-    private TextField onActual, onTestNo, onInputdata;
+    private TextField onTestNo, onInputdata;
     @FXML
-    private TextArea onTeststeps;
+    private TextArea onTeststeps, onActual;
 
     @FXML
     private Button onCancelButton, onConfirmButton, onUploadButton;
@@ -101,8 +101,14 @@ public class PopupAddTestresultController {
 
         }
     }
+    private void setData() {
+        testResultNameLabel.setText(testResult.getNameTR());
+        testResultIDLabel.setText(testResult.getIdTR());
+    }
 
     private void setTextEdit() {
+//        testResultNameLabel.setText(testResult.getNameTR());
+//        testResultIDLabel.setText(testResult.getIdTR());
         onTestNo.setText(testResultDetail.getTestNo());
         onTestscriptIDComboBox.getSelectionModel().select(testResultDetail.getTsIdTRD());
         onTestcaseIDComboBox.getSelectionModel().select(testResultDetail.getTcIdTRD());
@@ -321,11 +327,6 @@ public class PopupAddTestresultController {
             String IdTS_combobox = testScript.getIdTS()+ " : " + testScript.getNameTS();
             onTestscriptIDComboBox.getItems().add(IdTS_combobox);
         }
-    }
-
-    @FXML
-    void onActual(ActionEvent event) {
-
     }
 
     @FXML
