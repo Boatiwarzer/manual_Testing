@@ -216,7 +216,7 @@
             </HBox>
             <HBox alignment="TOP_CENTER" prefHeight="50.0" prefWidth="200.0" spacing="50.0">
                <children>
-                  <Button fx:id="onConfirmButton" mnemonicParsing="false" onAction="#onConfirmButton" prefHeight="30.0" prefWidth="80.0" text="Confirm">
+                  <Button fx:id="onConfirmButton" mnemonicParsing="false" onAction="#onConfirmButton" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #6fadac;" text="Confirm">
                      <font>
                         <Font size="14.0" />
                      </font>
