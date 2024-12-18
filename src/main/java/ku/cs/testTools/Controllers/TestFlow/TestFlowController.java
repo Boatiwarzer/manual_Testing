@@ -1,6 +1,7 @@
 package ku.cs.testTools.Controllers.TestFlow;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -788,6 +789,9 @@ public class TestFlowController {
         MenuItem resizeItem = new MenuItem("Resize");
         //MenuItem propertiesItem = new MenuItem("Properties");
         MenuItem deleteItem = new MenuItem("Delete");
+        if (!Objects.equals(type,"line")|| !Objects.equals(type, "arrow")) {
+            contextMenu.getItems().add(resizeItem);
+        }
         contextMenu.getItems().add(resizeItem);
         //contextMenu.getItems().add(propertiesItem);
         contextMenu.getItems().add(deleteItem);
@@ -826,7 +830,7 @@ public class TestFlowController {
             node.setOnMouseReleased(mouseEvent -> {
                 node.setOnMouseDragged(null);
                 saveProject();
-                if (!Objects.equals(type, "connection")) {
+                if (!Objects.equals(type, "line") || !Objects.equals(type, "arrow")) {
                     makeDraggable(node, type, ID);
                 }
             });
@@ -877,12 +881,19 @@ public class TestFlowController {
                 System.out.println("Item Removed");
             }
         });
+        node.setOnMouseReleased(mouseEvent -> {
+            node.setOnMouseDragged(null);
+            saveProject();
+            if (!Objects.equals(type,"line")|| !Objects.equals(type, "arrow")) {
+                makeDraggable(node, type, ID);
+            }
+        });
         node.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
             if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
                 System.out.println("Item Right Clicked");
                 contextMenu.show(node, mouseEvent.getScreenX(), mouseEvent.getScreenY());
 
-                if (!Objects.equals(type,"connection"))
+                if (!Objects.equals(type,"line")|| !Objects.equals(type, "arrow"))
                 {
                     makeDraggable(node, type, ID);
                 }

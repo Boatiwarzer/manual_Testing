@@ -117,9 +117,8 @@ public class PopupInfoTestcaseController {
                 }
                 setDataTC();
                 for (TestCaseDetail testCaseDetail : testCaseDetailListTemp.getTestCaseDetailList()) {
-                    if (testCase.getIdTC().trim().equals(testCaseDetail.getIdTC().trim())){
-                            testCaseDetailList.addOrUpdateTestCase(testCaseDetail);
-                    }
+                    testCaseDetailList.addOrUpdateTestCase(testCaseDetail);
+
                 }
                 if (testCaseDetailList != null){
                     loadTable(testCaseDetailList);
@@ -493,14 +492,7 @@ public class PopupInfoTestcaseController {
             // ขอ focus กลับไปที่ TableView
             onTableTestCase.requestFocus();
         });
-        onEditListButton.setOnAction(event1 -> onTableTestCase.requestFocus());
-        ArrayList<Object> objects = new ArrayList<>();
-        objects.add(projectName);
-        objects.add(directory);
-        objects.add(position);
-        objects.add(testCase);
-        objects.add(testCaseDetailList);
-        objects.add(selectedItem);
+
         try {
             String name = onTestNameCombobox.getValue();
             String idTS = tsId;
@@ -511,6 +503,14 @@ public class PopupInfoTestcaseController {
             String note = onTestNoteField.getText();
             String post = infoPostconLabel.getText();
             testCase = new TestCase(idTS, name, date, useCase, description,note,position,preCon,post);
+            onEditListButton.setOnAction(event1 -> onTableTestCase.requestFocus());
+            ArrayList<Object> objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add(position);
+            objects.add(testCase);
+            objects.add(testCaseDetailList);
+            objects.add(selectedItem);
             if (selectedItem != null){
                 FXRouter.popup("popup_testflow_add_testcase",objects,true);
             }
@@ -539,7 +539,7 @@ public class PopupInfoTestcaseController {
 
 
             // Add or update test script
-            testCaseList.addOrUpdateTestCase(testCase);
+            testCaseList.addTestCase(testCase);
             TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(position);
             testFlowPositionList.addPosition(testFlowPosition);
             // Write data to respective files

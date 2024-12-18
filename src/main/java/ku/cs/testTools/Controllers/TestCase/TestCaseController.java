@@ -64,7 +64,7 @@ public class TestCaseController {
     private ComboBox<String> infoUsecaseCombobox ;
 
     @FXML
-    private TextArea infoDescriptField, infoNoteField;
+    private TextArea infoDescriptField, infoNoteField,infoPreconField,infoPostconField;
 
     @FXML
     private Label testNameLabel;
@@ -172,6 +172,11 @@ public class TestCaseController {
         String note = testCase.getNote();
         infoNoteField.setText(note);
         setTableInfo(testCase);
+        String pre = testCase.getPreCon();
+        infoPreconField.setText(pre);
+        String post = testCase.getPostCon();
+        infoPostconField.setText(post);
+
     }
 
     private void setTableInfo(TestCase testCase) { // Clear existing columns

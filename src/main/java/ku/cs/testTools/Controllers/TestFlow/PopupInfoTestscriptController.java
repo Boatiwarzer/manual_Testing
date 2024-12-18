@@ -109,9 +109,7 @@ public class PopupInfoTestscriptController {
                 }
                 setDataTS();
                 for (TestScriptDetail testScriptDetail : testScriptDetailListTemp.getTestScriptDetailList()) {
-                    if (testScript.getIdTS().trim().equals(testScriptDetail.getIdTS().trim())){
-                        testScriptDetailList.addOrUpdateTestScriptDetail(testScriptDetail);
-                    }
+                    testScriptDetailList.addOrUpdateTestScriptDetail(testScriptDetail);
                 }
                 if (testScriptDetailList != null){
                     loadTable(testScriptDetailList);
@@ -395,6 +393,8 @@ public class PopupInfoTestscriptController {
             // อัปเดตข้อมูลใน Label
             infoPreconLabel.setText(useCase.getPreCondition());
             infoDescriptLabel.setText(useCase.getDescription());
+            infoPostconLabel.setText(useCase.getPostCondition());
+
         }
     }
 
