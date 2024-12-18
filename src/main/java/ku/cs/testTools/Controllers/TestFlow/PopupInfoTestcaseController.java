@@ -130,7 +130,7 @@ public class PopupInfoTestcaseController {
             else{
                 setTable();
                 System.out.println(tsId);
-                    selectedTCD();
+                selectedTCD();
 
 
 

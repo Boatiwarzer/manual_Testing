@@ -75,13 +75,9 @@ public class PopupInfoTestscriptController {
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
     private TestScript testScript = new TestScript();
     private TestScriptDetail testScriptDetail;
-
-    private String id;
     private int position;
-    private String date;
     private String tsId;
     private TestScriptDetail selectedItem;
-    private TestScript selectedTestScript;
     private TestCaseList testCaseList = new TestCaseList();
     private UseCaseList useCaseList = new UseCaseList();
     private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
@@ -329,7 +325,6 @@ public class PopupInfoTestscriptController {
 
     private void selectedComboBoxSetInfoTS(String selectedItem) {
         String[] data = selectedItem.split("[:,]");
-
         // ตรวจสอบว่า data มี UseCase ID ใน index 0 หรือไม่
         if (data.length > 0 && testScriptList.findTSById(data[0].trim()) != null) {
             testScript = testScriptList.findTSById(data[0].trim());
@@ -579,7 +574,6 @@ public class PopupInfoTestscriptController {
         String preCon = infoPreconLabel.getText();
         String note = onTestNoteField.getText();
         String post = infoPostconLabel.getText();
-
 
         // Create a new TestScript object
         testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post, note,position);

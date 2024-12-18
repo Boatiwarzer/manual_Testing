@@ -89,7 +89,6 @@ public class TestScriptAddController {
     private Button onEditListButton;
     private ArrayList <String> word = new ArrayList<>();
 
-
     @FXML
     private Label testIDLabel;
     private String tsId;
@@ -104,54 +103,86 @@ public class TestScriptAddController {
     private TestScript selectedTestScript;
     private TestCaseList testCaseList = new TestCaseList();
     private UseCaseList useCaseList = new UseCaseList();
-    private static int idCounter = 1; // Counter for sequential IDs
-    private static final int MAX_ID = 999; // Upper limit for IDs
-    private static Set<String> usedIds = new HashSet<>(); // Set to store used IDs
-    private final DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-    private final DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-    private final DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
-    private final DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName1+".csv");
+    private TestScriptDetail testScriptDetail;
+    private int position;
+    private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
+    private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
+    private TestScriptDetailList testScriptDetailListTemp = new TestScriptDetailList();
+    private ConnectionList connectionList;
     @FXML
     void initialize() {
         clearInfo();
+        loadProject();
         selectedComboBox();
         setDate();
         setButtonVisible();
-        {
-            if (FXRouter.getData() != null) {
-                onTableTestscript.isFocused();
-                testScriptDetailList = (TestScriptDetailList) FXRouter.getData();
-                loadTable(testScriptDetailList);
-                testScript = (TestScript) FXRouter.getData2();
-                selectedTSD();
-                selectedListView();
-                setDataTS();
-                if (testScriptListDataSource.readData() != null && testScriptDetailListDataSource.readData() != null){
-                    TestScriptList testScriptList = testScriptListDataSource.readData();
-                    loadListView(testScriptList);
-                    for (TestScript testScript : testScriptList.getTestScriptList()) {
-                        word.add(testScript.getNameTS());
-                    }
-                    searchSet();
-                }
+        if (FXRouter.getData() != null) {
+            ArrayList<Object> objects = (ArrayList) FXRouter.getData();
+            projectName = (String) objects.get(0);
+            directory = (String) objects.get(1);
+            onTableTestscript.isFocused();
+            testScriptDetailList = (TestScriptDetailList) FXRouter.getData();
+            loadTable(testScriptDetailList);
+            testScript = (TestScript) FXRouter.getData2();
+            selectedTSD();
+            selectedListView();
+            if (objects.get(2) != null){
+                testScript = (TestScript) objects.get(2);
+                testScriptDetailList = (TestScriptDetailList) objects.get(3);
+                testScriptDetail = (TestScriptDetail) objects.get(4);
             }
-            else{
-                setTable();
-                randomId();
-                System.out.println(tsId);
-                if (testScriptListDataSource.readData() != null && testScriptDetailListDataSource.readData() != null){
-                    testScriptList = testScriptListDataSource.readData();
-                    loadListView(testScriptList);
-                    selectedTSD();
-                    for (TestScript testScript : testScriptList.getTestScriptList()) {
-                        word.add(testScript.getNameTS());
-                    }
-                    searchSet();
-                }
-
+            setDataTS();
+            loadListView(testScriptList);
+            for (TestScript testScript : testScriptList.getTestScriptList()) {
+                word.add(testScript.getNameTS());
             }
+            searchSet();
         }
-        System.out.println(testScriptDetailList);
+        else {
+            setTable();
+            randomId();
+            loadListView(testScriptList);
+            selectedTSD();
+            for (TestScript testScript : testScriptList.getTestScriptList()) {
+                word.add(testScript.getNameTS());
+            }
+            searchSet();
+            }
+
+        }
+    private void loadProject() {
+        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
+        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
+        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+
+        testScriptList = testScriptListDataSource.readData();
+        testScriptDetailListTemp = testScriptDetailListDataSource.readData();
+        testCaseList = testCaseListDataSource.readData();
+        testCaseDetailList = testCaseDetailListDataSource.readData();
+        testFlowPositionList = testFlowPositionListDataSource.readData();
+        connectionList = connectionListDataSource.readData();
+        useCaseList = useCaseListDataSource.readData();
+
+    }
+    private void saveProject() {
+        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
+        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
+        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+        testFlowPositionListDataSource.writeData(testFlowPositionList);
+        testScriptListDataSource.writeData(testScriptList);
+        testScriptDetailListDataSource.writeData(testScriptDetailList);
+        testCaseListDataSource.writeData(testCaseList);
+        testCaseDetailListDataSource.writeData(testCaseDetailList);
+        connectionListDataSource.writeData(connectionList);
+        //useCaseListDataSource.writeData(useCaseList);
 
     }
 
@@ -356,28 +387,6 @@ public class TestScriptAddController {
         this.tsId = String.format("TS-%s", random1);
 
     }
-    public void generateSequentialId() {
-        // Loop until we find an unused ID
-        while (idCounter <= MAX_ID) {
-            // Generate ID with leading zeros, e.g., "001", "002", etc.
-            String sequentialId = String.format("TS-%03d", idCounter);
-
-            // Check if ID is already used
-            if (!usedIds.contains(sequentialId)) {
-                usedIds.add(sequentialId); // Add ID to the set of used IDs
-                this.tsId = sequentialId; // Assign to the object's tsId field
-                idCounter++; // Increment the counter for the next ID
-                break; // Exit loop once a valid ID is found
-            }
-
-            idCounter++; // Increment the counter if ID is already used
-        }
-
-        // Reset counter if we reach the max ID to prevent overflow (optional)
-        if (idCounter > MAX_ID) {
-            idCounter = 1; // Reset the counter back to 1 if needed
-        }
-    }
     void selectedTSD() {
         onTableTestscript.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null) {
@@ -426,7 +435,6 @@ public class TestScriptAddController {
             String note = onTestNoteField.getText();
             String post = infoPostconLabel.getText();
             testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note,post,0);
-
             if (testScriptDetailList != null){
                 FXRouter.popup("popup_add_testscript",testScriptDetailList,testScript,null,true);
             }else {
@@ -581,8 +589,7 @@ public class TestScriptAddController {
             testScriptList.addOrUpdateTestScript(testScript);
 
             // Write data to respective files
-            testScriptListDataSource.writeData(testScriptList);
-            testScriptDetailListDataSource.writeData(testScriptDetailList);
+            saveProject();
 
             // Show success message
             showAlert("Success", "Test script saved successfully!");
@@ -608,11 +615,7 @@ public class TestScriptAddController {
         onTestcaseCombobox.setItems(FXCollections.observableArrayList("None"));
         new AutoCompleteComboBoxListener<>(onTestcaseCombobox);
         onTestcaseCombobox.getSelectionModel().selectFirst();
-        if (testCaseListDataSource.readData() != null){
-            testCaseList = testCaseListDataSource.readData();
-            testCaseCombobox();
-
-        }
+        testCaseCombobox();
         onTestcaseCombobox.setOnAction(event -> {
             String selectedItem = onTestcaseCombobox.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
@@ -627,10 +630,7 @@ public class TestScriptAddController {
         onUsecaseCombobox.setItems(FXCollections.observableArrayList("None"));
         new AutoCompleteComboBoxListener<>(onUsecaseCombobox);
         onUsecaseCombobox.getSelectionModel().selectFirst();
-        if (useCaseListDataSource.readData() != null){
-            useCaseList= useCaseListDataSource.readData();
-            useCaseCombobox();
-        }
+        useCaseCombobox();
         onUsecaseCombobox.setOnAction(event -> {
             String selectedItem = onUsecaseCombobox.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {

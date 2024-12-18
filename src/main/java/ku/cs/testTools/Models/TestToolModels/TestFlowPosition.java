@@ -16,23 +16,22 @@ public class TestFlowPosition {
     @Id
     @Access(AccessType.FIELD)
     private int positionID;
-    private double xPosition;
-    private double yPosition;
     private double fitWidth;
     private double fitHeight;
+    private double xPosition;
+    private double yPosition;
     private double rotation;
     private String type;
 
-    public TestFlowPosition(int positionID, double xPosition, double yPosition, double fitWidth, double fitHeight, double rotation, String type) {
+    public TestFlowPosition(int positionID, double fitWidth, double fitHeight, double xPosition, double yPosition, double rotation, String type) {
         this.positionID = positionID;
-        this.xPosition = xPosition;
-        this.yPosition = yPosition;
         this.fitWidth = fitWidth;
         this.fitHeight = fitHeight;
+        this.xPosition = xPosition;
+        this.yPosition = yPosition;
         this.rotation = rotation;
         this.type = type;
     }
-
 
     public boolean isId(int id) {
         return this.positionID == id;

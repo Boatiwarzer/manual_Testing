@@ -215,11 +215,12 @@ public class TestFlowController {
 
     // Draws a test script with a rectangle shape and label
     public void drawTestScript(double width, double height, double layoutX, double layoutY, String label, int positionID) {
-        Rectangle rectangle = new Rectangle(width, height,200,75);
+        Rectangle rectangle = new Rectangle(width, height);
         rectangle.setArcWidth(30);       // Horizontal diameter of arc at corners
         rectangle.setArcHeight(30);
         rectangle.setStyle("-fx-fill: transparent");
         Label testScriptName = new Label(label);
+        testScriptName.setWrapText(true);
         
         rectangle.setStroke(Color.BLACK);
         rectangle.setStrokeWidth(0.2);
@@ -231,8 +232,8 @@ public class TestFlowController {
         stackPane.setLayoutY(layoutY);
         onDesignArea.getChildren().add(stackPane);
 
-        makeDraggable(onDesignArea.getChildren().get(onDesignArea.getChildren().size() - 1), "testScript", positionID);
-        makeSelectable(onDesignArea.getChildren().get(onDesignArea.getChildren().size() - 1), "testScript", positionID);
+        makeDraggable(onDesignArea.getChildren().get(onDesignArea.getChildren().size() - 1), "testscript", positionID);
+        makeSelectable(onDesignArea.getChildren().get(onDesignArea.getChildren().size() - 1), "testscript", positionID);
         stackPane.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getClickCount() == 2) {  // Check if it's a double click
                 // Send the use case details to the UseCasePage
@@ -253,40 +254,50 @@ public class TestFlowController {
     }
 
     private void drawTestCase(double width, double height, double layoutX, double layoutY, String label, int positionID) {
-        Rectangle rectangle = new Rectangle(width, height,75,75);
-        rectangle.setStyle("-fx-fill: transparent");
+        // Create a rectangle with specified width and height
+        Rectangle rectangle = new Rectangle(width, height);
+        rectangle.setFill(Color.TRANSPARENT); // Transparent fill
+        rectangle.setStroke(Color.BLACK); // Border color
+        rectangle.setStrokeWidth(0.2); // Border width
+
+        // Create a label for the test case
         Label testCaseName = new Label(label);
+        testCaseName.setWrapText(true); // Enable text wrapping
+        //testCaseName.setMaxWidth(width - 10); // Limit label width (padding 10 for spacing)
 
-        rectangle.setStroke(Color.BLACK);
-        rectangle.setStrokeWidth(0.2);
-
-
+        // Create a StackPane to hold the rectangle and label
         StackPane stackPane = new StackPane(rectangle, testCaseName);
-        stackPane.setAlignment(Pos.CENTER);
+        stackPane.setAlignment(Pos.CENTER); // Center align contents
         stackPane.setLayoutX(layoutX);
         stackPane.setLayoutY(layoutY);
+
+        // Add the StackPane to the parent container
         onDesignArea.getChildren().add(stackPane);
 
-        makeDraggable(onDesignArea.getChildren().get(onDesignArea.getChildren().size() - 1), "testCase", positionID);
-        makeSelectable(onDesignArea.getChildren().get(onDesignArea.getChildren().size() - 1), "testCase", positionID);
+        // Make the StackPane draggable and selectable
+        makeDraggable(stackPane, "testcase", positionID);
+        makeSelectable(stackPane, "testcase", positionID);
+
+        // Add double-click event handler
         stackPane.setOnMouseClicked(mouseEvent -> {
-            if (mouseEvent.getClickCount() == 2) {  // Check if it's a double click
-                // Send the use case details to the UseCasePage
+            if (mouseEvent.getClickCount() == 2) { // Handle double click
                 ArrayList<Object> objects = new ArrayList<>();
                 objects.add(projectName);
                 objects.add(directory);
                 objects.add(positionID);
-                objects.add(null);
+                objects.add(null); // Placeholder for additional data
                 System.out.println(positionID);
+
                 try {
-                    saveProject();
-                    FXRouter.newPopup("popup_info_testcase", objects,true);
+                    saveProject(); // Save current project state
+                    FXRouter.newPopup("popup_info_testcase", objects, true); // Navigate to the popup
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             }
         });
     }
+
     private void drawStart(double width, double height, double layoutX, double layoutY, String label, int positionID) {
         Circle circle = new Circle(width, height,15);
 
@@ -780,17 +791,6 @@ public class TestFlowController {
         contextMenu.getItems().add(resizeItem);
         //contextMenu.getItems().add(propertiesItem);
         contextMenu.getItems().add(deleteItem);
-        node.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
-            if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
-                System.out.println("Item Right Clicked");
-                contextMenu.show(node, mouseEvent.getScreenX(), mouseEvent.getScreenY());
-
-                if (!Objects.equals(type,"connection"))
-                {
-                    makeDraggable(node, type, ID);
-                }
-            }
-        });
         //set the action for resize menu item
         resizeItem.setOnAction(e -> {
             System.out.println("Edit Clicked");
@@ -801,17 +801,17 @@ public class TestFlowController {
                     double newHeight = mouseEvent.getY() + 10;
 
                     if (newWidth > 0 && newHeight > 0) {
-                        if (Objects.equals(type, "Rectangle-curve")) {
-                            ((Rectangle) ((VBox) node).getChildren().get(0)).setWidth(newWidth);
-                            ((Rectangle) ((VBox) node).getChildren().get(0)).setHeight(newHeight);
+                        if (Objects.equals(type, "testscript")) {
+                            ((Rectangle) ((StackPane) node).getChildren().get(0)).setWidth(newWidth);
+                            ((Rectangle) ((StackPane) node).getChildren().get(0)).setHeight(newHeight);
                             // Update the position
                             testFlowPositionList.updatePosition(ID, node.getLayoutX(), node.getLayoutY());
                             // Update the size
                             testFlowPositionList.updateSize(ID, newWidth, newHeight);
                             saveProject();
-                        }else if (Objects.equals(type, "Rectangle")){
-                            ((Rectangle) ((VBox) node).getChildren().get(0)).setWidth(newWidth);
-                            ((Rectangle) ((VBox) node).getChildren().get(0)).setHeight(newHeight);
+                        }else if (Objects.equals(type, "testcase")){
+                            ((Rectangle) ((StackPane) node).getChildren().get(0)).setWidth(newWidth);
+                            ((Rectangle) ((StackPane) node).getChildren().get(0)).setHeight(newHeight);
                             // Update the position
                             testFlowPositionList.updatePosition(ID, node.getLayoutX(), node.getLayoutY());
                             // Update the size
@@ -843,13 +843,13 @@ public class TestFlowController {
             if (result.get() == ButtonType.OK) {
                 // Remove the item from the list
 
-                if(Objects.equals(type, "testScript")) {
+                if(Objects.equals(type, "testscript")) {
                     TestScript testScript = testScriptList.findTSByPosition(ID);
                     System.out.println("testscript : " + testScript);
                     testScriptList.deleteTestScriptByPositionID(ID);
                     testScriptDetailList.deleteTestScriptDetailByTestScriptID(testScript.getIdTS());
                     testFlowPositionList.removePositionByID(ID);
-                }else if (Objects.equals(type, "testCase")){
+                }else if (Objects.equals(type, "testcase")){
                     TestCase testCase = testCaseList.findTCByPosition(ID);
                     System.out.println("testcase : " + testScript);
                     testCaseList.deleteTestCaseByPositionID(ID);
@@ -875,6 +875,17 @@ public class TestFlowController {
                 saveProject();
                 loadProject();
                 System.out.println("Item Removed");
+            }
+        });
+        node.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
+            if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
+                System.out.println("Item Right Clicked");
+                contextMenu.show(node, mouseEvent.getScreenX(), mouseEvent.getScreenY());
+
+                if (!Objects.equals(type,"connection"))
+                {
+                    makeDraggable(node, type, ID);
+                }
             }
         });
     }
