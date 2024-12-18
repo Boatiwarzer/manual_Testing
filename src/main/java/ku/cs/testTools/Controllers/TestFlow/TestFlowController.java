@@ -680,7 +680,7 @@ public class TestFlowController {
 
             }else if (event.getDragboard().getString().equals("Arrow")) {
                 addToConnectionList(event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Arrow", "none", "line", "open","line");
-                drawLine(connectionList.findLastConnectionID(), event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Association", "open", "line", "none");
+                drawLine(connectionList.findLastConnectionID(), event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Association", "none", "line", "open");
                 saveProject();
             }else if (event.getDragboard().getString().equals("Line")) {
                 addToConnectionList(event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Line", "none", "line", "none","line");

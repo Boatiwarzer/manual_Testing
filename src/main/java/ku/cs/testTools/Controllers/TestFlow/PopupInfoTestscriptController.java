@@ -488,18 +488,12 @@ public class PopupInfoTestscriptController {
         alert.setContentText("Press OK to confirm, or Cancel to go back.");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
-            DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-            DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-            DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");            // Remove the item from the list
-            TestScriptList testScriptList = testScriptListDataSource.readData();
-            TestScriptDetailList testScriptDetailList = testScriptDetailListDataSource.readData();
-            TestFlowPositionList testFlowPositionList = testFlowPositionListDataSource.readData();
-            TestScript testScript = testScriptList.findTSByPosition(position);
+            testScript = testScriptList.findTSByPosition(position);
             System.out.println("testscript : " + testScript);
             testScriptList.deleteTestScriptByPositionID(position);
             testScriptDetailList.deleteTestScriptDetailByTestScriptID(testScript.getIdTS());
             testFlowPositionList.removePositionByID(position);
-
+            saveProject();
             try {
                 ArrayList<Object> objects = new ArrayList<>();
                 objects.add(projectName);
@@ -520,43 +514,17 @@ public class PopupInfoTestscriptController {
 
     @FXML
     void onDeleteListButton(ActionEvent event) {
-        onDeleteListButton.setOnMouseClicked(event1 -> {
-            // ทำการลบ
-            // ...
-
-            // ขอ focus กลับไปที่ TableView
-            onTableTestscript.requestFocus();
-        });
-        try {
-            onTableTestscript.requestFocus();
-            String name = onTestNameCombobox.getValue();
-            String idTS = tsId;
-            String date = testDateLabel.getText();
-            String useCase = onUsecaseCombobox.getValue();
-            String description = infoDescriptLabel.getText();
-            String tc = onTestcaseCombobox.getValue();
-            String preCon = infoPreconLabel.getText();
-            String note = onTestNoteField.getText();
-            String post = infoPostconLabel.getText();
-            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, post,note,position);
-            ArrayList<Object> objects = new ArrayList<>();
-            objects.add(projectName);
-            objects.add(directory);
-            objects.add(position);
-            objects.add(testScript);
-            objects.add(testScriptDetailList);
-            objects.add(selectedItem);
-            objects.add(testCaseDetailList);
-            if (selectedItem != null){
-                System.out.println(testScriptDetailList);
-                System.out.println(testScript);
-                System.out.println(selectedItem);
-
-                FXRouter.popup("popup_testflow_delete_testscript",objects,true);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete Confirmation");
+        alert.setHeaderText("Are you sure you want to delete this item?");
+        alert.setContentText("Press OK to confirm, or Cancel to go back.");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            testScriptDetailList.deleteTestScriptDetail(selectedItem);
+            onTableTestscript.getItems().clear();
+            loadTable(testScriptDetailList);
         }
+
 
     }
 

@@ -436,6 +436,7 @@ public class PopupInfoTestcaseController {
 
     @FXML
     void onDeleteButton(ActionEvent event) {
+
         // Pop up to confirm deletion
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Delete Confirmation");
@@ -443,18 +444,12 @@ public class PopupInfoTestcaseController {
         alert.setContentText("Press OK to confirm, or Cancel to go back.");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
-            DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory,projectName + ".csv");
-            DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory,projectName + ".csv");
-            DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");            // Remove the item from the list
-            TestCaseList testCaseList = testCaseListDataSource.readData();
-            TestCaseDetailList testCaseDetailList = testCaseDetailListDataSource.readData();
-            TestFlowPositionList testFlowPositionList = testFlowPositionListDataSource.readData();
-            TestCase testCase = testCaseList.findTCByPosition(position);
+            testCase = testCaseList.findTCByPosition(position);
             System.out.println("testcase : " + testCase);
             testCaseList.deleteTestCaseByPositionID(position);
             testCaseDetailList.deleteTestCaseDetailByTestScriptID(testCase.getIdTC());
             testFlowPositionList.removePositionByID(position);
-
+            saveProject();
             try {
                 ArrayList<Object> objects = new ArrayList<>();
                 objects.add(projectName);
@@ -475,40 +470,16 @@ public class PopupInfoTestcaseController {
 
     @FXML
     void onDeleteListButton(ActionEvent event) {
-        onDeleteListButton.setOnMouseClicked(event1 -> {
-            // ทำการลบ
-            // ...
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete Confirmation");
+        alert.setHeaderText("Are you sure you want to delete this item?");
+        alert.setContentText("Press OK to confirm, or Cancel to go back.");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            testCaseDetailList.deleteTestCase(selectedItem);
+            onTableTestCase.getItems().clear();
+            loadTable(testCaseDetailList);
 
-            // ขอ focus กลับไปที่ TableView
-            onTableTestCase.requestFocus();
-        });
-        try {
-            onTableTestCase.requestFocus();
-            String name = onTestNameCombobox.getValue();
-            String idTS = tsId;
-            String date = testDateLabel.getText();
-            String useCase = onUsecaseCombobox.getValue();
-            String description = infoDescriptLabel.getText();
-            String preCon = infoPreconLabel.getText();
-            String note = onTestNoteField.getText();
-            String post = infoPostconLabel.getText();
-            testCase = new TestCase(idTS, name, date, useCase, description,note,position,preCon,post);
-            ArrayList<Object> objects = new ArrayList<>();
-            objects.add(projectName);
-            objects.add(directory);
-            objects.add(position);
-            objects.add(testCase);
-            objects.add(testCaseDetailList);
-            objects.add(selectedItem);
-            if (selectedItem != null){
-                System.out.println(testCaseDetailList);
-                System.out.println(testCase);
-                System.out.println(selectedItem);
-
-                FXRouter.popup("popup_testflow_delete_testcase",objects,true);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
 
     }
