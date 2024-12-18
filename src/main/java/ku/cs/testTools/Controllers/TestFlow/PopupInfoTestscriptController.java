@@ -90,10 +90,7 @@ public class PopupInfoTestscriptController {
     private ConnectionList connectionList;
     @FXML
     void initialize() {
-        setDate();
-        clearInfo();
-        selectedComboBox();
-        setButtonVisible();
+
         {
             if (FXRouter.getData() != null) {
                 ArrayList<Object> objects = (ArrayList) FXRouter.getData();
@@ -103,22 +100,25 @@ public class PopupInfoTestscriptController {
                 onTableTestscript.isFocused();
                 selectedTSD();
                 loadProject();
-                testScript = testScriptList.findByPositionId(position);
+                setDate();
+                clearInfo();
+                selectedComboBox();
+                setButtonVisible();
                 if (objects.get(3) != null){
                     testScript = (TestScript) objects.get(3);
                     testScriptDetailList = (TestScriptDetailList) objects.get(4);
                     testScriptDetail = (TestScriptDetail) objects.get(5);
+                }else {
+                    testScript = testScriptList.findByPositionId(position);
                 }
                 setDataTS();
-                    for (TestScriptDetail testScriptDetail : testScriptDetailListTemp.getTestScriptDetailList()) {
-                        if (testScript.getIdTS().trim().equals(testScriptDetail.getIdTS().trim())){
-                            testScriptDetailList.addOrUpdateTestScriptDetail(testScriptDetail);
-                        }
+                for (TestScriptDetail testScriptDetail : testScriptDetailListTemp.getTestScriptDetailList()) {
+                    if (testScript.getIdTS().trim().equals(testScriptDetail.getIdTS().trim())){
+                        testScriptDetailList.addOrUpdateTestScriptDetail(testScriptDetail);
                     }
-                    if (testScriptDetailList != null){
-                        loadTable(testScriptDetailList);
-
-
+                }
+                if (testScriptDetailList != null){
+                    loadTable(testScriptDetailList);
                 }
             }
             else{
@@ -190,7 +190,7 @@ public class PopupInfoTestscriptController {
             if (index <= 1) {  // ถ้าเป็นคอลัมน์แรก
                 col.setPrefWidth(80);
                 col.setMaxWidth(80);   // จำกัดขนาดสูงสุดของคอลัมน์แรก
-                col.setMinWidth(80); // ตั้งค่าขนาดคอลัมน์แรก
+                col.setMinWidth(80);// ตั้งค่าขนาดคอลัมน์แรก
             }
             col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
             new TableColumns(col);
@@ -272,18 +272,34 @@ public class PopupInfoTestscriptController {
     }
 
     private void selectedComboBox() {
+        testScriptCombobox();
+        onTestNameCombobox.setOnAction(event -> {
+            String selectedItem = onTestNameCombobox.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                onTestNameCombobox.getEditor().setText(selectedItem); // Set selected item in editor
+                Platform.runLater(onTestNameCombobox.getEditor()::end);
+                if (!selectedItem.equals("None")) {
+                    selectedComboBoxSetInfoTS(selectedItem);
+                }else {
+                    clearTestscrpt();
+                }
+            }
+
+        });
+
         onTestcaseCombobox.setItems(FXCollections.observableArrayList("None"));
         new AutoCompleteComboBoxListener<>(onTestcaseCombobox);
-        onTestcaseCombobox.getSelectionModel().selectFirst();
         testCaseCombobox();
-
-
         onTestcaseCombobox.setOnAction(event -> {
             String selectedItem = onTestcaseCombobox.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
                 onTestcaseCombobox.getEditor().setText(selectedItem); // Set selected item in editor
                 Platform.runLater(onTestcaseCombobox.getEditor()::end);
-
+                if (!selectedItem.equals("None")) {
+                    selectedComboBoxSetInfoTC(selectedItem);
+                }else {
+                    clearTestcase();
+                }
             }
 
         });
@@ -308,10 +324,69 @@ public class PopupInfoTestscriptController {
         });
     }
 
+    private void clearTestscrpt() {
+    }
+
+    private void selectedComboBoxSetInfoTS(String selectedItem) {
+        String[] data = selectedItem.split("[:,]");
+
+        // ตรวจสอบว่า data มี UseCase ID ใน index 0 หรือไม่
+        if (data.length > 0 && testScriptList.findTSById(data[0].trim()) != null) {
+            testScript = testScriptList.findTSById(data[0].trim());
+
+            // อัปเดตข้อมูลใน Label
+            testIDLabel.setText(testScript.getIdTS());
+            onTestcaseCombobox.setValue(testScript.getTestCase());
+            onUsecaseCombobox.setValue(testScript.getUseCase());
+            infoPreconLabel.setText(testScript.getPreCon());
+            infoDescriptLabel.setText(testScript.getDescriptionTS());
+            infoPostconLabel.setText(testScript.getPostCon());
+            onTestNoteField.setText(testScript.getFreeText());
+            for (TestScriptDetail testScriptDetail : testScriptDetailListTemp.getTestScriptDetailList()) {
+                if (testScript.getIdTS().trim().equals(testScriptDetail.getIdTS().trim())){
+                    testScriptDetailList.addOrUpdateTestScriptDetail(testScriptDetail);
+                }
+            }
+            if (testScriptDetailList != null){
+                loadTable(testScriptDetailList);
+            }
+
+        }
+    }
+
+    private void testScriptCombobox() {
+        for (TestScript testScript : testScriptList.getTestScriptList()){
+            String ts = testScript.getIdTS() + " : " + testScript.getNameTS();
+            onTestNameCombobox.getItems().add(ts);
+        }
+    }
+
+    private void selectedComboBoxSetInfoTC(String selectedItem) {
+        String[] data = selectedItem.split("[:,]");
+
+        // ตรวจสอบว่า data มี UseCase ID ใน index 0 หรือไม่
+        if (data.length > 0 && testCaseList.findTCById(data[0].trim()) != null) {
+            TestCase testCase = testCaseList.findTCById(data[0].trim());
+
+            // อัปเดตข้อมูลใน Label
+            testIDLabel.setText(testCase.getIdTC());
+            onUsecaseCombobox.setValue(testCase.getUseCase());
+            infoPreconLabel.setText(testCase.getPreCon());
+            infoDescriptLabel.setText(testCase.getDescriptionTC());
+            infoPostconLabel.setText(testCase.getPostCon());
+            onTestNoteField.setText(testCase.getNote());
+
+        }
+    }
+
+
     private void clearUsecase() {
         infoPreconLabel.setText("");
         infoDescriptLabel.setText("");
         infoPostconLabel.setText("");
+    }
+    private void clearTestcase() {
+
     }
 
     private void selectedComboBoxSetInfo(String selectedItem) {
@@ -374,6 +449,7 @@ public class PopupInfoTestscriptController {
             objects.add(testScript);
             objects.add(testScriptDetailList);
             objects.add(testScriptDetail);
+            objects.add(testCaseDetailList);
             if (testScriptDetailList != null){
                 FXRouter.popup("popup_testflow_add_testscript",objects,true);
             }
@@ -470,6 +546,7 @@ public class PopupInfoTestscriptController {
             objects.add(testScript);
             objects.add(testScriptDetailList);
             objects.add(selectedItem);
+            objects.add(testCaseDetailList);
             if (selectedItem != null){
                 System.out.println(testScriptDetailList);
                 System.out.println(testScript);
@@ -493,13 +570,7 @@ public class PopupInfoTestscriptController {
             onTableTestscript.requestFocus();
         });
         onEditListButton.setOnAction(event1 -> onTableTestscript.requestFocus());
-        ArrayList<Object> objects = new ArrayList<>();
-        objects.add(projectName);
-        objects.add(directory);
-        objects.add(position);
-        objects.add(testScript);
-        objects.add(testScriptDetailList);
-        objects.add(selectedItem);
+
         try {
             String name = onTestNameCombobox.getValue();
             String idTS = tsId;
@@ -511,6 +582,14 @@ public class PopupInfoTestscriptController {
             String note = onTestNoteField.getText();
             String post = infoPostconLabel.getText();
             testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, post,note,position);
+            ArrayList<Object> objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add(position);
+            objects.add(testScript);
+            objects.add(testScriptDetailList);
+            objects.add(selectedItem);
+            objects.add(testCaseDetailList);
             if (selectedItem != null){
                 FXRouter.popup("popup_testflow_add_testscript",objects,true);
             }
