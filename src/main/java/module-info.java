@@ -10,6 +10,7 @@ module ku.cs {
     requires org.controlsfx.controls; // Add this line for ControlsFX
     requires org.hibernate.orm.core;
     requires org.apache.poi.ooxml;
+    requires atlantafx.base;
 
     opens ku.cs.testTools.Controllers.Home to javafx.fxml, jakarta.persistence, lombok, org.controlsfx.controls;
     opens ku.cs.testTools.Controllers.UseCase to javafx.fxml, jakarta.persistence, lombok, org.controlsfx.controls;

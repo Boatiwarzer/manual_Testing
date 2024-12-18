@@ -46,7 +46,7 @@ public class TestCaseEditController {
     private Hyperlink onClickUsecase;
 
     @FXML
-    private Button onDeleteButton;
+    private Button onDeleteButton, onCancelButton;
 
     @FXML
     private Button onDeleteListButton;
@@ -70,7 +70,7 @@ public class TestCaseEditController {
     private TextField onTestNameField;
 
     @FXML
-    private TextField onTestNoteField;
+    private TextArea onTestNoteField, infoDescriptField;
 
     @FXML
     private ComboBox<String> onUsecaseCombobox;
@@ -251,7 +251,7 @@ public class TestCaseEditController {
         String useCase = testCase.getUseCase();
         onUsecaseCombobox.getSelectionModel().select(useCase);
         String description = testCase.getDescriptionTC();
-        infoDescriptLabel.setText(description);;
+        infoDescriptField.setText(description);;
         String note = testCase.getNote();
         onTestNoteField.setText(note);;
     }
@@ -403,11 +403,11 @@ public class TestCaseEditController {
             UseCase useCase = useCaseList.findByUseCaseId(data[0].trim());
 
             // อัปเดตข้อมูลใน Label
-            infoDescriptLabel.setText(useCase.getDescription());
+            infoDescriptField.setText(useCase.getDescription());
         }
     }
     private void clearUsecase() {
-        infoDescriptLabel.setText("");
+        infoDescriptField.setText("");
     }
     @FXML
     void onEditListButton(ActionEvent event) {
@@ -426,7 +426,7 @@ public class TestCaseEditController {
             String idTC = tcId;
             String date = testDateLabel.getText();
             String useCase = onUsecaseCombobox.getValue();
-            String description = infoDescriptLabel.getText();
+            String description = infoDescriptField.getText();
             String note = onTestNoteField.getText();
             testCase = new TestCase(idTC, name, date, useCase, description,note,0,"preCon","post");
             if (selectedItem != null){
@@ -445,7 +445,7 @@ public class TestCaseEditController {
             String idTC = tcId;
             String date = testDateLabel.getText();
             String useCase = onUsecaseCombobox.getValue();
-            String description = infoDescriptLabel.getText();
+            String description = infoDescriptField.getText();
             String note = onTestNoteField.getText();
             testCase = new TestCase(idTC, name, date, useCase, description,note,0,"preCon","post");
 
@@ -472,7 +472,7 @@ public class TestCaseEditController {
             String idTC = tcId;
             String date = testDateLabel.getText();
             String useCase = onUsecaseCombobox.getValue();
-            String description = infoDescriptLabel.getText();
+            String description = infoDescriptField.getText();
             String note = onTestNoteField.getText();
             testCase = new TestCase(idTC, name, date, useCase, description,note,0,"preCon","post");
             if (selectedItem != null){
@@ -492,7 +492,7 @@ public class TestCaseEditController {
             String idTC = tcId;
             String date = testDateLabel.getText();
             String useCase = onUsecaseCombobox.getValue();
-            String description = infoDescriptLabel.getText();
+            String description = infoDescriptField.getText();
             String note = onTestNoteField.getText();
             testCase = new TestCase(idTC, name, date, useCase, description,note,0,"preCon","post");
 
@@ -579,8 +579,15 @@ public class TestCaseEditController {
         }
 
     }
+    @FXML
+    void onCancelButton(ActionEvent event) {
+        try {
+            FXRouter.goTo("test_case");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-
+    }
 
 
 }

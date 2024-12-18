@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 public class TestResultEditController {
 
     @FXML
-    private Button onAddButton, onEditListButton, onDeleteButton, onDeleteListButton, onSearchButton, onSubmitButton;
+    private Button onAddButton, onEditListButton, onDeleteButton, onDeleteListButton, onSearchButton, onSubmitButton, onCancelButton;
 
     @FXML
     private Hyperlink onClickTestcase, onClickTestflow, onClickTestresult, onClickTestscript, onClickUsecase;
@@ -655,6 +655,15 @@ public class TestResultEditController {
     @FXML
     void onTestNoteField(ActionEvent event) {
 
+    }
+
+    @FXML
+    void onCancelButton(ActionEvent event) {
+        try {
+            FXRouter.goTo("test_result");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 public class TestResultController {
 
     @FXML
-    private Label infoNoteLabel, testIDLabel, testNameLabel;
+    private Label testIDLabel;
 
     @FXML
     private Hyperlink onClickTestcase, onClickTestflow, onClickTestresult, onClickTestscript, onClickUsecase;
@@ -40,7 +40,7 @@ public class TestResultController {
     private Button onCreateButton, onEditButton, onSearchButton, onIRButton;
 
     @FXML
-    private TextField onSearchField;
+    private TextField onSearchField, testNameLabel, infoNoteLabel;
 
     @FXML
     private ListView<TestResult> onSearchList;
@@ -198,8 +198,8 @@ public class TestResultController {
     private void clearInfo() {
         // Clear all the fields by setting them to an empty string
         testIDLabel.setText("-");
-        testNameLabel.setText("-");
-        infoNoteLabel.setText("-");
+        testNameLabel.setText("");
+        infoNoteLabel.setText("");
 
     }
 
@@ -582,5 +582,9 @@ public class TestResultController {
     void onSearchButton(ActionEvent event) {
         onSearchList.getItems().clear();
         onSearchList.getItems().addAll(searchList(onSearchField.getText(),testResultList.getTestResultList()));
+    }
+    @FXML
+    void onTestNoteField(ActionEvent event) {
+
     }
 }

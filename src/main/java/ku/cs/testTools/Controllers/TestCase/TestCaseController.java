@@ -19,12 +19,6 @@ import java.util.stream.Collectors;
 public class TestCaseController {
 
     @FXML
-    private Label infoDescriptLabel;
-
-    @FXML
-    private Label infoNoteLabel;
-
-    @FXML
     private Label infoUsecaseLabel;
 
     @FXML
@@ -52,7 +46,7 @@ public class TestCaseController {
     private Button onSearchButton;
 
     @FXML
-    private TextField onSearchField ;
+    private TextField onSearchField, testNameField ;
 
     @FXML
     private ListView<TestCase> onSearchList;
@@ -65,6 +59,12 @@ public class TestCaseController {
 
     @FXML
     private Label testIDLabel;
+
+    @FXML
+    private ComboBox<String> infoUsecaseCombobox ;
+
+    @FXML
+    private TextArea infoDescriptField, infoNoteField;
 
     @FXML
     private Label testNameLabel;
@@ -162,15 +162,15 @@ public class TestCaseController {
         String tsId = testCase.getIdTC();
         testIDLabel.setText(tsId);
         String name = testCase.getNameTC();
-        testNameLabel.setText(name);
+        testNameField.setText(name);
         String date = testCase.getDateTC();
         testDateLabel.setText(date);
         String useCase = testCase.getUseCase();
-        infoUsecaseLabel.setText(useCase);
+        infoUsecaseCombobox.getSelectionModel().select(useCase);
         String description = testCase.getDescriptionTC();
-        infoDescriptLabel.setText(description);;
+        infoDescriptField.setText(description);;
         String note = testCase.getNote();
-        infoNoteLabel.setText(note);
+        infoNoteField.setText(note);
         setTableInfo(testCase);
     }
 
@@ -230,11 +230,11 @@ public class TestCaseController {
     private void clearInfo() {
         // Clear all the fields by setting them to an empty string
         testIDLabel.setText("");
-        testNameLabel.setText("");
+        testNameField.setText("");
         testDateLabel.setText("");
         onClickUsecase.setText("");
-        infoDescriptLabel.setText("");
-        infoNoteLabel.setText("");
+        infoDescriptField.setText("");
+        infoNoteField.setText("");
 
         // Optionally clear the table if needed
         onTableTestcase.getItems().clear();
@@ -354,7 +354,6 @@ public class TestCaseController {
             throw new RuntimeException(e);
         }
     }
-
 
 
 }

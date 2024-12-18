@@ -9,23 +9,40 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="300.0" style="-fx-border-color: white;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.testTools.Controllers.Home.LabelPageController">
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="260.0" prefWidth="500.0" style="-fx-border-color: white;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.testTools.Controllers.Home.LabelPageController">
    <children>
-      <VBox layoutX="20.0" layoutY="57.0" spacing="4.0" AnchorPane.bottomAnchor="43.20000000000002" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="19.19999999999999" AnchorPane.topAnchor="57.0">
+      <VBox layoutX="72.0" layoutY="50.0" prefHeight="148.0" prefWidth="360.0" spacing="4.0" AnchorPane.bottomAnchor="65.20000000000005" AnchorPane.leftAnchor="72.0" AnchorPane.rightAnchor="71.20000000000005" AnchorPane.topAnchor="50.0">
          <children>
-            <Label fx:id="labelText" prefHeight="25.0" prefWidth="130.0" text="Name" />
-            <TextField fx:id="labelTextField" prefHeight="25.0" prefWidth="260.0" styleClass="input_box" />
-            <Label fx:id="noteLabel" prefHeight="25.0" prefWidth="258.0" text="Note" />
-            <TextArea fx:id="noteTextArea" prefHeight="50.0" prefWidth="260.0" wrapText="true" />
+            <Label fx:id="labelText" prefHeight="25.0" prefWidth="130.0" text="Name">
+               <font>
+                  <Font size="14.0" />
+               </font></Label>
+            <TextField fx:id="labelTextField" prefHeight="30.0" prefWidth="260.0" styleClass="input_box">
+               <font>
+                  <Font size="14.0" />
+               </font></TextField>
+            <Label fx:id="noteLabel" prefHeight="25.0" prefWidth="258.0" text="Note">
+               <font>
+                  <Font size="14.0" />
+               </font></Label>
+            <TextArea fx:id="noteTextArea" prefHeight="30.0" prefWidth="260.0" wrapText="true">
+               <font>
+                  <Font size="14.0" />
+               </font></TextArea>
             <Text fx:id="errorText" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="258.0000042915344" />
             <HBox alignment="TOP_CENTER">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
                <children>
-                  <Button fx:id="confirmButton" mnemonicParsing="false" onAction="#handleConfirmButton" text="Confirm" textAlignment="CENTER" />
+                  <Button fx:id="confirmButton" mnemonicParsing="false" onAction="#handleConfirmButton" prefHeight="30.0" prefWidth="80.0" text="Confirm">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
                </children>
             </HBox>
          </children>

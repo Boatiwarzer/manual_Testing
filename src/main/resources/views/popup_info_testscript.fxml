@@ -14,7 +14,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="700.0" prefWidth="1090.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.testTools.Controllers.TestFlow.PopupInfoTestscriptController">
    <children>
       <VBox layoutX="15.0" layoutY="15.0" prefHeight="265.0" prefWidth="1060.0" spacing="20.0" AnchorPane.leftAnchor="15.199999999999818">
@@ -149,7 +148,7 @@
                <graphic>
                   <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../icon/delete_icon.png" />
+                        <Image url="@../icon/edit.png" />
                      </image>
                   </ImageView>
                </graphic>

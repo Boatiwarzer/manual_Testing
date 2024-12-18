@@ -23,9 +23,6 @@ import java.util.stream.Collectors;
 public class TestCaseAddController {
 
     @FXML
-    private Label infoDescriptLabel;
-
-    @FXML
     private Button onAddButton;
 
     @FXML
@@ -62,13 +59,13 @@ public class TestCaseAddController {
     private Button onSubmitButton;
 
     @FXML
-    private TableView<TestCaseDetail> onTableTestscase;
+    private TableView<TestCaseDetail> onTableTestcase;
 
     @FXML
     private TextField onTestNameField;
 
     @FXML
-    private TextField onTestNoteField;
+    private TextArea onTestNoteField, infoDescriptField;
 
     @FXML
     private ComboBox<String> onUsecaseCombobox;
@@ -105,7 +102,7 @@ public class TestCaseAddController {
         setButtonVisible();
         {
             if (FXRouter.getData() != null) {
-                onTableTestscase.isFocused();
+                onTableTestcase.isFocused();
                 testCaseDetailList = (TestCaseDetailList) FXRouter.getData();
                 loadTable(testCaseDetailList);
                 testCase = (TestCase) FXRouter.getData2();
@@ -149,7 +146,7 @@ public class TestCaseAddController {
     }
 
     private void setTable() {
-        new TableviewSet<>(onTableTestscase);
+        new TableviewSet<>(onTableTestcase);
 
         ArrayList<StringConfiguration> configs = new ArrayList<>();
         configs.add(new StringConfiguration("title:TC-ID."));
@@ -168,7 +165,7 @@ public class TestCaseAddController {
             }
             col.setSortable(false);
             col.setReorderable(false);
-            onTableTestscase.getColumns().add(col);
+            onTableTestcase.getColumns().add(col);
             index++;
 
         }
@@ -240,7 +237,7 @@ public class TestCaseAddController {
         String useCase = testCase.getUseCase();
         onUsecaseCombobox.getSelectionModel().select(useCase);
         String description = testCase.getDescriptionTC();
-        infoDescriptLabel.setText(description);;
+        infoDescriptField.setText(description);;
         String note = testCase.getNote();
         onTestNoteField.setText(note);;
     }
@@ -269,7 +266,7 @@ public class TestCaseAddController {
     }
 
     private void selectedTCD() {
-        onTableTestscase.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+        onTableTestcase.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null) {
                 selectedItem = null;
             } else {
@@ -287,11 +284,11 @@ public class TestCaseAddController {
             }
         });
         // Listener สำหรับ focusedProperty ของ TableView
-        onTableTestscase.focusedProperty().addListener((observable, oldValue, newValue) -> {
+        onTableTestcase.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) { // เมื่อ TableView สูญเสีย focus
                 // เช็คว่า focus มาจากปุ่มที่กดหรือไม่
                 if (!onEditListButton.isPressed() && !onDeleteListButton.isPressed()) {
-                    onTableTestscase.getSelectionModel().clearSelection(); // เคลียร์การเลือก
+                    onTableTestcase.getSelectionModel().clearSelection(); // เคลียร์การเลือก
                     //selectedItem = null; // อาจจะรีเซ็ต selectedItem
                     onEditListButton.setVisible(false); // ซ่อนปุ่ม
                     onDeleteListButton.setVisible(false); // ซ่อนปุ่ม
@@ -302,7 +299,7 @@ public class TestCaseAddController {
 
     private void loadTable(TestCaseDetailList testCaseDetailList) {
         // Clear existing columns
-        new TableviewSet<>(onTableTestscase);
+        new TableviewSet<>(onTableTestcase);
 
         // Define column configurations
         ArrayList<StringConfiguration> configs = new ArrayList<>();
@@ -323,13 +320,13 @@ public class TestCaseAddController {
             }
             col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
             new TableColumns(col);
-            onTableTestscase.getColumns().add(col);
+            onTableTestcase.getColumns().add(col);
             index++;
         }
 
         //Add items to the table
         for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()) {
-            onTableTestscase.getItems().add(testCaseDetail);
+            onTableTestcase.getItems().add(testCaseDetail);
         }
 
     }
@@ -390,18 +387,18 @@ public class TestCaseAddController {
             UseCase useCase = useCaseList.findByUseCaseId(data[0].trim());
 
             // อัปเดตข้อมูลใน Label
-            infoDescriptLabel.setText(useCase.getDescription());
+            infoDescriptField.setText(useCase.getDescription());
         }
     }
     @FXML
     void onEditListButton(ActionEvent event) {
         onEditListButton.setOnMouseClicked(event1 -> {
-            onTableTestscase.requestFocus();
+            onTableTestcase.requestFocus();
         });
         onEditListButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                onTableTestscase.requestFocus();
+                onTableTestcase.requestFocus();
 
             }
         });
@@ -410,7 +407,7 @@ public class TestCaseAddController {
             String idTC = tcId;
             String date = testDateLabel.getText();
             String useCase = onUsecaseCombobox.getValue();
-            String description = infoDescriptLabel.getText();
+            String description = infoDescriptField.getText();
             String note = onTestNoteField.getText();
             //String preCon = infoPreconLabel.getText();
            // String post = infoPostconLabel.getText();
@@ -431,7 +428,7 @@ public class TestCaseAddController {
             String idTC = tcId;
             String date = testDateLabel.getText();
             String useCase = onUsecaseCombobox.getValue();
-            String description = infoDescriptLabel.getText();
+            String description = infoDescriptField.getText();
             String note = onTestNoteField.getText();
             //String preCon = infoPreconLabel.getText();
             //String post = infoPostconLabel.getText();
@@ -453,14 +450,14 @@ public class TestCaseAddController {
     @FXML
     void onDeleteListButton(ActionEvent event) {
         onDeleteListButton.setOnMouseClicked(event1 -> {
-            onTableTestscase.requestFocus();
+            onTableTestcase.requestFocus();
         });
         try {
             String name = onTestNameField.getText();
             String idTC = tcId;
             String date = testDateLabel.getText();
             String useCase = onUsecaseCombobox.getValue();
-            String description = infoDescriptLabel.getText();
+            String description = infoDescriptField.getText();
             String notes = onTestNoteField.getText();
             //String preCon = infoPreconLabel.getText();
             //String post = infoPostconLabel.getText();
@@ -482,7 +479,7 @@ public class TestCaseAddController {
             String idTC = tcId;
             String date = testDateLabel.getText();
             String useCase = onUsecaseCombobox.getValue();
-            String description = infoDescriptLabel.getText();
+            String description = infoDescriptField.getText();
             String note = onTestNoteField.getText();
             testCase = new TestCase(idTC, name, date, useCase, description,note,0,"preCon","post");
 

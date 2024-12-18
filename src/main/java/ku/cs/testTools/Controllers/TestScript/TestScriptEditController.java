@@ -68,7 +68,7 @@ public class TestScriptEditController {
     private ListView<TestScript> onSearchList;
 
     @FXML
-    private Button onSubmitButton;
+    private Button onSubmitButton, onCancelButton;
 
     @FXML
     private TableView<TestScriptDetail> onTableTestscript;
@@ -694,5 +694,12 @@ public class TestScriptEditController {
         }
     }
 
-
+    @FXML
+    void onCancelButton(ActionEvent event) {
+        try {
+            FXRouter.goTo("test_script");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -30,7 +30,7 @@ public class UseCaseController {
     private VBox actorActionVBox, systemActionVBox;
 
     @FXML
-    private Label testActorLabel, testIDLabel, testNameLabel, infoDescriptLabel, infoNoteLabel, infoPostConLabel, infoPreConLabel;
+    private Label testIDLabel;
 
     @FXML
     private Hyperlink onClickTestcase, onClickTestflow, onClickTestresult, onClickTestscript,onClickUsecase;
@@ -39,10 +39,13 @@ public class UseCaseController {
     private Button onCreateButton, onEditButton, onSearchButton;
 
     @FXML
-    private TextField onSearchField;
+    private TextField onSearchField, testActorLabel, testNameField;
 
     @FXML
     private ListView<UseCase> onSearchList;
+
+    @FXML
+    private TextArea infoPreConLabel, infoPostConLabel, infoDescriptLabel, infoNoteLabel;
 
     private String projectName = "125", directory = "data", useCaseId; // directory, projectName
     private UseCase useCase;
@@ -128,7 +131,7 @@ public class UseCaseController {
         useCaseId = useCase.getUseCaseID();
         testIDLabel.setText(useCaseId);
         String useCaseName = useCase.getUseCaseName();
-        testNameLabel.setText(useCaseName);
+        testNameField.setText(useCaseName);
         String useCaseActor = useCase.getActor();
         testActorLabel.setText(useCaseActor);
         String useCaseDescript = useCase.getDescription();
@@ -205,8 +208,8 @@ public class UseCaseController {
     private void clearInfo() {
         // Clear all the fields by setting them to an empty string
         testIDLabel.setText("-");
-        testNameLabel.setText("-");
-        testActorLabel.setText("-");
+        testNameField.setText("");
+        testActorLabel.setText("");
         infoDescriptLabel.setText("");
         infoPreConLabel.setText("");
         infoPostConLabel.setText("");

@@ -1,11 +1,12 @@
 package ku.cs;
 
+import atlantafx.base.theme.PrimerDark;
+import atlantafx.base.theme.PrimerLight;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
-import ku.cs.testTools.Services.DatabaseConnector;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -23,6 +24,12 @@ public class Main extends Application {
 //          FXRouter.popup("landing_page_tester",true);
 //          FXRouter.goTo("role");
             FXRouter.goTo("use_case");
+            Application.setUserAgentStylesheet(getClass().getResource("/style/Themes/nord-light.css").toExternalForm());
+//            Application.setUserAgentStylesheet(getClass().getResource("/style/Themes/cupertino-light.css").toExternalForm());
+//            Application.setUserAgentStylesheet(getClass().getResource("/style/Themes/caspian-embedded-highContrast.css").toExternalForm());
+//            Application.setUserAgentStylesheet(getClass().getResource("/style/Themes/caspian-embedded.css").toExternalForm());
+//            Application.setUserAgentStylesheet(getClass().getResource("/style/Themes/nord-dark.css").toExternalForm());
+//            Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
 //        } catch (SQLException e) {
 //            e.printStackTrace();
             // Display an error message to the user or handle the exception as needed

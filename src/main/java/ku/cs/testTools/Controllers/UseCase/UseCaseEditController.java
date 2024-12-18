@@ -593,6 +593,15 @@ public class UseCaseEditController {
     }
 
     @FXML
+    void onCancelButton(ActionEvent event) {
+        try {
+            FXRouter.goTo("use_case");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @FXML
     void onSearchButton(ActionEvent event) {
 
     }
