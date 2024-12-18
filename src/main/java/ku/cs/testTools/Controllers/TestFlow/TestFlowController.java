@@ -145,14 +145,14 @@ public class TestFlowController {
             // Find the position of the use case
             TestFlowPosition testFlowTSPosition = testFlowPositionList.findByPositionId(testScript.getPosition());
             if (testFlowTSPosition != null) {
-                drawTestScript(testFlowTSPosition.getFitWidth(), testFlowTSPosition.getFitHeight(), testFlowTSPosition.getXPosition(), testFlowTSPosition.getYPosition(), testScript.getNameTS(), testFlowTSPosition.getPositionID());
+                drawTestScript(testFlowTSPosition.getFitWidth(), testFlowTSPosition.getFitHeight(), testFlowTSPosition.getXPosition(), testFlowTSPosition.getYPosition(),testScript.getIdTS() + " : " + testScript.getNameTS(), testFlowTSPosition.getPositionID());
             }
         });
         testCaseList.getTestCaseList().forEach(testCase -> {
             // Find the position of the use case
             TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(testCase.getPosition());
             if (testFlowPosition != null) {
-                drawTestCase(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(), testCase.getNameTC(), testFlowPosition.getPositionID());
+                drawTestCase(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(), testCase.getIdTC() + " : " + testCase.getNameTC(), testFlowPosition.getPositionID());
             }
         });
         connectionList.getConnectionList().forEach(connection -> {
@@ -680,7 +680,7 @@ public class TestFlowController {
 
             }else if (event.getDragboard().getString().equals("Arrow")) {
                 addToConnectionList(event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Arrow", "none", "line", "open","line");
-                drawLine(connectionList.findLastConnectionID(), event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Association", "open", "line", "none");
+                drawLine(connectionList.findLastConnectionID(), event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Association", "none", "line", "open");
                 saveProject();
             }else if (event.getDragboard().getString().equals("Line")) {
                 addToConnectionList(event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Line", "none", "line", "none","line");

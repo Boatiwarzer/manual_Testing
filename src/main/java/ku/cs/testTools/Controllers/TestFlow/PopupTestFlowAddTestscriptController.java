@@ -8,10 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
-import ku.cs.testTools.Models.TestToolModels.TestScript;
-import ku.cs.testTools.Models.TestToolModels.TestScriptDetail;
-import ku.cs.testTools.Models.TestToolModels.TestScriptDetailList;
-import ku.cs.testTools.Models.TestToolModels.TestScriptList;
+import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.AutoCompleteComboBoxListener;
 
 import java.io.IOException;
@@ -50,16 +47,15 @@ public class PopupTestFlowAddTestscriptController {
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
     private TestScript testScript = new TestScript();
     private TestScriptDetail testScriptDetail = new TestScriptDetail();
+    private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
     private String id;
     private String idTS;
     private String date;
     private int position;
     @FXML
     void initialize() {
-        selectedComboBox();
         clearInfo();
         randomId();
-
         if (FXRouter.getData() != null) {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
@@ -68,6 +64,9 @@ public class PopupTestFlowAddTestscriptController {
             testScript = (TestScript) objects.get(3);
             testScriptDetailList = (TestScriptDetailList) objects.get(4);
             idTS = testScript.getIdTS();
+            testCaseDetailList = (TestCaseDetailList) objects.get(6);
+            selectedComboBox();
+            System.out.println(testCaseDetailList);
             if (objects.get(5) != null){
                 testScriptDetail = (TestScriptDetail) objects.get(5);
                 testScriptDetailList.findTSById(testScriptDetail.getIdTSD());
@@ -163,16 +162,12 @@ public class PopupTestFlowAddTestscriptController {
         this.id = String.format("TSD-%s", random1);
     }
     private void selectedComboBox(){
-        onInputDataCombobox.setItems(FXCollections.observableArrayList("None"));
+        inputCombobox();
         new AutoCompleteComboBoxListener<>(onInputDataCombobox);
-        onInputDataCombobox.getSelectionModel().selectFirst();
         onInputDataCombobox.setOnAction(event -> {
             String selectedItem = onInputDataCombobox.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
                 onInputDataCombobox.getEditor().setText(selectedItem); // Set selected item in editor
-                //editor.setEditable(true);
-                onInputDataCombobox.getEditor().requestFocus();// Ensure the editor remains editable
-                // Move cursor to the end
                 Platform.runLater(onInputDataCombobox.getEditor()::end);
             }
 
@@ -183,6 +178,17 @@ public class PopupTestFlowAddTestscriptController {
 //                categoryBox.getItems().add(equipment.getType_equipment());
 //            }
 //        }
+    }
+
+    private void inputCombobox() {
+        for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()){
+            String tcd = testCaseDetail.getVariableTCD() + " : " + testCaseDetail.getNameTCD();
+            onInputDataCombobox.getItems().add(tcd);
+        }
+
+    }
+
+    private void selectedComboBoxSetInfoTC_TCD(String selectedItem) {
     }
 
     @FXML

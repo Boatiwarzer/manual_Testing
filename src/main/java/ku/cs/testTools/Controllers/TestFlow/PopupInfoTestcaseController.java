@@ -96,9 +96,6 @@ public class PopupInfoTestcaseController {
 
     @FXML
     void initialize() {
-        setDate();
-        selectedComboBox();
-        setButtonVisible();
         {
             if (FXRouter.getData() != null) {
                 ArrayList<Object> objects = (ArrayList) FXRouter.getData();
@@ -108,22 +105,25 @@ public class PopupInfoTestcaseController {
                 onTableTestCase.isFocused();
                 selectedTCD();
                 loadProject();
-                testCase = testCaseList.findByPositionId(position);
+                setDate();
+                selectedComboBox();
+                setButtonVisible();
                 if (objects.get(3) != null){
                     testCase = (TestCase) objects.get(3);
                     testCaseDetailList = (TestCaseDetailList) objects.get(4);
                     testCaseDetail = (TestCaseDetail) objects.get(5);
+                }else {
+                    testCase = testCaseList.findByPositionId(position);
                 }
                 setDataTC();
-                    //testCaseDetailListTemp = testCaseDetailListDataSource.readData();
-                    for (TestCaseDetail testCaseDetail : testCaseDetailListTemp.getTestCaseDetailList()) {
-                        if (testCase.getIdTC().trim().equals(testCaseDetail.getIdTC().trim())){
+                for (TestCaseDetail testCaseDetail : testCaseDetailListTemp.getTestCaseDetailList()) {
+                    if (testCase.getIdTC().trim().equals(testCaseDetail.getIdTC().trim())){
                             testCaseDetailList.addOrUpdateTestCase(testCaseDetail);
-                        }
                     }
-                    if (testCaseDetailList != null){
-                        loadTable(testCaseDetailList);
-                    }
+                }
+                if (testCaseDetailList != null){
+                    loadTable(testCaseDetailList);
+                }
 
 
             }
@@ -275,11 +275,24 @@ public class PopupInfoTestcaseController {
     }
 
     private void selectedComboBox() {
-        onUsecaseCombobox.getItems().clear();
+        testCaseCombobox();
+        onTestNameCombobox.setOnAction(event -> {
+            String selectedItem = onTestNameCombobox.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                onTestNameCombobox.getEditor().setText(selectedItem); // Set selected item in editor
+                Platform.runLater(onTestNameCombobox.getEditor()::end);
+                if (!selectedItem.equals("None")) {
+                    selectedComboBoxSetInfoTC(selectedItem);
+                }else {
+                    clearTestcase();
+                }
+            }
+
+        });
+
         onUsecaseCombobox.setItems(FXCollections.observableArrayList("None"));
         new AutoCompleteComboBoxListener<>(onUsecaseCombobox);
         onUsecaseCombobox.getSelectionModel().selectFirst();
-        loadProject();
         useCaseCombobox();
 
         onUsecaseCombobox.setOnAction(event -> {
@@ -297,10 +310,48 @@ public class PopupInfoTestcaseController {
         });
     }
 
+    private void selectedComboBoxSetInfoTC(String selectedItem) {
+        String[] data = selectedItem.split("[:,]");
+
+        // ตรวจสอบว่า data มี UseCase ID ใน index 0 หรือไม่
+        if (data.length > 0 && testCaseList.findTCById(data[0].trim()) != null) {
+            testCase = testCaseList.findTCById(data[0].trim());
+
+            // อัปเดตข้อมูลใน Label
+            testIDLabel.setText(testCase.getIdTC());
+            onUsecaseCombobox.setValue(testCase.getUseCase());
+            infoPreconLabel.setText(testCase.getPreCon());
+            infoDescriptLabel.setText(testCase.getDescriptionTC());
+            infoPostconLabel.setText(testCase.getPostCon());
+            onTestNoteField.setText(testCase.getNote());
+
+            onTableTestCase.getItems().clear();
+            for (TestCaseDetail testCaseDetail : testCaseDetailListTemp.getTestCaseDetailList()) {
+                if (testCase.getIdTC().trim().equals(testCaseDetail.getIdTC().trim())){
+                    testCaseDetailList.addOrUpdateTestCase(testCaseDetail);
+                }
+            }
+            if (testCaseDetailList != null){
+                loadTable(testCaseDetailList);
+            }
+
+        }
+    }
+
+    private void testCaseCombobox() {
+        for (TestCase testCase : testCaseList.getTestCaseList()){
+            String tc = testCase.getIdTC() + " : " + testCase.getNameTC();
+            onTestNameCombobox.getItems().add(tc);
+        }
+    }
+
     private void clearUsecase() {
         infoPreconLabel.setText("");
         infoDescriptLabel.setText("");
         infoPostconLabel.setText("");
+    }
+    private void clearTestcase() {
+
     }
 
     private void selectedComboBoxSetInfo(String selectedItem) {
@@ -314,6 +365,8 @@ public class PopupInfoTestcaseController {
             // อัปเดตข้อมูลใน Label
             infoPreconLabel.setText(useCase.getPreCondition());
             infoDescriptLabel.setText(useCase.getDescription());
+            infoPostconLabel.setText(useCase.getPostCondition());
+
         }
     }
 
@@ -383,6 +436,7 @@ public class PopupInfoTestcaseController {
 
     @FXML
     void onDeleteButton(ActionEvent event) {
+
         // Pop up to confirm deletion
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Delete Confirmation");
@@ -390,18 +444,12 @@ public class PopupInfoTestcaseController {
         alert.setContentText("Press OK to confirm, or Cancel to go back.");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
-            DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory,projectName + ".csv");
-            DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory,projectName + ".csv");
-            DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");            // Remove the item from the list
-            TestCaseList testCaseList = testCaseListDataSource.readData();
-            TestCaseDetailList testCaseDetailList = testCaseDetailListDataSource.readData();
-            TestFlowPositionList testFlowPositionList = testFlowPositionListDataSource.readData();
-            TestCase testCase = testCaseList.findTCByPosition(position);
+            testCase = testCaseList.findTCByPosition(position);
             System.out.println("testcase : " + testCase);
             testCaseList.deleteTestCaseByPositionID(position);
             testCaseDetailList.deleteTestCaseDetailByTestScriptID(testCase.getIdTC());
             testFlowPositionList.removePositionByID(position);
-
+            saveProject();
             try {
                 ArrayList<Object> objects = new ArrayList<>();
                 objects.add(projectName);
@@ -422,40 +470,16 @@ public class PopupInfoTestcaseController {
 
     @FXML
     void onDeleteListButton(ActionEvent event) {
-        onDeleteListButton.setOnMouseClicked(event1 -> {
-            // ทำการลบ
-            // ...
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete Confirmation");
+        alert.setHeaderText("Are you sure you want to delete this item?");
+        alert.setContentText("Press OK to confirm, or Cancel to go back.");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            testCaseDetailList.deleteTestCase(selectedItem);
+            onTableTestCase.getItems().clear();
+            loadTable(testCaseDetailList);
 
-            // ขอ focus กลับไปที่ TableView
-            onTableTestCase.requestFocus();
-        });
-        try {
-            onTableTestCase.requestFocus();
-            String name = onTestNameCombobox.getValue();
-            String idTS = tsId;
-            String date = testDateLabel.getText();
-            String useCase = onUsecaseCombobox.getValue();
-            String description = infoDescriptLabel.getText();
-            String preCon = infoPreconLabel.getText();
-            String note = onTestNoteField.getText();
-            String post = infoPostconLabel.getText();
-            testCase = new TestCase(idTS, name, date, useCase, description,note,position,preCon,post);
-            ArrayList<Object> objects = new ArrayList<>();
-            objects.add(projectName);
-            objects.add(directory);
-            objects.add(position);
-            objects.add(testCase);
-            objects.add(testCaseDetailList);
-            objects.add(selectedItem);
-            if (selectedItem != null){
-                System.out.println(testCaseDetailList);
-                System.out.println(testCase);
-                System.out.println(selectedItem);
-
-                FXRouter.popup("popup_testflow_delete_testcase",objects,true);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
 
     }
