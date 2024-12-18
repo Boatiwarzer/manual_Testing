@@ -58,7 +58,7 @@
                      <Font size="14.0" />
                  </font>
              </TitledPane>
-              <Pane fx:id="onDesignArea" layoutX="15.0" layoutY="46.0" onDragDropped="#paneDragDropped" onDragOver="#paneDragOver" prefHeight="610.0" prefWidth="1062.0" style="-fx-background-color: white; -fx-border-color: silver;" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="27.199999999999818" AnchorPane.topAnchor="15.0" />
+              <Pane fx:id="onDesignArea" layoutX="15.0" layoutY="46.0" onDragDropped="#paneDragDropped" onDragOver="#paneDragOver" prefHeight="610.0" prefWidth="1062.0" style="-fx-background-color: white; -fx-border-color: silver;" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="27.199999999999818" AnchorPane.topAnchor="50.0" />
          </children>
       </AnchorPane>
    </center>
