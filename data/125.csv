@@ -4,6 +4,7 @@ testFlowPosition,692,75.0,75.0,422.5999999999999,306.8,0.0,testscript
 testFlowPosition,5,75.0,75.0,434.6,454.79999999999995,0.0,decision
 testFlowPosition,7,388.4,530.1999999999999,455.00000000000006,576.5999999999999,0.0,end
 testFlowPosition,292,75.0,75.0,423.39999999999986,154.0,0.0,testcase
+testFlowPosition,583,75.0,75.0,136.2,209.2,0.0,testscript
 connection,1,265.6,179.8,355.6,89.80000000000001,Start,none,none,none,!@#$%^&*()_+,start
 connection,2,468.19999999999993,90.0,469.0,153.2,Arrow,none,line,open,!@#$%^&*()_+,line
 connection,3,469.79999999999995,231.60000000000002,470.6,298.8,Arrow,none,line,open,!@#$%^&*()_+,line
@@ -11,10 +12,12 @@ connection,4,470.6,386.0,472.19999999999993,448.40000000000003,Arrow,none,line,o
 connection,5,75.0,75.0,480.19999999999993,474.0,Pass,none,none,none,!@#$%^&*()_+,decision
 connection,6,471.4,532.4,472.19999999999993,572.4,Arrow,none,line,open,!@#$%^&*()_+,line
 connection,7,418.4,650.1999999999999,508.4,560.1999999999999,End,none,none,none,!@#$%^&*()_+,end
-testScript,TS-407,Login,19-12-2024,UC-776 : Login,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,TC-321 : Login,-,สามารถเข้าสู่ระบบได้,-,692
+testScript,TS-407,Login,19-12-2024,UC-776 : Login,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,TC-321 : Login,-,-,สามารถเข้าสู่ระบบได้,692
+testScript,TS-941,Incorrect Login,19-12-2024,UC-776 : Login,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,TC-321 : Login,-,สามารถเข้าสู่ระบบได้,-,583
 testScriptDetail,TSD-940,001,กรอก username,String : Username,สามารถกรอกข้อมูลได้,TS-407,19-12-2024
 testScriptDetail,TSD-610,002,กรอก password,String : Password,สามารถกรอก password ได้ type password,TS-407,19-12-2024
 testScriptDetail,TSD-358,003,กด ปุ่ม login,Button : Button login,เข้าหน้า home ได้,TS-407,19-12-2024
+testScriptDetail,TSD-335,001,กรอก username ผิด,String : Username,ไม่สามารถเข้าสู่ระบบได้,TS-941,19-12-2024
 testCase,TC-321,Login,19-12-2024,UC-776 : Login,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,-,292,-,สามารถเข้าสู่ระบบได้
 testCaseDetail,TCD-151,001,Username,String,19-12-2024,TC-321
 testCaseDetail,TCD-165,002,Password,String,19-12-2024,TC-321
