@@ -113,7 +113,7 @@ public class TestResultController {
             }
         }
 
-        testResult = testResultList.findTRById(testIDLabel.getText());
+        //testResult = testResultList.findTRById(testIDLabel.getText());
         System.out.println(testResultList.findTRById(testIDLabel.getText()));
 
     }
@@ -390,7 +390,6 @@ public class TestResultController {
     }
 
     public void setTable() {
-        testResultDetailList = new TestResultDetailList();
         onTableTestresult.getColumns().clear();
         onTableTestresult.getItems().clear();
         onTableTestresult.refresh();

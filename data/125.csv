@@ -18,6 +18,7 @@ testScriptDetail,TSD-940,001,กรอก username,String : Username,สาม�
 testScriptDetail,TSD-610,002,กรอก password,String : Password,สามารถกรอก password ได้ type password,TS-407,19-12-2024
 testScriptDetail,TSD-358,003,กด ปุ่ม login,Button : Button login,เข้าหน้า home ได้,TS-407,19-12-2024
 testScriptDetail,TSD-335,001,กรอก username ผิด,String : Username,ไม่สามารถเข้าสู่ระบบได้,TS-941,19-12-2024
+testScriptDetail,TSD-195,002,กรอก password ผิด,String : Password,ไม่สามารถเข้าสู่ระบบได้,TS-941,19-12-2024
 testCase,TC-321,Login,19-12-2024,UC-776 : Login,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,-,292,-,สามารถเข้าสู่ระบบได้
 testCaseDetail,TCD-151,001,Username,String,19-12-2024,TC-321
 testCaseDetail,TCD-165,002,Password,String,19-12-2024,TC-321
@@ -28,5 +29,6 @@ useCaseDetail,UC-776,actor,2,กรอกข้อมูล password
 useCaseDetail,UC-776,actor,3,กดปุ่ม เข้าสู่ระบบ
 useCaseDetail,UC-776,system,1,รับข้อมูล username และ password มาตรวจสอบ
 useCaseDetail,UC-776,system,2,ไปหน้า home 
-testResult,TR-996,Login,2024-12-19 10:08:13,,In Tester
+testResult,TR-996,Login,2024-12-19 15:14:35,,In Tester
 testResultDetail,TRD-286,001,TS-407 : Login,TC-321 : Login,User,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,กรอก username|กรอก password|กด ปุ่ม login,1. กรอก username|2. กรอก password|3. กด ปุ่ม login|,สามารถเข้าสู่ระบบได้,สามารถเข้าสู่ระบบได้,Pass,None,19-12-2024,Tester,...,Waiting,Remark,TR-996
+testResultDetail,TRD-351,002,TS-941 : Incorrect Login,TC-321 : Login,User,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,กรอก username ผิด|กรอก password ผิด,1. กรอก username ผิด|2. กรอก password ผิด|,สามารถเข้าสู่ระบบได้,เข้าสู่ระบบได้,Fail,High,19-12-2024,Tester,...,Waiting,Remark,TR-996
