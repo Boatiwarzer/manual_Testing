@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
+import javafx.scene.text.Text;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
@@ -245,6 +246,25 @@ public class TestScriptController {
                 col.setMinWidth(80); // ตั้งค่าขนาดคอลัมน์แรก
             }
             index++;
+            col.setCellFactory(tc -> {
+                TableCell<TestScriptDetail, String> cell = new TableCell<>() {
+                    private final Text text = new Text();
+
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            setGraphic(null);
+                        } else {
+                            text.setText(item);
+                            text.wrappingWidthProperty().bind(tc.widthProperty().subtract(10));
+                            setGraphic(text);
+                        }
+                    }
+                };
+//                    cell.setStyle("-fx-alignment: top-left; -fx-padding: 5px;");
+                return cell;
+            });
             new TableColumns(col);
             onTableTestscript.getColumns().add(col);
         }

@@ -319,14 +319,14 @@ public class UseCaseEditController {
 
     private void preConCombobox() {
         for (UseCase useCase : useCaseList.getUseCaseList()){
-            String pre_combobox = useCase.getUseCaseName()+ " : " + useCase.getPreCondition();
-            preConListComboBox.getItems().add(pre_combobox);
+            String post_combobox = useCase.getUseCaseName()+ " : " + useCase.getPostCondition();
+            postConListComboBox.getItems().add(post_combobox);
         }
     }
     private void postConCombobox() {
         for (UseCase useCase : useCaseList.getUseCaseList()){
-            String post_combobox = useCase.getUseCaseName()+ " : " + useCase.getPostCondition();
-            postConListComboBox.getItems().add(post_combobox);
+            String pre_combobox = useCase.getUseCaseName()+ " : " + useCase.getPreCondition();
+            preConListComboBox.getItems().add(pre_combobox);
         }
     }
 

@@ -91,6 +91,7 @@ public class TestResultController {
             testResultList = testResultListDataSource.readData();
             testResultDetailList = testResultDetailListDataSource.readData();
             testResult = (TestResult) FXRouter.getData();
+            setTable();
             loadListView(testResultList);
             selected();
             for (TestResult testResult : testResultList.getTestResultList()) {
