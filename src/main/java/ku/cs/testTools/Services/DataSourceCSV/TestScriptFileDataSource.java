@@ -197,8 +197,8 @@ public class TestScriptFileDataSource implements DataSource<TestScriptList>, Man
                 + testScript.getDescriptionTS() + ","
                 + testScript.getTestCase() + ","
                 + testScript.getPreCon() + ","
-                + testScript.getFreeText()+ ","
                 + testScript.getPostCon() + ","
+                + testScript.getFreeText()+ ","
                 + testScript.getPosition();
     }
 }

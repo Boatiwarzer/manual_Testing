@@ -305,7 +305,7 @@ public class PopupAddTestresultController {
                 }
 
                 if (!matchingInput.isEmpty()) {
-                    String formattedText = String.join(", ", matchingSteps);
+                    String formattedText = String.join(", ", matchingInput);
                     onInputdata.setText(formattedText);
                     System.out.println("Test Input for " + tsId + ": " + matchingInput);
                 } else {
