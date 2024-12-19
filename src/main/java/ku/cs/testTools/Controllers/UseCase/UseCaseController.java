@@ -101,14 +101,34 @@ public class UseCaseController {
 
         }
         System.out.println(word);
+        onSearchField.setOnKeyReleased(event -> {
+            String typedText = onSearchField.getText().toLowerCase();
 
-        TextFields.bindAutoCompletion(onSearchField,word);
-        onSearchField.setOnKeyPressed(keyEvent -> {
-            if (Objects.requireNonNull(keyEvent.getCode()) == KeyCode.ENTER) {
-                onSearchList.getItems().clear();
+            // Clear ListView และกรองข้อมูล
+            onSearchList.getItems().clear();
+
+            if (!typedText.isEmpty()) {
+                // กรองคำที่ตรงกับข้อความที่พิมพ์
+//                List<String> filteredList = word.stream()
+//                        .filter(item -> item.toLowerCase().contains(typedText))
+//                        .collect(Collectors.toList());
+
+                // เพิ่มคำที่กรองได้ไปยัง ListView
+                onSearchList.getItems().addAll(searchList(onSearchField.getText(), useCaseList.getUseCaseList()));
+            } else {
+                for (UseCase useCase : useCaseList.getUseCaseList()) {
+                    word.add(useCase.getUseCaseName());
+                }
                 onSearchList.getItems().addAll(searchList(onSearchField.getText(), useCaseList.getUseCaseList()));
             }
         });
+//        TextFields.bindAutoCompletion(onSearchField,word);
+//        onSearchField.setOnKeyPressed(keyEvent -> {
+//            if (Objects.requireNonNull(keyEvent.getCode()) == KeyCode.ENTER) {
+//                onSearchList.getItems().clear();
+//                onSearchList.getItems().addAll(searchList(onSearchField.getText(), useCaseList.getUseCaseList()));
+//            }
+//        });
     }
 
 

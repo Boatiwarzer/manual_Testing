@@ -124,14 +124,34 @@ public class TestResultController {
 
         }
         System.out.println(word);
+        onSearchField.setOnKeyReleased(event -> {
+            String typedText = onSearchField.getText().toLowerCase();
 
-        TextFields.bindAutoCompletion(onSearchField,word);
-        onSearchField.setOnKeyPressed(keyEvent -> {
-            if (Objects.requireNonNull(keyEvent.getCode()) == KeyCode.ENTER) {
-                onSearchList.getItems().clear();
+            // Clear ListView และกรองข้อมูล
+            onSearchList.getItems().clear();
+
+            if (!typedText.isEmpty()) {
+                // กรองคำที่ตรงกับข้อความที่พิมพ์
+//                List<String> filteredList = word.stream()
+//                        .filter(item -> item.toLowerCase().contains(typedText))
+//                        .collect(Collectors.toList());
+
+                // เพิ่มคำที่กรองได้ไปยัง ListView
+                onSearchList.getItems().addAll(searchList(onSearchField.getText(), testResultList.getTestResultList()));
+            } else {
+                for (TestResult testResult : testResultList.getTestResultList()) {
+                    word.add(testResult.getNameTR());
+                }
                 onSearchList.getItems().addAll(searchList(onSearchField.getText(), testResultList.getTestResultList()));
             }
         });
+//        TextFields.bindAutoCompletion(onSearchField,word);
+//        onSearchField.setOnKeyPressed(keyEvent -> {
+//            if (Objects.requireNonNull(keyEvent.getCode()) == KeyCode.ENTER) {
+//                onSearchList.getItems().clear();
+//                onSearchList.getItems().addAll(searchList(onSearchField.getText(), testResultList.getTestResultList()));
+//            }
+//        });
     }
 
     private void selected() {

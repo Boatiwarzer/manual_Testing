@@ -120,13 +120,34 @@ public class TestCaseController {
         }
         System.out.println(word);
 
-        TextFields.bindAutoCompletion(onSearchField,word);
-        onSearchField.setOnKeyPressed(keyEvent -> {
-            if (Objects.requireNonNull(keyEvent.getCode()) == KeyCode.ENTER) {
-                onSearchList.getItems().clear();
+        onSearchField.setOnKeyReleased(event -> {
+            String typedText = onSearchField.getText().toLowerCase();
+
+            // Clear ListView และกรองข้อมูล
+            onSearchList.getItems().clear();
+
+            if (!typedText.isEmpty()) {
+                // กรองคำที่ตรงกับข้อความที่พิมพ์
+//                List<String> filteredList = word.stream()
+//                        .filter(item -> item.toLowerCase().contains(typedText))
+//                        .collect(Collectors.toList());
+
+                // เพิ่มคำที่กรองได้ไปยัง ListView
+                onSearchList.getItems().addAll(searchList(onSearchField.getText(), testCaseList.getTestCaseList()));
+            } else {
+                for (TestCase testCase : testCaseList.getTestCaseList()) {
+                    word.add(testCase.getNameTC());
+                }
                 onSearchList.getItems().addAll(searchList(onSearchField.getText(), testCaseList.getTestCaseList()));
             }
         });
+//        TextFields.bindAutoCompletion(onSearchField,word);
+//        onSearchField.setOnKeyPressed(keyEvent -> {
+//            if (Objects.requireNonNull(keyEvent.getCode()) == KeyCode.ENTER) {
+//                onSearchList.getItems().clear();
+//                onSearchList.getItems().addAll(searchList(onSearchField.getText(), testCaseList.getTestCaseList()));
+//            }
+//        });
     }
 
     private void selected() {
