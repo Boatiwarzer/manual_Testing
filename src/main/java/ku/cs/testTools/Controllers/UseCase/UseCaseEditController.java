@@ -301,7 +301,7 @@ public class UseCaseEditController {
             UseCase useCase = useCaseList.findByUseCaseName(data[0].trim());
 
             // อัปเดตข้อมูล
-            onPreConArea.setText(useCase.getPreCondition());
+            onPreConArea.setText(useCase.getPostCondition());
         }
     }
     private void selectedPostConSetInfo(String selectedItem) {
@@ -313,20 +313,20 @@ public class UseCaseEditController {
             UseCase useCase = useCaseList.findByUseCaseName(data[0].trim());
 
             // อัปเดตข้อมูล
-            onPostConArea.setText(useCase.getPostCondition());
+            onPostConArea.setText(useCase.getPreCondition());
         }
     }
 
     private void preConCombobox() {
         for (UseCase useCase : useCaseList.getUseCaseList()){
-            String pre_combobox = useCase.getUseCaseName()+ " : " + useCase.getPreCondition();
-            preConListComboBox.getItems().add(pre_combobox);
+            String post_combobox = useCase.getUseCaseName()+ " : " + useCase.getPostCondition();
+            preConListComboBox.getItems().add(post_combobox);
         }
     }
     private void postConCombobox() {
         for (UseCase useCase : useCaseList.getUseCaseList()){
-            String post_combobox = useCase.getUseCaseName()+ " : " + useCase.getPostCondition();
-            postConListComboBox.getItems().add(post_combobox);
+            String pre_combobox = useCase.getUseCaseName()+ " : " + useCase.getPreCondition();
+            postConListComboBox.getItems().add(pre_combobox);
         }
     }
 

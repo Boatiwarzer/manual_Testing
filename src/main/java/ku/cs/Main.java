@@ -26,8 +26,6 @@ public class Main extends Application {
             FXRouter.goTo("use_case");
             Application.setUserAgentStylesheet(getClass().getResource("/style/Themes/nord-light.css").toExternalForm());
 //            Application.setUserAgentStylesheet(getClass().getResource("/style/Themes/cupertino-light.css").toExternalForm());
-//            Application.setUserAgentStylesheet(getClass().getResource("/style/Themes/caspian-embedded-highContrast.css").toExternalForm());
-//            Application.setUserAgentStylesheet(getClass().getResource("/style/Themes/caspian-embedded.css").toExternalForm());
 //            Application.setUserAgentStylesheet(getClass().getResource("/style/Themes/nord-dark.css").toExternalForm());
 //            Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
 //        } catch (SQLException e) {

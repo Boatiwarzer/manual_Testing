@@ -91,6 +91,7 @@ public class TestResultController {
             testResultList = testResultListDataSource.readData();
             testResultDetailList = testResultDetailListDataSource.readData();
             testResult = (TestResult) FXRouter.getData();
+            setTable();
             loadListView(testResultList);
             selected();
             for (TestResult testResult : testResultList.getTestResultList()) {
@@ -112,7 +113,7 @@ public class TestResultController {
             }
         }
 
-        testResult = testResultList.findTRById(testIDLabel.getText());
+        //testResult = testResultList.findTRById(testIDLabel.getText());
         System.out.println(testResultList.findTRById(testIDLabel.getText()));
 
     }
@@ -124,14 +125,34 @@ public class TestResultController {
 
         }
         System.out.println(word);
+        onSearchField.setOnKeyReleased(event -> {
+            String typedText = onSearchField.getText().toLowerCase();
 
-        TextFields.bindAutoCompletion(onSearchField,word);
-        onSearchField.setOnKeyPressed(keyEvent -> {
-            if (Objects.requireNonNull(keyEvent.getCode()) == KeyCode.ENTER) {
-                onSearchList.getItems().clear();
+            // Clear ListView และกรองข้อมูล
+            onSearchList.getItems().clear();
+
+            if (!typedText.isEmpty()) {
+                // กรองคำที่ตรงกับข้อความที่พิมพ์
+//                List<String> filteredList = word.stream()
+//                        .filter(item -> item.toLowerCase().contains(typedText))
+//                        .collect(Collectors.toList());
+
+                // เพิ่มคำที่กรองได้ไปยัง ListView
+                onSearchList.getItems().addAll(searchList(onSearchField.getText(), testResultList.getTestResultList()));
+            } else {
+                for (TestResult testResult : testResultList.getTestResultList()) {
+                    word.add(testResult.getNameTR());
+                }
                 onSearchList.getItems().addAll(searchList(onSearchField.getText(), testResultList.getTestResultList()));
             }
         });
+//        TextFields.bindAutoCompletion(onSearchField,word);
+//        onSearchField.setOnKeyPressed(keyEvent -> {
+//            if (Objects.requireNonNull(keyEvent.getCode()) == KeyCode.ENTER) {
+//                onSearchList.getItems().clear();
+//                onSearchList.getItems().addAll(searchList(onSearchField.getText(), testResultList.getTestResultList()));
+//            }
+//        });
     }
 
     private void selected() {
@@ -251,9 +272,9 @@ public class TestResultController {
             TableColumn<TestResultDetail, String> col = new TableColumn<>(conf.get("title"));
             col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
             if (index != 14 && index <= 16) {  // ถ้าเป็นคอลัมน์แรก
-                col.setPrefWidth(100);
-                col.setMaxWidth(100);   // จำกัดขนาดสูงสุดของคอลัมน์แรก
-                col.setMinWidth(100); // ตั้งค่าขนาดคอลัมน์แรก
+                col.setPrefWidth(120);
+                col.setMaxWidth(120);
+                col.setMinWidth(120); // ตั้งค่าขนาดคอลัมน์แรก
             }
             col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
             index++;
@@ -369,7 +390,6 @@ public class TestResultController {
     }
 
     public void setTable() {
-        testResultDetailList = new TestResultDetailList();
         onTableTestresult.getColumns().clear();
         onTableTestresult.getItems().clear();
         onTableTestresult.refresh();
@@ -396,9 +416,9 @@ public class TestResultController {
 
         for (StringConfiguration conf: configs) {
             TableColumn col = new TableColumn(conf.get("title"));
-            col.setPrefWidth(100);
-            col.setMaxWidth(100);
-            col.setMinWidth(100);
+            col.setPrefWidth(120);
+            col.setMaxWidth(120);
+            col.setMinWidth(120);
             col.setSortable(false);
             col.setReorderable(false);
             onTableTestresult.getColumns().add(col);

@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
+import javafx.scene.text.Text;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
@@ -120,13 +121,34 @@ public class TestCaseController {
         }
         System.out.println(word);
 
-        TextFields.bindAutoCompletion(onSearchField,word);
-        onSearchField.setOnKeyPressed(keyEvent -> {
-            if (Objects.requireNonNull(keyEvent.getCode()) == KeyCode.ENTER) {
-                onSearchList.getItems().clear();
+        onSearchField.setOnKeyReleased(event -> {
+            String typedText = onSearchField.getText().toLowerCase();
+
+            // Clear ListView และกรองข้อมูล
+            onSearchList.getItems().clear();
+
+            if (!typedText.isEmpty()) {
+                // กรองคำที่ตรงกับข้อความที่พิมพ์
+//                List<String> filteredList = word.stream()
+//                        .filter(item -> item.toLowerCase().contains(typedText))
+//                        .collect(Collectors.toList());
+
+                // เพิ่มคำที่กรองได้ไปยัง ListView
+                onSearchList.getItems().addAll(searchList(onSearchField.getText(), testCaseList.getTestCaseList()));
+            } else {
+                for (TestCase testCase : testCaseList.getTestCaseList()) {
+                    word.add(testCase.getNameTC());
+                }
                 onSearchList.getItems().addAll(searchList(onSearchField.getText(), testCaseList.getTestCaseList()));
             }
         });
+//        TextFields.bindAutoCompletion(onSearchField,word);
+//        onSearchField.setOnKeyPressed(keyEvent -> {
+//            if (Objects.requireNonNull(keyEvent.getCode()) == KeyCode.ENTER) {
+//                onSearchList.getItems().clear();
+//                onSearchList.getItems().addAll(searchList(onSearchField.getText(), testCaseList.getTestCaseList()));
+//            }
+//        });
     }
 
     private void selected() {
@@ -196,6 +218,26 @@ public class TestCaseController {
         for (StringConfiguration conf : configs) {
             TableColumn<TestCaseDetail, String> col = new TableColumn<>(conf.get("title"));
             col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
+
+            col.setCellFactory(tc -> {
+                TableCell<TestCaseDetail, String> cell = new TableCell<>() {
+                    private final Text text = new Text();
+
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            setGraphic(null);
+                        } else {
+                            text.setText(item);
+                            text.wrappingWidthProperty().bind(tc.widthProperty().subtract(10));
+                            setGraphic(text);
+                        }
+                    }
+                };
+//                    cell.setStyle("-fx-alignment: top-left; -fx-padding: 5px;");
+                return cell;
+            });
             if (index <= 1) {  // ถ้าเป็นคอลัมน์แรก
                 col.setPrefWidth(80);
                 col.setMaxWidth(80);   // จำกัดขนาดสูงสุดของคอลัมน์แรก

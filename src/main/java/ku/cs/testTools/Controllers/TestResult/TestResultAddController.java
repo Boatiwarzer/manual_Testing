@@ -233,9 +233,9 @@ public class TestResultAddController {
             TableColumn<TestResultDetail, String> col = new TableColumn<>(conf.get("title"));
             col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
             if (index != 14 && index <= 16) {  // ถ้าเป็นคอลัมน์แรก
-                col.setPrefWidth(100);
-                col.setMaxWidth(100);   // จำกัดขนาดสูงสุดของคอลัมน์แรก
-                col.setMinWidth(100); // ตั้งค่าขนาดคอลัมน์แรก
+                col.setPrefWidth(120);
+                col.setMaxWidth(120);
+                col.setMinWidth(120); // ตั้งค่าขนาดคอลัมน์แรก
             }
             col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
             index++;
@@ -373,9 +373,9 @@ public class TestResultAddController {
 
         for (StringConfiguration conf: configs) {
             TableColumn col = new TableColumn(conf.get("title"));
-//            col.setPrefWidth(100);
-//            col.setMaxWidth(100);
-//            col.setMinWidth(100);
+            col.setPrefWidth(120);
+            col.setMaxWidth(120);
+            col.setMinWidth(120);
             col.setSortable(false);
             col.setReorderable(false);
             onTableTestresult.getColumns().add(col);

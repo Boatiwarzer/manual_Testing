@@ -61,7 +61,6 @@ public class PopupAddTestresultController {
     private String savedImagePath;
 
     private String projectName = "125", directory = "data";
-    private String projectName1 = "uc";
     private UseCaseList useCaseList = new UseCaseList();
     private UseCaseDetailList useCaseDetailList = new UseCaseDetailList();
     private TestScriptList testScriptList = new TestScriptList();
@@ -74,7 +73,7 @@ public class PopupAddTestresultController {
     private TestCaseDetail testCaseDetail = new TestCaseDetail();
     private final DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
     private final DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-    private final DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory, projectName1 + ".csv");
+    private final DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv");
     private final DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
     private final DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
 
@@ -306,7 +305,7 @@ public class PopupAddTestresultController {
                 }
 
                 if (!matchingInput.isEmpty()) {
-                    String formattedText = String.join(", ", matchingSteps);
+                    String formattedText = String.join(", ", matchingInput);
                     onInputdata.setText(formattedText);
                     System.out.println("Test Input for " + tsId + ": " + matchingInput);
                 } else {
