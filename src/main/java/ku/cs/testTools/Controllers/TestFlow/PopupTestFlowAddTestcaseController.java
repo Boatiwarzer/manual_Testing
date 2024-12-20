@@ -52,13 +52,13 @@ public class PopupTestFlowAddTestcaseController {
     private String date;
     private int position;
     private String projectName, directory;
+    private String type;
 
     @FXML
     void initialize() {
         clearInfo();
         randomId();
         setDateTCD();
-
         if (FXRouter.getData() != null) {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
@@ -66,9 +66,10 @@ public class PopupTestFlowAddTestcaseController {
             position = (int) objects.get(2);
             testCase = (TestCase) objects.get(3);
             testCaseDetailList = (TestCaseDetailList) objects.get(4);
+            type = (String) objects.get(5);
             idTC = testCase.getIdTC();
-            if (objects.get(5) != null){
-                testCaseDetail = (TestCaseDetail) objects.get(5);
+            if (objects.get(6) != null && type.equals("edit")){
+                testCaseDetail = (TestCaseDetail) objects.get(6);
                 testCaseDetailList.findTCById(testCaseDetail.getIdTCD());
                 id = testCaseDetail.getIdTCD();
                 setTextEdit();
@@ -105,6 +106,7 @@ public class PopupTestFlowAddTestcaseController {
         projectName = (String) objects.get(0);
         directory = (String) objects.get(1);
         position = (int) objects.get(2);
+        clearInfo();
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
@@ -114,28 +116,21 @@ public class PopupTestFlowAddTestcaseController {
 
     @FXML
     void onConfirmButton(ActionEvent event) {
-        String TsNo = onTestNo.getText();
-        String Name = onNameVariablesField.getText();
-        String Type = onTypeVariableField.getText();
-        setDateTCD();
-        //boolean signup = isAvailable(username, userTextField);
-//        if(userTextField.getText().isEmpty() && passwordTextField.getText().isEmpty() && passwordTextField.getText().isEmpty() && conPasswordTextField.getText().isEmpty()){
-//            errorLabel.setText("Please enter data");
-//        }if(!password1.equals(password2)){
-//            errorLabel.setText("Password not correct");
-//        } if(signup){
-
-        testCaseDetail = new TestCaseDetail(id, TsNo, Name, Type, dateTCD, idTC);
-        testCaseDetailList.addOrUpdateTestCase(testCaseDetail);
         try {
+            String TsNo = onTestNo.getText();
+            String Name = onNameVariablesField.getText();
+            String Type = onTypeVariableField.getText();
+            setDateTCD();
+
+            testCaseDetail = new TestCaseDetail(id, TsNo, Name, Type, dateTCD, idTC);
+            testCaseDetailList.addOrUpdateTestCase(testCaseDetail);
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             objects.add(projectName);
             objects.add(directory);
             objects.add(position);
             objects.add(testCase);
             objects.add(testCaseDetailList);
-            objects.add(testCaseDetail);
-            objects.add("1");
+            objects.add(type);
             FXRouter.newPopup("popup_info_testcase", objects, true);
             System.out.println(testCaseDetail);
             Node source = (Node) event.getSource();

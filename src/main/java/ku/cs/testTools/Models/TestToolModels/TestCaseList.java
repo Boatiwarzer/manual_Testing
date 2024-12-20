@@ -66,6 +66,9 @@ public class TestCaseList {
             }
         }
     }
+    public void clearTestCase(String ID) {
+        testCaseList.removeIf(testCase -> testCase.getIdTC().equals(ID));
+    }
     public void sort(Comparator<TestCase> cmp) {
         testCaseList.sort(cmp);
     }

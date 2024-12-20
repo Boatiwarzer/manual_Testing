@@ -24,7 +24,9 @@ public class TestScriptList {
     public void clear() {
         testScriptList.clear();
     }
-
+    public void clearTestScript(String ID) {
+        testScriptList.removeIf(testScript -> testScript.getIdTS().equals(ID));
+    }
     public TestScript findTSById(String id) {
         for (TestScript testScript : testScriptList) {
             if (testScript.isId(id) ) {

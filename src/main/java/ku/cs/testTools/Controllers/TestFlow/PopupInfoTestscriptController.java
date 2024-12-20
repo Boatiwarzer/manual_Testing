@@ -73,7 +73,7 @@ public class PopupInfoTestscriptController {
     private String projectName = "125", directory = "data";
     private TestScriptList testScriptList = new TestScriptList();
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
-    private TestScript testScript = new TestScript();
+    private TestScript testScript;
     private TestScriptDetail testScriptDetail;
     private int position;
     private String tsId;
@@ -84,6 +84,7 @@ public class PopupInfoTestscriptController {
     private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
     private TestScriptDetailList testScriptDetailListTemp = new TestScriptDetailList();
     private ConnectionList connectionList;
+    private String type = "new";
     @FXML
     void initialize() {
 
@@ -97,20 +98,23 @@ public class PopupInfoTestscriptController {
                 selectedTSD();
                 loadProject();
                 setDate();
-                clearInfo();
                 selectedComboBox();
                 setButtonVisible();
                 if (objects.get(3) != null){
                     testScript = (TestScript) objects.get(3);
                     testScriptDetailList = (TestScriptDetailList) objects.get(4);
-                    testScriptDetail = (TestScriptDetail) objects.get(5);
+                    type = (String) objects.get(5);
                 }else {
                     testScript = testScriptList.findByPositionId(position);
+                    System.out.println(testScript);
                 }
                 setDataTS();
-                for (TestScriptDetail testScriptDetail : testScriptDetailListTemp.getTestScriptDetailList()) {
-                    testScriptDetailList.addOrUpdateTestScriptDetail(testScriptDetail);
+                if (type.equals("new")){
+                    for (TestScriptDetail testScriptDetail : testScriptDetailListTemp.getTestScriptDetailList()) {
+                        testScriptDetailList.addOrUpdateTestScriptDetail(testScriptDetail);
+                    }
                 }
+
                 if (testScriptDetailList != null){
                     loadTable(testScriptDetailList);
                 }
@@ -289,11 +293,11 @@ public class PopupInfoTestscriptController {
             if (selectedItem != null) {
                 onTestcaseCombobox.getEditor().setText(selectedItem); // Set selected item in editor
                 Platform.runLater(onTestcaseCombobox.getEditor()::end);
-                if (!selectedItem.equals("None")) {
-                    selectedComboBoxSetInfoTC(selectedItem);
-                }else {
-                    clearTestcase();
-                }
+//                if (!selectedItem.equals("None")) {
+//                    selectedComboBoxSetInfoTC(selectedItem);
+//                }else {
+//                    clearTestcase();
+//                }
             }
 
         });
@@ -412,8 +416,7 @@ public class PopupInfoTestscriptController {
         }
     }
 
-    private void clearInfo() {
-    }
+
 
     private void setDate() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -443,8 +446,9 @@ public class PopupInfoTestscriptController {
             objects.add(position);
             objects.add(testScript);
             objects.add(testScriptDetailList);
-            objects.add(testScriptDetail);
             objects.add(testCaseDetailList);
+            objects.add("new");
+            objects.add(null);
             if (testScriptDetailList != null){
                 FXRouter.popup("popup_testflow_add_testscript",objects,true);
             }
@@ -525,14 +529,6 @@ public class PopupInfoTestscriptController {
 
     @FXML
     void onEditListButton(ActionEvent event) {
-        onEditListButton.setOnMouseClicked(event12 -> {
-            // ทำการแก้ไข
-            // ...
-
-            // ขอ focus กลับไปที่ TableView
-            onTableTestscript.requestFocus();
-        });
-        onEditListButton.setOnAction(event1 -> onTableTestscript.requestFocus());
 
         try {
             String name = onTestNameCombobox.getValue();
@@ -551,8 +547,9 @@ public class PopupInfoTestscriptController {
             objects.add(position);
             objects.add(testScript);
             objects.add(testScriptDetailList);
-            objects.add(selectedItem);
             objects.add(testCaseDetailList);
+            objects.add("edit");
+            objects.add(selectedItem);
             if (selectedItem != null){
                 FXRouter.popup("popup_testflow_add_testscript",objects,true);
             }

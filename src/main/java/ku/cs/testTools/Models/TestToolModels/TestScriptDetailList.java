@@ -51,6 +51,9 @@ public class TestScriptDetailList {
             }
         }
     }
+    public void clearTestScriptDetail(String ID) {
+        testScriptDetail.removeIf(testScriptDetail -> testScriptDetail.getIdTSD().equals(ID));
+    }
 
     // เมธอดนี้จะต้องถูกย้ายไปยัง TestScriptDetailFIleDataSource
     public TestScriptDetail findTSById(String id) {

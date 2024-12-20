@@ -90,6 +90,8 @@ public class PopupInfoTestcaseController {
 //    private TestScript selectedTestScript;
     private TestCaseList testCaseList = new TestCaseList();
     private UseCaseList useCaseList = new UseCaseList();
+    private String type = "new";
+
 //    private TestScriptDetailList testScriptDetailListTemp = new TestScriptDetailList();
 //    DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
 //    DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
@@ -111,15 +113,18 @@ public class PopupInfoTestcaseController {
                 if (objects.get(3) != null){
                     testCase = (TestCase) objects.get(3);
                     testCaseDetailList = (TestCaseDetailList) objects.get(4);
-                    testCaseDetail = (TestCaseDetail) objects.get(5);
+                    type = (String) objects.get(5);
                 }else {
                     testCase = testCaseList.findByPositionId(position);
                 }
                 setDataTC();
-                for (TestCaseDetail testCaseDetail : testCaseDetailListTemp.getTestCaseDetailList()) {
-                    testCaseDetailList.addOrUpdateTestCase(testCaseDetail);
+                if(type.equals("new")){
+                    for (TestCaseDetail testCaseDetail : testCaseDetailListTemp.getTestCaseDetailList()) {
+                        testCaseDetailList.addOrUpdateTestCase(testCaseDetail);
 
+                    }
                 }
+
                 if (testCaseDetailList != null){
                     loadTable(testCaseDetailList);
                 }
@@ -144,7 +149,7 @@ public class PopupInfoTestcaseController {
         DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
         DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
         DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName1+".csv");
+        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
         DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
         DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
 
@@ -161,7 +166,7 @@ public class PopupInfoTestcaseController {
         DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
         DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
         DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName1+".csv");
+        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
         DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
         DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
         testFlowPositionListDataSource.writeData(testFlowPositionList);
@@ -403,7 +408,8 @@ public class PopupInfoTestcaseController {
             objects.add(position);
             objects.add(testCase);
             objects.add(testCaseDetailList);
-            objects.add(testCaseDetail);
+            objects.add("new");
+            objects.add(null);
             if (testCaseDetailList != null){
                 FXRouter.popup("popup_testflow_add_testcase",objects,true);
             }
@@ -485,13 +491,6 @@ public class PopupInfoTestcaseController {
 
     @FXML
     void onEditListButton(ActionEvent event) {
-        onEditListButton.setOnMouseClicked(event12 -> {
-            // ทำการแก้ไข
-            // ...
-
-            // ขอ focus กลับไปที่ TableView
-            onTableTestCase.requestFocus();
-        });
 
         try {
             String name = onTestNameCombobox.getValue();
@@ -510,6 +509,7 @@ public class PopupInfoTestcaseController {
             objects.add(position);
             objects.add(testCase);
             objects.add(testCaseDetailList);
+            objects.add("edit");
             objects.add(selectedItem);
             if (selectedItem != null){
                 FXRouter.popup("popup_testflow_add_testcase",objects,true);

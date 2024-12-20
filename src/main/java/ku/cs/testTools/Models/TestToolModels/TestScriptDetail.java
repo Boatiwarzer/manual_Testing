@@ -74,4 +74,7 @@ public class TestScriptDetail {
     public boolean isIdTS(String id) {
         return this.idTS.equals(id);
     }
+
+    public void clear() {
+    }
 }

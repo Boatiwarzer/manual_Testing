@@ -45,31 +45,36 @@ public class PopupTestFlowAddTestscriptController {
     private String projectName, directory;
     private TestScriptList testScriptList = new TestScriptList();
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
-    private TestScript testScript = new TestScript();
+    private TestScript testScript;
     private TestScriptDetail testScriptDetail = new TestScriptDetail();
     private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
     private String id;
     private String idTS;
     private String date;
     private int position;
+    private String type;
     @FXML
     void initialize() {
         clearInfo();
         randomId();
+        System.out.println(testScriptDetail);
         if (FXRouter.getData() != null) {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
             position = (int) objects.get(2);
             testScript = (TestScript) objects.get(3);
+            System.out.println(testScript);
             testScriptDetailList = (TestScriptDetailList) objects.get(4);
             idTS = testScript.getIdTS();
-            testCaseDetailList = (TestCaseDetailList) objects.get(6);
+            testCaseDetailList = (TestCaseDetailList) objects.get(5);
+            type = (String) objects.get(6);
+            System.out.println(type);
             selectedComboBox();
             System.out.println(testCaseDetailList);
-            if (objects.get(5) != null){
-                testScriptDetail = (TestScriptDetail) objects.get(5);
-                testScriptDetailList.findTSById(testScriptDetail.getIdTSD());
+            if (objects.get(7) != null && type.equals("edit")){
+                testScriptDetail = (TestScriptDetail) objects.get(7);
+                testScriptDetail = testScriptDetailList.findTSById(testScriptDetail.getIdTSD());
                 id = testScriptDetail.getIdTSD();
                 setTextEdit();
             }
@@ -95,6 +100,7 @@ public class PopupTestFlowAddTestscriptController {
         projectName = (String) objects.get(0);
         directory = (String) objects.get(1);
         position = (int) objects.get(2);
+        clearInfo();
         System.out.println(testScriptDetail);
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
@@ -105,25 +111,23 @@ public class PopupTestFlowAddTestscriptController {
 
     @FXML
     void onConfirmButton(ActionEvent event) {
-        String TsNo = onTestNo.getText();
-        String TsStep = onTeststepsArea.getText().toLowerCase();
-        String Input = onInputDataCombobox.getValue();
-        String Expect = onExpectedArea.getText();
-        setDateTSD();
-        testScriptDetail = new TestScriptDetail(id,TsNo, TsStep, Input, Expect,idTS,date);
-        testScriptDetailList.addOrUpdateTestScriptDetail(testScriptDetail);
 
         try {
-            ArrayList<Object> objects = (ArrayList) FXRouter.getData();
+            String TsNo = onTestNo.getText();
+            String TsStep = onTeststepsArea.getText().toLowerCase();
+            String Input = onInputDataCombobox.getValue();
+            String Expect = onExpectedArea.getText();
+            setDateTSD();
+            testScriptDetail = new TestScriptDetail(id,TsNo, TsStep, Input, Expect,idTS,date);
+            testScriptDetailList.addOrUpdateTestScriptDetail(testScriptDetail);
+            ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
             objects.add(position);
             objects.add(testScript);
             objects.add(testScriptDetailList);
-            objects.add(testScriptDetail);
-            objects.add("1");
+            objects.add(type);
             FXRouter.newPopup("popup_info_testscript",objects,true);
-            System.out.println(testScriptDetail);
             Node source = (Node) event.getSource();
             Stage stage = (Stage) source.getScene().getWindow();
             stage.close();
@@ -153,6 +157,7 @@ public class PopupTestFlowAddTestscriptController {
         onTeststepsArea.setText("");
         onInputDataCombobox.getSelectionModel().selectFirst();
         onExpectedArea.setText("");
+        testScriptDetail.clear();
     }
 
     public void randomId(){
@@ -188,8 +193,7 @@ public class PopupTestFlowAddTestscriptController {
 
     }
 
-    private void selectedComboBoxSetInfoTC_TCD(String selectedItem) {
-    }
+
 
     @FXML
     void onInputDataCombobox(ActionEvent event) {
