@@ -9,6 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
@@ -194,8 +195,25 @@ public class PopupInfoTestscriptController {
             new TableColumns(col);
             onTableTestscript.getColumns().add(col);
             index++;
-        }
+            col.setCellFactory(tc -> {
+                TableCell<TestScriptDetail, String> cell = new TableCell<>() {
+                    private final Text text = new Text();
 
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            setGraphic(null);
+                        } else {
+                            text.setText(item);
+                            text.wrappingWidthProperty().bind(tc.widthProperty().subtract(10));
+                            setGraphic(text);
+                        }
+                    }
+                };
+                return cell;
+            });
+        }
         //Add items to the table
         for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()) {
             if (testScriptDetail.getIdTS().trim().equals(testScript.getIdTS().trim())){

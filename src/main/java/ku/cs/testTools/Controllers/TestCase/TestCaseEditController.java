@@ -5,15 +5,15 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
+import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
-import ku.cs.testTools.Services.DataSourceCSV.TestCaseDetailFileDataSource;
-import ku.cs.testTools.Services.DataSourceCSV.TestCaseFileDataSource;
-import ku.cs.testTools.Services.DataSourceCSV.UseCaseListFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.*;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.IOException;
@@ -83,72 +83,87 @@ public class TestCaseEditController {
 
     @FXML
     private Button onEditListButton;
+    @FXML
+    private TextArea infoPreconField;
+    @FXML
+    private TextArea infoPostconField;
     private ArrayList<String> word = new ArrayList<>();
     private String tcId;
-    private String projectName1 = "uc", projectName = "125", directory = "data";
+    private String projectName, directory;
     private TestCaseList testCaseList = new TestCaseList();
-    //private ArrayList<Object> objects = (ArrayList) FXRouter.getData();
+    private ArrayList<Object> objects;
     private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
     private TestCaseDetail selectedItem;
     private TestCase testCase;
     private TestCase selectedTestCase;
     private UseCaseList useCaseList;
-    private static int idCounter = 1; // Counter for sequential IDs
-    private static final int MAX_ID = 999; // Upper limit for IDs
-    private static Set<String> usedIds = new HashSet<>(); // Set to store used IDs
+    private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
+    private ConnectionList connectionList;
     private TestCaseDetailList testcaseDetailListTemp = new TestCaseDetailList();
-    private final DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory,projectName + ".csv");
-    private final DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
-    private final DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName1+".csv");
+    private String type;
+    private String typeTC;
+    private int position = 0;
 
     @FXML
     void initialize() {
         setDate();
         clearInfo();
+        loadProject();
         selectedComboBox();
         setButtonVisible();
-        {
-            if (FXRouter.getData() != null) {
-                onTableTestcase.isFocused();
-                testCase = (TestCase) FXRouter.getData();
-                selectedTCD();
-                selectedListView();
-                setDataTC();
-                if (testCaseListDataSource.readData() != null && testCaseDetailListDataSource.readData() != null){
-                    TestCaseList testCaseListTemp = testCaseListDataSource.readData();
-                    testCaseList = testCaseListDataSource.readData();
-                    testcaseDetailListTemp = testCaseDetailListDataSource.readData();
-
-                    for (TestCaseDetail testCaseDetail : testcaseDetailListTemp.getTestCaseDetailList()) {
-                        if (testCase.getIdTC().trim().equals(testCaseDetail.getIdTC().trim())){
-                            testCaseDetailList.addOrUpdateTestCase(testCaseDetail);
-                        }
-                    }
-                    loadTable(testCaseDetailList);
-                    loadListView(testCaseList);
-                    for (TestCase testCase : testCaseList.getTestCaseList()) {
-                        word.add(testCase.getNameTC());
-                    }
-                    searchSet();
-                }
-            }
-            else{
-                setTable();
-                randomId();
-                System.out.println(tcId);
-                if (testCaseListDataSource.readData() != null && testCaseDetailListDataSource.readData() != null){
-                    TestCaseList testCaseListTemp = testCaseListDataSource.readData();
-                    loadListView(testCaseListTemp);
-                    selectedTCD();
-                    for (TestCase testCase : testCaseListTemp.getTestCaseList()) {
-                        word.add(testCase.getNameTC());
-                    }
-                    searchSet();
-                }
+        if (FXRouter.getData() != null) {
+            objects = (ArrayList) FXRouter.getData();
+            projectName = (String) objects.get(0);
+            directory = (String) objects.get(1);
+            typeTC = (String) objects.get(2);
+            onTableTestcase.isFocused();
+            selectedTCD();
+            selectedListView();
+            if (objects.get(3) != null){
+                testCase = (TestCase) objects.get(3);
+                testCaseDetailList = (TestCaseDetailList) objects.get(4);
+                type = (String) objects.get(5);
 
             }
+            setDataTC();
+            if (typeTC.equals("editTC") && type.equals("new")){
+                for (TestCaseDetail testCaseDetail : testcaseDetailListTemp.getTestCaseDetailList()) {
+                    testCaseDetailList.addOrUpdateTestCase(testCaseDetail);
+                }
+            }
+            loadTable(testCaseDetailList);
+            loadListView(testCaseList);
+            for (TestCase testCase : testCaseList.getTestCaseList()) {
+                word.add(testCase.getNameTC());
+            }
+            searchSet();
         }
-        System.out.println(testCaseDetailList);
+    }
+
+
+    private void loadProject() {
+        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
+        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
+        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
+        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+
+        testCaseList = testCaseListDataSource.readData();
+        testCaseDetailList = testCaseDetailListDataSource.readData();
+        testFlowPositionList = testFlowPositionListDataSource.readData();
+        connectionList = connectionListDataSource.readData();
+        useCaseList = useCaseListDataSource.readData();
+
+    }
+    private void saveProject() {
+        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
+        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
+        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+        testFlowPositionListDataSource.writeData(testFlowPositionList);
+        testCaseListDataSource.writeData(testCaseList);
+        testCaseDetailListDataSource.writeData(testCaseDetailList);
+        connectionListDataSource.writeData(connectionList);
 
     }
 
@@ -251,9 +266,13 @@ public class TestCaseEditController {
         String useCase = testCase.getUseCase();
         onUsecaseCombobox.getSelectionModel().select(useCase);
         String description = testCase.getDescriptionTC();
-        infoDescriptField.setText(description);;
+        infoDescriptField.setText(description);
         String note = testCase.getNote();
-        onTestNoteField.setText(note);;
+        onTestNoteField.setText(note);
+        String preCon = testCase.getPreCon();
+        infoPreconField.setText(preCon);
+        String post = testCase.getPostCon();
+        infoPostconField.setText(post);
     }
 
     private void selectedListView() {
@@ -340,7 +359,9 @@ public class TestCaseEditController {
 
         //Add items to the table
         for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()) {
-            onTableTestcase.getItems().add(testCaseDetail);
+            if (testCase.getIdTC().trim().equals(testCaseDetail.getIdTC().trim())){
+                onTableTestcase.getItems().add(testCaseDetail);
+            }
         }
 
     }
@@ -368,10 +389,8 @@ public class TestCaseEditController {
         onUsecaseCombobox.setItems(FXCollections.observableArrayList("None"));
         new AutoCompleteComboBoxListener<>(onUsecaseCombobox);
         onUsecaseCombobox.getSelectionModel().selectFirst();
-        if (useCaseListDataSource.readData() != null){
-            useCaseList = useCaseListDataSource.readData();
-            useCaseCombobox();
-        }
+        useCaseCombobox();
+
         onUsecaseCombobox.setOnAction(event -> {
             String selectedItem = onUsecaseCombobox.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
@@ -404,33 +423,43 @@ public class TestCaseEditController {
 
             // อัปเดตข้อมูลใน Label
             infoDescriptField.setText(useCase.getDescription());
+            infoPreconField.setText(useCase.getPreCondition());
+            infoPostconField.setText(useCase.getPostCondition());
         }
     }
     private void clearUsecase() {
         infoDescriptField.setText("");
     }
+    private void currentNewData(){
+        String name = onTestNameField.getText();
+        String idTC = tcId;
+        String date = testDateLabel.getText();
+        String useCase = onUsecaseCombobox.getValue();
+        String description = infoDescriptField.getText();
+        String note = onTestNoteField.getText();
+        String preCon = infoPreconField.getText();
+        String post = infoPostconField.getText();
+        testCase = new TestCase(idTC, name, date, useCase, description,note,0,preCon,post);
+
+    }
+    private void objects() {
+        objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(typeTC);
+        objects.add(testCase);
+        objects.add(testCaseDetailList);
+        objects.add(type);
+    }
     @FXML
     void onEditListButton(ActionEvent event) {
-        onEditListButton.setOnMouseClicked(event1 -> {
-            onTableTestcase.requestFocus();
-        });
-        onEditListButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                onTableTestcase.requestFocus();
-
-            }
-        });
         try {
-            String name = onTestNameField.getText();
-            String idTC = tcId;
-            String date = testDateLabel.getText();
-            String useCase = onUsecaseCombobox.getValue();
-            String description = infoDescriptField.getText();
-            String note = onTestNoteField.getText();
-            testCase = new TestCase(idTC, name, date, useCase, description,note,0,"preCon","post");
+            currentNewData();
+            objects();
+            objects.add("edit");
+            objects.add(selectedItem);
             if (selectedItem != null){
-                FXRouter.popup("popup_add_testcase",testCaseDetailList,testCase,selectedItem,true);
+                FXRouter.popup("popup_add_testcase",objects,true);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -441,20 +470,13 @@ public class TestCaseEditController {
     @FXML
     void onAddButton(ActionEvent actionEvent){
         try {
-            String name = onTestNameField.getText();
-            String idTC = tcId;
-            String date = testDateLabel.getText();
-            String useCase = onUsecaseCombobox.getValue();
-            String description = infoDescriptField.getText();
-            String note = onTestNoteField.getText();
-            testCase = new TestCase(idTC, name, date, useCase, description,note,0,"preCon","post");
-
-            if (testCaseDetailList != null){
-                FXRouter.popup("popup_add_testcase",testCaseDetailList,testCase,null,true);
-            }else {
-                FXRouter.popup("popup_add_testcase",null,testCase,true);
+            currentNewData();
+            objects();
+            objects.add("new");
+            objects.add(null);
+            if (selectedItem != null){
+                FXRouter.popup("popup_add_testcase",objects,true);
             }
-
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -464,20 +486,45 @@ public class TestCaseEditController {
     }
     @FXML
     void onDeleteListButton(ActionEvent event) {
-        onDeleteListButton.setOnMouseClicked(event1 -> {
-            onTableTestcase.requestFocus();
-        });
         try {
-            String name = onTestNameField.getText();
-            String idTC = tcId;
-            String date = testDateLabel.getText();
-            String useCase = onUsecaseCombobox.getValue();
-            String description = infoDescriptField.getText();
-            String note = onTestNoteField.getText();
-            testCase = new TestCase(idTC, name, date, useCase, description,note,0,"preCon","post");
-            if (selectedItem != null){
-                FXRouter.popup("popup_delete_testcase",testCaseDetailList,testCase,selectedItem,true);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Delete Confirmation");
+            alert.setHeaderText("Are you sure you want to delete this item?");
+            alert.setContentText("Press OK to confirm, or Cancel to go back.");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                testCaseDetailList.deleteTestCase(selectedItem);
+                onTableTestcase.getItems().clear();
+                loadTable(testCaseDetailList);
             }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+    @FXML
+    void onDeleteButton(ActionEvent event) {
+        try {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Delete Confirmation");
+            alert.setHeaderText("Are you sure you want to delete this item?");
+            alert.setContentText("Press OK to confirm, or Cancel to go back.");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                testCase = testCaseList.findTCByPosition(position);
+                testCaseList.deleteTestCaseByPositionID(position);
+                testCaseDetailList.deleteTestCaseDetailByTestScriptID(testCase.getIdTC());
+                testFlowPositionList.removePositionByID(position);
+            }
+            saveProject();
+            objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add("none");
+            FXRouter.goTo("test_case", objects);
+            Node source = (Node) event.getSource();
+            Stage stage = (Stage) source.getScene().getWindow();
+            stage.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -488,22 +535,15 @@ public class TestCaseEditController {
     @FXML
     void onSubmitButton(ActionEvent event) {
         try {
-            String name = onTestNameField.getText();
-            String idTC = tcId;
-            String date = testDateLabel.getText();
-            String useCase = onUsecaseCombobox.getValue();
-            String description = infoDescriptField.getText();
-            String note = onTestNoteField.getText();
-            testCase = new TestCase(idTC, name, date, useCase, description,note,0,"preCon","post");
-
+            currentNewData();
+            objects();
             testCaseList.addOrUpdateTestCase(testCase);
 
             // Write data to respective files
-            testCaseListDataSource.writeData(testCaseList);
-            testCaseDetailListDataSource.writeData(testCaseDetailList);
+            saveProject();
             showAlert("Success", "Test case saved successfully!");
 
-            FXRouter.goTo("test_case",testCase,true);
+            FXRouter.goTo("test_case",objects);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -566,19 +606,7 @@ public class TestCaseEditController {
         }
     }
 
-    @FXML
-    void onDeleteButton(ActionEvent event) {
-        try {
-            testCaseList.deleteTestCase(testCase);
-            testCaseListDataSource.writeData(testCaseList);
-            if (testCase != null){
-                FXRouter.popup("popup_delete_testcase",null,testCase,true);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
 
-    }
     @FXML
     void onCancelButton(ActionEvent event) {
         try {

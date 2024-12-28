@@ -51,6 +51,28 @@ public class TestScriptDetailList {
             }
         }
     }
+    public String findLastID() {
+        int ID = 0;
+        for (TestScriptDetail testScriptDetail : testScriptDetailList) {
+            String[] data = testScriptDetail.getIdTSD().split("-");
+            int tcId = Integer.parseInt(data[1].trim());
+            if (tcId > ID) {
+                ID = Integer.parseInt(testScriptDetail.getIdTSD());
+            }
+        }
+        return String.format("TSD-%s",ID);
+    }
+    public int findLastPositionID() {
+        int ID = 0;
+        for (TestScriptDetail testScriptDetail : testScriptDetailList) {
+            String[] data = testScriptDetail.getIdTSD().split("-");
+            int tcId = Integer.parseInt(data[1].trim());
+            if (tcId > ID) {
+                ID = Integer.parseInt(testScriptDetail.getIdTSD());
+            }
+        }
+        return ID;
+    }
     public void clearTestScriptDetail(String ID) {
         testScriptDetail.removeIf(testScriptDetail -> testScriptDetail.getIdTSD().equals(ID));
     }

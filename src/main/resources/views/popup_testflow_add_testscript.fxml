@@ -40,7 +40,7 @@
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="onTestNo" alignment="TOP_LEFT" onAction="#onTestNo" prefHeight="30.0" prefWidth="450.0">
+                  <TextField fx:id="onTestNo" alignment="TOP_LEFT"  prefHeight="30.0" prefWidth="450.0">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -68,7 +68,7 @@
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="onInputDataCombobox" onAction="#onInputDataCombobox" prefHeight="30.0" prefWidth="450.0" />
+                  <ComboBox fx:id="onInputDataCombobox"  prefHeight="30.0" prefWidth="450.0" />
                </children>
             </HBox>
             <HBox alignment="TOP_CENTER" prefHeight="60.0" prefWidth="200.0" spacing="30.0">

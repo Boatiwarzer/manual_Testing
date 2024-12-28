@@ -12,6 +12,8 @@ import javafx.scene.layout.VBox;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.DataSource;
+import ku.cs.testTools.Services.DataSourceCSV.ConnectionListFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.TestFlowPositionListFileDataSource;
 import ku.cs.testTools.Services.DataSourceCSV.UseCaseDetailListFileDataSource;
 import ku.cs.testTools.Services.DataSourceCSV.UseCaseListFileDataSource;
 import javafx.scene.input.KeyCode;
@@ -57,67 +59,75 @@ public class UseCaseAddController {
     @FXML
     private Label testIDLabel, errorLabel;
 
-    private String projectName = "125", directory = "data", useCaseId; // directory, projectName
+    private String projectName, directory, useCaseId; // directory, projectName
     private UseCase useCase;
     private UseCase selectedUseCase;
     private UseCaseDetail selectedItem;
     private UseCaseList useCaseList = new UseCaseList();
-    private DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv"); //= new UseCaseListFileDataSource(directory, projectName + ".csv")
     private UseCaseDetail useCaseDetail;
     private UseCaseDetailList useCaseDetailList = new UseCaseDetailList();
-    private DataSource<UseCaseDetailList> useCaseDetailListDataSource = new UseCaseDetailListFileDataSource(directory, projectName + ".csv"); //= new UseCaseDetailListFileDataSource(directory, projectName + ".csv")
     private ObservableList<String> items;
     private ArrayList <String> word = new ArrayList<>();
     private boolean isGenerated = false;
+    private ArrayList<Object> objects;
+    private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
+    private ConnectionList connectionList = new ConnectionList();
+    private String typeUC;
+
     @FXML
     public void initialize() {
-//            ArrayList<Object> objects = (ArrayList<Object>) FXRouter.getData();
-//            projectName = (String) objects.get(0);
-//            directory = (String) objects.get(1);
-//            String useCaseID = (String) objects.get(2);
-
-        // อ่านข้อมูลจากไฟล์และกำหนดค่าให้กับ useCaseList
-        useCaseListDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv"); //directory, projectName + ".csv"
-        useCaseList = useCaseListDataSource.readData();
-
-        useCaseDetailListDataSource = new UseCaseDetailListFileDataSource(directory, projectName + ".csv");
-        useCaseDetailList = useCaseDetailListDataSource.readData();
-
-        clearInfo();
-        selectedComboBox();
-        selectedListView();
         {
             if (FXRouter.getData() != null) {
-                useCaseDetailList = (UseCaseDetailList) FXRouter.getData();
-                useCase = (UseCase) FXRouter.getData2();
+                ArrayList<Object> objects = (ArrayList) FXRouter.getData();
+                projectName = (String) objects.get(0);
+                directory = (String) objects.get(1);
+                typeUC = (String) objects.get(2);
+                loadProject();
 
+                clearInfo();
+                selectedComboBox();
                 selectedListView();
-                setData();
-                if (useCaseListDataSource.readData() != null && useCaseDetailListDataSource.readData() != null){
-                    UseCaseList useCaseList = useCaseListDataSource.readData();
-                    loadListView(useCaseList);
 
-                    for (UseCase useCase : useCaseList.getUseCaseList()) {
-                        word.add(useCase.getUseCaseName());
-                    }
-                    searchSet();
-                }
-            }
-            else{
-                System.out.println(useCaseId);
-                if (useCaseListDataSource.readData() != null && useCaseDetailListDataSource.readData() != null){
-                    UseCaseList useCaseList = useCaseListDataSource.readData();
-                    loadListView(useCaseList);
-
-                    for (UseCase useCase : useCaseList.getUseCaseList()) {
-                        word.add(useCase.getUseCaseName());
-                    }
-                    searchSet();
+                if (objects.get(3) != null){
+                    useCase = (UseCase) objects.get(3);
+                    useCaseDetailList = (UseCaseDetailList) objects.get(4);
+                    setData();
                 }
 
+                loadListView(useCaseList);
+
+                for (UseCase useCase : useCaseList.getUseCaseList()) {
+                    word.add(useCase.getUseCaseName());
+                }
+                searchSet();
+
             }
+
         }
         System.out.println(useCaseDetailList);
+    }
+    private void loadProject() {
+        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
+        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+        DataSource<UseCaseDetailList> useCaseDetailListFileDataSource = new UseCaseDetailListFileDataSource(directory,projectName+".csv");
+        useCaseDetailList = useCaseDetailListFileDataSource.readData();
+        testFlowPositionList = testFlowPositionListDataSource.readData();
+        connectionList = connectionListDataSource.readData();
+        useCaseList = useCaseListDataSource.readData();
+
+    }
+    private void saveProject() {
+        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
+        DataSource<UseCaseDetailList> useCaseDetailListFileDataSource = new UseCaseDetailListFileDataSource(directory,projectName+".csv");
+
+        testFlowPositionListDataSource.writeData(testFlowPositionList);
+        connectionListDataSource.writeData(connectionList);
+        useCaseListDataSource.writeData(useCaseList);
+        useCaseDetailListFileDataSource.writeData(useCaseDetailList);
+
     }
 
 
@@ -161,10 +171,7 @@ public class UseCaseAddController {
         new AutoCompleteComboBoxListener<>(preConListComboBox);
         TextField editorPre = preConListComboBox.getEditor();
         preConListComboBox.getSelectionModel().selectFirst();
-        if (useCaseListDataSource.readData() != null){
-            useCaseList= useCaseListDataSource.readData();
-            preConCombobox();
-        }
+        preConCombobox();
         preConListComboBox.setOnAction(event -> {
             String selectedItem = preConListComboBox.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
@@ -185,10 +192,7 @@ public class UseCaseAddController {
 
         new AutoCompleteComboBoxListener<>(postConListComboBox);
         TextField editorPost = postConListComboBox.getEditor();
-        if (useCaseListDataSource.readData() != null){
-            useCaseList= useCaseListDataSource.readData();
-            postConCombobox();
-        }
+        postConCombobox();
         postConListComboBox.setOnAction(event1 -> {
             String selectedItem = postConListComboBox.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
@@ -445,7 +449,7 @@ public class UseCaseAddController {
                     );
 
                     useCaseList.addUseCase(newUseCase);
-                    useCaseListDataSource.writeData(useCaseList);
+                    saveProject();
                     errorLabel.setText("Use case added successfully!");
                 } else {
                     errorLabel.setText("Use case name already exists.");
@@ -479,7 +483,7 @@ public class UseCaseAddController {
                 }
             }
 
-            useCaseDetailListDataSource.writeData(useCaseDetailList);
+            saveProject();
             isGenerated = false;
             showAlert("Success", "Test case saved successfully!");
 

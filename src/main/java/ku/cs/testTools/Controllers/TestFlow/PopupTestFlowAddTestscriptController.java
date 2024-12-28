@@ -43,7 +43,6 @@ public class PopupTestFlowAddTestscriptController {
     private Label testScriptNameLabel;
 
     private String projectName, directory;
-    private TestScriptList testScriptList = new TestScriptList();
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
     private TestScript testScript;
     private TestScriptDetail testScriptDetail = new TestScriptDetail();
@@ -53,13 +52,14 @@ public class PopupTestFlowAddTestscriptController {
     private String date;
     private int position;
     private String type;
+    private ArrayList<Object> objects;
     @FXML
     void initialize() {
         clearInfo();
         randomId();
         System.out.println(testScriptDetail);
         if (FXRouter.getData() != null) {
-            ArrayList<Object> objects = (ArrayList) FXRouter.getData();
+            objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
             position = (int) objects.get(2);
@@ -96,7 +96,7 @@ public class PopupTestFlowAddTestscriptController {
 
     @FXML
     void onCancelButton(ActionEvent event) {
-        ArrayList<Object> objects = (ArrayList) FXRouter.getData();
+        objects = new ArrayList<>();
         projectName = (String) objects.get(0);
         directory = (String) objects.get(1);
         position = (int) objects.get(2);
@@ -108,37 +108,35 @@ public class PopupTestFlowAddTestscriptController {
         event.consume();
         System.out.println(testScriptDetailList);
     }
-
+    private void currentNewData(){
+        String TsNo = onTestNo.getText();
+        String TsStep = onTeststepsArea.getText().toLowerCase();
+        String Input = onInputDataCombobox.getValue();
+        String Expect = onExpectedArea.getText();
+        setDateTSD();
+        testScriptDetail = new TestScriptDetail(id,TsNo, TsStep, Input, Expect,idTS,date);
+        testScriptDetailList.addOrUpdateTestScriptDetail(testScriptDetail);
+    }
+    private void objects() {
+        objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(position);
+        objects.add(testScript);
+        objects.add(testScriptDetailList);
+        objects.add(type);
+    }
     @FXML
     void onConfirmButton(ActionEvent event) {
 
         try {
-            String TsNo = onTestNo.getText();
-            String TsStep = onTeststepsArea.getText().toLowerCase();
-            String Input = onInputDataCombobox.getValue();
-            String Expect = onExpectedArea.getText();
-            setDateTSD();
-            testScriptDetail = new TestScriptDetail(id,TsNo, TsStep, Input, Expect,idTS,date);
-            testScriptDetailList.addOrUpdateTestScriptDetail(testScriptDetail);
-            ArrayList<Object> objects = new ArrayList<>();
-            objects.add(projectName);
-            objects.add(directory);
-            objects.add(position);
-            objects.add(testScript);
-            objects.add(testScriptDetailList);
-            objects.add(type);
+            currentNewData();
+            objects();
             FXRouter.newPopup("popup_info_testscript",objects,true);
             Node source = (Node) event.getSource();
             Stage stage = (Stage) source.getScene().getWindow();
             stage.close();
             System.out.println(testScriptDetailList);
-//        } catch (IOException e) {
-//            System.err.println("ไปที่หน้า home ไม่ได้");
-//            System.err.println("ให้ตรวจสอบการกำหนด route");
-//        }
-//        }else{
-//            errorLabel.setText("Username is Available");
-//
        } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -167,6 +165,7 @@ public class PopupTestFlowAddTestscriptController {
         this.id = String.format("TSD-%s", random1);
     }
     private void selectedComboBox(){
+        onInputDataCombobox.setItems(FXCollections.observableArrayList("None"));
         inputCombobox();
         new AutoCompleteComboBoxListener<>(onInputDataCombobox);
         onInputDataCombobox.setOnAction(event -> {
@@ -177,12 +176,6 @@ public class PopupTestFlowAddTestscriptController {
             }
 
         });
-
-//        for (Equipment equipment : equipmentList.getEquipmentList()){
-//            if (!categoryBox.getItems().contains(equipment.getType_equipment())) {
-//                categoryBox.getItems().add(equipment.getType_equipment());
-//            }
-//        }
     }
 
     private void inputCombobox() {
@@ -193,16 +186,5 @@ public class PopupTestFlowAddTestscriptController {
 
     }
 
-
-
-    @FXML
-    void onInputDataCombobox(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onTestNo(ActionEvent event) {
-
-    }
 
 }

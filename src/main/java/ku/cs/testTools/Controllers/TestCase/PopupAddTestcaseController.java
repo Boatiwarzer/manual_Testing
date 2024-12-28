@@ -16,6 +16,7 @@ import ku.cs.testTools.Services.DataSourceCSV.TestCaseFileDataSource;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public class PopupAddTestcaseController {
 
@@ -47,27 +48,31 @@ public class PopupAddTestcaseController {
     private String id;
     private String idTC;
     private String dateTCD;
-    private String projectName1 = "uc", projectName = "125", directory = "data";
-
-    private final DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory,projectName + ".csv");
-    private final DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
+    private String projectName , directory;
+    private String type;
+    private String typeTC;
+    private ArrayList<Object> objects;
 
     @FXML
     void initialize() {
-        clearInfo();
-        randomId();
-        setDateTCD();
-        System.out.println(FXRouter.getData3());
-        System.out.println(FXRouter.getData2());
         if (FXRouter.getData() != null) {
-            testCaseDetailList = (TestCaseDetailList) FXRouter.getData();
-            testCase = (TestCase) FXRouter.getData2();
+            objects = (ArrayList) FXRouter.getData();
+            projectName = (String) objects.get(0);
+            directory = (String) objects.get(1);
+            typeTC = (String) objects.get(2);
+            testCase = (TestCase) objects.get(3);
+            testCaseDetailList = (TestCaseDetailList) objects.get(4);
             idTC = testCase.getIdTC();
-            if (FXRouter.getData3() != null){
-                testCaseDetail = (TestCaseDetail) FXRouter.getData3();
-                testCaseDetailList.findTCById(testCaseDetail.getIdTCD());
+            type = (String) objects.get(5);
+            System.out.println(type);
+            System.out.println(testCaseDetailList);
+            if (objects.get(6) != null && type.equals("edit")){
+                testCaseDetail = (TestCaseDetail) objects.get(6);
+                testCaseDetail = testCaseDetailList.findTCById(testCaseDetail.getIdTCD());
                 id = testCaseDetail.getIdTCD();
                 setTextEdit();
+            }else {
+                randomId();
             }
 
 
@@ -93,17 +98,31 @@ public class PopupAddTestcaseController {
         onNameVariablesField.setText("");
         onTypeVariableField.setText("");
     }
-
+    private void objects() {
+        objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(typeTC);
+        objects.add(testCase);
+        objects.add(testCaseDetailList);
+        objects.add(type);
+    }
+    private void route(ActionEvent event, ArrayList<Object> objects) throws IOException {
+        if (typeTC.equals("editTC")){
+            FXRouter.goTo("test_case_edit", objects);
+        }else {
+            FXRouter.goTo("test_case_add", objects);
+        }
+        Node source = (Node) event.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
+    }
     @FXML
     void onCancelButton(ActionEvent event) {
         try {
-            testCaseDetail = null;
-            FXRouter.goTo("test_case_add", testCaseDetailList, testCase);
-            System.out.println(testCaseDetail);
-            Node source = (Node) event.getSource();
-            Stage stage = (Stage) source.getScene().getWindow();
-            stage.close();
-            System.out.println(testCaseDetailList);
+            objects();
+            clearInfo();
+            route(event, objects);
         } catch (IOException e) {
             System.err.println("ไปที่หน้า home ไม่ได้");
             System.err.println("ให้ตรวจสอบการกำหนด route");
@@ -112,37 +131,18 @@ public class PopupAddTestcaseController {
 
     @FXML
     void onConfirmButton(ActionEvent event) {
-        String TsNo = onTestNo.getText();
-        String Name = onNameVariablesField.getText();
-        String Type = onTypeVariableField.getText();
-        setDateTCD();
-        //boolean signup = isAvailable(username, userTextField);
-//        if(userTextField.getText().isEmpty() && passwordTextField.getText().isEmpty() && passwordTextField.getText().isEmpty() && conPasswordTextField.getText().isEmpty()){
-//            errorLabel.setText("Please enter data");
-//        }if(!password1.equals(password2)){
-//            errorLabel.setText("Password not correct");
-//        } if(signup){
-
-        testCaseDetail = new TestCaseDetail(id,TsNo, Name, Type, dateTCD,idTC);
-        testCaseDetailList.addOrUpdateTestCase(testCaseDetail);
         try {
-            testCaseDetail = null;
-            clearInfo();
-            FXRouter.goTo("test_case_add",testCaseDetailList,testCase);
-            System.out.println(testCaseDetail);
-            Node source = (Node) event.getSource();
-            Stage stage = (Stage) source.getScene().getWindow();
-            stage.close();
-            System.out.println(testCaseDetailList);
+            String TsNo = onTestNo.getText();
+            String Name = onNameVariablesField.getText();
+            String Type = onTypeVariableField.getText();
+            setDateTCD();
+            testCaseDetail = new TestCaseDetail(id,TsNo, Name, Type, dateTCD,idTC);
+            testCaseDetailList.addOrUpdateTestCase(testCaseDetail);
+            route(event,objects);
         } catch (IOException e) {
             System.err.println("ไปที่หน้า home ไม่ได้");
             System.err.println("ให้ตรวจสอบการกำหนด route");
         }
-//        }else{
-//            errorLabel.setText("Username is Available");
-//
-//        }
-
     }
 
     private void setDateTCD() {
@@ -151,19 +151,5 @@ public class PopupAddTestcaseController {
         dateTCD = now.format(dtf);
     }
 
-    @FXML
-    void onNameVariablesField(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onTestNo(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onTypeVariableField(ActionEvent event) {
-
-    }
 
 }

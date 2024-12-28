@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
@@ -65,12 +66,7 @@ public class PopupInfoTestcaseController {
 
     @FXML
     private Label testIDLabel;
-    private String projectName1 = "uc", projectName = "125", directory = "data";
-//    private TestScriptList testScriptList = new TestScriptList();
-//    private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
-//    private TestScript testScript = new TestScript();
-//    private TestScriptDetail testScriptDetail;
-    private TestCaseDetail testCaseDetail;
+    private String projectName, directory;
     private TestCaseDetail selectedItem;
     private TestFlowPositionList testFlowPositionList;
     private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
@@ -80,67 +76,47 @@ public class PopupInfoTestcaseController {
     private ConnectionList connectionList;
 
     private TestCase testCase;
-    private TestCase selectedTestCase;
-    private TestCaseList testCaseListTemp;
-    private String id;
     private int position;
     private String date;
     private String tsId;
-//    private TestScriptDetail selectedItem;
-//    private TestScript selectedTestScript;
     private TestCaseList testCaseList = new TestCaseList();
     private UseCaseList useCaseList = new UseCaseList();
     private String type = "new";
 
-//    private TestScriptDetailList testScriptDetailListTemp = new TestScriptDetailList();
-//    DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-//    DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
 
     @FXML
     void initialize() {
-        {
-            if (FXRouter.getData() != null) {
-                ArrayList<Object> objects = (ArrayList) FXRouter.getData();
-                projectName = (String) objects.get(0);
-                directory = (String) objects.get(1);
-                position = (int) objects.get(2);
-                onTableTestCase.isFocused();
-                selectedTCD();
-                loadProject();
-                setDate();
-                selectedComboBox();
-                setButtonVisible();
-                if (objects.get(3) != null){
-                    testCase = (TestCase) objects.get(3);
-                    testCaseDetailList = (TestCaseDetailList) objects.get(4);
-                    type = (String) objects.get(5);
-                }else {
-                    testCase = testCaseList.findByPositionId(position);
-                }
-                setDataTC();
-                if(type.equals("new")){
-                    for (TestCaseDetail testCaseDetail : testCaseDetailListTemp.getTestCaseDetailList()) {
-                        testCaseDetailList.addOrUpdateTestCase(testCaseDetail);
 
-                    }
+        if (FXRouter.getData() != null) {
+            ArrayList<Object> objects = (ArrayList) FXRouter.getData();
+            projectName = (String) objects.get(0);
+            directory = (String) objects.get(1);
+            position = (int) objects.get(2);
+            onTableTestCase.isFocused();
+            selectedTCD();
+            loadProject();
+            setDate();
+            selectedComboBox();
+            setButtonVisible();
+            if (objects.get(3) != null){
+                testCase = (TestCase) objects.get(3);
+                testCaseDetailList = (TestCaseDetailList) objects.get(4);
+                type = (String) objects.get(5);
+            }else {
+                testCase = testCaseList.findByPositionId(position);
+            }
+            setDataTC();
+            if(type.equals("new")){
+                for (TestCaseDetail testCaseDetail : testCaseDetailListTemp.getTestCaseDetailList()) {
+                    testCaseDetailList.addOrUpdateTestCase(testCaseDetail);
                 }
+            }
 
-                if (testCaseDetailList != null){
-                    loadTable(testCaseDetailList);
-                }
-
+            if (testCaseDetailList != null){
+                loadTable(testCaseDetailList);
+            }
 
             }
-            else{
-                setTable();
-                System.out.println(tsId);
-                selectedTCD();
-
-
-
-            }
-        }
-        System.out.println(testCaseDetailList);
 
     }
 
@@ -204,6 +180,24 @@ public class PopupInfoTestcaseController {
             new TableColumns(col);
             onTableTestCase.getColumns().add(col);
             index++;
+            col.setCellFactory(tc -> {
+                TableCell<TestCaseDetail, String> cell = new TableCell<>() {
+                    private final Text text = new Text();
+
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            setGraphic(null);
+                        } else {
+                            text.setText(item);
+                            text.wrappingWidthProperty().bind(tc.widthProperty().subtract(10));
+                            setGraphic(text);
+                        }
+                    }
+                };
+                return cell;
+            });
         }
 
         //Add items to the table

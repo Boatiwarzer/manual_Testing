@@ -35,34 +35,24 @@ public class TestFlowController {
     public ImageView blackCircleImageView;
     @FXML
     private TitledPane componentTitlePane;
-
     @FXML
     private TitledPane designTitlePane;
-
     @FXML
     private TitledPane noteTitlePane;
-
     @FXML
     private Hyperlink onClickTestcase;
-
     @FXML
     private Hyperlink onClickTestflow;
-
     @FXML
     private Hyperlink onClickTestresult;
-
     @FXML
     private Hyperlink onClickTestscript;
-
     @FXML
     private Hyperlink onClickUsecase;
-
     @FXML
     private AnchorPane onComponentArea;
-
     @FXML
     private Pane onDesignArea;
-
     @FXML
     private TextArea onNoteTextArea;
     @FXML
@@ -75,9 +65,7 @@ public class TestFlowController {
     private ImageView lineImageView;
     @FXML
     private ImageView arrowImageView;
-
     private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
-
     private double startX, startY;
     private TestScriptList testScriptList = new TestScriptList();
     private TestScriptDetailList testScriptDetailList;
@@ -85,20 +73,16 @@ public class TestFlowController {
     private TestScript testScript = new TestScript();
     private TestCaseList testCaseList = new TestCaseList();
     private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
-    private TestCaseDetail testCaseDetail;
-    private TestCase testCase = new TestCase();
     private ConnectionList connectionList = new ConnectionList();
     private Connection connection = new Connection();
-    private UseCaseList useCaseList = new UseCaseList();
-
     private int id;
-
+    private ArrayList<Object> objects;
     @FXML
     void initialize() {
         onDesignArea.getChildren().clear();
 
         if (FXRouter.getData() != null){
-            ArrayList<Object> objects = (ArrayList) FXRouter.getData();
+            objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
             String type =  (String) objects.get(2);
