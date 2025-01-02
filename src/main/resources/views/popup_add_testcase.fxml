@@ -39,7 +39,7 @@
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="onTestNo" alignment="TOP_LEFT" onAction="#onTestNo" prefHeight="30.0" prefWidth="450.0">
+                  <TextField fx:id="onTestNo" alignment="TOP_LEFT" prefHeight="30.0" prefWidth="450.0">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -53,7 +53,7 @@
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="onNameVariablesField" onAction="#onNameVariablesField" prefHeight="30.0" prefWidth="450.0">
+                  <TextField fx:id="onNameVariablesField"  prefHeight="30.0" prefWidth="450.0">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -67,7 +67,7 @@
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="onTypeVariableField" onAction="#onTypeVariableField" prefHeight="30.0" prefWidth="450.0">
+                  <TextField fx:id="onTypeVariableField"  prefHeight="30.0" prefWidth="450.0">
                      <font>
                         <Font size="14.0" />
                      </font>

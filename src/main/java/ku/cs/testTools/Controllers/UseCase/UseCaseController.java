@@ -9,8 +9,7 @@ import javafx.scene.layout.VBox;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.DataSource;
-import ku.cs.testTools.Services.DataSourceCSV.UseCaseDetailListFileDataSource;
-import ku.cs.testTools.Services.DataSourceCSV.UseCaseListFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.*;
 import ku.cs.testTools.Services.UseCaseComparable;
 import org.controlsfx.control.textfield.TextFields;
 
@@ -57,18 +56,21 @@ public class UseCaseController {
     private UseCaseDetailList useCaseDetailList = new UseCaseDetailList();
     private DataSource<UseCaseDetailList> useCaseDetailListDataSource = new UseCaseDetailListFileDataSource(directory, projectName + ".csv"); //= new UseCaseDetailListFileDataSource(directory, projectName + ".csv")
     private ArrayList <String> word = new ArrayList<>();
+    private ArrayList<Object> objects;
+    private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
+    private ConnectionList connectionList = new ConnectionList();
+
     @FXML
     void initialize() {
-        useCaseListDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv"); //directory, projectName + ".csv"
-        useCaseList = useCaseListDataSource.readData();
-        useCaseDetailListDataSource = new UseCaseDetailListFileDataSource(directory, projectName + ".csv");
-        useCaseDetailList = useCaseDetailListDataSource.readData();
-
         clearInfo();
         if (FXRouter.getData() != null) {
-            useCaseList = useCaseListDataSource.readData();
-            useCaseDetailList = useCaseDetailListDataSource.readData();
-            useCase = (UseCase) FXRouter.getData();
+            ArrayList<Object> objects = (ArrayList) FXRouter.getData();
+            projectName = (String) objects.get(0);
+            directory = (String) objects.get(1);
+            if (objects.get(2) != null){
+                useCase = (UseCase) objects.get(2);
+            }
+            loadProject();
             loadListView(useCaseList);
             selected();
             for (UseCase useCase : useCaseList.getUseCaseList()) {
@@ -76,19 +78,15 @@ public class UseCaseController {
             }
             searchSet();
 
-        } else {
-            if (useCaseListDataSource.readData() != null && useCaseDetailListDataSource.readData() != null){
-                useCaseList = useCaseListDataSource.readData();
-                useCaseDetailList = useCaseDetailListDataSource.readData();
-                loadListView(useCaseList);
-                selected();
-                for (UseCase useCase : useCaseList.getUseCaseList()) {
-                    word.add(useCase.getUseCaseName());
-                }
-                searchSet();
+        }else {
+            loadProject();
+            loadListView(useCaseList);
+            selected();
+            for (UseCase useCase : useCaseList.getUseCaseList()) {
+                word.add(useCase.getUseCaseName());
             }
+            searchSet();
         }
-
         useCase = useCaseList.findByUseCaseId(testIDLabel.getText());
         System.out.println(useCaseList.findByUseCaseId(testIDLabel.getText()));
 
@@ -129,6 +127,29 @@ public class UseCaseController {
 //                onSearchList.getItems().addAll(searchList(onSearchField.getText(), useCaseList.getUseCaseList()));
 //            }
 //        });
+    }
+    private void loadProject() {
+        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
+        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+        DataSource<UseCaseDetailList> useCaseDetailListFileDataSource = new UseCaseDetailListFileDataSource(directory,projectName+".csv");
+        useCaseList = useCaseListDataSource.readData();
+        useCaseDetailList = useCaseDetailListFileDataSource.readData();
+        testFlowPositionList = testFlowPositionListDataSource.readData();
+        connectionList = connectionListDataSource.readData();
+
+    }
+    private void saveProject() {
+        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
+        DataSource<UseCaseDetailList> useCaseDetailListFileDataSource = new UseCaseDetailListFileDataSource(directory,projectName+".csv");
+
+        testFlowPositionListDataSource.writeData(testFlowPositionList);
+        connectionListDataSource.writeData(connectionList);
+        useCaseListDataSource.writeData(useCaseList);
+        useCaseDetailListFileDataSource.writeData(useCaseDetailList);
+
     }
 
 
@@ -309,7 +330,12 @@ public class UseCaseController {
     @FXML
     void onCreateButton(ActionEvent event) {
         try {
-            FXRouter.goTo("use_case_add");
+            objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add("newUC");
+            objects.add(null);
+            FXRouter.goTo("use_case_add",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -318,8 +344,14 @@ public class UseCaseController {
     @FXML
     void onEditButton(ActionEvent event) {
         try {
+            objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add("editUC");
+            objects.add(selectedUseCase);
+            objects.add(useCaseDetailList);
             if (selectedUseCase != null) {
-                FXRouter.goTo("use_case_edit", selectedUseCase);
+                FXRouter.goTo("use_case_edit", objects);
             } else {
                 System.out.println("No selected use case to edit.");
             }

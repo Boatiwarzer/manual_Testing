@@ -135,7 +135,7 @@ public class LabelPageController {
         if (type.equals("Rectangle-curve")){
             randomIdTS();
             randomId();
-            testScript = new TestScript(objectID,label,null,null,null,null,null,null,note,id);
+            testScript = new TestScript(objectID,label,"-","-","-","-","-","-","-",id);
             testScriptList.addOrUpdateTestScript(testScript);
             testFlowPosition = new TestFlowPosition(id,width,height,layoutX,layoutY,0,"testscript");
             testFlowPositionList.addPosition(testFlowPosition);
@@ -145,7 +145,7 @@ public class LabelPageController {
         }else if (type.equals("Rectangle")){
             randomIdTC();
             randomId();
-            testCase = new TestCase(objectID,label,null,null,null,note,id,null,null);
+            testCase = new TestCase(objectID,label,"-","-","-","-",id,"-","-");
             testCaseList.addOrUpdateTestCase(testCase);
             testFlowPosition = new TestFlowPosition(id,width,height,layoutX,layoutY,0,"testcase");
             testFlowPositionList.addPosition(testFlowPosition);

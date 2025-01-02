@@ -5,17 +5,17 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
-import ku.cs.testTools.Services.DataSourceCSV.TestCaseFileDataSource;
-import ku.cs.testTools.Services.DataSourceCSV.TestScriptDetailFIleDataSource;
-import ku.cs.testTools.Services.DataSourceCSV.TestScriptFileDataSource;
-import ku.cs.testTools.Services.DataSourceCSV.UseCaseListFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.*;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.IOException;
@@ -97,79 +97,100 @@ public class TestScriptEditController {
     private String projectName1 = "uc", projectName = "125", directory = "data";
     private TestScriptList testScriptList = new TestScriptList();
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
-    private TestScriptDetailList testScriptDetailListTemp = new TestScriptDetailList();
     private TestScriptDetail selectedItem;
     private TestScript testScript;
     private TestScript selectedTestScript;
     private TestCaseList testCaseList = new TestCaseList();
     private UseCaseList useCaseList = new UseCaseList();
-    private static int idCounter = 1; // Counter for sequential IDs
-    private static final int MAX_ID = 999;
+    private TestScriptDetail testScriptDetail = new TestScriptDetail();
+    private int position = 0;
+    private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
+    private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
+    private ConnectionList connectionList;
     private ArrayList <String> word = new ArrayList<>();
-    // Upper limit for IDs
-    private static Set<String> usedIds = new HashSet<>(); // Set to store used IDs
-    private final DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-    private final DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-    private final DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
-    private final DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName1+".csv");
+    private String type;
+    private TestScriptDetailList testScriptDetailListTemp;
+    private String typeTS;
+    private ArrayList<Object> objects;
 
     @FXML
     void initialize() {
         setDate();
         clearInfo();
+        loadProject();
         selectedComboBox();
         setButtonVisible();
-        {
-            if (FXRouter.getData() != null) {
-                onTableTestscript.isFocused();
-                testScript = (TestScript) FXRouter.getData();
-                selectedTSD();
-                selectedListView();
-                setDataTS();
-                if (testScriptListDataSource.readData() != null && testScriptDetailListDataSource.readData() != null){
-                    TestScriptList testScriptListTemp = testScriptListDataSource.readData();
-                    testScriptDetailListTemp = testScriptDetailListDataSource.readData();
-                    for (TestScriptDetail testScriptDetail : testScriptDetailListTemp.getTestScriptDetailList()) {
-                        if (testScript.getIdTS().trim().equals(testScriptDetail.getIdTS().trim())){
-                            testScriptDetailList.addOrUpdateTestScriptDetail(testScriptDetail);
-                        }
-                    }
-                    loadTable(testScriptDetailList);
-                    loadListView(testScriptListTemp);
-                    for (TestScript testScript : testScriptListTemp.getTestScriptList()) {
-                        word.add(testScript.getNameTS());
-                    }
-                    searchSet();
-                }
-            }
-            else{
-                setTable();
-                randomId();
-                System.out.println(tsId);
-                if (testScriptListDataSource.readData() != null && testScriptDetailListDataSource.readData() != null){
-                    TestScriptList testScriptListTemp = testScriptListDataSource.readData();
-                    loadListView(testScriptListTemp);
-                    selectedTSD();
-                    for (TestScript testScript : testScriptListTemp.getTestScriptList()) {
-                        word.add(testScript.getNameTS());
-                    }
-                    searchSet();
-                }
+        if (FXRouter.getData() != null) {
+            objects = (ArrayList) FXRouter.getData();
+            projectName = (String) objects.get(0);
+            directory = (String) objects.get(1);
+            typeTS = (String) objects.get(2);
+            onTableTestscript.isFocused();
+            selectedTSD();
+            selectedListView();
+            if (objects.get(3) != null){
+                testScript = (TestScript) objects.get(3);
+                testScriptDetailList = (TestScriptDetailList) objects.get(4);
+                type = (String) objects.get(5);
 
             }
+            setDataTS();
+            if (typeTS.equals("editTS") && type.equals("new")){
+                for (TestScriptDetail testScriptDetail : testScriptDetailListTemp.getTestScriptDetailList()) {
+                    testScriptDetailList.addOrUpdateTestScriptDetail(testScriptDetail);
+                }
+            }
+            loadTable(testScriptDetailList);
+            loadListView(testScriptList);
+            for (TestScript testScript : testScriptList.getTestScriptList()) {
+                word.add(testScript.getNameTS());
+            }
+            searchSet();
+
         }
-        System.out.println(testScriptDetailList);
+
+    }
+
+    private void loadProject() {
+        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
+        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
+        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+
+        testScriptList = testScriptListDataSource.readData();
+        testScriptDetailListTemp = testScriptDetailListDataSource.readData();
+        testCaseList = testCaseListDataSource.readData();
+        testCaseDetailList = testCaseDetailListDataSource.readData();
+        testFlowPositionList = testFlowPositionListDataSource.readData();
+        connectionList = connectionListDataSource.readData();
+        useCaseList = useCaseListDataSource.readData();
+
+    }
+    private void saveProject() {
+        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
+        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
+        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+        testFlowPositionListDataSource.writeData(testFlowPositionList);
+        testScriptListDataSource.writeData(testScriptList);
+        testScriptDetailListDataSource.writeData(testScriptDetailList);
+        testCaseListDataSource.writeData(testCaseList);
+        testCaseDetailListDataSource.writeData(testCaseDetailList);
+        connectionListDataSource.writeData(connectionList);
+        //useCaseListDataSource.writeData(useCaseList);
 
     }
     private void selectedComboBox() {
         onTestcaseCombobox.setItems(FXCollections.observableArrayList("None"));
         new AutoCompleteComboBoxListener<>(onTestcaseCombobox);
         onTestcaseCombobox.getSelectionModel().selectFirst();
-        if (testCaseListDataSource.readData() != null){
-            testCaseList = testCaseListDataSource.readData();
-            testCaseCombobox();
-
-        }
+        testCaseCombobox();
         onTestcaseCombobox.setOnAction(event -> {
             String selectedItem = onTestcaseCombobox.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
@@ -183,10 +204,7 @@ public class TestScriptEditController {
         onUsecaseCombobox.setItems(FXCollections.observableArrayList("None"));
         new AutoCompleteComboBoxListener<>(onUsecaseCombobox);
         onUsecaseCombobox.getSelectionModel().selectFirst();
-        if (useCaseListDataSource.readData() != null){
-            useCaseList= useCaseListDataSource.readData();
-            useCaseCombobox();
-        }
+        useCaseCombobox();
         onUsecaseCombobox.setOnAction(event -> {
             String selectedItem = onUsecaseCombobox.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
@@ -226,6 +244,7 @@ public class TestScriptEditController {
             // อัปเดตข้อมูลใน Label
             infoPreconLabel.setText(useCase.getPreCondition());
             infoDescriptLabel.setText(useCase.getDescription());
+            infoPostconLabel.setText(useCase.getPostCondition());
         }
     }
 
@@ -371,6 +390,24 @@ public class TestScriptEditController {
             new TableColumns(col);
             onTableTestscript.getColumns().add(col);
             index++;
+            col.setCellFactory(tc -> {
+                TableCell<TestScriptDetail, String> cell = new TableCell<>() {
+                    private final Text text = new Text();
+
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            setGraphic(null);
+                        } else {
+                            text.setText(item);
+                            text.wrappingWidthProperty().bind(tc.widthProperty().subtract(10));
+                            setGraphic(text);
+                        }
+                    }
+                };
+                return cell;
+            });
         }
 
         //Add items to the table
@@ -385,7 +422,6 @@ public class TestScriptEditController {
     }
 
     public void setTable() {
-        testScriptDetailList = new TestScriptDetailList();
         onTableTestscript.getColumns().clear();
         onTableTestscript.getItems().clear();
         onTableTestscript.refresh();
@@ -432,28 +468,6 @@ public class TestScriptEditController {
         this.tsId = String.format("TS-%s", random1+random2);
 
     }
-    public void generateSequentialId() {
-        // Loop until we find an unused ID
-        while (idCounter <= MAX_ID) {
-            // Generate ID with leading zeros, e.g., "001", "002", etc.
-            String sequentialId = String.format("TS-%03d", idCounter);
-
-            // Check if ID is already used
-            if (!usedIds.contains(sequentialId)) {
-                usedIds.add(sequentialId); // Add ID to the set of used IDs
-                this.tsId = sequentialId; // Assign to the object's tsId field
-                idCounter++; // Increment the counter for the next ID
-                break; // Exit loop once a valid ID is found
-            }
-
-            idCounter++; // Increment the counter if ID is already used
-        }
-
-        // Reset counter if we reach the max ID to prevent overflow (optional)
-        if (idCounter > MAX_ID) {
-            idCounter = 1; // Reset the counter back to 1 if needed
-        }
-    }
     void selectedTSD() {
         onTableTestscript.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == null) {
@@ -486,112 +500,7 @@ public class TestScriptEditController {
         });
     }
 
-
-
-    @FXML
-    void onAddButton(ActionEvent event) {
-
-        try {
-            String name = onTestNameField.getText();
-            String idTS = tsId;
-            String date = testDateLabel.getText();
-            String useCase = onUsecaseCombobox.getValue();
-            String description = infoDescriptLabel.getText();
-            String tc = onTestcaseCombobox.getValue();
-            String preCon = infoPreconLabel.getText();
-            String note = onTestNoteField.getText();
-            String post = infoPostconLabel.getText();
-
-            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note,post,0);
-
-            if (testScriptDetailList != null){
-                FXRouter.popup("popup_add_testscript",testScriptDetailList,testScript,null,true);
-            }else {
-                FXRouter.popup("popup_add_testscript",null,testScript,true);
-            }
-
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    @FXML
-    void onEditListButton(ActionEvent event)  {
-        onEditListButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                // ทำการแก้ไข
-                // ...
-
-                // ขอ focus กลับไปที่ TableView
-                onTableTestscript.requestFocus();
-            }
-        });
-        onEditListButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                onTableTestscript.requestFocus();
-
-            }
-        });
-        try {
-            String name = onTestNameField.getText();
-            String idTS = tsId;
-            String date = testDateLabel.getText();
-            String useCase = onUsecaseCombobox.getValue();
-            String description = infoDescriptLabel.getText();
-            String tc = onTestcaseCombobox.getValue();
-            String preCon = infoPreconLabel.getText();
-            String note = onTestNoteField.getText();
-            String post = infoPostconLabel.getText();
-            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note,post,0);
-            if (selectedItem != null){
-                FXRouter.popup("popup_add_testscript",testScriptDetailList,testScript,selectedItem,true);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-    @FXML
-    void onDeleteListButton(ActionEvent event) {
-        onDeleteListButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                // ทำการลบ
-                // ...
-
-                // ขอ focus กลับไปที่ TableView
-                onTableTestscript.requestFocus();
-            }
-        });
-        try {
-            onTableTestscript.requestFocus();
-            String name = onTestNameField.getText();
-            String idTS = tsId;
-            String date = testDateLabel.getText();
-            String useCase = onUsecaseCombobox.getValue();
-            String description = infoDescriptLabel.getText();
-            String tc = onTestcaseCombobox.getValue();
-            String preCon = infoPreconLabel.getText();
-            String note = onTestNoteField.getText();
-            String post = infoPostconLabel.getText();
-            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note,post,0);
-            if (selectedItem != null){
-                System.out.println(testScriptDetailList);
-                System.out.println(testScript);
-                System.out.println(selectedItem);
-
-                FXRouter.popup("popup_delete_testscript",testScriptDetailList,testScript,selectedItem,true);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-    @FXML
-    void onSubmitButton(ActionEvent event) {
-        // Validate fields
+    private void currentNewData(){
         String name = onTestNameField.getText();
         String idTS = tsId;
         String date = testDateLabel.getText();
@@ -601,29 +510,102 @@ public class TestScriptEditController {
         String preCon = infoPreconLabel.getText();
         String note = onTestNoteField.getText();
         String post = infoPostconLabel.getText();
-        // Check if mandatory fields are empty
+        testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post,note,position);
         if (name == null || name.isEmpty() ||
                 useCase == null || useCase.isEmpty() ||
                 tc == null || tc.isEmpty()) {
             showAlert("Input Error", "Please fill in all required fields.");
-            return;
+        }
+    }
+
+    @FXML
+    void onAddButton(ActionEvent event) {
+
+        try {
+            currentNewData();
+            objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add(typeTS);
+            objects.add(testScript);
+            objects.add(testScriptDetailList);
+            objects.add(testCaseDetailList);
+            objects.add("edit");
+            objects.add(selectedItem);
+
+            if (testScriptDetailList != null){
+                FXRouter.popup("popup_add_testscript",objects,true);
+            }
+
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    @FXML
+    void onEditListButton(ActionEvent event)  {
+
+        try {
+            currentNewData();
+            objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add(typeTS);
+            objects.add(testScript);
+            objects.add(testScriptDetailList);
+            objects.add(testCaseDetailList);
+            objects.add("edit");
+            objects.add(selectedItem);
+            if (selectedItem != null){
+                FXRouter.popup("popup_add_testscript",objects,true);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
 
+    }
+    @FXML
+    void onDeleteListButton(ActionEvent event) {
+        try{
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Delete Confirmation");
+            alert.setHeaderText("Are you sure you want to delete this item?");
+            alert.setContentText("Press OK to confirm, or Cancel to go back.");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                testScriptDetailList.deleteTestScriptDetail(selectedItem);
+                onTableTestscript.getItems().clear();
+                loadTable(testScriptDetailList);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+    @FXML
+    void onSubmitButton(ActionEvent event) {
+        // Validate fields
+        currentNewData();
+        // Check if mandatory fields are empty
+
+
         // Create a new TestScript object
-        testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note,post,0);
 
 
         // Add or update test script
-        testScriptList.addOrUpdateTestScript(testScript);
+        testScriptList.addTestScript(testScript);
 
         // Write data to respective files
-        testScriptListDataSource.writeData(testScriptList);
-        testScriptDetailListDataSource.writeData(testScriptDetailListTemp);
-
+        saveProject();
+        objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(testScript);
         // Show success message
         showAlert("Success", "Test script saved successfully!");
         try {
-            FXRouter.goTo("test_script",testScript);
+            FXRouter.goTo("test_script",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -631,10 +613,29 @@ public class TestScriptEditController {
     }
     @FXML
     void onDeleteButton(ActionEvent event) {
+        // Pop up to confirm deletion
         try {
-            if (testScript != null){
-                FXRouter.popup("popup_delete_testscript",null,testScript,true);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Delete Confirmation");
+            alert.setHeaderText("Are you sure you want to delete this item?");
+            alert.setContentText("Press OK to confirm, or Cancel to go back.");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                testScript = testScriptList.findTSByPosition(position);
+                System.out.println("testscript : " + testScript);
+                testScriptList.deleteTestScriptByPositionID(position);
+                testScriptDetailList.deleteTestScriptDetailByTestScriptID(testScript.getIdTS());
+                testFlowPositionList.removePositionByID(position);
             }
+            saveProject();
+            objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add("none");
+            FXRouter.goTo("test_script", objects);
+            Node source = (Node) event.getSource();
+            Stage stage = (Stage) source.getScene().getWindow();
+            stage.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

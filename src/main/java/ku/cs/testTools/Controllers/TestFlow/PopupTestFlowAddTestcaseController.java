@@ -124,7 +124,7 @@ public class PopupTestFlowAddTestcaseController {
 
             testCaseDetail = new TestCaseDetail(id, TsNo, Name, Type, dateTCD, idTC);
             testCaseDetailList.addOrUpdateTestCase(testCaseDetail);
-            ArrayList<Object> objects = (ArrayList) FXRouter.getData();
+            ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
             objects.add(position);
@@ -137,14 +137,6 @@ public class PopupTestFlowAddTestcaseController {
             Stage stage = (Stage) source.getScene().getWindow();
             stage.close();
             System.out.println(testCaseDetailList);
-//        } catch (IOException e) {
-//            System.err.println("ไปที่หน้า home ไม่ได้");
-//            System.err.println("ให้ตรวจสอบการกำหนด route");
-//        }
-//        }else{
-//            errorLabel.setText("Username is Available");
-//
-//        }
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -157,19 +149,6 @@ public class PopupTestFlowAddTestcaseController {
         dateTCD = now.format(dtf);
     }
 
-    @FXML
-    void onNameVariablesField(ActionEvent event) {
 
-    }
-
-    @FXML
-    void onTestNo(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onTypeVariableField(ActionEvent event) {
-
-    }
 
 }

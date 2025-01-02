@@ -7,12 +7,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
+import javafx.scene.text.Text;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
 import ku.cs.testTools.Services.DataSourceCSV.*;
 
-import ku.cs.testTools.Services.Repository.TestScriptRepository;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.IOException;
@@ -25,129 +25,102 @@ public class TestScriptAddController {
 
     @FXML
     private TextArea infoDescriptLabel;
-
     @FXML
     private TextArea infoPreconLabel;
     @FXML
     private TextArea infoPostconLabel;
-
     @FXML
     private Button onAddButton;
-
     @FXML
     private Button onCancelButton;
-
     @FXML
     private Hyperlink onClickTestcase;
-
     @FXML
     private Hyperlink onClickTestflow;
-
     @FXML
     private Hyperlink onClickTestresult;
-
     @FXML
     private Hyperlink onClickTestscript;
-
     @FXML
     private Hyperlink onClickUsecase;
-
     @FXML
     private Button onDeleteListButton;
-
     @FXML
     private Button onSearchButton;
-
     @FXML
     private TextField onSearchField;
-
     @FXML
     private ListView<TestScript> onSearchList;
-
     @FXML
     private Button onSubmitButton;
-
     @FXML
     private TableView<TestScriptDetail> onTableTestscript;
-
     @FXML
     private TextField onTestNameField = TextFields.createClearableTextField();;
-
     @FXML
     private TextArea onTestNoteField;
-
     @FXML
     private ComboBox<String> onTestcaseCombobox;
-
     @FXML
     private ComboBox<String> onUsecaseCombobox;
-
     @FXML
     private Label testDateLabel;
-
     @FXML
     private Button onEditListButton;
-    private ArrayList <String> word = new ArrayList<>();
-
+    public ArrayList <String> word = new ArrayList<>();
     @FXML
     private Label testIDLabel;
     private String tsId;
     private String projectName = "125", directory = "data";
-    private String projectName1 = "uc";
-
     private  TestScriptList testScriptList = new TestScriptList();
-    //private ArrayList<Object> objects = (ArrayList) FXRouter.getData();
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
     private TestScriptDetail selectedItem;
     private TestScript testScript;
     private TestScript selectedTestScript;
     private TestCaseList testCaseList = new TestCaseList();
     private UseCaseList useCaseList = new UseCaseList();
-    private TestScriptDetail testScriptDetail;
-    private int position;
+    private final int position = 0;
     private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
     private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
-    private TestScriptDetailList testScriptDetailListTemp = new TestScriptDetailList();
     private ConnectionList connectionList;
+    private String type = "new";
+    private String typeTS = "new";
+    private ArrayList<Object> objects;
+
     @FXML
     void initialize() {
-        clearInfo();
-        loadProject();
-        selectedComboBox();
-        setDate();
-        setButtonVisible();
         if (FXRouter.getData() != null) {
-            ArrayList<Object> objects = (ArrayList) FXRouter.getData();
+            objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
+            typeTS = (String) objects.get(2);
             onTableTestscript.isFocused();
-            testScriptDetailList = (TestScriptDetailList) FXRouter.getData();
-            loadTable(testScriptDetailList);
-            testScript = (TestScript) FXRouter.getData2();
+            clearInfo();
+            loadProject();
+            selectedComboBox();
+            setDate();
+            setButtonVisible();
             selectedTSD();
             selectedListView();
-            if (objects.get(2) != null){
-                testScript = (TestScript) objects.get(2);
-                testScriptDetailList = (TestScriptDetailList) objects.get(3);
-                testScriptDetail = (TestScriptDetail) objects.get(4);
+            if (objects.get(3) != null){
+                testScript = (TestScript) objects.get(3);
+                testScriptDetailList = (TestScriptDetailList) objects.get(4);
+                testCaseDetailList = (TestCaseDetailList) objects.get(5);
+                setDataTS();
+            }else {
+                randomId();
             }
-            setDataTS();
             loadListView(testScriptList);
             for (TestScript testScript : testScriptList.getTestScriptList()) {
                 word.add(testScript.getNameTS());
             }
             searchSet();
+
+
+            if (testScriptDetailList != null){
+                loadTable(testScriptDetailList);
+            }
         }
-        else {
-            setTable();
-            randomId();
-            loadListView(testScriptList);
-            selectedTSD();
-            for (TestScript testScript : testScriptList.getTestScriptList()) {
-                word.add(testScript.getNameTS());
-            }
-            searchSet();
-            }
 
         }
     private void loadProject() {
@@ -160,7 +133,7 @@ public class TestScriptAddController {
         DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
 
         testScriptList = testScriptListDataSource.readData();
-        testScriptDetailListTemp = testScriptDetailListDataSource.readData();
+        TestScriptDetailList testScriptDetailListTemp = testScriptDetailListDataSource.readData();
         testCaseList = testCaseListDataSource.readData();
         testCaseDetailList = testCaseDetailListDataSource.readData();
         testFlowPositionList = testFlowPositionListDataSource.readData();
@@ -332,6 +305,24 @@ public class TestScriptAddController {
             new TableColumns(col);
             onTableTestscript.getColumns().add(col);
             index++;
+            col.setCellFactory(tc -> {
+                TableCell<TestScriptDetail, String> cell = new TableCell<>() {
+                    private final Text text = new Text();
+
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            setGraphic(null);
+                        } else {
+                            text.setText(item);
+                            text.wrappingWidthProperty().bind(tc.widthProperty().subtract(10));
+                            setGraphic(text);
+                        }
+                    }
+                };
+                return cell;
+            });
         }
 
          //Add items to the table
@@ -420,25 +411,38 @@ public class TestScriptAddController {
     }
 
 
+    private void currentNewData(){
+        String name = onTestNameField.getText();
+        String idTS = tsId;
+        String date = testDateLabel.getText();
+        String useCase = onUsecaseCombobox.getValue();
+        String description = infoDescriptLabel.getText();
+        String tc = onTestcaseCombobox.getValue();
+        String preCon = infoPreconLabel.getText();
+        String note = onTestNoteField.getText();
+        String post = infoPostconLabel.getText();
+        testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post,note,position);
+
+    }
+    private void objects() {
+        objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(typeTS);
+        objects.add(testScript);
+        objects.add(testScriptDetailList);
+        objects.add(testCaseDetailList);
+    }
 
     @FXML
     void onAddButton(ActionEvent event) {
-
         try {
-            String name = onTestNameField.getText();
-            String idTS = tsId;
-            String date = testDateLabel.getText();
-            String useCase = onUsecaseCombobox.getValue();
-            String description = infoDescriptLabel.getText();
-            String tc = onTestcaseCombobox.getValue();
-            String preCon = infoPreconLabel.getText();
-            String note = onTestNoteField.getText();
-            String post = infoPostconLabel.getText();
-            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note,post,0);
+            currentNewData();
+            objects();
+            objects.add("new");
+            objects.add(null);
             if (testScriptDetailList != null){
-                FXRouter.popup("popup_add_testscript",testScriptDetailList,testScript,null,true);
-            }else {
-                FXRouter.popup("popup_add_testscript",null,testScript,true);
+                FXRouter.popup("popup_add_testscript",objects,true);
             }
 
 
@@ -448,24 +452,13 @@ public class TestScriptAddController {
     }
     @FXML
     void onEditListButton(ActionEvent event)  {
-        onEditListButton.setOnMouseClicked(event2 -> {
-            onTableTestscript.requestFocus();
-        });
-        onEditListButton.setOnAction(event1 -> onTableTestscript.requestFocus());
         try {
-            String name = onTestNameField.getText();
-            String idTS = tsId;
-            String date = testDateLabel.getText();
-            LocalDateTime now  = LocalDateTime.now();
-            String useCase = onUsecaseCombobox.getValue();
-            String description = infoDescriptLabel.getText();
-            String tc = onTestcaseCombobox.getValue();
-            String preCon = infoPreconLabel.getText();
-            String note = onTestNoteField.getText();
-            String post = infoPostconLabel.getText();
-            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note,post,0);
+            currentNewData();
+            objects();
+            objects.add("edit");
+            objects.add(selectedItem);
             if (selectedItem != null){
-                FXRouter.popup("popup_add_testscript",testScriptDetailList,testScript,selectedItem,true);
+                FXRouter.popup("popup_add_testscript",objects,true);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -474,28 +467,132 @@ public class TestScriptAddController {
     }
     @FXML
     void onDeleteListButton(ActionEvent event) {
-        onDeleteListButton.setOnMouseClicked(event1 -> {
-            onTableTestscript.requestFocus();
-        });
         try {
-            onTableTestscript.requestFocus();
-            String name = onTestNameField.getText();
-            String idTS = tsId;
-            String date = testDateLabel.getText();
-            String useCase = onUsecaseCombobox.getValue();
-            String description = infoDescriptLabel.getText();
-            String tc = onTestcaseCombobox.getValue();
-            String preCon = infoPreconLabel.getText();
-            String note = onTestNoteField.getText();
-            String post = infoPostconLabel.getText();
-            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, note,post,0);
-            if (selectedItem != null){
-                FXRouter.popup("popup_delete_testscript",testScriptDetailList,testScript,selectedItem,true);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Delete Confirmation");
+            alert.setHeaderText("Are you sure you want to delete this item?");
+            alert.setContentText("Press OK to confirm, or Cancel to go back.");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                testScriptDetailList.deleteTestScriptDetail(selectedItem);
+                onTableTestscript.getItems().clear();
+                loadTable(testScriptDetailList);
             }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+    @FXML
+    void onSubmitButton(ActionEvent event) {
+
+        try {
+            // Validate fields
+            currentNewData();
+            // Check if mandatory fields are empty
+//            if (name == null || name.isEmpty() ||
+//                    useCase == null || useCase.isEmpty() ||
+//                    tc == null || tc.isEmpty()) {
+//                showAlert("Input Error", "Please fill in all required fields.");
+//                return;
+//            }
+//         TestScriptRepository testScriptRepository = new TestScriptRepository();
+            DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+            TestScriptDetailList testScriptDetailListTemp = testScriptDetailListDataSource.readData();
+            for (TestScriptDetail testScriptDetail1 : testScriptDetailListTemp.getTestScriptDetailList()){
+                testScriptDetailList.addTestScriptDetail(testScriptDetail1);
+            }
+            // Add or update test script
+            testScriptList.addOrUpdateTestScript(testScript);
+
+            // Write data to respective files
+            saveProject();
+            ArrayList<Object>objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add(testScript);
+            // Show success message
+            showAlert("Success", "Test script saved successfully!");
+            FXRouter.goTo("test_script",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
+    }
+
+    // Helper method to show alert dialogs
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+
+    private void selectedComboBox(){
+        onTestcaseCombobox.getItems().clear();
+        onTestcaseCombobox.setItems(FXCollections.observableArrayList("None"));
+        new AutoCompleteComboBoxListener<>(onTestcaseCombobox);
+        onTestcaseCombobox.getSelectionModel().selectFirst();
+        testCaseCombobox();
+        onTestcaseCombobox.setOnAction(event -> {
+            String selectedItem = onTestcaseCombobox.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                onTestcaseCombobox.getEditor().setText(selectedItem); // Set selected item in editor
+                Platform.runLater(onTestcaseCombobox.getEditor()::end);
+
+            }
+
+        });
+
+        onUsecaseCombobox.getItems().clear();
+        onUsecaseCombobox.setItems(FXCollections.observableArrayList("None"));
+        new AutoCompleteComboBoxListener<>(onUsecaseCombobox);
+        onUsecaseCombobox.getSelectionModel().selectFirst();
+        useCaseCombobox();
+        onUsecaseCombobox.setOnAction(event -> {
+            String selectedItem = onUsecaseCombobox.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                onUsecaseCombobox.getEditor().setText(selectedItem); // Set selected item in editor
+                Platform.runLater(onUsecaseCombobox.getEditor()::end);
+                if (!selectedItem.equals("None")) {
+                    selectedComboBoxSetInfo(selectedItem);
+                }else {
+                    clearUsecase();
+                }
+            }
+
+        });
+
+    }
+
+    private void selectedComboBoxSetInfo(String selectedItem) {
+        // แยกข้อมูล UseCase ID จาก selectedItem โดยใช้ split(":") เพื่อตัดข้อความก่อนเครื่องหมาย :
+        String[] data = selectedItem.split("[:,]");
+
+        // ตรวจสอบว่า data มี UseCase ID ใน index 0 หรือไม่
+        if (data.length > 0 && useCaseList.findByUseCaseId(data[0].trim()) != null) {
+            UseCase useCase = useCaseList.findByUseCaseId(data[0].trim());
+
+            // อัปเดตข้อมูลใน Label
+            infoPreconLabel.setText(useCase.getPreCondition());
+            infoDescriptLabel.setText(useCase.getDescription());
+            infoPostconLabel.setText(useCase.getPostCondition());
+        }
+    }
+    private void clearUsecase() {
+        infoPreconLabel.setText("");
+        infoDescriptLabel.setText("");
+        infoPostconLabel.setText("");
+
+    }
+
+    private void useCaseCombobox() {
+        for (UseCase useCase : useCaseList.getUseCaseList()){
+            String uc_combobox = useCase.getUseCaseID() + " : " + useCase.getUseCaseName();
+            onUsecaseCombobox.getItems().add(uc_combobox);
+        }
     }
     @FXML
     void onCancelButton(ActionEvent event) {
@@ -557,127 +654,6 @@ public class TestScriptAddController {
         }
     }
 
-    @FXML
-    void onSubmitButton(ActionEvent event) {
 
-        try {
-            // Validate fields
-            String tsId = this.tsId;
-            String name = onTestNameField.getText();
-            String date = testDateLabel.getText();
-            String useCase = onUsecaseCombobox.getValue();
-            String description = infoDescriptLabel.getText();
-            String tc = onTestcaseCombobox.getValue();
-            String preCon = infoPreconLabel.getText();
-            String note = onTestNoteField.getText();
-            String post = infoPostconLabel.getText();
-
-            // Check if mandatory fields are empty
-//            if (name == null || name.isEmpty() ||
-//                    useCase == null || useCase.isEmpty() ||
-//                    tc == null || tc.isEmpty()) {
-//                showAlert("Input Error", "Please fill in all required fields.");
-//                return;
-//            }
-
-//         TestScriptRepository testScriptRepository = new TestScriptRepository();
-            testScript = new TestScript(tsId, name, date, useCase, description, tc, preCon, note,post,0);
-            System.out.println(testScript);
-
-
-            // Add or update test script
-            testScriptList.addOrUpdateTestScript(testScript);
-
-            // Write data to respective files
-            saveProject();
-
-            // Show success message
-            showAlert("Success", "Test script saved successfully!");
-            FXRouter.goTo("test_script",testScript,true);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-    // Helper method to show alert dialogs
-    private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
-    }
-
-
-    private void selectedComboBox(){
-        onTestcaseCombobox.getItems().clear();
-        onTestcaseCombobox.setItems(FXCollections.observableArrayList("None"));
-        new AutoCompleteComboBoxListener<>(onTestcaseCombobox);
-        onTestcaseCombobox.getSelectionModel().selectFirst();
-        testCaseCombobox();
-        onTestcaseCombobox.setOnAction(event -> {
-            String selectedItem = onTestcaseCombobox.getSelectionModel().getSelectedItem();
-            if (selectedItem != null) {
-                onTestcaseCombobox.getEditor().setText(selectedItem); // Set selected item in editor
-                Platform.runLater(onTestcaseCombobox.getEditor()::end);
-
-            }
-
-        });
-
-        onUsecaseCombobox.getItems().clear();
-        onUsecaseCombobox.setItems(FXCollections.observableArrayList("None"));
-        new AutoCompleteComboBoxListener<>(onUsecaseCombobox);
-        onUsecaseCombobox.getSelectionModel().selectFirst();
-        useCaseCombobox();
-        onUsecaseCombobox.setOnAction(event -> {
-            String selectedItem = onUsecaseCombobox.getSelectionModel().getSelectedItem();
-            if (selectedItem != null) {
-                onUsecaseCombobox.getEditor().setText(selectedItem); // Set selected item in editor
-                Platform.runLater(onUsecaseCombobox.getEditor()::end);
-                if (!selectedItem.equals("None")) {
-                    selectedComboBoxSetInfo(selectedItem);
-                }else {
-                    clearUsecase();
-                }
-            }
-
-        });
-
-//        for (Equipment equipment : equipmentList.getEquipmentList()){
-//            if (!categoryBox.getItems().contains(equipment.getType_equipment())) {
-//                categoryBox.getItems().add(equipment.getType_equipment());
-//            }
-//        }
-    }
-
-    private void selectedComboBoxSetInfo(String selectedItem) {
-        // แยกข้อมูล UseCase ID จาก selectedItem โดยใช้ split(":") เพื่อตัดข้อความก่อนเครื่องหมาย :
-        String[] data = selectedItem.split("[:,]");
-
-        // ตรวจสอบว่า data มี UseCase ID ใน index 0 หรือไม่
-        if (data.length > 0 && useCaseList.findByUseCaseId(data[0].trim()) != null) {
-            UseCase useCase = useCaseList.findByUseCaseId(data[0].trim());
-
-            // อัปเดตข้อมูลใน Label
-            infoPreconLabel.setText(useCase.getPreCondition());
-            infoDescriptLabel.setText(useCase.getDescription());
-            infoPostconLabel.setText(useCase.getPostCondition());
-        }
-    }
-    private void clearUsecase() {
-        infoPreconLabel.setText("");
-        infoDescriptLabel.setText("");
-        infoPostconLabel.setText("");
-
-    }
-
-    private void useCaseCombobox() {
-        for (UseCase useCase : useCaseList.getUseCaseList()){
-            String uc_combobox = useCase.getUseCaseID() + " : " + useCase.getUseCaseName();
-            onUsecaseCombobox.getItems().add(uc_combobox);
-        }
-    }
 
 }

@@ -9,8 +9,7 @@ import javafx.scene.text.Text;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
-import ku.cs.testTools.Services.DataSourceCSV.TestCaseDetailFileDataSource;
-import ku.cs.testTools.Services.DataSourceCSV.TestCaseFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.*;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.IOException;
@@ -21,73 +20,58 @@ public class TestCaseController {
 
     @FXML
     private Label infoUsecaseLabel;
-
     @FXML
     private Hyperlink onClickTestcase;
-
     @FXML
     private Hyperlink onClickTestflow;
-
     @FXML
     private Hyperlink onClickTestresult;
-
     @FXML
     private Hyperlink onClickTestscript;
-
     @FXML
     private Hyperlink onClickUsecase;
-
     @FXML
     private Button onCreateButton;
-
     @FXML
     private Button onEditButton;
-
     @FXML
     private Button onSearchButton;
-
     @FXML
     private TextField onSearchField, testNameField ;
-
     @FXML
     private ListView<TestCase> onSearchList;
-
     @FXML
     private TableView<TestCaseDetail> onTableTestcase;
-
     @FXML
     private Label testDateLabel;
-
     @FXML
     private Label testIDLabel;
-
     @FXML
     private ComboBox<String> infoUsecaseCombobox ;
-
     @FXML
     private TextArea infoDescriptField, infoNoteField,infoPreconField,infoPostconField;
-
     @FXML
     private Label testNameLabel;
     private ArrayList<String> word = new ArrayList<>();
-    private String tcId;
     private String projectName = "125", directory = "data";
     private TestCaseList testCaseList = new TestCaseList();
-    //private ArrayList<Object> objects = (ArrayList) FXRouter.getData();
+    private ArrayList<Object> objects;
     private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
-    private TestCaseDetail selectedItem;
     private TestCase testCase = new TestCase();
     private TestCase selectedTestCase = new TestCase();
-    private static int idCounter = 1; // Counter for sequential IDs
-    private static final int MAX_ID = 999; // Upper limit for IDs
-    private static Set<String> usedIds = new HashSet<>(); // Set to store used IDs
-    DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory,projectName + ".csv");
-    DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
+    private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
+    private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
+    private TestScriptDetailList testScriptDetailListTemp = new TestScriptDetailList();
+    private ConnectionList connectionList = new ConnectionList();
+    private UseCaseList useCaseList = new UseCaseList();
     @FXML
     void initialize() {
+        loadProject();
+
         if (FXRouter.getData() != null) {
-            testCaseList = testCaseListDataSource.readData();
-            testCaseDetailList = testCaseDetailListDataSource.readData();
+            ArrayList<Object> objects = (ArrayList) FXRouter.getData();
+            projectName = (String) objects.get(0);
+            directory = (String) objects.get(1);
             testCase = (TestCase) FXRouter.getData();
             loadListView(testCaseList);
             selected();
@@ -98,9 +82,6 @@ public class TestCaseController {
 
         } else {
             setTable();
-            if (testCaseListDataSource.readData() != null && testCaseDetailListDataSource.readData() != null){
-                testCaseList = testCaseListDataSource.readData();
-                testCaseDetailList = testCaseDetailListDataSource.readData();
                 loadListView(testCaseList);
                 selected();
                 for (TestCase testCase : testCaseList.getTestCaseList()) {
@@ -110,7 +91,36 @@ public class TestCaseController {
             }
 
 
-        }
+
+
+    }
+    private void loadProject() {
+        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
+        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
+        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+
+        testScriptDetailList = testScriptDetailListDataSource.readData();
+        testCaseList = testCaseListDataSource.readData();
+        testCaseDetailList = testCaseDetailListDataSource.readData();
+        testFlowPositionList = testFlowPositionListDataSource.readData();
+        connectionList = connectionListDataSource.readData();
+        useCaseList = useCaseListDataSource.readData();
+
+    }
+    private void saveProject() {
+        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
+        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+        testFlowPositionListDataSource.writeData(testFlowPositionList);
+        testScriptDetailListDataSource.writeData(testScriptDetailList);
+        testCaseListDataSource.writeData(testCaseList);
+        testCaseDetailListDataSource.writeData(testCaseDetailList);
+        connectionListDataSource.writeData(connectionList);
 
     }
     private void searchSet() {
@@ -310,6 +320,7 @@ public class TestCaseController {
             index++;
             new TableColumns(col);
             onTableTestcase.getColumns().add(col);
+
         }
 
 
@@ -387,7 +398,12 @@ public class TestCaseController {
     @FXML
     void onCreateButton(ActionEvent event) {
         try {
-            FXRouter.goTo("test_case_add",null);
+            objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add("newTC");
+            objects.add(null);
+            FXRouter.goTo("test_case_add",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -396,6 +412,13 @@ public class TestCaseController {
     @FXML
     void onEditButton(ActionEvent event) {
         try {
+           objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add("editTC");
+            objects.add(selectedTestCase);
+            objects.add(testCaseDetailList);
+            objects.add("new");
             FXRouter.goTo("test_case_edit",selectedTestCase);
         } catch (IOException e) {
             throw new RuntimeException(e);
