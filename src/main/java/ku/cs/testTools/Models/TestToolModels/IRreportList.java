@@ -23,12 +23,29 @@ public class IRreportList {
 
     public IRreport findTRById(String idTR) {
         for (IRreport iRreport : iRreportList) {
-            if (iRreport.isId(idTR) ) {
+            if (iRreport.getTrIR().equals(idTR) ) {
                 return iRreport;
             }
         }
         return null;
     }
+    public IRreport findIRById(String idIR) {
+        for (IRreport iRreport : iRreportList) {
+            if (iRreport.getIdIR().equals(idIR)) {
+                return iRreport;
+            }
+        }
+        return null;
+    }
+
+    public void clearIR(String idIR) {
+        iRreportList.removeIf(iRreport -> iRreport.getIdIR().equals(idIR));
+    }
+
+    public void addIR(IRreport iRreport) {
+        iRreportList.add(iRreport);
+    }
+
     public void addOrUpdateIRreport(IRreport iRreport) {
         boolean exists = false;
 

@@ -36,6 +36,10 @@ useCaseDetail,UC-687,actor,2,กรอกข้อมูล password
 useCaseDetail,UC-687,actor,3,กดปุ่ม เข้าสู่ระบบ
 useCaseDetail,UC-687,system,1,รับข้อมูล username และ password มาตรวจสอบ
 useCaseDetail,UC-687,system,2,ไม่ไปหน้า home
-testResult,TR-996,Login,2024-12-19 16:17:09,,In Tester
+testResult,TR-996,Login,2024-12-26 14:26:39,,In Tester
 testResultDetail,TRD-286,001,TS-407 : Login,TC-321 : Login,User,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,String : Username|String : Password|Button : Button login,1. กรอก username|2. กรอก password|3. กด ปุ่ม login|,สามารถเข้าสู่ระบบได้,สามารถเข้าสู่ระบบได้,Pass,None,19-12-2024,Tester,...,Waiting,Remark,TR-996
 testResultDetail,TRD-21,002,TS-243 : Incorrect Login,TC-321 : Login,User,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,String : Username|String : Password|Button : Button login,1. กรอก username ผิด|2. กรอก password ผิด|3. กดปุ่ม login|,ไม่สามารถเข้าสู่ระบบได้,เข้าสู่ระบบได้,Fail,High,19-12-2024,Tester,...,Waiting,Remark,TR-996
+testResultDetail,TRD-527,1,TS-407 : Login,TC-321 : Login,User,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,String : Username|String : Password|Button : Button login,1. กรอก username|2. กรอก password|3. กด ปุ่ม login|,สามารถเข้าสู่ระบบได้,1111,Fail,Medium,26-12-2024,Tester,...,Waiting,Remark,TR-996
+iRreport,IR-531,Login,2024-12-26 15:42:36,TR-996
+iRreportDetail,IRD-628,1,Tester,TS-243 : Incorrect Login,TC-321 : Login,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,-,...,High,,,In Manager,,IR-514
+iRreportDetail,IRD-402,2,Tester,TS-407 : Login,TC-321 : Login,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,-,...,Medium,,,In Manager,,IR-514

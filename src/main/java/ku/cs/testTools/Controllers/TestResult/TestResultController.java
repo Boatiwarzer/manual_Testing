@@ -13,6 +13,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
@@ -60,6 +62,7 @@ public class TestResultController {
 
     private String irId;
     private String irdId;
+    private boolean isGenerated = false;
     private IRreport iRreport;
     private IRreport selectedIRreport = new IRreport();
     private IRreportList iRreportList = new IRreportList();
@@ -336,6 +339,29 @@ public class TestResultController {
                 });
             }
 
+            if (conf.get("field").equals("statusTRD")) {
+                col.setCellFactory(column -> new TableCell<>() {
+                    private final Text text = new Text();
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            setGraphic(null);
+                        } else {
+                            text.setText(item);
+                            text.wrappingWidthProperty().bind(column.widthProperty().subtract(10)); // ตั้งค่าการห่อข้อความตามขนาดคอลัมน์
+                            if (item.equals("Pass")) {
+                                text.setFill(javafx.scene.paint.Color.GREEN); // สีเขียวสำหรับ "Pass"
+                            } else if (item.equals("Fail")) {
+                                text.setFill(javafx.scene.paint.Color.RED); // สีแดงสำหรับ "Fail"
+                            } else {
+                                text.setFill(javafx.scene.paint.Color.BLACK); // สีปกติสำหรับค่าอื่น ๆ
+                            }
+                            setGraphic(text); // แสดงผล Text Node
+                        }
+                    }
+                });
+            }
             // เพิ่มคอลัมน์แสดงภาพ
             if (conf.get("field").equals("imageTRD")) {
                 col.setCellFactory(column -> new TableCell<>() {
@@ -507,11 +533,59 @@ public class TestResultController {
     void onIRButton(ActionEvent event) {
         testScriptList = testScriptListDataSource.readData();
         iRreportList =iRreportListDataSource.readData();
-
         String idTR = testIDLabel.getText();
 
-        if (iRreportList.isIdTRExist(idTR)) { // สำหรับ CSV
+        if (iRreportList.isIdTRExist(idTR)) {
             System.out.println("ID " + idTR + " already exists in the file.");
+            IRreport ir = iRreportList.findTRById(idTR);
+            String idIR = ir.getIdIR();
+            String nameIR = ir.getNameIR();
+            String dateIR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            iRreportList.clearIR(idIR);
+            IRreport newIR = new IRreport(idIR, nameIR, dateIR, idTR);
+            iRreportList.addIR(newIR);
+
+            iRreportDetailList.clearIRDetail(idIR);
+            List<TestResultDetail> trdList = testResultDetailList.findAllTRinTRDById(idTR.trim());
+            for (TestResultDetail trd : trdList) {
+                System.out.println("trd " + trd);
+            }
+
+            List<TestResultDetail> failedResult = trdList.stream()
+                    .filter(faildetail -> faildetail.getIdTR().equals(idTR) && faildetail.getStatusTRD().equals("Fail"))
+                    .collect(Collectors.toList());
+            int counter = 1;
+            for (TestResultDetail detail : failedResult) {
+                randomIdIRD();
+                String irdID = irdId;
+                String testNo = String.format("%d", counter);
+                counter++; // เพิ่มค่าตัวนับ
+                String testerIRD = "Tester";
+                String tsIdIRD = detail.getTsIdTRD();
+                String tcIdIRD = detail.getTcIdTRD();
+                System.out.println("tsId " + tsIdIRD);
+                String descriptIRD = detail.getDescriptTRD();
+
+                String selectedId = tsIdIRD; // ดึง ID จาก ComboBox
+                String[] parts = selectedId.split(" : "); // แยกข้อความตาม " : "
+                String tsId = parts[0]; // ดึงส่วนแรกออกมา
+                TestScript selectedCon = testScriptList.findByTestScriptId(tsId.trim());
+                System.out.println("con " + selectedCon);
+
+                String conditionIRD = selectedCon.getPreCon();
+                String imageIRD = detail.getImageTRD();
+                String priorityIRD = detail.getPriorityTRD();
+                String rcaIRD = "";
+                String managerIRD = "";
+                String statusIRD = "In Manager";
+                String remarkIRD = "";
+
+                IRreportDetail newIRDetail = new IRreportDetail(irdID, testNo, testerIRD, tsIdIRD, tcIdIRD, descriptIRD, conditionIRD, imageIRD, priorityIRD, rcaIRD, managerIRD, statusIRD, remarkIRD, irId);
+                iRreportDetailList.addIRreportDetail(newIRDetail);
+            }
+            iRreportListDataSource.writeData(iRreportList);
+            iRreportDetailListDataSource.writeData(iRreportDetailList);
+
         } else {
             System.out.println("ID " + idTR + " does not exist in the file.");
             String idIR = irId;
@@ -566,11 +640,6 @@ public class TestResultController {
 //        if (statusIRD.equals()) {
 //
 //        }
-
-
-        // Save data to files
-        // DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-        // DataSource<TestScriptDetailList> testScriptDetailListListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
 
         // Show success message
         showAlert("Success", "IR Report saved successfully!");

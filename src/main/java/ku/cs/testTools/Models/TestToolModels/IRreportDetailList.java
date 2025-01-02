@@ -16,6 +16,10 @@ public class IRreportDetailList {
         iRreportDetailList.add(iRreportDetail);
     }
 
+    public void clearIRDetail(String irID) {
+        iRreportDetailList.removeIf(iRreportDetail -> iRreportDetail.getIdIR().equals(irID));
+    }
+
     public void addOrUpdateIRreportDetail(IRreportDetail iRreportDetail) {
         boolean exists = false;
 

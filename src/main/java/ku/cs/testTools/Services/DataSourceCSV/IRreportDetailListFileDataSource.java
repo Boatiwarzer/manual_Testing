@@ -13,7 +13,6 @@ import java.util.List;
 public class IRreportDetailListFileDataSource implements DataSource<IRreportDetailList>, ManageDataSource<IRreportDetail> {
     private String directory;
     private String fileName;
-    private static IRreportDetailListFileDataSource instance;
 
     public IRreportDetailListFileDataSource(String directory, String fileName) {
         this.directory = directory;
@@ -49,11 +48,14 @@ public class IRreportDetailListFileDataSource implements DataSource<IRreportDeta
     public IRreportDetailList readData() {
         IRreportDetailList iRreportDetailList = new IRreportDetailList();
         String filePath = directory + File.separator + fileName;
-        DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, fileName);
-        IRreportList iRreportList = iRreportListDataSource.readData();
+        File file = new File(filePath);
+        FileReader reader = null;
+        BufferedReader buffer = null;
 
-        try (BufferedReader buffer = new BufferedReader(new FileReader(filePath, StandardCharsets.UTF_8))) {
-            String line;
+        try {
+            reader = new FileReader(file);
+            buffer = new BufferedReader(reader);
+            String line = "";
             while ((line = buffer.readLine()) != null) {
                 String[] data = line.split(",");
 
@@ -75,13 +77,23 @@ public class IRreportDetailListFileDataSource implements DataSource<IRreportDeta
                             data[13].trim(),
                             data[14].trim()
                     );
-
                     // Add the detail to the list
                     iRreportDetailList.addIRreportDetail(iRreportDetail);
                 }
             }
-        } catch (IOException e) {
-            throw new RuntimeException("Error reading data", e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (buffer != null) {
+                    buffer.close();
+                }
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
 
         return iRreportDetailList;
