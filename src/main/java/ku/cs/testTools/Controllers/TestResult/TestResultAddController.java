@@ -344,6 +344,30 @@ public class TestResultAddController {
                 });
             }
 
+            if (conf.get("field").equals("statusTRD")) {
+                col.setCellFactory(column -> new TableCell<>() {
+                    private final Text text = new Text();
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            setGraphic(null);
+                        } else {
+                            text.setText(item);
+                            text.wrappingWidthProperty().bind(column.widthProperty().subtract(10)); // ตั้งค่าการห่อข้อความตามขนาดคอลัมน์
+                            if (item.equals("Pass")) {
+                                text.setFill(javafx.scene.paint.Color.GREEN); // สีเขียวสำหรับ "Pass"
+                            } else if (item.equals("Fail")) {
+                                text.setFill(javafx.scene.paint.Color.RED); // สีแดงสำหรับ "Fail"
+                            } else {
+                                text.setFill(javafx.scene.paint.Color.BLACK); // สีปกติสำหรับค่าอื่น ๆ
+                            }
+                            setGraphic(text); // แสดงผล Text Node
+                        }
+                    }
+                });
+            }
+
             // เพิ่มคอลัมน์แสดงภาพ
             if (conf.get("field").equals("imageTRD")) {
                 col.setCellFactory(column -> new TableCell<>() {

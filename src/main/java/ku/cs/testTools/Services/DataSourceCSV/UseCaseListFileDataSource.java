@@ -129,7 +129,6 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
 //            writer = new FileWriter(file, StandardCharsets.UTF_8, append);
             writer = new FileWriter(file, StandardCharsets.UTF_8);
             buffer = new BufferedWriter(writer);
-            //Write useCaseList to CSV
             for (TestFlowPosition position : testFlowPositionList.getPositionList()) {
                 String line = testFlowPositionListFileDataSource.createLine(position);
                 buffer.append(line);

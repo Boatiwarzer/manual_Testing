@@ -5,11 +5,10 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
@@ -18,6 +17,7 @@ import ku.cs.testTools.Services.DataSource;
 import ku.cs.testTools.Services.StringConfiguration;
 import ku.cs.testTools.Services.DataSourceCSV.IRreportDetailListFileDataSource;
 import ku.cs.testTools.Services.DataSourceCSV.IRreportListFileDataSource;
+import ku.cs.testTools.Services.TableColumns;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -137,53 +137,95 @@ public class IRTestresultController {
         onTableIR.refresh();
 
         // Define column configurations
-        ArrayList<StringConfigurations> configs = new ArrayList<>();
-        configs.add(new StringConfigurations("title:IRD-ID.", "field:idIRD"));
-        configs.add(new StringConfigurations("title:Test No.", "field:testNoIRD"));
-        configs.add(new StringConfigurations("title:Tester", "field:testerIRD"));
-        configs.add(new StringConfigurations("title:TS-ID.", "field:tsIdIRD"));
-        configs.add(new StringConfigurations("title:TC-ID.", "field:tcIdIRD"));
-        configs.add(new StringConfigurations("title:Description", "field:descriptIRD"));
-        configs.add(new StringConfigurations("title:Condition", "field:conditionIRD"));
-        configs.add(new StringConfigurations("title:Image", "field:imageIRD"));
-        configs.add(new StringConfigurations("title:Priority", "field:priorityIRD"));
-        configs.add(new StringConfigurations("title:RCA", "field:rcaIRD"));
-        configs.add(new StringConfigurations("title:Review By", "field:managerIRD"));
-        configs.add(new StringConfigurations("title:Status", "field:statusIRD"));
-        configs.add(new StringConfigurations("title:Remark", "field:remarkIRD"));
+        ArrayList<StringConfiguration> configs = new ArrayList<>();
+        configs.add(new StringConfiguration("title:IRD-ID.", "field:idIRD"));
+        configs.add(new StringConfiguration("title:Test No.", "field:testNoIRD"));
+        configs.add(new StringConfiguration("title:Tester", "field:testerIRD"));
+        configs.add(new StringConfiguration("title:TS-ID.", "field:tsIdIRD"));
+        configs.add(new StringConfiguration("title:TC-ID.", "field:tcIdIRD"));
+        configs.add(new StringConfiguration("title:Description", "field:descriptIRD"));
+        configs.add(new StringConfiguration("title:Condition", "field:conditionIRD"));
+        configs.add(new StringConfiguration("title:Image", "field:imageIRD"));
+        configs.add(new StringConfiguration("title:Priority", "field:priorityIRD"));
+        configs.add(new StringConfiguration("title:RCA", "field:rcaIRD"));
+        configs.add(new StringConfiguration("title:Review By", "field:managerIRD"));
+        configs.add(new StringConfiguration("title:Status", "field:statusIRD"));
+        configs.add(new StringConfiguration("title:Remark", "field:remarkIRD"));
+
+        // เพิ่มคอลัมน์ลงใน TableView
+        int index = 0;
+        for (StringConfiguration conf : configs) {
+            TableColumn<IRreportDetail, String> col = new TableColumn<>(conf.get("title"));
+            col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
+            if (index != 14 && index <= 16) {  // ถ้าเป็นคอลัมน์แรก
+                col.setPrefWidth(120);
+                col.setMaxWidth(120);
+                col.setMinWidth(120); // ตั้งค่าขนาดคอลัมน์แรก
+            }
+            col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
+            index++;
+            if (!conf.get("field").equals("imageTRD")) {
+                col.setCellFactory(tc -> {
+                    TableCell<IRreportDetail, String> cell = new TableCell<>() {
+                        private final Text text = new Text();
+
+                        @Override
+                        protected void updateItem(String item, boolean empty) {
+                            super.updateItem(item, empty);
+                            if (empty || item == null) {
+                                setGraphic(null);
+                            } else {
+                                text.setText(item);
+                                text.wrappingWidthProperty().bind(tc.widthProperty().subtract(10));
+                                setGraphic(text);
+                            }
+                        }
+                    };
+//                    cell.setStyle("-fx-alignment: top-left; -fx-padding: 5px;");
+                    return cell;
+                });
+            }
+
+            if (conf.get("field").equals("priorityIRD")) {
+                col.setCellFactory(column -> new TableCell<>() {
+                    private final Text text = new Text();
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            setGraphic(null);
+                        } else {
+                            text.setText(item);
+                            text.wrappingWidthProperty().bind(column.widthProperty().subtract(10)); // ตั้งค่าการห่อข้อความตามขนาดคอลัมน์
+                            if (item.equals("Low")) {
+                                text.setFill(Color.YELLOW);
+                            } else if (item.equals("Medium")) {
+                                text.setFill(Color.ORANGE);
+                            } else if (item.equals("High")) {
+                                text.setFill(Color.RED);
+                            } else if (item.equals("Critical")) {
+                                text.setFill(Color.DARKRED);
+                            } else {
+                                text.setFill(Color.BLACK); // สีปกติสำหรับค่าอื่น ๆ
+                            }
+                            setGraphic(text); // แสดงผล Text Node
+                        }
+                    }
+                });
+            }
+            new TableColumns(col);
+            onTableIR.getColumns().add(col);
+        }
 
 //        for (IRreportDetail iRreportDetail : iRreportDetailList.getIRreportDetailList()) {
-//            onTableIR.getItems().add(iRreportDetail);
+//            if (iRreportDetail.getIdIR().trim().equals(iRreport.getIdIR().trim())){
+//                onTableIR.getItems().add(iRreportDetail);
+//            }
 //        }
-        // เพิ่มคอลัมน์ลงใน TableView
-        for (StringConfigurations config : configs) {
-            TableColumn<IRreportDetail, String> column = new TableColumn<>(config.getTitle());
-            column.setCellValueFactory(new PropertyValueFactory<>(config.getField()));
-            onTableIR.getColumns().add(column);
-        }
 
         // เพิ่มข้อมูลลงใน TableView
         ObservableList<IRreportDetail> observableList = FXCollections.observableArrayList(iRreportDetailList.getIRreportDetailList());
         onTableIR.setItems(observableList);
-    }
-
-    public static class StringConfigurations {
-        private String title;
-        private String field;
-
-        public StringConfigurations(String titleField, String fieldName) {
-            String[] parts = titleField.split(":");
-            this.title = parts[1].trim();
-            this.field = fieldName.split(":")[1].trim();
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public String getField() {
-            return field;
-        }
     }
 
     @FXML

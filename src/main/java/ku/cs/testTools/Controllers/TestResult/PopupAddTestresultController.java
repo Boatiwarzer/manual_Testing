@@ -414,6 +414,10 @@ public class PopupAddTestresultController {
 
     @FXML
     void onConfirmButton(ActionEvent event) {
+        if (!handleSaveAction()) {
+            return; // ถ้าข้อมูลไม่ครบ หยุดการทำงานทันที
+        }
+
         String TrNo = onTestNo.getText();
         String IdTS = onTestscriptIDComboBox.getValue();
 
@@ -433,7 +437,7 @@ public class PopupAddTestresultController {
         String priority = onPriorityComboBox.getValue();
         String tester = onTester.getText();
         String image = onImage.getText();
-        handleSaveAction();
+
         testResultDetail = new TestResultDetail(id, TrNo, IdTS, IdTC, actor, descript, inputdata, teststeps, expected, actual, status, priority, date, tester, image, "Waiting", "Remark", idTR);
         testResultDetailList.addOrUpdateTestResultDetail(testResultDetail);
 
@@ -449,66 +453,52 @@ public class PopupAddTestresultController {
     }
 
     @FXML
-    void handleSaveAction() {
+    boolean handleSaveAction() {
         if (onTestNo.getText() == null || onTestNo.getText().trim().isEmpty()) {
             showAlert("กรุณากรอกข้อมูล Test No.");
-            return;
+            return false;
         }
 
-        if (onTestscriptIDComboBox.getValue() == null || onTestscriptIDComboBox.getValue().trim().isEmpty()) {
+        if (onTestscriptIDComboBox.getValue() == null || onTestscriptIDComboBox.getValue().trim().isEmpty() || onTestscriptIDComboBox.getValue().equals("None")) {
             showAlert("กรุณาเลือก Test Script ID.");
-            return;
-        }
-
-        if (onDate.getText() == null || onDate.getText().trim().isEmpty()) {
-            showAlert("กรุณากรอกวันที่.");
-            return;
+            return false;
         }
 
         if (onDescription.getText() == null || onDescription.getText().trim().isEmpty()) {
             showAlert("กรุณากรอก Description.");
-            return;
+            return false;
         }
 
-        if (onActor.getText() == null || onActor.getText().trim().isEmpty()) {
-            showAlert("กรุณากรอก Actor.");
-            return;
+        if (onInputdata.getText() == null || onInputdata.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอก Input Data.");
+            return false;
         }
 
         if (onTeststeps.getText() == null || onTeststeps.getText().trim().isEmpty()) {
             showAlert("กรุณากรอก Test Steps.");
-            return;
-        }
-
-        if (onExpected.getText() == null || onExpected.getText().trim().isEmpty()) {
-            showAlert("กรุณากรอก Expected.");
-            return;
+            return false;
         }
 
         if (onActual.getText() == null || onActual.getText().trim().isEmpty()) {
             showAlert("กรุณากรอก Actual.");
-            return;
+            return false;
         }
 
         if (onStatusComboBox.getValue() == null || onStatusComboBox.getValue().trim().isEmpty()) {
             showAlert("กรุณาเลือก Status.");
-            return;
+            return false;
         }
 
         if (onPriorityComboBox.getValue() == null || onPriorityComboBox.getValue().trim().isEmpty()) {
             showAlert("กรุณาเลือก Priority.");
-            return;
-        }
-
-        if (onInputdata.getText() == null || onInputdata.getText().trim().isEmpty()) {
-            showAlert("กรุณาเลือก Input Data.");
-            return;
+            return false;
         }
 
         if (onTester.getText() == null || onTester.getText().trim().isEmpty()) {
             showAlert("กรุณากรอก Tester.");
-            return;
+            return false;
         }
+        return true;
     }
 
     // ฟังก์ชันแสดง Popup Alert
@@ -517,7 +507,7 @@ public class PopupAddTestresultController {
         alert.setTitle("แจ้งเตือน");
         alert.setHeaderText(null);
         alert.setContentText(message);
-        alert.showAndWait(); // รอให้ผู้ใช้กดปิด Popup ก่อนดำเนินการต่อ
+        alert.showAndWait(); // รอให้ผู้ใช้กด OK ก่อนดำเนินการต่อ
     }
 
     @FXML
