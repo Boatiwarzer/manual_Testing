@@ -2,6 +2,7 @@ package ku.cs.testTools.Controllers.TestResult;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -59,8 +60,7 @@ public class PopupAddTestresultController {
     private boolean isGenerated = false;
     private File selectedFile;
     private String savedImagePath;
-
-    private String projectName = "125", directory = "data";
+    private String projectName , directory;
     private UseCaseList useCaseList = new UseCaseList();
     private UseCaseDetailList useCaseDetailList = new UseCaseDetailList();
     private TestScriptList testScriptList = new TestScriptList();
@@ -71,34 +71,90 @@ public class PopupAddTestresultController {
     private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
     private TestCase testCase = new TestCase();
     private TestCaseDetail testCaseDetail = new TestCaseDetail();
-    private final DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-    private final DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-    private final DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv");
-    private final DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
-    private final DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
-
+    private ObservableList<TestResult> imageItems = FXCollections.observableArrayList();
+    private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
+    private TestScriptDetailList testScriptDetailListTemp = new TestScriptDetailList();
+    private ConnectionList connectionList = new ConnectionList();
+    private TestResultDetailList testResultDetailListTemp;
+    private ArrayList<Object> objects;
+    private IRreport iRreport;
+    private IRreportList iRreportList = new IRreportList();
+    private IRreportDetail iRreportDetail = new IRreportDetail();
+    private IRreportDetailList iRreportDetailList = new IRreportDetailList();
+    private String type;
+    private String typeTR;
     @FXML
     void initialize() {
-        selectedComboBox();
         setStatus();
         setPriority();
         clearInfo();
-        randomId();
-        System.out.println(FXRouter.getData3());
-        System.out.println(FXRouter.getData2());
-        useCaseList = useCaseListDataSource.readData();
         if (FXRouter.getData() != null) {
-            testResultDetailList = (TestResultDetailList) FXRouter.getData();
-            testResult = (TestResult) FXRouter.getData2();
+            objects = (ArrayList) FXRouter.getData();
+            projectName = (String) objects.get(0);
+            directory = (String) objects.get(1);
+            typeTR = (String) objects.get(2);
+            testResult = (TestResult) objects.get(3);
+            testResultDetailList = (TestResultDetailList) objects.get(4);
             idTR = testResult.getIdTR();
-            if (FXRouter.getData3() != null) {
-                testResultDetail = (TestResultDetail) FXRouter.getData3();
-                testResultDetailList.findTRDById(testResultDetail.getIdTRD());
-                id = testResultDetail.getIdTRD();
+            type = (String) objects.get(5);
+            loadProject();
+            selectedComboBox();
+            if (objects.get(6) != null && type.equals("edit")) {
+                testResultDetail = (TestResultDetail) objects.get(6);
+                testResultDetail = testResultDetailList.findTRDById(testResultDetail.getIdTRD());
+                id = testCaseDetail.getIdTCD();
                 setTextEdit();
+            }else {
+                randomId();
             }
 
         }
+    }
+    private void loadProject() {
+        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
+        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
+        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+        DataSource<TestResultList> testResultListDataSource = new TestResultListFileDataSource(directory, projectName + ".csv");
+        DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
+        DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
+        DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
+        testResultList = testResultListDataSource.readData();
+        testResultDetailListTemp = testResultDetailListDataSource.readData();
+        iRreportList = iRreportListDataSource.readData();
+        iRreportDetailList = iRreportDetailListDataSource.readData();
+        testScriptList = testScriptListDataSource.readData();
+        testScriptDetailList = testScriptDetailListDataSource.readData();
+        testCaseList = testCaseListDataSource.readData();
+        testCaseDetailList = testCaseDetailListDataSource.readData();
+        testFlowPositionList = testFlowPositionListDataSource.readData();
+        connectionList = connectionListDataSource.readData();
+        useCaseList = useCaseListDataSource.readData();
+
+    }
+    private void saveProject() {
+        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
+        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+        DataSource<TestResultList> testResultListDataSource = new TestResultListFileDataSource(directory, projectName + ".csv");
+        DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
+        DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
+        DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
+        testResultListDataSource.writeData(testResultList);
+        testResultDetailListDataSource.writeData(testResultDetailList);
+        iRreportListDataSource.writeData(iRreportList);
+        iRreportDetailListDataSource.writeData(iRreportDetailList);
+        testFlowPositionListDataSource.writeData(testFlowPositionList);
+        testScriptDetailListDataSource.writeData(testScriptDetailList);
+        testCaseListDataSource.writeData(testCaseList);
+        testCaseDetailListDataSource.writeData(testCaseDetailList);
+        connectionListDataSource.writeData(connectionList);
+
     }
     private void setData() {
         testResultNameLabel.setText(testResult.getNameTR());
@@ -229,10 +285,7 @@ public class PopupAddTestresultController {
         new AutoCompleteComboBoxListener<>(onTestscriptIDComboBox);
         TextField editorTsId = onTestscriptIDComboBox.getEditor();
         onTestscriptIDComboBox.getSelectionModel().selectFirst();
-        if (testScriptListDataSource.readData() != null){
-            testScriptList= testScriptListDataSource.readData();
-            IdTSCombobox();
-        }
+        IdTSCombobox();
         onTestscriptIDComboBox.setOnAction(event -> {
             String selectedItem = onTestscriptIDComboBox.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
@@ -276,7 +329,7 @@ public class PopupAddTestresultController {
                         onActual.setText("No Actor found for ID: " + tsId);
                     }
                 }
-
+                DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
                 List<TestScriptDetail> testScriptDetailList = testScriptDetailListDataSource.readData().getTestScriptDetailList();
 
                 List<String> matchingSteps = new ArrayList<>();
@@ -327,12 +380,35 @@ public class PopupAddTestresultController {
             onTestscriptIDComboBox.getItems().add(IdTS_combobox);
         }
     }
-
-    @FXML
-    void onCancelButton(ActionEvent actionEvent) {
-        Node source = (Node) actionEvent.getSource();
+    private void objects() {
+        objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(typeTR);
+        objects.add(testResult);
+        objects.add(testResultDetailList);
+        objects.add(type);
+    }
+    private void route(ActionEvent event, ArrayList<Object> objects) throws IOException {
+        if (typeTR.equals("editTR")){
+            FXRouter.goTo("test_result_edit", objects);
+        }else {
+            FXRouter.goTo("test_result_add", objects);
+        }
+        Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
+    }
+    @FXML
+    void onCancelButton(ActionEvent event) {
+        try {
+            objects();
+            clearInfo();
+            route(event, objects);
+        } catch (IOException e) {
+            System.err.println("ไปที่หน้า home ไม่ได้");
+            System.err.println("ให้ตรวจสอบการกำหนด route");
+        }
     }
 
 
@@ -362,14 +438,9 @@ public class PopupAddTestresultController {
         testResultDetailList.addOrUpdateTestResultDetail(testResultDetail);
 
         try {
-            testResultDetail = null;
+            objects();
             clearInfo();
-            FXRouter.goTo("test_result_add",testResultDetailList,testResult);
-            System.out.println(testResultDetail);
-            Node source = (Node) event.getSource();
-            Stage stage = (Stage) source.getScene().getWindow();
-            stage.close();
-            System.out.println(testResultDetailList);
+            route(event, objects);
         } catch (IOException e) {
             System.err.println("ไปที่หน้า home ไม่ได้");
             System.err.println("ให้ตรวจสอบการกำหนด route");

@@ -13,8 +13,7 @@ import javafx.scene.text.Text;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
-import ku.cs.testTools.Services.DataSourceCSV.TestResultDetailListFileDataSource;
-import ku.cs.testTools.Services.DataSourceCSV.TestResultListFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.*;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.File;
@@ -58,48 +57,98 @@ public class TestResultAddController {
     private static int idCounter = 1; // Counter for sequential IDs
     private static final int MAX_ID = 999; // Upper limit for IDs
     private static Set<String> usedIds = new HashSet<>(); // Set to store used IDs
-    private final DataSource<TestResultList> testResultListDataSource = new TestResultListFileDataSource(directory, projectName + ".csv");
-    private final DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
+    private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
+    private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
+    private TestScriptDetailList testScriptDetailListTemp = new TestScriptDetailList();
+    private ConnectionList connectionList = new ConnectionList();
+    private UseCaseList useCaseList = new UseCaseList();
+    private IRreportList iRreportList = new IRreportList();
+    private IRreportDetailList iRreportDetailList = new IRreportDetailList();
+    private TestCaseList testCaseList;
+    private TestCaseDetailList testCaseDetailList;
+    private TestResultDetailList testResultDetailListTemp;
+    private ArrayList<Object> objects;
+    private String typeTR;
+    private String type;
+    private TestScriptList testScriptList;
 
     @FXML
     void initialize() {
-        clearInfo();
-        setButtonVisible();
         {
             if (FXRouter.getData() != null) {
+                objects = (ArrayList) FXRouter.getData();
+                projectName = (String) objects.get(0);
+                directory = (String) objects.get(1);
+                typeTR = (String) objects.get(2);
                 onTableTestresult.isFocused();
-                testResultDetailList = (TestResultDetailList) FXRouter.getData();
-                loadTable(testResultDetailList);
-                testResult = (TestResult) FXRouter.getData2();
+                clearInfo();
+                loadProject();
+                setButtonVisible();
                 selectedTRD();
                 selectedListView();
-                setDataTR();
-                if (testResultListDataSource.readData() != null && testResultDetailListDataSource.readData() != null){
-                    testResultList = testResultListDataSource.readData();
-                    loadListView(testResultList);
-                    for (TestResult testResult : testResultList.getTestResultList()) {
-                        word.add(testResult.getNameTR());
-                    }
-                    searchSet();
+                if (objects.get(3) != null){
+                    testResult = (TestResult) objects.get(3);
+                    testResultDetailList = (TestResultDetailList) objects.get(4);
+                    type = (String) objects.get(5);
+                    setDataTR();
+                }else {
+                    randomId();
                 }
-            }
-            else{
-                setTable();
-                randomId();
-                System.out.println(trId);
-                if (testResultListDataSource.readData() != null && testResultDetailListDataSource.readData() != null){
-                    testResultList = testResultListDataSource.readData();
-                    loadListView(testResultList);
-                    selectedTRD();
-                    for (TestResult testResult : testResultList.getTestResultList()) {
-                        word.add(testResult.getNameTR());
-                    }
-                    searchSet();
+                loadTable(testResultDetailList);
+                loadListView(testResultList);
+                for (TestResult testResult : testResultList.getTestResultList()) {
+                    word.add(testResult.getNameTR());
                 }
-
+                searchSet();
             }
         }
         System.out.println(testResultDetailList);
+
+    }
+    private void loadProject() {
+        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
+        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
+        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+        DataSource<TestResultList> testResultListDataSource = new TestResultListFileDataSource(directory, projectName + ".csv");
+        DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
+        DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
+        DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
+        testResultList = testResultListDataSource.readData();
+        //testResultDetailListTemp = testResultDetailListDataSource.readData();
+        iRreportList = iRreportListDataSource.readData();
+        iRreportDetailList = iRreportDetailListDataSource.readData();
+        testScriptList = testScriptListDataSource.readData();
+        testScriptDetailList = testScriptDetailListDataSource.readData();
+        testCaseList = testCaseListDataSource.readData();
+        testCaseDetailList = testCaseDetailListDataSource.readData();
+        testFlowPositionList = testFlowPositionListDataSource.readData();
+        connectionList = connectionListDataSource.readData();
+        useCaseList = useCaseListDataSource.readData();
+
+    }
+    private void saveProject() {
+        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
+        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+        DataSource<TestResultList> testResultListDataSource = new TestResultListFileDataSource(directory, projectName + ".csv");
+        DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
+        DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
+        DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
+        testResultListDataSource.writeData(testResultList);
+        testResultDetailListDataSource.writeData(testResultDetailList);
+        iRreportListDataSource.writeData(iRreportList);
+        iRreportDetailListDataSource.writeData(iRreportDetailList);
+        testFlowPositionListDataSource.writeData(testFlowPositionList);
+        testScriptDetailListDataSource.writeData(testScriptDetailList);
+        testCaseListDataSource.writeData(testCaseList);
+        testCaseDetailListDataSource.writeData(testCaseDetailList);
+        connectionListDataSource.writeData(connectionList);
 
     }
 
@@ -346,7 +395,6 @@ public class TestResultAddController {
     }
 
     public void setTable() {
-        testResultDetailList = new TestResultDetailList();
         onTableTestresult.getColumns().clear();
         onTableTestresult.getItems().clear();
         onTableTestresult.refresh();
@@ -449,49 +497,45 @@ public class TestResultAddController {
             }
         });
     }
+    private void objects() {
+        objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(typeTR);
+        objects.add(testResult);
+        objects.add(testResultDetailList);
+    }
 
+    private void currentNewData() {
+        String idTR = trId;
+        String nameTR = onTestNameField.getText();
+        String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String noteTR = onTestNoteField.getText();
+        testResult = new TestResult(idTR, nameTR, dateTR, noteTR, "In Tester");
+    }
     @FXML
     void onAddButton(ActionEvent event) {
         try {
-            String idTR = trId;
-            String nameTR = onTestNameField.getText();
-            String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            String noteTR = onTestNoteField.getText();
-            testResult = new TestResult(idTR, nameTR, dateTR, noteTR, "In Tester");
-
+            currentNewData();
+            objects();
+            objects.add("new");
+            objects.add(null);
             if (testResultDetailList != null){
-                FXRouter.popup("popup_add_testresult",testResultDetailList,testResult,null,true);
-            }else {
-                FXRouter.popup("popup_add_testresult",null,testResult,true);
+                FXRouter.popup("popup_add_testresult",objects,true);
             }
-
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
     @FXML
     void onEditListButton(ActionEvent event)  {
-        onEditListButton.setOnMouseClicked(event1 -> {
-            onTableTestresult.requestFocus();
-        });
-        onEditListButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                onTableTestresult.requestFocus();
-
-                                         }
-        });
-//                (event1 -> onTableTestresult.requestFocus());
         try {
-            String idTR = trId;
-            String nameTR = onTestNameField.getText();
-            String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            String noteTR = onTestNoteField.getText();
-            testResult = new TestResult(idTR, nameTR, dateTR, noteTR,"In Tester");
-
-            if (selectedItem != null){
-                FXRouter.popup("popup_add_testresult",testResultDetailList,testResult,selectedItem,true);
+            currentNewData();
+            objects();
+            objects.add("edit");
+            objects.add(selectedItem);
+            if (testResultDetailList != null){
+                FXRouter.popup("popup_add_testresult",objects,true);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -500,37 +544,31 @@ public class TestResultAddController {
     }
     @FXML
     void onDeleteListButton(ActionEvent event) {
-        onDeleteListButton.setOnMouseClicked(event1 -> {
-            onTableTestresult.requestFocus();
-        });
         try {
-            onTableTestresult.requestFocus();
-            String idTR = trId;
-            String nameTR = onTestNameField.getText();
-            String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            String noteTR = onTestNoteField.getText();
-            testResult = new TestResult(idTR, nameTR, dateTR, noteTR,"In Tester");
-            if (selectedItem != null){
-                FXRouter.popup("popup_delete_testresult",testResultDetailList,testResult,selectedItem,true);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Delete Confirmation");
+            alert.setHeaderText("Are you sure you want to delete this item?");
+            alert.setContentText("Press OK to confirm, or Cancel to go back.");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                testResultDetailList.deleteTestResultDetail(selectedItem);
+                onTableTestresult.getItems().clear();
+                loadTable(testResultDetailList);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-//    @FXML
-//    void onAddButton(ActionEvent event) {
-//        try {
-//            FXRouter.popup("popup_add_testresult", true);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-
     @FXML
     void onCancelButton(ActionEvent event) {
         try {
-            FXRouter.goTo("test_result");
+            objects = new ArrayList<>();
+            objects.add(directory);
+            objects.add(projectName);
+            TestResult testResult = new TestResult();
+            objects.add(testResult);
+            FXRouter.goTo("test_result",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -624,8 +662,7 @@ public class TestResultAddController {
             testResultList.addOrUpdateTestResult(testResult);
 
             // Write data to respective files
-            testResultListDataSource.writeData(testResultList);
-            testResultDetailListDataSource.writeData(testResultDetailList);
+            saveProject();
             showAlert("Success", "Test case saved successfully!");
 
             FXRouter.goTo("test_result",testResult,true);

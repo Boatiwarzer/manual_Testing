@@ -53,27 +53,16 @@ public class TestResultController {
     private TestResult selectedTestResult = new TestResult();
     private TestResultList testResultList = new TestResultList();
     private DataSource<TestResultList> testResultListDataSource = new TestResultListFileDataSource(directory, projectName + ".csv"); //= new TestResultListFileDataSource(directory, projectName + ".csv")
-    private TestResultDetail testResultDetail;
     private TestResultDetailList testResultDetailList = new TestResultDetailList();
     private DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv"); //= new TestResultDetailListFileDataSource(directory, projectName + ".csv")
     private ArrayList<String> word = new ArrayList<>();
-
     private String irId;
     private String irdId;
     private IRreport iRreport;
-    private IRreport selectedIRreport = new IRreport();
     private IRreportList iRreportList = new IRreportList();
     private IRreportDetail iRreportDetail = new IRreportDetail();
     private IRreportDetailList iRreportDetailList = new IRreportDetailList();
-    private TestScript testScript = new TestScript();
     private TestScriptList testScriptList = new TestScriptList();
-    private final DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-    private final DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-    private static int idCounter = 1; // Counter for sequential IDs
-    private static final int MAX_ID = 999; // Upper limit for IDs
-    private final DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
-    private final DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
-
     @FXML
     private TableColumn<TestResult, String> imageColumn;
 
@@ -81,16 +70,28 @@ public class TestResultController {
     private TableColumn<TestResult, String> pathColumn;
 
     private ObservableList<TestResult> imageItems = FXCollections.observableArrayList();
+    private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
+    private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
+    private TestScriptDetailList testScriptDetailListTemp = new TestScriptDetailList();
+    private ConnectionList connectionList = new ConnectionList();
+    private UseCaseList useCaseList = new UseCaseList();
+    private TestCaseList testCaseList;
+    private TestCaseDetailList testCaseDetailList;
+    private TestResultDetailList testResultDetailListTemp;
+    private ArrayList<Object> objects;
+
 
     @FXML
     void initialize() {
         clearInfo();
+        loadProject();
         randomIdIR();
         randomIdIRD();
         if (FXRouter.getData() != null) {
-            testResultList = testResultListDataSource.readData();
-            testResultDetailList = testResultDetailListDataSource.readData();
-            testResult = (TestResult) FXRouter.getData();
+            objects = (ArrayList) FXRouter.getData();
+            projectName = (String) objects.get(0);
+            directory = (String) objects.get(1);
+            testResult = (TestResult) objects.get(2);
             setTable();
             loadListView(testResultList);
             selected();
@@ -101,20 +102,63 @@ public class TestResultController {
 
         } else {
             setTable();
-            if (testResultListDataSource.readData() != null && testResultDetailListDataSource.readData() != null){
-                testResultList = testResultListDataSource.readData();
-                testResultDetailList = testResultDetailListDataSource.readData();
-                loadListView(testResultList);
-                selected();
-                for (TestResult testResult : testResultList.getTestResultList()) {
-                    word.add(testResult.getNameTR());
-                }
-                searchSet();
+            loadListView(testResultList);
+            selected();
+            for (TestResult testResult : testResultList.getTestResultList()) {
+                word.add(testResult.getNameTR());
             }
+            searchSet();
         }
+
 
         //testResult = testResultList.findTRById(testIDLabel.getText());
         System.out.println(testResultList.findTRById(testIDLabel.getText()));
+
+    }
+    private void loadProject() {
+        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
+        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
+        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+        DataSource<TestResultList> testResultListDataSource = new TestResultListFileDataSource(directory, projectName + ".csv");
+        DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
+        DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
+        DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
+        testResultList = testResultListDataSource.readData();
+        testResultDetailListTemp = testResultDetailListDataSource.readData();
+        iRreportList = iRreportListDataSource.readData();
+        iRreportDetailList = iRreportDetailListDataSource.readData();
+        testScriptList = testScriptListDataSource.readData();
+        testScriptDetailList = testScriptDetailListDataSource.readData();
+        testCaseList = testCaseListDataSource.readData();
+        testCaseDetailList = testCaseDetailListDataSource.readData();
+        testFlowPositionList = testFlowPositionListDataSource.readData();
+        connectionList = connectionListDataSource.readData();
+        useCaseList = useCaseListDataSource.readData();
+
+    }
+    private void saveProject() {
+        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
+        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+        DataSource<TestResultList> testResultListDataSource = new TestResultListFileDataSource(directory, projectName + ".csv");
+        DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
+        DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
+        DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
+        testResultListDataSource.writeData(testResultList);
+        testResultDetailListDataSource.writeData(testResultDetailList);
+        iRreportListDataSource.writeData(iRreportList);
+        iRreportDetailListDataSource.writeData(iRreportDetailList);
+        testFlowPositionListDataSource.writeData(testFlowPositionList);
+        testScriptDetailListDataSource.writeData(testScriptDetailList);
+        testCaseListDataSource.writeData(testCaseList);
+        testCaseDetailListDataSource.writeData(testCaseDetailList);
+        connectionListDataSource.writeData(connectionList);
 
     }
 
@@ -381,7 +425,7 @@ public class TestResultController {
         onTableTestresult.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
         //Add items to the table
-        for (TestResultDetail testResultDetail : testResultDetailList.getTestResultDetailList()) {
+        for (TestResultDetail testResultDetail : testResultDetailListTemp.getTestResultDetailList()) {
             if (testResultDetail.getIdTR().trim().equals(testResult.getIdTR().trim())){
                 onTableTestresult.getItems().add(testResultDetail);
             }
@@ -474,7 +518,12 @@ public class TestResultController {
     @FXML
     void onCreateButton(ActionEvent event) {
         try {
-            FXRouter.goTo("test_result_add",null);
+            objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add("newTR");
+            objects.add(null);
+            FXRouter.goTo("test_result_add",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -483,7 +532,14 @@ public class TestResultController {
     @FXML
     void onEditButton(ActionEvent event) {
         try {
-            FXRouter.goTo("test_result_edit", selectedTestResult);
+            objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add("editTR");
+            objects.add(selectedTestResult);
+            objects.add(testResultDetailList);
+            objects.add("new");
+            FXRouter.goTo("test_result_edit", objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -505,9 +561,6 @@ public class TestResultController {
 
     @FXML
     void onIRButton(ActionEvent event) {
-        testScriptList = testScriptListDataSource.readData();
-        iRreportList =iRreportListDataSource.readData();
-
         String idTR = testIDLabel.getText();
 
         if (iRreportList.isIdTRExist(idTR)) { // สำหรับ CSV
@@ -559,8 +612,7 @@ public class TestResultController {
                 iRreportDetail = new IRreportDetail(irID, testNo, testerIRD, tsIdIRD, tcIdIRD, descriptIRD, conditionIRD, imageIRD, priorityIRD, rcaIRD, managerIRD, statusIRD, remarkIRD, irId);
                 iRreportDetailList.addOrUpdateIRreportDetail(iRreportDetail);
             }
-            iRreportListDataSource.writeData(iRreportList);
-            iRreportDetailListDataSource.writeData(iRreportDetailList);
+            saveProject();
         }
 
 //        if (statusIRD.equals()) {
@@ -576,15 +628,22 @@ public class TestResultController {
         showAlert("Success", "IR Report saved successfully!");
         try {
 //            FXRouter.popup("test_result_ir");
+            DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
+            DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
             IRreportDetailList iRreportDetailList = iRreportDetailListDataSource.readData();
             IRreportList iRreportList = iRreportListDataSource.readData();
             // โหลด FXML ของ Popup
-            HashMap<String, Object> params = new HashMap<>();
-            params.put("iRreportDetailList", iRreportDetailList);
-            params.put("iRreportList", iRreportList);
+            objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add(iRreportDetailList);
+            objects.add(iRreportList);
+//            HashMap<String, Object> params = new HashMap<>();
+//            params.put("iRreportDetailList", iRreportDetailList);
+//            params.put("iRreportList", iRreportList);
 
             // เปิด Popup ด้วย FXRouter
-            FXRouter.popup("test_result_ir", params);
+            FXRouter.popup("test_result_ir", objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
