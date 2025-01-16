@@ -117,8 +117,7 @@ public class TestScriptEditController {
     void initialize() {
         setDate();
         clearInfo();
-        loadProject();
-        selectedComboBox();
+
         setButtonVisible();
         if (FXRouter.getData() != null) {
             objects = (ArrayList) FXRouter.getData();
@@ -126,6 +125,8 @@ public class TestScriptEditController {
             directory = (String) objects.get(1);
             typeTS = (String) objects.get(2);
             onTableTestscript.isFocused();
+            loadProject();
+            selectedComboBox();
             selectedTSD();
             selectedListView();
             if (objects.get(3) != null){
@@ -653,7 +654,8 @@ public class TestScriptEditController {
     @FXML
     void onClickTestcase(ActionEvent event) {
         try {
-            FXRouter.goTo("test_case");
+            objects();
+            FXRouter.goTo("test_case",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -662,7 +664,8 @@ public class TestScriptEditController {
     @FXML
     void onClickTestflow(ActionEvent event) {
         try {
-            FXRouter.goTo("test_flow");
+            objects();
+            FXRouter.goTo("test_flow",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -671,7 +674,8 @@ public class TestScriptEditController {
     @FXML
     void onClickTestresult(ActionEvent event) {
         try {
-            FXRouter.goTo("test_result");
+            objects();
+            FXRouter.goTo("test_result",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -680,7 +684,8 @@ public class TestScriptEditController {
     @FXML
     void onClickTestscript(ActionEvent event) {
         try {
-            FXRouter.goTo("test_script");
+            objects();
+            FXRouter.goTo("test_script",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -689,7 +694,8 @@ public class TestScriptEditController {
     @FXML
     void onClickUsecase(ActionEvent event) {
         try {
-            FXRouter.goTo("use_case");
+            objects();
+            FXRouter.goTo("use_case",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -698,9 +704,16 @@ public class TestScriptEditController {
     @FXML
     void onCancelButton(ActionEvent event) {
         try {
-            FXRouter.goTo("test_script");
+            objects();
+            FXRouter.goTo("test_script",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+    public void objects(){
+        objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(null);
     }
 }

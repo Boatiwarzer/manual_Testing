@@ -45,8 +45,7 @@ public class TestResultAddController {
 
     private ArrayList<String> word = new ArrayList<>();
     private String trId;
-    private String projectName = "125", directory = "data";
-    private String projectName1 = "uc";
+    private String projectName, directory;
 
     private TestResultList testResultList = new TestResultList();
     //private ArrayList<Object> objects = (ArrayList) FXRouter.getData();
@@ -590,8 +589,7 @@ public class TestResultAddController {
             objects = new ArrayList<>();
             objects.add(directory);
             objects.add(projectName);
-            TestResult testResult = new TestResult();
-            objects.add(testResult);
+            objects.add(null);
             FXRouter.goTo("test_result",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -601,7 +599,8 @@ public class TestResultAddController {
     @FXML
     void onClickTestcase(ActionEvent event) {
         try {
-            FXRouter.goTo("test_case");
+            objects();
+            FXRouter.goTo("test_case",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -610,7 +609,8 @@ public class TestResultAddController {
     @FXML
     void onClickTestflow(ActionEvent event) {
         try {
-            FXRouter.goTo("test_flow");
+            objects();
+            FXRouter.goTo("test_flow",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -619,7 +619,8 @@ public class TestResultAddController {
     @FXML
     void onClickTestresult(ActionEvent event) {
         try {
-            FXRouter.goTo("test_result");
+            objects();
+            FXRouter.goTo("test_result",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -628,7 +629,8 @@ public class TestResultAddController {
     @FXML
     void onClickTestscript(ActionEvent event) {
         try {
-            FXRouter.goTo("test_script");
+            objects();
+            FXRouter.goTo("test_script",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -637,7 +639,8 @@ public class TestResultAddController {
     @FXML
     void onClickUsecase(ActionEvent event) {
         try {
-            FXRouter.goTo("use_case");
+            objects();
+            FXRouter.goTo("use_case",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -29,12 +29,30 @@ public class HomeTesterController {
     private Hyperlink onClickUsecase;
     private String projectName, directory;
     private TestScriptList testScriptList = new TestScriptList();
+    private ArrayList<Object> objects;
 
-
+    @FXML
+    void initialize() {
+        if (FXRouter.getData() != null) {
+            objects = (ArrayList) FXRouter.getData();
+            // Load the project
+            projectName = (String) objects.get(0);
+            directory = (String) objects.get(1);
+            System.out.println("Project Name: " + projectName);
+            System.out.println("Directory: " + directory);
+        }
+    }
+    public void objects(){
+        objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(null);
+    }
     @FXML
     void onClickTestcase(ActionEvent event) {
         try {
-            FXRouter.goTo("test_case");
+            objects();
+            FXRouter.goTo("test_case",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -43,7 +61,8 @@ public class HomeTesterController {
     @FXML
     void onClickTestflow(ActionEvent event) {
         try {
-            FXRouter.goTo("test_flow");
+            objects();
+            FXRouter.goTo("test_flow",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -52,7 +71,8 @@ public class HomeTesterController {
     @FXML
     void onClickTestresult(ActionEvent event) {
         try {
-            FXRouter.goTo("test_result");
+            objects();
+            FXRouter.goTo("test_result",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -61,7 +81,8 @@ public class HomeTesterController {
     @FXML
     void onClickTestscript(ActionEvent event) {
         try {
-            FXRouter.goTo("test_script");
+            objects();
+            FXRouter.goTo("test_script",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -70,35 +91,14 @@ public class HomeTesterController {
     @FXML
     void onClickUsecase(ActionEvent event) {
         try {
-            FXRouter.goTo("use_case");
+            objects();
+            FXRouter.goTo("use_case",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-    @FXML
-    void initialize() {
-        if (FXRouter.getData() != null) {
-            ArrayList<Object> objects = (ArrayList) FXRouter.getData();
-            // Load the project
-            projectName = (String) objects.get(0);
-            directory = (String) objects.get(1);
-            loadProject();
-            saveProject();
-            System.out.println("Project Name: " + projectName);
-            System.out.println("Directory: " + directory);
-        }
-    }
 
-    private void loadProject() {
-        testScriptList.clear();
 
-        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-        testScriptListDataSource.readData();
-    }
 
-    private void saveProject() {
-        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-        testScriptListDataSource.writeData(testScriptList);
-    }
 
 }

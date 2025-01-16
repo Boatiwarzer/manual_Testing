@@ -82,7 +82,7 @@ public class UseCaseEditController {
 //            showInfo(selectedUseCase);
 //        }
         if (FXRouter.getData() != null) {
-            ArrayList<Object> objects = (ArrayList) FXRouter.getData();
+            objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
             typeUC = (String) objects.get(2);
@@ -503,7 +503,8 @@ public class UseCaseEditController {
     @FXML
     void onClickTestcase(ActionEvent event) {
         try {
-            FXRouter.goTo("test_case");
+            objects();
+            FXRouter.goTo("test_case",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -512,7 +513,8 @@ public class UseCaseEditController {
     @FXML
     void onClickTestflow(ActionEvent event) {
         try {
-            FXRouter.goTo("test_flow");
+            objects();
+            FXRouter.goTo("test_flow",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -521,7 +523,8 @@ public class UseCaseEditController {
     @FXML
     void onClickTestresult(ActionEvent event) {
         try {
-            FXRouter.goTo("test_result");
+            objects();
+            FXRouter.goTo("test_result",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -530,7 +533,8 @@ public class UseCaseEditController {
     @FXML
     void onClickTestscript(ActionEvent event) {
         try {
-            FXRouter.goTo("test_script");
+            objects();
+            FXRouter.goTo("test_script",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -539,7 +543,8 @@ public class UseCaseEditController {
     @FXML
     void onClickUsecase(ActionEvent event) {
         try {
-            FXRouter.goTo("use_case");
+            objects();
+            FXRouter.goTo("use_case",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -601,12 +606,18 @@ public class UseCaseEditController {
     @FXML
     void onCancelButton(ActionEvent event) {
         try {
-            FXRouter.goTo("use_case");
+            objects();
+            FXRouter.goTo("use_case",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-
+    public void objects(){
+        objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(null);
+    }
     @FXML
     void onSearchButton(ActionEvent event) {
 

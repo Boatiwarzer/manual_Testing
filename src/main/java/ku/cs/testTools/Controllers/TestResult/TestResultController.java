@@ -50,13 +50,11 @@ public class TestResultController {
     @FXML
     private TableView<TestResultDetail> onTableTestresult;
 
-    private String projectName = "125", directory = "data", TestResultId; // directory, projectName
+    private String projectName, directory, TestResultId; // directory, projectName
     private TestResult testResult = new TestResult();
     private TestResult selectedTestResult = new TestResult();
     private TestResultList testResultList = new TestResultList();
-    private DataSource<TestResultList> testResultListDataSource = new TestResultListFileDataSource(directory, projectName + ".csv"); //= new TestResultListFileDataSource(directory, projectName + ".csv")
     private TestResultDetailList testResultDetailList = new TestResultDetailList();
-    private DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv"); //= new TestResultDetailListFileDataSource(directory, projectName + ".csv")
     private ArrayList<String> word = new ArrayList<>();
     private String irId;
     private String irdId;
@@ -85,15 +83,18 @@ public class TestResultController {
 
     @FXML
     void initialize() {
-        clearInfo();
-        loadProject();
-        randomIdIR();
-        randomIdIRD();
+
         if (FXRouter.getData() != null) {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            testResult = (TestResult) objects.get(2);
+            if (objects.get(2) != null){
+                testResult = (TestResult) objects.get(2);
+            }
+            clearInfo();
+            loadProject();
+            randomIdIR();
+            randomIdIRD();
             setTable();
             loadListView(testResultList);
             selected();
@@ -102,20 +103,16 @@ public class TestResultController {
             }
             searchSet();
 
-        } else {
-            setTable();
-            loadListView(testResultList);
-            selected();
-            for (TestResult testResult : testResultList.getTestResultList()) {
-                word.add(testResult.getNameTR());
-            }
-            searchSet();
         }
-
-
         //testResult = testResultList.findTRById(testIDLabel.getText());
         System.out.println(testResultList.findTRById(testIDLabel.getText()));
 
+    }
+    public void objects(){
+        objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(null);
     }
     private void loadProject() {
         DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
@@ -498,7 +495,8 @@ public class TestResultController {
     @FXML
     void onClickTestcase(ActionEvent event) {
         try {
-            FXRouter.goTo("test_case");
+            objects();
+            FXRouter.goTo("test_case",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -507,7 +505,8 @@ public class TestResultController {
     @FXML
     void onClickTestflow(ActionEvent event) {
         try {
-            FXRouter.goTo("test_flow");
+            objects();
+            FXRouter.goTo("test_flow",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -516,7 +515,8 @@ public class TestResultController {
     @FXML
     void onClickTestresult(ActionEvent event) {
         try {
-            FXRouter.goTo("test_result");
+            objects();
+            FXRouter.goTo("test_result",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -525,7 +525,8 @@ public class TestResultController {
     @FXML
     void onClickTestscript(ActionEvent event) {
         try {
-            FXRouter.goTo("test_script");
+            objects();
+            FXRouter.goTo("test_script",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -534,7 +535,8 @@ public class TestResultController {
     @FXML
     void onClickUsecase(ActionEvent event) {
         try {
-            FXRouter.goTo("use_case");
+            objects();
+            FXRouter.goTo("use_case",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

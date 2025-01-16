@@ -72,7 +72,7 @@ public class TestFlowController {
     private double startX, startY;
     private TestScriptList testScriptList = new TestScriptList();
     private TestScriptDetailList testScriptDetailList;
-    private String projectName = "125", directory = "data";
+    private String projectName, directory;
     private TestScript testScript = new TestScript();
     private TestCaseList testCaseList = new TestCaseList();
     private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
@@ -100,7 +100,7 @@ public class TestFlowController {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            String type =  (String) objects.get(2);
+//            String type =  (String) objects.get(2);
         }
         loadProject();
         saveProject();
@@ -114,6 +114,12 @@ public class TestFlowController {
 
 
 
+    }
+    public void objects(){
+        objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(null);
     }
     private void undoAction() {
     }
@@ -143,9 +149,9 @@ public class TestFlowController {
 
         testScriptList.getTestScriptList().forEach(testScript -> {
             // Find the position of the use case
-            TestFlowPosition testFlowTSPosition = testFlowPositionList.findByPositionId(testScript.getPosition());
-            if (testFlowTSPosition != null) {
-                drawTestScript(testFlowTSPosition.getFitWidth(), testFlowTSPosition.getFitHeight(), testFlowTSPosition.getXPosition(), testFlowTSPosition.getYPosition(),testScript.getIdTS() + " : " + testScript.getNameTS(), testFlowTSPosition.getPositionID());
+            TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(testScript.getPosition());
+            if (testFlowPosition != null) {
+                drawTestScript(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),testScript.getIdTS() + " : " + testScript.getNameTS(), testFlowPosition.getPositionID());
             }
         });
         testCaseList.getTestCaseList().forEach(testCase -> {
@@ -1696,7 +1702,7 @@ public class TestFlowController {
     @FXML
     void onClickTestcase(ActionEvent event) {
         try {
-            FXRouter.goTo("test_case");
+            FXRouter.goTo("test_case",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -1705,7 +1711,7 @@ public class TestFlowController {
     @FXML
     void onClickTestflow(ActionEvent event) {
         try {
-            FXRouter.goTo("test_flow");
+            FXRouter.goTo("test_flow",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -1714,7 +1720,8 @@ public class TestFlowController {
     @FXML
     void onClickTestresult(ActionEvent event) {
         try {
-            FXRouter.goTo("test_result");
+            objects();
+            FXRouter.goTo("test_result",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -1723,7 +1730,8 @@ public class TestFlowController {
     @FXML
     void onClickTestscript(ActionEvent event) {
         try {
-            FXRouter.goTo("test_script");
+            objects();
+            FXRouter.goTo("test_script",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -1732,7 +1740,8 @@ public class TestFlowController {
     @FXML
     void onClickUsecase(ActionEvent event) {
         try {
-            FXRouter.goTo("use_case");
+            objects();
+            FXRouter.goTo("use_case",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

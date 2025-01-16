@@ -108,7 +108,6 @@ public class TestCaseEditController {
     void initialize() {
         setDate();
         clearInfo();
-        loadProject();
         selectedComboBox();
         setButtonVisible();
         if (FXRouter.getData() != null) {
@@ -116,6 +115,7 @@ public class TestCaseEditController {
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
             typeTC = (String) objects.get(2);
+            loadProject();
             onTableTestcase.isFocused();
             selectedTCD();
             selectedListView();
@@ -564,7 +564,8 @@ public class TestCaseEditController {
     @FXML
     void onClickTestcase(ActionEvent event) {
         try {
-            FXRouter.goTo("test_case");
+            objects();
+            FXRouter.goTo("test_case",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -573,7 +574,8 @@ public class TestCaseEditController {
     @FXML
     void onClickTestflow(ActionEvent event) {
         try {
-            FXRouter.goTo("test_flow");
+            objects();
+            FXRouter.goTo("test_flow",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -582,7 +584,8 @@ public class TestCaseEditController {
     @FXML
     void onClickTestresult(ActionEvent event) {
         try {
-            FXRouter.goTo("test_result");
+            objects();
+            FXRouter.goTo("test_result",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -591,7 +594,8 @@ public class TestCaseEditController {
     @FXML
     void onClickTestscript(ActionEvent event) {
         try {
-            FXRouter.goTo("test_script");
+            objects();
+            FXRouter.goTo("test_script",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -600,7 +604,8 @@ public class TestCaseEditController {
     @FXML
     void onClickUsecase(ActionEvent event) {
         try {
-            FXRouter.goTo("use_case");
+            objects();
+            FXRouter.goTo("use_case",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -610,7 +615,8 @@ public class TestCaseEditController {
     @FXML
     void onCancelButton(ActionEvent event) {
         try {
-            FXRouter.goTo("test_case");
+            objects();
+            FXRouter.goTo("test_case",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
