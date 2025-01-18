@@ -77,6 +77,7 @@ public class NewProjectController {
         ArrayList<Object> objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(null);
         //แก้พาท
         String packageStr1 = "views/";
         FXRouter.when("home", packageStr1 + "home_tester.fxml","TestTools | " + projectName);

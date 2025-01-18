@@ -59,7 +59,7 @@ public class IRTestresultController {
     void initialize() {
 //        clearInfo();
         setTable();
-        iRreportList = iRreportListDataSource.readData();
+//        iRreportList = iRreportListDataSource.readData();
 //        if (FXRouter.getData() != null) {
 //            iRreportDetailList = (IRreportDetailList) FXRouter.getData();
 //            iRreport = (IRreport) FXRouter.getData2();
@@ -73,9 +73,14 @@ public class IRTestresultController {
 //            setTableInfo(iRreportDetailList);
 //        }
         try {
-            HashMap<String, Object> params = (HashMap<String, Object>) FXRouter.getData();
-            IRreportDetailList iRreportDetailList = (IRreportDetailList) params.get("iRreportDetailList");
-            IRreportList iRreportList = (IRreportList) params.get("iRreportList");
+            ArrayList<Object> objects = (ArrayList) FXRouter.getData();
+            projectName = (String) objects.get(0);
+            directory = (String) objects.get(1);
+            iRreportDetailList = (IRreportDetailList) objects.get(2);
+            iRreportList = (IRreportList) objects.get(3);
+//            HashMap<String, Object> params = (HashMap<String, Object>) FXRouter.getData();
+//            IRreportDetailList iRreportDetailList = (IRreportDetailList) params.get("iRreportDetailList");
+//            IRreportList iRreportList = (IRreportList) params.get("iRreportList");
 
             // ตั้งค่า TableView
             setTableInfo(iRreportDetailList);
@@ -92,7 +97,6 @@ public class IRTestresultController {
     }
 
     public void setTable() {
-        iRreportDetailList = new IRreportDetailList();
         onTableIR.getColumns().clear();
         onTableIR.getItems().clear();
         onTableIR.refresh();

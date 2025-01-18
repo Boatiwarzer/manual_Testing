@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -12,11 +13,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
-import ku.cs.testTools.Services.DataSourceCSV.TestResultDetailListFileDataSource;
-import ku.cs.testTools.Services.DataSourceCSV.TestResultListFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.*;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.File;
@@ -48,9 +49,7 @@ public class TestResultEditController {
 
     private ArrayList<String> word = new ArrayList<>();
     private String trId;
-    private String projectName = "125", directory = "data";
-    private String projectName1 = "uc";
-
+    private String projectName, directory;
     private TestResultList testResultList = new TestResultList();
     //private ArrayList<Object> objects = (ArrayList) FXRouter.getData();
     private TestResultDetailList testResultDetailList = new TestResultDetailList();
@@ -61,8 +60,19 @@ public class TestResultEditController {
     private static int idCounter = 1; // Counter for sequential IDs
     private static final int MAX_ID = 999; // Upper limit for IDs
     private static Set<String> usedIds = new HashSet<>(); // Set to store used IDs
-    private final DataSource<TestResultList> testResultListDataSource = new TestResultListFileDataSource(directory, projectName + ".csv");
-    private final DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
+    private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
+    private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
+    private TestScriptDetailList testScriptDetailListTemp = new TestScriptDetailList();
+    private ConnectionList connectionList = new ConnectionList();
+    private UseCaseList useCaseList = new UseCaseList();
+    private IRreportList iRreportList = new IRreportList();
+    private IRreportDetailList iRreportDetailList = new IRreportDetailList();
+    private TestCaseList testCaseList;
+    private TestCaseDetailList testCaseDetailList;
+    private ArrayList<Object> objects;
+    private String typeTR;
+    private String type;
+    private TestScriptList testScriptList;
 
     @FXML
     void initialize() {
@@ -70,45 +80,86 @@ public class TestResultEditController {
         setButtonVisible();
         {
             if (FXRouter.getData() != null) {
+                objects = (ArrayList) FXRouter.getData();
+                projectName = (String) objects.get(0);
+                directory = (String) objects.get(1);
+                typeTR = (String) objects.get(2);
+                System.out.println(typeTR);
+                System.out.println(objects.get(3));
                 onTableTestresult.isFocused();
-                testResult = (TestResult) FXRouter.getData();
                 selectedTRD();
                 selectedListView();
+                loadProject();
+                if (objects.get(3) != null){
+                    testResult = (TestResult) objects.get(3);
+                    testResultDetailList = (TestResultDetailList) objects.get(4);
+                    type = (String) objects.get(5);
+                    System.out.println(type);
+
+                }
                 setDataTR();
-                if (testResultListDataSource.readData() != null && testResultDetailListDataSource.readData() != null){
-                    TestResultList testResultListTemp = testResultListDataSource.readData();
-                    testResultList = testResultListDataSource.readData();
-                    testResultDetailListTemp = testResultDetailListDataSource.readData();
+                if (typeTR.equals("editTR") && type.equals("new")){
                     for (TestResultDetail testResultDetail : testResultDetailListTemp.getTestResultDetailList()) {
-                        if (testResult.getIdTR().trim().equals(testResultDetail.getIdTR().trim())){
-                            testResultDetailList.addOrUpdateTestResultDetail(testResultDetail);
-                        }
+                        testResultDetailList.addOrUpdateTestResultDetail(testResultDetail);
                     }
-                    loadTable(testResultDetailList);
-                    loadListView(testResultList);
-                    for (TestResult testResult : testResultList.getTestResultList()) {
-                        word.add(testResult.getNameTR());
-                    }
-                    searchSet();
                 }
-            }
-            else{
-                setTable();
-                randomId();
-                System.out.println(trId);
-                if (testResultListDataSource.readData() != null && testResultDetailListDataSource.readData() != null){
-                    TestResultList testResultListTemp = testResultListDataSource.readData();
-                    loadListView(testResultListTemp);
-                    selectedTRD();
-                    for (TestResult testResult : testResultListTemp.getTestResultList()) {
-                        word.add(testResult.getNameTR());
-                    }
-                    searchSet();
+
+                loadTable(testResultDetailList);
+                loadListView(testResultList);
+                for (TestResult testResult : testResultList.getTestResultList()) {
+                    word.add(testResult.getNameTR());
                 }
+                searchSet();
 
             }
         }
         System.out.println(testResultDetailList);
+    }
+    private void loadProject() {
+        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
+        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
+        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+        DataSource<TestResultList> testResultListDataSource = new TestResultListFileDataSource(directory, projectName + ".csv");
+        DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
+        DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
+        DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
+        testResultList = testResultListDataSource.readData();
+        testResultDetailListTemp = testResultDetailListDataSource.readData();
+        iRreportList = iRreportListDataSource.readData();
+        iRreportDetailList = iRreportDetailListDataSource.readData();
+        testScriptList = testScriptListDataSource.readData();
+        testScriptDetailList = testScriptDetailListDataSource.readData();
+        testCaseList = testCaseListDataSource.readData();
+        testCaseDetailList = testCaseDetailListDataSource.readData();
+        testFlowPositionList = testFlowPositionListDataSource.readData();
+        connectionList = connectionListDataSource.readData();
+        useCaseList = useCaseListDataSource.readData();
+
+    }
+    private void saveProject() {
+        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
+        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+        DataSource<TestResultList> testResultListDataSource = new TestResultListFileDataSource(directory, projectName + ".csv");
+        DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
+        DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
+        DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
+        testResultListDataSource.writeData(testResultList);
+        testResultDetailListDataSource.writeData(testResultDetailList);
+        iRreportListDataSource.writeData(iRreportList);
+        iRreportDetailListDataSource.writeData(iRreportDetailList);
+        testFlowPositionListDataSource.writeData(testFlowPositionList);
+        testScriptDetailListDataSource.writeData(testScriptDetailList);
+        testCaseListDataSource.writeData(testCaseList);
+        testCaseDetailListDataSource.writeData(testCaseDetailList);
+        connectionListDataSource.writeData(connectionList);
+
     }
     private void selectedListView() {
         if (testResult != null){
@@ -138,8 +189,6 @@ public class TestResultEditController {
         testIDLabel.setText(trId);
         String name = testResult.getNameTR();
         onTestNameField.setText(name);
-        String date = testResult.getDateTR();
-//        testDateLabel.setText(date);
         String note = testResult.getNoteTR();
         onTestNoteField.setText(note);
     }
@@ -153,8 +202,6 @@ public class TestResultEditController {
         testIDLabel.setText("-");
         onTestNameField.setText("");
         onTestNoteField.setText("");
-        selectedItem = null;
-        FXRouter.setData3(null);
     }
     private void searchSet() {
         ArrayList <String> word = new ArrayList<>();
@@ -372,7 +419,9 @@ public class TestResultEditController {
 
         //Add items to the table
         for (TestResultDetail testResultDetail : testResultDetailList.getTestResultDetailList()) {
-            onTableTestresult.getItems().add(testResultDetail);
+            if (testResultDetail.getIdTR().trim().equals(testResult.getIdTR().trim())){
+                onTableTestresult.getItems().add(testResultDetail);
+            }
         }
     }
 
@@ -475,20 +524,33 @@ public class TestResultEditController {
             }
         });
     }
-
+    private void currentNewData() {
+        String idTR = trId;
+        String nameTR = onTestNameField.getText();
+        String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String noteTR = onTestNoteField.getText();
+        testResult = new TestResult(idTR, nameTR, dateTR, noteTR, "In Tester");
+        if (nameTR == null || nameTR.isEmpty()) {
+            showAlert("Input Error", "Please fill in all required fields.");
+        }
+    }
+    private void objects() {
+        objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(typeTR);
+        objects.add(testResult);
+        objects.add(testResultDetailList);
+    }
     @FXML
     void onAddButton(ActionEvent event) {
         try {
-            String idTR = trId;
-            String nameTR = onTestNameField.getText();
-            String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            String noteTR = onTestNoteField.getText();
-            testResult = new TestResult(idTR, nameTR, dateTR, noteTR,"In Tester");
-
+            currentNewData();
+            objects();
+            objects.add("edit");
+            objects.add(selectedItem);
             if (testResultDetailList != null){
-                FXRouter.popup("popup_add_testresult",testResultDetailList,testResult,null,true);
-            }else {
-                FXRouter.popup("popup_add_testresult",null,testResult,true);
+                FXRouter.popup("popup_add_testresult",objects,true);
             }
 
         } catch (IOException e) {
@@ -497,25 +559,13 @@ public class TestResultEditController {
     }
     @FXML
     void onEditListButton(ActionEvent event)  {
-        onEditListButton.setOnMouseClicked(event1 -> {
-            onTableTestresult.requestFocus();
-        });
-        onEditListButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                onTableTestresult.requestFocus();
-
-            }
-        });
         try {
-            String idTR = trId;
-            String nameTR = onTestNameField.getText();
-            String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            String noteTR = onTestNoteField.getText();
-            testResult = new TestResult(idTR, nameTR, dateTR, noteTR, "In Tester");
-
+            currentNewData();
+            objects();
+            objects.add("edit");
+            objects.add(selectedItem);
             if (selectedItem != null){
-                FXRouter.popup("popup_add_testresult",testResultDetailList,testResult,selectedItem,true);
+                FXRouter.popup("popup_add_testresult",objects,true);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -523,26 +573,18 @@ public class TestResultEditController {
     }
     @FXML
     void onDeleteListButton(ActionEvent event) {
-        onDeleteListButton.setOnMouseClicked(event1 -> {
-            onTableTestresult.requestFocus();
-        });
-//        onDeleteListButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent event) {
-//                onTableTestresult.requestFocus();
-//            }
-//        });
         try {
-            onTableTestresult.requestFocus();
-            String idTR = trId;
-            String nameTR = onTestNameField.getText();
-            String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            String noteTR = onTestNoteField.getText();
-            testResult = new TestResult(idTR, nameTR, dateTR, noteTR,"In Tester");
-            if (selectedItem != null){
-                FXRouter.popup("popup_delete_testresult",testResultDetailList,testResult,selectedItem,true);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Delete Confirmation");
+            alert.setHeaderText("Are you sure you want to delete this item?");
+            alert.setContentText("Press OK to confirm, or Cancel to go back.");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                testResultDetailList.deleteTestResultDetail(selectedItem);
+                onTableTestresult.getItems().clear();
+                loadTable(testResultDetailList);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
@@ -552,7 +594,8 @@ public class TestResultEditController {
     @FXML
     void onClickTestcase(ActionEvent event) {
         try {
-            FXRouter.goTo("test_case");
+            objects();
+            FXRouter.goTo("test_case",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -561,7 +604,8 @@ public class TestResultEditController {
     @FXML
     void onClickTestflow(ActionEvent event) {
         try {
-            FXRouter.goTo("test_flow");
+            objects();
+            FXRouter.goTo("test_flow",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -570,7 +614,8 @@ public class TestResultEditController {
     @FXML
     void onClickTestresult(ActionEvent event) {
         try {
-            FXRouter.goTo("test_result");
+            objects();
+            FXRouter.goTo("test_result",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -579,7 +624,8 @@ public class TestResultEditController {
     @FXML
     void onClickTestscript(ActionEvent event) {
         try {
-            FXRouter.goTo("test_script");
+            objects();
+            FXRouter.goTo("test_script",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -588,7 +634,8 @@ public class TestResultEditController {
     @FXML
     void onClickUsecase(ActionEvent event) {
         try {
-            FXRouter.goTo("use_case");
+            objects();
+            FXRouter.goTo("use_case",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -597,11 +644,24 @@ public class TestResultEditController {
     @FXML
     void onDeleteButton(ActionEvent event) {
         try {
-            testResultList.deleteTestResult(testResult);
-            testResultListDataSource.writeData(testResultList);
-            if (testResult != null){
-                FXRouter.popup("popup_delete_testresult",null,testResult,true);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Delete Confirmation");
+            alert.setHeaderText("Are you sure you want to delete this item?");
+            alert.setContentText("Press OK to confirm, or Cancel to go back.");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                testResultList.deleteTestResult(testResult);
+                testResultDetailListTemp.deleteTestResultDetailByID(testResult.getIdTR());
             }
+            saveProject();
+            objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add("none");
+            FXRouter.goTo("test_resultt", objects);
+            Node source = (Node) event.getSource();
+            Stage stage = (Stage) source.getScene().getWindow();
+            stage.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -639,25 +699,17 @@ public class TestResultEditController {
 //        }
 
         try {
-            String idTR = trId;
-            String nameTR = onTestNameField.getText();
-            String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            String noteTR = onTestNoteField.getText();
-            testResult = new TestResult(idTR, nameTR, dateTR, noteTR,"In Tester");
-
-            if (nameTR == null || nameTR.isEmpty()) {
-                showAlert("Input Error", "Please fill in all required fields.");
-                return;
-            }
-
+            currentNewData();
+            objects();
+            objects.add("edit");
+            objects.add(selectedItem);
             testResultList.addOrUpdateTestResult(testResult);
 
             // Write data to respective files
-            testResultListDataSource.writeData(testResultList);
-            testResultDetailListDataSource.writeData(testResultDetailList);
+            saveProject();
             showAlert("Success", "Test case saved successfully!");
 
-            FXRouter.goTo("test_result",testResult,true);
+            FXRouter.goTo("test_result",objects,true);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -684,7 +736,8 @@ public class TestResultEditController {
     @FXML
     void onCancelButton(ActionEvent event) {
         try {
-            FXRouter.goTo("test_result");
+            objects();
+            FXRouter.goTo("test_result",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

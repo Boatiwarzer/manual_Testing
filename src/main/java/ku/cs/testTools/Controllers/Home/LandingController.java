@@ -76,6 +76,7 @@ public class LandingController {
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(null);
             // แก้พาท
             String packageStr1 = "views/";
             FXRouter.when("home_tester", packageStr1 + "home_tester.fxml", "TestTools | " + projectName);
@@ -130,6 +131,7 @@ public class LandingController {
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(null);
             // แก้พาท
             String packageStr1 = "views/";
             FXRouter.when("home_manager", packageStr1 + "home_manager.fxml", "TestTools | " + projectName);
