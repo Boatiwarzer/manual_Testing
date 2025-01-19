@@ -23,45 +23,35 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="780.0" prefWidth="1360.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.testTools.Controllers.TestCase.TestCaseController">
    <top>
-      <MenuBar prefHeight="30.0" style="-fx-background-color: #98aeca;" BorderPane.alignment="CENTER">
-        <menus>
-            <Menu mnemonicParsing="false" text="File">
-               <items>
-                  <MenuItem mnemonicParsing="false" text="New" />
-                  <MenuItem mnemonicParsing="false" text="Open…" />
-                  <Menu mnemonicParsing="false" text="Open Recent" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Close" />
-                  <MenuItem mnemonicParsing="false" text="Save" />
-                  <MenuItem mnemonicParsing="false" text="Save As…" />
-                  <MenuItem mnemonicParsing="false" text="Revert" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Preferences…" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Quit" />
-               </items>
-            </Menu>
-            <Menu mnemonicParsing="false" text="Edit">
-               <items>
-                  <MenuItem mnemonicParsing="false" text="Undo" />
-                  <MenuItem mnemonicParsing="false" text="Redo" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Cut" />
-                  <MenuItem mnemonicParsing="false" text="Copy" />
-                  <MenuItem mnemonicParsing="false" text="Paste" />
-                  <MenuItem mnemonicParsing="false" text="Delete" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Select All" />
-                  <MenuItem mnemonicParsing="false" text="Unselect All" />
-               </items>
-            </Menu>
-            <Menu mnemonicParsing="false" text="Help">
-               <items>
-                  <MenuItem mnemonicParsing="false" text="About ManualTestTools" />
-               </items>
-            </Menu>
-        </menus>
-      </MenuBar>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <MenuBar fx:id="homePageMenuBar" style="-fx-background-color: #98aeca;">
+               <menus>
+                  <Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
+                     <items>
+                        <MenuItem fx:id="newMenuItem" mnemonicParsing="false" onAction="#handleNewMenuItem" text="New" />
+                        <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" onAction="#handleSaveMenuItem" text="Save" />
+                        <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#handleOpenMenuItem" text="Open…" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <Menu fx:id="exportMenu" mnemonicParsing="false" text="Export">
+                           <items>
+                              <MenuItem fx:id="exportMenuItem" mnemonicParsing="false" onAction="#handleExportMenuItem" text="Export..." />
+                              <MenuItem fx:id="exportPDF" mnemonicParsing="false" onAction="#handleExportPDF" text="Export All..." />
+                           </items>
+                        </Menu>
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem fx:id="exitQuit" mnemonicParsing="false" onAction="#handleExit" text="Quit" />
+                     </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Help">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
+                     </items>
+                  </Menu>
+               </menus>
+            </MenuBar>
+         </children>
+      </VBox>
    </top>
    <center>
       <AnchorPane prefWidth="1680.0" BorderPane.alignment="CENTER">

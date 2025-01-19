@@ -10,6 +10,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.AutoCompleteComboBoxListener;
@@ -21,6 +23,7 @@ import ku.cs.testTools.Services.DataSourceCSV.UseCaseListFileDataSource;
 import ku.cs.testTools.Services.UseCaseComparable;
 import org.controlsfx.control.textfield.TextFields;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -57,7 +60,22 @@ public class UseCaseEditController {
 
     @FXML
     private Label testIDLabel, errorLabel;;
-
+    @FXML
+    private MenuItem exitQuit;
+    @FXML
+    private Menu exportMenu;
+    @FXML
+    private MenuItem exportMenuItem;
+    @FXML
+    private MenuItem exportPDF;
+    @FXML
+    private Menu fileMenu;
+    @FXML
+    private MenuItem newMenuItem;
+    @FXML
+    private MenuBar homePageMenuBar;
+    @FXML
+    private MenuItem saveMenuItem;
     private UseCase selectedUseCase;
     private String projectName, directory, useCaseId; // directory, projectName
     private UseCase useCase;
@@ -647,5 +665,65 @@ public class UseCaseEditController {
     void preConListComboBox(ActionEvent event) {
 
     }
+    @FXML
+    void handleSaveMenuItem(ActionEvent event) {
+        //saveProject();
+    }
+    @FXML
+    void handleExit(ActionEvent event) {
+        Node source = (Node) event.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
+    }
 
+    @FXML
+    void handleExportPDF(ActionEvent event) {
+
+    }
+
+    @FXML
+    void handleNewMenuItem(ActionEvent event) throws IOException {
+        FXRouter.popup("landing_newproject");
+    }
+
+    @FXML
+    void handleOpenMenuItem(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+
+        // Configure the file chooser
+        fileChooser.setTitle("Open Project");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        // Show the file chooser
+        File file = fileChooser.showOpenDialog(null);
+        if (file != null) {
+            System.out.println("Opening: " + file.getName());
+            // Get the project name from the file name
+            projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
+
+            // Get the directory from the file path
+            directory = file.getParent();
+            //loadProject();
+        } else {
+            System.out.println("Open command cancelled");
+        }
+    }
+    public void handleExportMenuItem(ActionEvent actionEvent) {
+        boolean noteAdded = false;
+//        try {
+//            // Create a file chooser
+//            FileChooser fileChooser = new FileChooser();
+//            fileChooser.setTitle("Export Project");
+//            fileChooser.setInitialFileName(projectName);
+//            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png"));
+//            File file = fileChooser.showSaveDialog(null);
+//            if (file != null) {
+//                ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+//            }
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+
+    }
 }

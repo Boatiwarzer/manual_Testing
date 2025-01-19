@@ -2,14 +2,17 @@ package ku.cs.testTools.Controllers.TestFlow;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -20,11 +23,15 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.DataSource;
 import ku.cs.testTools.Services.DataSourceCSV.*;
 
+import javax.imageio.ImageIO;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,41 +40,79 @@ import java.util.Optional;
 
 public class TestFlowController {
     @FXML
-    public ImageView rectangleImageVIew;
+    private ImageView arrowImageView;
+
     @FXML
-    public ImageView blackCircleImageView;
-    @FXML
-    private TitledPane componentTitlePane;
-    @FXML
-    private TitledPane designTitlePane;
-    @FXML
-    private TitledPane noteTitlePane;
-    @FXML
-    private Hyperlink onClickTestcase;
-    @FXML
-    private Hyperlink onClickTestflow;
-    @FXML
-    private Hyperlink onClickTestresult;
-    @FXML
-    private Hyperlink onClickTestscript;
-    @FXML
-    private Hyperlink onClickUsecase;
-    @FXML
-    private AnchorPane onComponentArea;
-    @FXML
-    private Pane onDesignArea;
-    @FXML
-    private TextArea onNoteTextArea;
-    @FXML
-    private ImageView squareImageView;
+    private ImageView blackCircleImageView;
+
     @FXML
     private ImageView circleImageView;
+
+    @FXML
+    private TitledPane componentTitlePane;
+
+    @FXML
+    private TitledPane designTitlePane;
+
+    @FXML
+    private MenuItem exitQuit;
+    @FXML
+    private Menu exportMenu;
+    @FXML
+    private MenuItem exportMenuItem;
+    @FXML
+    private MenuItem exportPDF;
+    @FXML
+    private Menu fileMenu;
+    @FXML
+    private MenuItem newMenuItem;
+    @FXML
+    private MenuBar homePageMenuBar;
+    @FXML
+    private MenuItem saveMenuItem;
     @FXML
     private ImageView kiteImageView;
+
     @FXML
     private ImageView lineImageView;
+
     @FXML
-    private ImageView arrowImageView;
+    private TitledPane noteTitlePane;
+
+    @FXML
+    private Hyperlink onClickTestcase;
+
+    @FXML
+    private Hyperlink onClickTestflow;
+
+    @FXML
+    private Hyperlink onClickTestresult;
+
+    @FXML
+    private Hyperlink onClickTestscript;
+
+    @FXML
+    private Hyperlink onClickUsecase;
+
+    @FXML
+    private AnchorPane onComponentArea;
+
+    @FXML
+    private Pane onDesignArea;
+
+    @FXML
+    private TextArea onNoteTextArea;
+
+    @FXML
+    private MenuItem openMenuItem;
+
+    @FXML
+    private ImageView rectangleImageVIew;
+
+
+
+    @FXML
+    private ImageView squareImageView;
     private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
     private double startX, startY;
     private TestScriptList testScriptList = new TestScriptList();
@@ -86,11 +131,6 @@ public class TestFlowController {
     private StackPane stackPane;
     private Circle circle;
     private List<StackPane> stackPaneList = new ArrayList<>();
-    double[][] positions = {
-            {-(double) 50, -(double) 50}, {0, -(double) 50}, {(double) 50, -(double) 50},
-            {-(double) 50, 0}, {(double) 50, 0},
-            {-(double) 50, (double) 50}, {0, (double) 50}, {(double) 50, (double) 50}
-    };
     @FXML
     void initialize() {
         onDesignArea.getChildren().clear();
@@ -104,6 +144,18 @@ public class TestFlowController {
         }
         loadProject();
         saveProject();
+        onDesignArea.setOnMouseReleased(mouseEvent -> {
+            hideBorderAndAnchors(border,anchors);
+        });
+        onDesignArea.setOnMouseDragOver(mouseDragEvent -> {
+            hideBorderAndAnchors(border,anchors);
+        });
+        onDesignArea.setOnMousePressed(mouseDragEvent ->{
+            hideBorderAndAnchors(border,anchors);
+        });
+        onDesignArea.setOnMouseClicked(mouseEvent -> {
+            hideBorderAndAnchors(border, anchors);
+        });
         onDesignArea.setOnKeyPressed((KeyEvent event) -> {
             // ตรวจสอบว่าเป็นการกด Ctrl + Z
             if (event.isControlDown() && event.getCode() == KeyCode.Z) {
@@ -111,10 +163,87 @@ public class TestFlowController {
                 undoAction();
             }
         });
+    }
+    public void handleExportMenuItem(ActionEvent actionEvent) {
+        boolean noteAdded = false;
+        // add note to the top left corner of the designPane
+//        if (noteTextArea.getText() != null) {
+//            Label note = new Label(noteTextArea.getText());
+//            note.setLayoutX(10);
+//            note.setLayoutY(10);
+//            designPane.getChildren().add(note);
+//            noteAdded = true;
+//        }
 
+        onDesignArea.getChildren().removeIf(node -> node instanceof Circle && ((Circle) node).getFill().equals(Color.RED));
 
+        // save Pane to image
+        WritableImage image = onDesignArea.snapshot(new SnapshotParameters(), null);
+
+        if (noteAdded) {
+            onDesignArea.getChildren().remove(onDesignArea.getChildren().size() - 1);
+        }
+
+        try {
+            // Create a file chooser
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Export Project");
+            fileChooser.setInitialFileName(projectName);
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png"));
+            File file = fileChooser.showSaveDialog(null);
+            if (file != null) {
+                ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
+    @FXML
+    void handleSaveMenuItem(ActionEvent event) {
+        saveProject();
+    }
+    @FXML
+    void handleExit(ActionEvent event) {
+        Node source = (Node) event.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
+    }
+
+    @FXML
+    void handleExportPDF(ActionEvent event) {
+
+    }
+
+    @FXML
+    void handleNewMenuItem(ActionEvent event) throws IOException {
+        FXRouter.popup("landing_newproject");
+    }
+
+    @FXML
+    void handleOpenMenuItem(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+
+        // Configure the file chooser
+        fileChooser.setTitle("Open Project");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        // Show the file chooser
+        File file = fileChooser.showOpenDialog(null);
+        if (file != null) {
+            System.out.println("Opening: " + file.getName());
+            // Get the project name from the file name
+            projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
+
+            // Get the directory from the file path
+            directory = file.getParent();
+            loadProject();
+        } else {
+            System.out.println("Open command cancelled");
+        }
+    }
+
     public void objects(){
         objects = new ArrayList<>();
         objects.add(projectName);
@@ -245,7 +374,6 @@ public class TestFlowController {
     }
     private void BoundShape(Rectangle[] anchors, Rectangle rectangle,Rectangle border ,StackPane stackPane, String type ,int positionID) {
         stackPane.setOnMouseClicked(event -> {
-            event.consume();
             if (event.getClickCount() == 2) {
                 hideBorderAndAnchors(border,anchors);
                 switch (type){
@@ -257,10 +385,10 @@ public class TestFlowController {
                         openTestCasePopup(positionID);
                         break;
                 }
+                event.consume();
             } else {
                 toggleBorderAndAnchors(border, anchors);
                 updateAnchorPositions(anchors, stackPane, rectangle);
-
             }
         });
 
@@ -290,13 +418,14 @@ public class TestFlowController {
     }
     private void BoundShape(Rectangle[] anchors, Polygon polygon,Rectangle border ,StackPane stackPane,int positionID) {
         stackPane.setOnMouseClicked(event -> {
-            event.consume();
             if (event.getClickCount() == 1){
                 toggleBorderAndAnchors(border, anchors);
                 updateAnchorPositions(anchors, stackPane, polygon);
+                event.consume();
             }
             else {
                 hideBorderAndAnchors(border,anchors);
+
             }
         });
 
@@ -330,9 +459,11 @@ public class TestFlowController {
             if (event.getClickCount() == 1){
                 toggleBorderAndAnchors(border, anchors);
                 updateAnchorPositions(anchors, stackPane, circle);
+                event.consume();
             }
             else {
                 hideBorderAndAnchors(border,anchors);
+
             }
         });
 
@@ -894,7 +1025,7 @@ public class TestFlowController {
 
     public void drawTestScript(double width, double height, double layoutX, double layoutY, String label, int positionID) {
         // Create the main rectangle
-        rectangle = new Rectangle(width, height);
+        Rectangle rectangle = new Rectangle(width, height);
         rectangle.setArcWidth(30); // Rounded corners
         rectangle.setArcHeight(30);
         rectangle.setFill(Color.TRANSPARENT);
@@ -936,6 +1067,9 @@ public class TestFlowController {
         makeDraggable(stackPane, anchors, rectangle,border,"testscript",positionID);
         // Make the stackPane draggable and selectable
         makeSelectable(stackPane, "testscript", positionID);
+        onDesignArea.setOnMouseClicked(mouseEvent -> {
+            hideBorderAndAnchors(border, anchors);
+        });
     }
 
     // เปิดหน้าต่างป็อปอัป
@@ -956,7 +1090,7 @@ public class TestFlowController {
 
     private void drawTestCase(double width, double height, double layoutX, double layoutY, String label, int positionID) {
         // Create a rectangle with specified width and height
-        rectangle = new Rectangle(width, height);
+        Rectangle rectangle = new Rectangle(width, height);
         rectangle.setFill(Color.TRANSPARENT); // Transparent fill
         rectangle.setStroke(Color.BLACK); // Border color
         rectangle.setStrokeWidth(0.2); // Border width
@@ -994,11 +1128,14 @@ public class TestFlowController {
         // เพิ่ม Drag Handler ให้ StackPane
         makeDraggable(stackPane, anchors, rectangle,border,"testcase",positionID);
         makeSelectable(stackPane, "testcase", positionID);
+        onDesignArea.setOnMouseClicked(mouseEvent -> {
+            hideBorderAndAnchors(border, anchors);
+        });
 
     }
 
     private void drawStart(double width, double height, double layoutX, double layoutY, String label, int positionID) {
-        circle = new Circle(width, height,15);
+        Circle circle = new Circle(width, height,15);
 
         circle.setStyle("-fx-fill: transparent");
         //Label testScriptName = new Label(label);
@@ -1039,13 +1176,16 @@ public class TestFlowController {
         // เพิ่ม Drag Handler ให้ StackPane
         makeDraggable(stackPane, anchors, circle,border,"start",positionID);
         makeSelectable(stackPane, "start", positionID);
+        onDesignArea.setOnMouseClicked(mouseEvent -> {
+            hideBorderAndAnchors(border, anchors);
+        });
         saveProject();
     }
 
 
 
     private void drawEnd(double width, double height, double layoutX, double layoutY, String label, int positionID) {
-        circle = new Circle(width, height,15);
+        Circle circle = new Circle(width, height,15);
 
         circle.setStyle("-fx-fill: transparent");
        // Label testScriptName = new Label(label);
@@ -1085,6 +1225,9 @@ public class TestFlowController {
         // เพิ่ม Drag Handler ให้ StackPane
         makeDraggable(stackPane, anchors, circle,border,"end",positionID);
         makeSelectable(stackPane, "end", positionID);
+        onDesignArea.setOnMouseClicked(mouseEvent -> {
+            hideBorderAndAnchors(border, anchors);
+        });
         saveProject();
     }
     private void drawDecision(double width, double height, double layoutX, double layoutY, String label, int positionID) {
@@ -1135,7 +1278,9 @@ public class TestFlowController {
         makeDraggable(stackPane, anchors, polygon, border, positionID);
         // ตั้งค่าการเลือกวัตถุ
         makeSelectable(stackPane, "decision", positionID);
-
+        onDesignArea.setOnMouseClicked(mouseEvent -> {
+            hideBorderAndAnchors(border, anchors);
+        });
         // บันทึกโปรเจค
         saveProject();
     }
