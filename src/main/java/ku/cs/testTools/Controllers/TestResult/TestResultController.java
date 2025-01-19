@@ -688,8 +688,13 @@ public class TestResultController {
                     .collect(Collectors.toList());
             int counter = 1;
             for (TestResultDetail detail : failedResult) {
-                randomIdIRD();
-                String irdID = irdId;
+                String irdID;
+                if (detail.getIdTRD() == null) {
+                    randomIdIRD();
+                    irdID = irdId;
+                } else {
+                    irdID = detail.getIdTRD();
+                }
                 String testNo = String.format("%d", counter);
                 counter++; // เพิ่มค่าตัวนับ
                 String testerIRD = "Tester";
