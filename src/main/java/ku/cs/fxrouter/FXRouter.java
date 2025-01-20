@@ -416,7 +416,14 @@ public class FXRouter {
         private double sceneWidth;
         private double sceneHeight;
         private Object data;
-        private Object data3;
+        private static Object data3;
+
+        public static void setName(String name) {
+            RouteScene.name = name;
+        }
+
+        @Getter
+        private static String name;
         private static Object setPart;
         //private Map<String, Object> state;
 

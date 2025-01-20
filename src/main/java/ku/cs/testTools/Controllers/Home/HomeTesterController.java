@@ -60,6 +60,8 @@ public class HomeTesterController {
             // Load the project
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
+            String name = (String) FXRouter.getData3();
+            System.out.println(name);
             System.out.println("Project Name: " + projectName);
             System.out.println("Directory: " + directory);
         }
@@ -163,7 +165,23 @@ public class HomeTesterController {
             throw new RuntimeException(e);
         }
     }
+    public void handleExportMenuItem(ActionEvent actionEvent) {
+        boolean noteAdded = false;
+//        try {
+//            // Create a file chooser
+//            FileChooser fileChooser = new FileChooser();
+//            fileChooser.setTitle("Export Project");
+//            fileChooser.setInitialFileName(projectName);
+//            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png"));
+//            File file = fileChooser.showSaveDialog(null);
+//            if (file != null) {
+//                ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
+//            }
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
 
+    }
 
 
 

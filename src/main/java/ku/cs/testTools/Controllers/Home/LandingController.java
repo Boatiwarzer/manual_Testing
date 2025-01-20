@@ -77,6 +77,8 @@ public class LandingController {
             objects.add(projectName);
             objects.add(directory);
             objects.add(null);
+            FXRouter.setData3("Tester");
+
             // แก้พาท
             String packageStr1 = "views/";
             FXRouter.when("home_tester", packageStr1 + "home_tester.fxml", "TestTools | " + projectName);
@@ -132,6 +134,8 @@ public class LandingController {
             objects.add(projectName);
             objects.add(directory);
             objects.add(null);
+            FXRouter.setData3("Tester");
+
             // แก้พาท
             String packageStr1 = "views/";
             FXRouter.when("home_manager", packageStr1 + "home_manager.fxml", "TestTools | " + projectName);
