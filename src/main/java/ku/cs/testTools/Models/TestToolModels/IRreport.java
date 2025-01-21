@@ -1,5 +1,6 @@
 package ku.cs.testTools.Models.TestToolModels;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Getter;
@@ -18,9 +19,16 @@ import java.util.Objects;
 @Entity
 public class IRreport {
     @Id
+    @Column(name = "id_ir", nullable = false, unique = true)
     private String idIR;
+
+    @Column(name = "name_ir", nullable = false)
     private String nameIR;
+
+    @Column(name = "date_ir")
     private String dateIR;
+
+    @Column(name = "tr_ir")
     private String trIR;
 
     @Override

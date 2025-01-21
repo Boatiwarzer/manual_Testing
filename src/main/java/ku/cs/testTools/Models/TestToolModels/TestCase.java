@@ -16,16 +16,30 @@ import java.util.Objects;
 public class TestCase {
     @Id
     @Access(AccessType.FIELD)
+    @Column(name = "id_tc", nullable = false, unique = true)
     private String idTC;
+
+    @Column(name = "name_tc", nullable = false)
     private String nameTC;
+
+    @Column(name = "date_tc")
     private String dateTC;
+
+    @Column(name = "use_case")
     private String useCase;
+
+    @Column(name = "description_tc")
     private String descriptionTC;
+
+    @Column(name = "note")
     private String note;
-    @OneToMany(mappedBy = "testCase")
+
+    @OneToMany(mappedBy = "testCase", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TestCaseDetail> testCaseList;
-    private String idTCDList;
+
+    @Column(name = "position", nullable = false)
     private int position;
+
     @Column(name = "pre_con") // Maps to `precon` in the database
     private String preCon;
 
@@ -44,36 +58,25 @@ public class TestCase {
         this.postCon = postCon;
     }
 
-
-
-//    public TestCase(String idTC, String nameTC, String dateTC, String useCase, String descriptionTC, String note, String idTCDList) {
-//        this.idTC = idTC;
-//        this.nameTC = nameTC;
-//        this.dateTC = dateTC;
-//        this.useCase = useCase;
-//        this.descriptionTC = descriptionTC;
-//        this.note = note;
-//        this.idTCDList = idTCDList;
-//    }
-
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TestCase testCase = (TestCase) o;
-        return getIdTC() != null && Objects.equals(getIdTC(), testCase.getIdTC());
+        return idTC != null && idTC.equals(testCase.idTC);
     }
 
     @Override
     public final int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(idTC);
     }
+
     @Override
     public String toString() {
         return idTC + " : " + nameTC;
     }
 
     public boolean isId(String id) {
-        return this.idTC.equals(id);
+        return this.idTC != null && this.idTC.equals(id);
     }
 }
