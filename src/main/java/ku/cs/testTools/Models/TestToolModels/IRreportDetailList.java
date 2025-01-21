@@ -52,7 +52,7 @@ public class IRreportDetailList {
         }
     }
 
-    public IRreportDetail findTSById(String id) {
+    public IRreportDetail findIRDById(String id) {
         for (IRreportDetail iRreportDetail : iRreportDetailList) {
             if (iRreportDetail.isId(id) ) {
                 return iRreportDetail;

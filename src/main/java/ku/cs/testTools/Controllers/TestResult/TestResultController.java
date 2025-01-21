@@ -389,7 +389,7 @@ public class TestResultController {
                             setGraphic(null);
                         } else {
                             text.setText(item);
-                            text.wrappingWidthProperty().bind(column.widthProperty().subtract(10)); // ตั้งค่าการห่อข้อความตามขนาดคอลัมน์
+                            text.wrappingWidthProperty().bind(column.widthProperty().subtract(10));
                             if (item.equals("Pass")) {
                                 text.setFill(javafx.scene.paint.Color.GREEN); // สีเขียวสำหรับ "Pass"
                             } else if (item.equals("Fail")) {
@@ -397,7 +397,7 @@ public class TestResultController {
                             } else {
                                 text.setFill(javafx.scene.paint.Color.BLACK); // สีปกติสำหรับค่าอื่น ๆ
                             }
-                            setGraphic(text); // แสดงผล Text Node
+                            setGraphic(text);
                         }
                     }
                 });
@@ -426,7 +426,7 @@ public class TestResultController {
                                 imageView.setPreserveRatio(true); // รักษาสัดส่วนภาพ
                                 setGraphic(imageView); // แสดงผลในเซลล์
                             } else {
-                                setGraphic(null); // หาก path ไม่ถูกต้อง ให้เว้นว่าง
+                                setGraphic(null); // path ไม่ถูกต้อง ให้เว้นว่าง
                             }
                         }
                     }
