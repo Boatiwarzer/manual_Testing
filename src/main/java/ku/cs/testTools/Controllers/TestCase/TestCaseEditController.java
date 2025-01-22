@@ -108,16 +108,16 @@ public class TestCaseEditController {
 
     @FXML
     void initialize() {
-        setDate();
-        clearInfo();
-        selectedComboBox();
-        setButtonVisible();
         if (FXRouter.getData() != null) {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
             typeTC = (String) objects.get(2);
             loadProject();
+            setDate();
+            clearInfo();
+            selectedComboBox();
+            setButtonVisible();
             onTableTestcase.isFocused();
             selectedTCD();
             selectedListView();

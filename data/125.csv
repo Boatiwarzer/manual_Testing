@@ -18,39 +18,37 @@ connection,8,370.0,410.0,373.0,407.59999999999997,Line,none,line,none,!@#$%^&*()
 connection,9,466.6,301.2,467.4,236.40000000000003,Line,none,line,none,!@#$%^&*()_+,line
 connection,10,477.6,637.4,567.6,547.4,End,none,none,none,!@#$%^&*()_+,end
 connection,11,428.0,78.2,518.0,-11.799999999999997,Start,none,none,none,!@#$%^&*()_+,start
-testScript,TS-001,Login,19-12-2024,UC-776 : Login,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,TC-321 : Login,-,สามารถเข้าสู่ระบบได้,-,692
-testScript,TS-002,Incorrect Login,19-12-2024,UC-687 : Incorrect Login,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,TC-321 : Login,-,ไม่สามารถเข้าสู่ระบบได้,-,99
-testScript,TS-999,Test,25-12-2024,UC-776 : Login,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,None,-,สามารถเข้าสู่ระบบได้,,0
 testScript,TS-340,tset,22-01-2025,UC-687 : Incorrect Login,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,-,-,ไม่สามารถเข้าสู่ระบบได้,-,347
-testScriptDetail,TSD-412,a,a,None,a,TS-999,25-12-2024
+testScript,TS-001,Login,19-12-2024,UC-776 : Login,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,TC-321 : Login,-,สามารถเข้าสู่ระบบได้,-,692
+testScript,TS-002,Incorrect Login,19-12-2024,UC-687 : Incorrect Login,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,TC-321 : Login,-,ไม่สามารถเข้าสู่ระบบได้,-,0
 testScriptDetail,TSD-940,001,กรอก username,String : Username,สามารถกรอกข้อมูลได้,TS-001,19-12-2024
 testScriptDetail,TSD-610,002,กรอก password,String : Password,สามารถกรอก password ได้ type password,TS-001,19-12-2024
 testScriptDetail,TSD-358,003,กด ปุ่ม login,Button : Button login,เข้าหน้า home ได้,TS-001,19-12-2024
-testScriptDetail,TSD-975,001,กรอก username ผิด,String : Username,สามารถกรอกได้,TS-002,19-12-2024
+testScriptDetail,TSD-975,001,กรอก username ผิด,String : Username,สามารถกรอกได้...,TS-002,22-01-2025
 testScriptDetail,TSD-140,002,กรอก password ผิด,String : Password,สามารถกรอกได้,TS-002,19-12-2024
-testScriptDetail,TSD-203,003,กดปุ่ม login,Button : Button login,ไม่สามารถเข้าสู่ระบบได้,TS-002,19-12-2024
-testCase,TC-321,Login,19-12-2024,UC-776 : Login,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,-,292,-,สามารถเข้าสู่ระบบได้
 testCase,TC-885,tset,22-01-2025,UC-687 : Incorrect Login,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,-,279,-,ไม่สามารถเข้าสู่ระบบได้
+testCase,TC-321,Login,19-12-2024,UC-776 : Login,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,-,292,-,สามารถเข้าสู่ระบบได้
+testCase,TC-361,aaa,22-01-2025,UC-687 : Incorrect Login,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,,0,-,ไม่สามารถเข้าสู่ระบบได้
 testCaseDetail,TCD-151,001,Username,String,19-12-2024,TC-321
 testCaseDetail,TCD-165,002,Password,String,19-12-2024,TC-321
 testCaseDetail,TCD-42,003,Button login,Button,19-12-2024,TC-321
-useCase,UC-687,Incorrect Login,User,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,-,ไม่สามารถเข้าสู่ระบบได้,None,2024-12-19 15:56:06
-useCase,UC-776,Login,User,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,-,สามารถเข้าสู่ระบบได้,None,2024-12-19 09:58:05
+useCase,UC-687,Incorrect Login,User,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,-,ไม่สามารถเข้าสู่ระบบได้,None,2025-01-22 21:49:39
 useCase,UC-473,TEsts,TEsts,TEsts,TEsts,TEsts,TEsts,2024-12-28 12:05:13
+useCase,UC-776,Login,User,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,-,สามารถเข้าสู่ระบบได้,None,2024-12-19 09:58:05
 useCaseDetail,UC-776,actor,1,กรอกข้อมูล username
 useCaseDetail,UC-776,actor,2,กรอกข้อมูล password
 useCaseDetail,UC-776,actor,3,กดปุ่ม เข้าสู่ระบบ
 useCaseDetail,UC-776,system,1,รับข้อมูล username และ password มาตรวจสอบ
 useCaseDetail,UC-776,system,2,ไปหน้า home
+useCaseDetail,UC-473,actor,1,TEsts
+useCaseDetail,UC-473,system,1,TEsts
 useCaseDetail,UC-687,actor,1,กรอกข้อมูล username
 useCaseDetail,UC-687,actor,2,กรอกข้อมูล password
 useCaseDetail,UC-687,actor,3,กดปุ่ม เข้าสู่ระบบ
 useCaseDetail,UC-687,system,1,รับข้อมูล username และ password มาตรวจสอบ
 useCaseDetail,UC-687,system,2,ไม่ไปหน้า home
-useCaseDetail,UC-473,actor,1,TEsts
-useCaseDetail,UC-473,system,1,TEsts
-testResult,TR-996,Login,2025-01-22 14:47:34,,In Tester
+testResult,TR-996,Login,2025-01-22 21:45:47,,In Tester
 testResultDetail,TRD-286,001,TS-001 : Login,TC-321 : Login,User,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,String : Username|String : Password|Button : Button login,1. กรอก username|2. กรอก password|3. กด ปุ่ม login|,สามารถเข้าสู่ระบบได้,สามารถเข้าสู่ระบบได้,Pass,None,19-12-2024,Tester,...,Waiting,Remark,TR-996
 testResultDetail,TRD-21,002,TS-002 : Incorrect Login,TC-321 : Login,User,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,String : Username|String : Password|Button : Button login,1. กรอก username ผิด|2. กรอก password ผิด|3. กดปุ่ม login|,ไม่สามารถเข้าสู่ระบบได้,เข้าสู่ระบบได้,Fail,High,19-12-2024,Tester,...,Waiting,Remark,TR-996
-iRreport,IR-597,Login,2025-01-22 16:14:53,TR-996
+iRreport,IR-597,Login,2025-01-22 22:04:54,2025-01-22 16:14:53,TR-996
 iRreportDetail,IRD-240,1,Tester,TS-002 : Incorrect Login,TC-321 : Login,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,-,...,High,,,In Test,,IR-597,TRD-21
