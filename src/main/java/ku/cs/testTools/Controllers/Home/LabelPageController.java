@@ -29,7 +29,7 @@ public class LabelPageController {
     public AnchorPane anchorPane;
     private double width, height, layoutX, layoutY;
     private String type = "testScript";
-    private String projectName1 = "uc", projectName = "125", directory = "data";
+    private String projectName, directory;
     private String editType;
     private int editID, subSystemID;
     private final DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
@@ -130,7 +130,7 @@ public class LabelPageController {
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
-            objects.add(type);
+            //objects.add(type);
             //objects.add(ID);
         if (type.equals("Rectangle-curve")){
             randomIdTS();

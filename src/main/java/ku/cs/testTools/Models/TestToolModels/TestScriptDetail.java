@@ -10,21 +10,37 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @Entity
-@Data
 @Table(name = "test_scripts_detail")
 @NamedQuery(name = "find testscriptdetail by id", query = "Select t from TestScriptDetail t where t.idTSD = :id")
 public class TestScriptDetail {
+
     @Id
     @Access(AccessType.FIELD)
+    @Column(name = "idTSD")  // Optional: You can add Column annotation for clarity
     private String idTSD;
+
+    @Column(name = "testNo")  // Add Column annotation for testNo
     private String testNo;
+
+    @Column(name = "steps")  // Add Column annotation for steps
     private String steps;
+
+    @Column(name = "inputData")  // Add Column annotation for inputData
     private String inputData;
+
+    @Column(name = "expected")  // Add Column annotation for expected
     private String expected;
-//    @ManyToOne
-//    private TestScript testScript;
+
+    @Column(name = "idTS")  // Add Column annotation for idTS
     private String idTS;
+
+    @Column(name = "dateTSD")  // Add Column annotation for dateTSD
     private String dateTSD;
+
+    // Uncomment and complete if you need this relationship
+    // @ManyToOne
+    // @JoinColumn(name = "test_script_id")  // Optional: Add JoinColumn annotation
+    // private TestScript testScript;
 
     public TestScriptDetail(String idTSD, String testNo, String steps, String inputData, String expected, String idTS, String dateTSD) {
         this.idTSD = idTSD;
@@ -44,7 +60,6 @@ public class TestScriptDetail {
         this.expected = expected;
     }
 
-
     public TestScriptDetail(String idTSD, String testNo, String steps, String inputData, String expected, String idTS) {
         this.idTSD = idTSD;
         this.testNo = testNo;
@@ -53,7 +68,6 @@ public class TestScriptDetail {
         this.expected = expected;
         this.idTS = idTS;
     }
-
 
     @Override
     public final boolean equals(Object o) {
@@ -65,16 +79,23 @@ public class TestScriptDetail {
 
     @Override
     public final int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(idTSD);
     }
 
     public boolean isId(String id) {
         return this.idTSD.equals(id);
     }
+
     public boolean isIdTS(String id) {
         return this.idTS.equals(id);
     }
 
     public void clear() {
+        this.testNo = null;
+        this.steps = null;
+        this.inputData = null;
+        this.expected = null;
+        this.idTS = null;
+        this.dateTSD = null;
     }
 }

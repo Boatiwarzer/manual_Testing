@@ -1,30 +1,46 @@
 package ku.cs.testTools.Models.TestToolModels;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-@Getter
 @Data
 @Entity
 @Table(name = "use_case")
 @NamedQuery(name = "find usecase by id", query = "Select t from UseCase t where t.useCaseID = :id")
 public class UseCase {
+
     @Id
     @Access(AccessType.FIELD)
+    @Column(name = "use_case_id", nullable = false)
     private String useCaseID;
+
+    @Column(name = "use_case_name", length = 255, nullable = false)
     private String useCaseName;
+
+    @Column(name = "actor", length = 255)
     private String actor;
+
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
+
+    @Column(name = "pre_condition", columnDefinition = "TEXT")
     private String preCondition;
+
+    @Column(name = "post_condition", columnDefinition = "TEXT")
     private String postCondition;
+
+    @Column(name = "note", length = 255)
     private String note;
+
+    @Column(name = "date", columnDefinition = "DATETIME")
     private String date;
 
+    // Default Constructor
+    public UseCase() {}
+
+    // Parametrized Constructor
     public UseCase(String useCaseID, String useCaseName, String actor, String description, String preCondition, String postCondition, String note, String date) {
         this.useCaseID = useCaseID;
         this.useCaseName = useCaseName;
@@ -36,114 +52,31 @@ public class UseCase {
         this.date = date;
     }
 
-    public UseCase() {
-        this.useCaseID = useCaseID;
-        this.useCaseName = useCaseName;
-        this.actor = actor;
-        this.description = description;
-        this.preCondition = preCondition;
-        this.postCondition = postCondition;
-        this.note = note;
-        this.date = date;
+    // Automatically sets the date before the entity is persisted
+    @PrePersist
+    public void prePersist() {
+        if (this.date == null) {
+            LocalDateTime dateTime = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            this.date = dateTime.format(formatter);
+        }
     }
 
-//    public UseCase(String useCaseID, String useCaseName, String actor, String description, String preCondition, String postCondition) {
-//        this.useCaseID = useCaseID;
-//        this.useCaseName = useCaseName;
-//        this.actor = actor;
-//        this.description = description;
-//        this.preCondition = preCondition;
-//        this.postCondition = postCondition;
-//        this.note = "None";
-//    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setUseCaseID(String useCaseID) {
-        this.useCaseID = useCaseID;
-    }
-
-    public void setUseCaseName(String useCaseName) {
-        this.useCaseName = useCaseName;
-    }
-
-    public void setActor(String actor) {
-        this.actor = actor;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setPreCondition(String preCondition) {
-        this.preCondition = preCondition;
-    }
-
-    public void setPostCondition(String postCondition) {
-        this.postCondition = postCondition;
-    }
-
-    public void setNote (String note) {
-        this.note = note;
-    }
-
-    public String getUseCaseID() {
-        return useCaseID;
-    }
-
-    public String getUseCaseName() {
-        return useCaseName;
-    }
-
-    public String getActor() {
-        return actor;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getPreCondition() {
-        return preCondition;
-    }
-
-    public String getPostCondition() {
-        return postCondition;
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public String setDate() {
-        LocalDateTime dateTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        this.date = dateTime.format(formatter);
-        return date;
-    }
     public boolean isId(String id) {
         return this.useCaseID.equals(id);
     }
-
-//    @Override
-//    public String toString() {
-//        return useCaseID + " : " + useCaseName;
-//    }
 
     @Override
     public String toString() {
         return "UseCase{" +
                 "useCaseID='" + useCaseID + '\'' +
-                "useCaseName='" + useCaseName + '\'' +
-                "useCaseActor='" + actor + '\'' +
-                "useCaseDescript='" + description + '\'' +
-                "useCasePreCon='" + preCondition + '\'' +
-                "useCasePostCon='" + postCondition + '\'' +
-                "useCaseNote='" + note + '\'' +
-                "useCaseDate='" + date + '\'' +
+                ", useCaseName='" + useCaseName + '\'' +
+                ", actor='" + actor + '\'' +
+                ", description='" + description + '\'' +
+                ", preCondition='" + preCondition + '\'' +
+                ", postCondition='" + postCondition + '\'' +
+                ", note='" + note + '\'' +
+                ", date='" + date + '\'' +
                 '}';
     }
-
 }

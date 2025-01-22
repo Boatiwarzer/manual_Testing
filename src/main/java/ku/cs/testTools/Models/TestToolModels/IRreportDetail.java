@@ -1,35 +1,58 @@
 package ku.cs.testTools.Models.TestToolModels;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import lombok.*;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 
-@Getter
-@Setter
-@ToString
-@RequiredArgsConstructor
-@Entity
 @Data
-@AllArgsConstructor
+@NoArgsConstructor
+@Entity
 public class IRreportDetail {
     @Id
+    @Column(name = "id_ird", nullable = false, unique = true)
     private String idIRD;
+
+    @Column(name = "test_no_ird", nullable = false)
     private String testNoIRD;
+
+    @Column(name = "tester_ird")
     private String testerIRD;
+
+    @Column(name = "ts_id_ird")
     private String tsIdIRD;
+
+    @Column(name = "tc_id_ird")
     private String tcIdIRD;
+
+    @Column(name = "description_ird")
     private String descriptIRD;
+
+    @Column(name = "condition_ird")
     private String conditionIRD;
+
+    @Column(name = "image_ird")
     private String imageIRD;
+
+    @Column(name = "priority_ird")
     private String priorityIRD;
+
+    @Column(name = "rca_ird")
     private String rcaIRD;
+
+    @Column(name = "manager_ird")
     private String managerIRD;
+
+    @Column(name = "status_ird")
     private String statusIRD;
+
+    @Column(name = "remark_ird")
     private String remarkIRD;
+
+
     @ManyToOne
+    @JoinColumn(name = "id_ir", referencedColumnName = "idIR", nullable = false)
     private IRreport iRreport;
     private String idIR;
     private String idTRD;
@@ -57,16 +80,16 @@ public class IRreportDetail {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         IRreportDetail that = (IRreportDetail) o;
-        return getIdIRD() != null && Objects.equals(getIdIRD(), that.getIdIRD());
+        return idIRD != null && idIRD.equals(that.idIRD);
     }
 
     @Override
     public final int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(idIRD);
     }
 
     public boolean isId(String id) {
-        return this.idIRD.equals(id);
+        return this.idIRD != null && this.idIRD.equals(id);
     }
     public boolean isTrd(String id) {
         return this.idTRD.equals(id);

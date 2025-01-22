@@ -5,18 +5,24 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
 @Data
 @Entity
-@Getter
 @Table(name = "use_case_detail")
 @NamedQuery(name = "find usecasedetail by id", query = "Select t from UseCaseDetail t where t.useCaseID = :id")
 public class UseCaseDetail {
+
     @Id
     @Access(AccessType.FIELD)
+    @Column(name = "use_case_id", nullable = false)
     private String useCaseID;
+
+    @Column(name = "action", length = 255)
     private String action;
+
+    @Column(name = "number")
     private int number;
+
+    @Column(name = "detail", columnDefinition = "TEXT")
     private String detail;
 
     public UseCaseDetail(String useCaseID, String action, int number, String detail) {
@@ -27,42 +33,20 @@ public class UseCaseDetail {
     }
 
     public UseCaseDetail() {
-
-    }
-
-    public String getUseCaseID() {
-        return useCaseID;
-    }
-
-    public String getAction() {
-        return action;
-    }
-
-    public int getNumber() {
-        return number;
-    }
-
-    public String getDetail() {
-        return detail;
-    }
-
-    public void setUseCaseID(String useCaseID) {
-        this.useCaseID = useCaseID;
-    }
-
-    public void setAction(String action) {
-        this.action = action;
-    }
-
-    public void setNumber(int number) {
-        this.number = number;
-    }
-
-    public void setDetail(String detail) {
-        this.detail = detail;
+        // Default constructor
     }
 
     public boolean isId(String id) {
         return this.useCaseID.equals(id);
+    }
+
+    @Override
+    public String toString() {
+        return "UseCaseDetail{" +
+                "useCaseID='" + useCaseID + '\'' +
+                ", action='" + action + '\'' +
+                ", number=" + number +
+                ", detail='" + detail + '\'' +
+                '}';
     }
 }

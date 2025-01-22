@@ -498,9 +498,8 @@ public class TestCaseAddController {
 
     }
     private void objects() {
-        objects = new ArrayList<>();
-        objects.add(projectName);
-        objects.add(directory);
+
+
         objects.add(typeTC);
         objects.add(testCase);
         objects.add(testCaseDetailList);
@@ -612,7 +611,10 @@ public class TestCaseAddController {
     @FXML
     void onCancelButton(ActionEvent event) {
         try {
-            objects();
+            objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add(null);
             FXRouter.goTo("test_case",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);

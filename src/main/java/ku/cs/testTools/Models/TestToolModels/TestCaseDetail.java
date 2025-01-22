@@ -3,6 +3,7 @@ package ku.cs.testTools.Models.TestToolModels;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
@@ -15,39 +16,56 @@ import java.util.Objects;
 public class TestCaseDetail {
     @Id
     @Access(AccessType.FIELD)
+    @Column(name = "id_tcd", nullable = false, unique = true)
     private String idTCD;
+
+    @Column(name = "test_no", nullable = false)
     private String testNo;
+
+    @Column(name = "name_tcd", nullable = false)
     private String nameTCD;
+
+    @Column(name = "variable_tcd")
     private String variableTCD;
+
+    @Column(name = "date_tcd")
     private String dateTCD;
-    @ManyToOne
-    private TestCase testCase;
     private String idTC;
-    public TestCaseDetail(String idTCD, String testNo, String nameTCD, String variableTCD, String dateTCD ,String idTC) {
+
+    @ManyToOne
+    @JoinColumn(name = "id_tc", nullable = false) // Foreign key column
+    private TestCase testCase;
+
+    public TestCaseDetail(String idTCD, String testNo, String nameTCD, String variableTCD, String dateTCD, TestCase testCase) {
         this.idTCD = idTCD;
         this.testNo = testNo;
         this.nameTCD = nameTCD;
         this.variableTCD = variableTCD;
         this.dateTCD = dateTCD;
-        this.idTC = idTC;
-
+        this.testCase = testCase;
     }
-
-
-
+    public TestCaseDetail(String idTCD, String testNo, String nameTCD, String variableTCD, String dateTCD, String testCase) {
+        this.idTCD = idTCD;
+        this.testNo = testNo;
+        this.nameTCD = nameTCD;
+        this.variableTCD = variableTCD;
+        this.dateTCD = dateTCD;
+        this.idTC = testCase;
+    }
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TestCaseDetail that = (TestCaseDetail) o;
-        return getIdTCD() != null && Objects.equals(getIdTCD(), that.getIdTCD());
+        return idTCD != null && idTCD.equals(that.idTCD);
     }
 
     @Override
     public final int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(idTCD);
     }
+
     public boolean isId(String id) {
-        return this.idTCD.equals(id);
+        return this.idTCD != null && this.idTCD.equals(id);
     }
 }
