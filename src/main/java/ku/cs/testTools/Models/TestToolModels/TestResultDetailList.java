@@ -99,6 +99,15 @@ public class TestResultDetailList {
         return result;
     }
 
+    public boolean isIdTRDExist(String idTRD) {
+        for (TestResultDetail testResultDetail : testResultDetailList) {
+            if (testResultDetail.getIdTRD().equals(idTRD)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void clearItems() {
         testResultDetailList.clear();
     }

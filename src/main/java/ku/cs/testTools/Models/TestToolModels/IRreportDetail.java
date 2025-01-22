@@ -32,8 +32,9 @@ public class IRreportDetail {
     @ManyToOne
     private IRreport iRreport;
     private String idIR;
+    private String idTRD;
 
-    public IRreportDetail(String idIRD, String testNoIRD, String testerIRD, String tsIdIRD, String tcIdIRD, String descriptIRD, String conditionIRD, String imageIRD, String priorityIRD, String rcaIRD, String managerIRD, String statusIRD, String remarkIRD, String idIR) {
+    public IRreportDetail(String idIRD, String testNoIRD, String testerIRD, String tsIdIRD, String tcIdIRD, String descriptIRD, String conditionIRD, String imageIRD, String priorityIRD, String rcaIRD, String managerIRD, String statusIRD, String remarkIRD, String idIR, String idTRD) {
         this.idIRD = idIRD;
         this.testNoIRD = testNoIRD;
         this.testerIRD = testerIRD;
@@ -48,6 +49,7 @@ public class IRreportDetail {
         this.statusIRD = statusIRD;
         this.remarkIRD = remarkIRD;
         this.idIR = idIR;
+        this.idTRD = idTRD;
     }
 
     @Override
@@ -65,5 +67,8 @@ public class IRreportDetail {
 
     public boolean isId(String id) {
         return this.idIRD.equals(id);
+    }
+    public boolean isTrd(String id) {
+        return this.idTRD.equals(id);
     }
 }

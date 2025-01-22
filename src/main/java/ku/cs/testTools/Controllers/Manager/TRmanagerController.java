@@ -1,20 +1,14 @@
-package ku.cs.testTools.Controllers.TestResult;
+package ku.cs.testTools.Controllers.Manager;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -22,25 +16,25 @@ import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
 import ku.cs.testTools.Services.DataSourceCSV.*;
-import org.controlsfx.control.textfield.TextFields;
 
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
-public class TestResultController {
-
+public class TRmanagerController {
     @FXML
     private Label testIDLabel;
 
     @FXML
-    private Hyperlink onClickTestcase, onClickTestflow, onClickTestresult, onClickTestscript, onClickUsecase;
+    private Hyperlink onClickTestflow, onClickTestresult, onClickUsecase, onClickIR;
 
     @FXML
-    private Button onCreateButton, onEditButton, onSearchButton, onIRButton;
+    private Button onEditButton, onSearchButton;
 
     @FXML
     private TextField onSearchField, testNameLabel, infoNoteLabel;
@@ -57,18 +51,15 @@ public class TestResultController {
     private TestResultList testResultList = new TestResultList();
     private TestResultDetailList testResultDetailList = new TestResultDetailList();
     private ArrayList<String> word = new ArrayList<>();
-    private String irId;
-    private String irdId;
-    private IRreport iRreport;
     private IRreportList iRreportList = new IRreportList();
-    private IRreportDetail iRreportDetail = new IRreportDetail();
     private IRreportDetailList iRreportDetailList = new IRreportDetailList();
-    private TestScriptList testScriptList = new TestScriptList();
+
     @FXML
     private TableColumn<TestResult, String> imageColumn;
 
     @FXML
     private TableColumn<TestResult, String> pathColumn;
+
     @FXML
     private MenuItem exitQuit;
     @FXML
@@ -91,6 +82,7 @@ public class TestResultController {
     private TestScriptDetailList testScriptDetailListTemp = new TestScriptDetailList();
     private ConnectionList connectionList = new ConnectionList();
     private UseCaseList useCaseList = new UseCaseList();
+    private TestScriptList testScriptList = new TestScriptList();
     private TestCaseList testCaseList;
     private TestCaseDetailList testCaseDetailList;
     private TestResultDetailList testResultDetailListTemp;
@@ -109,8 +101,6 @@ public class TestResultController {
             }
             clearInfo();
             loadProject();
-            randomIdIR();
-            randomIdIRD();
             setTable();
             loadListView(testResultList);
             selected();
@@ -120,9 +110,6 @@ public class TestResultController {
             searchSet();
 
         }
-        //testResult = testResultList.findTRById(testIDLabel.getText());
-        System.out.println(testResultList.findTRById(testIDLabel.getText()));
-
     }
     public void handleExportMenuItem(ActionEvent actionEvent) {
         boolean noteAdded = false;
@@ -252,11 +239,6 @@ public class TestResultController {
             onSearchList.getItems().clear();
 
             if (!typedText.isEmpty()) {
-                // กรองคำที่ตรงกับข้อความที่พิมพ์
-//                List<String> filteredList = word.stream()
-//                        .filter(item -> item.toLowerCase().contains(typedText))
-//                        .collect(Collectors.toList());
-
                 // เพิ่มคำที่กรองได้ไปยัง ListView
                 onSearchList.getItems().addAll(searchList(onSearchField.getText(), testResultList.getTestResultList()));
             } else {
@@ -266,13 +248,6 @@ public class TestResultController {
                 onSearchList.getItems().addAll(searchList(onSearchField.getText(), testResultList.getTestResultList()));
             }
         });
-//        TextFields.bindAutoCompletion(onSearchField,word);
-//        onSearchField.setOnKeyPressed(keyEvent -> {
-//            if (Objects.requireNonNull(keyEvent.getCode()) == KeyCode.ENTER) {
-//                onSearchList.getItems().clear();
-//                onSearchList.getItems().addAll(searchList(onSearchField.getText(), testResultList.getTestResultList()));
-//            }
-//        });
     }
 
     private void selected() {
@@ -286,7 +261,6 @@ public class TestResultController {
                     clearInfo();
                     System.out.println("Selected TestResult ID: " + (newValue != null ? newValue.getIdTR() : "null"));
                     onEditButton.setVisible(newValue.getIdTR() != null);
-                    onIRButton.setVisible(newValue.getIdTR() != null);
                     selectedTestResult = newValue;
                     showInfo(newValue);
                 }
@@ -320,7 +294,6 @@ public class TestResultController {
 
     private void loadListView(TestResultList testResultList) {
         onEditButton.setVisible(false);
-        onIRButton.setVisible(false);
         onSearchList.refresh();
         if (testResultList != null){
             testResultList.sort(new TestResultComparable());
@@ -429,7 +402,6 @@ public class TestResultController {
                         if (empty || item == null) {
                             setGraphic(null);
                         } else {
-//                            setText(item.replace("|", "\n"));
                             text.setText(item.replace("|", "\n"));
                             text.wrappingWidthProperty().bind(column.widthProperty().subtract(10)); // ตั้งค่าการห่อข้อความตามขนาดคอลัมน์
                             setGraphic(text); // แสดงผล Text Node แทนข้อความธรรมดา
@@ -447,7 +419,6 @@ public class TestResultController {
                         if (empty || item == null) {
                             setGraphic(null);
                         } else {
-//                            setText(item.replace("|", ", "));
                             text.setText(item.replace("|", ", "));
                             text.wrappingWidthProperty().bind(column.widthProperty().subtract(10)); // ตั้งค่าการห่อข้อความตามขนาดคอลัมน์
                             setGraphic(text); // แสดงผล Text Node
@@ -512,11 +483,6 @@ public class TestResultController {
                 col.setMaxWidth(160);
                 col.setMinWidth(160);
             }
-
-//            col.setPrefWidth(100);
-//            col.setMaxWidth(100);
-//            col.setMinWidth(100);
-
             // เพิ่มคอลัมน์ลง TableView
             new TableColumns(col);
             onTableTestresult.getColumns().add(col);
@@ -570,10 +536,10 @@ public class TestResultController {
     }
 
     @FXML
-    void onClickTestcase(ActionEvent event) {
+    void onClickIR(ActionEvent event) {
         try {
             objects();
-            FXRouter.goTo("test_case",objects);
+            FXRouter.goTo("ir_manager",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -583,7 +549,7 @@ public class TestResultController {
     void onClickTestflow(ActionEvent event) {
         try {
             objects();
-            FXRouter.goTo("test_flow",objects);
+            FXRouter.goTo("test_flow_manager",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -593,17 +559,7 @@ public class TestResultController {
     void onClickTestresult(ActionEvent event) {
         try {
             objects();
-            FXRouter.goTo("test_result",objects);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @FXML
-    void onClickTestscript(ActionEvent event) {
-        try {
-            objects();
-            FXRouter.goTo("test_script",objects);
+            FXRouter.goTo("test_result_manager",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -613,21 +569,7 @@ public class TestResultController {
     void onClickUsecase(ActionEvent event) {
         try {
             objects();
-            FXRouter.goTo("use_case",objects);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @FXML
-    void onCreateButton(ActionEvent event) {
-        try {
-            objects = new ArrayList<>();
-            objects.add(projectName);
-            objects.add(directory);
-            objects.add("newTR");
-            objects.add(null);
-            FXRouter.goTo("test_result_add",objects);
+            FXRouter.goTo("use_case_manager",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -643,195 +585,7 @@ public class TestResultController {
             objects.add(selectedTestResult);
             objects.add(testResultDetailList);
             objects.add("new");
-            FXRouter.goTo("test_result_edit", objects);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void randomIdIR(){
-        int min = 1;
-        int upperbound = 999;
-        String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
-        this.irId = String.format("IR-%s", random1);
-    }
-
-    public void randomIdIRD(){
-        int min = 1;
-        int upperbound = 999;
-        String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
-        this.irdId = String.format("IRD-%s", random1);
-    }
-
-    @FXML
-    void onIRButton(ActionEvent event) {
-        String idTR = testIDLabel.getText();
-
-        if (iRreportList.isIdTRExist(idTR)) {
-            System.out.println("ID " + idTR + " already exists in the file.");
-            IRreport ir = iRreportList.findTRById(idTR);
-            String idIR = ir.getIdIR();
-            String nameIR = ir.getNameIR();
-            String noteIR = ir.getNoteIR();
-            String dateIR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            iRreportList.clearIR(idIR);
-            IRreport newIR = new IRreport(idIR, nameIR, dateIR, noteIR , idTR);
-            iRreportList.addIR(newIR);
-
-//            iRreportDetailList.clearIRDetail(idIR);
-            List<TestResultDetail> trdList = testResultDetailList.findAllTRinTRDById(idTR.trim());
-            for (TestResultDetail trd : trdList) {
-                System.out.println("trd " + trd);
-            }
-
-            List<TestResultDetail> failedResult = trdList.stream()
-                    .filter(faildetail -> faildetail.getIdTR().equals(idTR) && faildetail.getStatusTRD().equals("Fail"))
-                    .collect(Collectors.toList());
-            int counter = 1;
-            for (TestResultDetail detail : failedResult) {
-                String irdID;
-                String idTrd = detail.getIdTRD();
-                if (iRreportDetailList.isIdTRDExist(idTrd)) {
-                    String testNo = String.format("%d", counter);
-                    counter++;
-                    IRreportDetail id = iRreportDetailList.findIRDByTRD(idTrd);
-                    String idIRD = id.getIdIRD();
-                    String testerIRD = id.getTesterIRD();
-                    String tsIdIRD = id.getTsIdIRD();
-                    String tcIdIRD = id.getTcIdIRD();
-                    String descriptIRD = id.getDescriptIRD();
-                    String conditionIRD = id.getConditionIRD();
-                    String imageIRD = id.getImageIRD();
-                    String priorityIRD = id.getPriorityIRD();
-                    String rcaIRD = id.getRcaIRD();
-                    String managerIRD = id.getManagerIRD();
-                    String statusIRD = id.getStatusIRD();
-                    String remarkIRD = id.getRemarkIRD();
-
-                    iRreportDetailList.clearIRDetail(idIRD);
-                    IRreportDetail newIRDetail = new IRreportDetail(idIRD, testNo, testerIRD, tsIdIRD, tcIdIRD, descriptIRD, conditionIRD, imageIRD, priorityIRD, rcaIRD, managerIRD, statusIRD, remarkIRD, idIR, idTrd);
-                    iRreportDetailList.addIRreportDetail(newIRDetail);
-                } else {
-                    randomIdIRD();
-                    irdID = irdId;
-                    String testNo = String.format("%d", counter);
-                    counter++;
-                    String testerIRD = "Tester";
-                    String tsIdIRD = detail.getTsIdTRD();
-                    String tcIdIRD = detail.getTcIdTRD();
-                    System.out.println("tsId " + tsIdIRD);
-                    String descriptIRD = detail.getDescriptTRD();
-
-                    String selectedId = tsIdIRD; // ดึง ID จาก ComboBox
-                    String[] parts = selectedId.split(" : "); // แยกข้อความตาม " : "
-                    String tsId = parts[0]; // ดึงส่วนแรกออกมา
-                    TestScript selectedCon = testScriptList.findByTestScriptId(tsId.trim());
-                    System.out.println("con " + selectedCon);
-
-                    String conditionIRD = selectedCon.getPreCon();
-                    String imageIRD = detail.getImageTRD();
-                    String priorityIRD = detail.getPriorityTRD();
-                    String rcaIRD = "";
-                    String managerIRD = "";
-                    String statusIRD = "In Manager";
-                    String remarkIRD = "";
-
-                    IRreportDetail newIRDetail = new IRreportDetail(irdID, testNo, testerIRD, tsIdIRD, tcIdIRD, descriptIRD, conditionIRD, imageIRD, priorityIRD, rcaIRD, managerIRD, statusIRD, remarkIRD, irId, idTrd);
-                    iRreportDetailList.addIRreportDetail(newIRDetail);
-                }
-            }
-
-            List<IRreportDetail> irdList = iRreportDetailList.findAllIRDinIRById(idIR.trim());
-            for (IRreportDetail ird : irdList) {
-                System.out.println("ird " + ird);
-            }
-
-            List<IRreportDetail> idIRDetail = irdList.stream()
-                    .filter(idIRD -> idIRD.getIdIR().equals(idIR))
-                    .collect(Collectors.toList());
-            System.out.println("idIRDetail: " + idIRDetail);
-
-            for (IRreportDetail idIRdetail : idIRDetail) {
-                String idTrd = idIRdetail.getIdTRD();
-                if (!testResultDetailList.isIdTRDExist(idTrd)) {
-                    String idIrd = idIRdetail.getIdIRD();
-                    iRreportDetailList.clearIRDetail(idIrd);
-                }
-            }
-
-            saveProject();
-        } else {
-            System.out.println("ID " + idTR + " does not exist in the file.");
-            String idIR = irId;
-            String nameIR = testNameLabel.getText();
-            String noteIR = "";
-            String dateIR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-
-            iRreport = new IRreport(idIR, nameIR, dateIR, noteIR, idTR);
-            iRreportList.addOrUpdateIRreport(iRreport);
-            List<TestResultDetail> trdList = testResultDetailList.findAllTRinTRDById(idTR.trim());
-            for (TestResultDetail trd : trdList) {
-                System.out.println("trd " + trd);
-            }
-
-            List<TestResultDetail> failedResult = trdList.stream()
-                    .filter(faildetail -> faildetail.getIdTR().equals(idTR) && faildetail.getStatusTRD().equals("Fail"))
-                    .collect(Collectors.toList());
-            System.out.println("failedResult: " + failedResult);
-
-            int counter = 1;
-            for (TestResultDetail detail : failedResult) {
-                String idTrd = detail.getIdTRD();
-                randomIdIRD();
-                String irID = irdId;
-                String testNo = String.format("%d", counter);
-                counter++; // เพิ่มค่าตัวนับ
-                String testerIRD = "Tester";
-                String tsIdIRD = detail.getTsIdTRD();
-                String tcIdIRD = detail.getTcIdTRD();
-                System.out.println("tsId " + tsIdIRD);
-                String descriptIRD = detail.getDescriptTRD();
-
-                String selectedId = tsIdIRD; // ดึง ID จาก ComboBox
-                String[] parts = selectedId.split(" : "); // แยกข้อความตาม " : "
-                String tsId = parts[0]; // ดึงส่วนแรกออกมา
-                TestScript selectedCon = testScriptList.findByTestScriptId(tsId.trim());
-                System.out.println("con " + selectedCon);
-
-                String conditionIRD = selectedCon.getPreCon();
-                String imageIRD = detail.getImageTRD();
-                String priorityIRD = detail.getPriorityTRD();
-                String rcaIRD = "";
-                String managerIRD = "";
-                String statusIRD = "In Manager";
-                String remarkIRD = "";
-
-                iRreportDetail = new IRreportDetail(irID, testNo, testerIRD, tsIdIRD, tcIdIRD, descriptIRD, conditionIRD, imageIRD, priorityIRD, rcaIRD, managerIRD, statusIRD, remarkIRD, irId, idTrd);
-                iRreportDetailList.addOrUpdateIRreportDetail(iRreportDetail);
-            }
-            saveProject();
-        }
-
-        // Show success message
-        showAlert("Success", "IR Report saved successfully!");
-        try {
-//            FXRouter.popup("test_result_ir");
-            DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
-            DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
-            IRreportDetailList iRreportDetailList = iRreportDetailListDataSource.readData();
-            IRreportList iRreportList = iRreportListDataSource.readData();
-            // โหลด FXML ของ Popup
-            objects = new ArrayList<>();
-            objects.add(projectName);
-            objects.add(directory);
-            objects.add(iRreportDetailList);
-            objects.add(iRreportList);
-//            HashMap<String, Object> params = new HashMap<>();
-//            params.put("iRreportDetailList", iRreportDetailList);
-//            params.put("iRreportList", iRreportList);
-
-            // เปิด Popup ด้วย FXRouter
-            FXRouter.popup("test_result_ir", objects);
+            FXRouter.goTo("test_result_edit_manager", objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

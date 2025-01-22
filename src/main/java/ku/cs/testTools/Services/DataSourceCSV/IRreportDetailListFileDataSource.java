@@ -75,7 +75,8 @@ public class IRreportDetailListFileDataSource implements DataSource<IRreportDeta
                             data[11].trim(),
                             data[12].trim(),
                             data[13].trim(),
-                            data[14].trim()
+                            data[14].trim(),
+                            data[15].trim()
                     );
                     // Add the detail to the list
                     iRreportDetailList.addIRreportDetail(iRreportDetail);
@@ -214,6 +215,7 @@ public class IRreportDetailListFileDataSource implements DataSource<IRreportDeta
                 iRreportDetail.getManagerIRD() + "," +
                 iRreportDetail.getStatusIRD() + "," +
                 iRreportDetail.getRemarkIRD() + "," +
-                iRreportDetail.getIdIR();
+                iRreportDetail.getIdIR() + "," +
+                iRreportDetail.getIdTRD();
     }
 }

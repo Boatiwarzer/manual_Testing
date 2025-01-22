@@ -21,6 +21,7 @@ public class IRreport {
     private String idIR;
     private String nameIR;
     private String dateIR;
+    private String NoteIR;
     private String trIR;
 
     @Override
@@ -36,10 +37,11 @@ public class IRreport {
         return getClass().hashCode();
     }
 
-    public IRreport(String idIR, String nameIR, String dateIR, String trIR) {
+    public IRreport(String idIR, String nameIR, String dateIR, String noteIR, String trIR) {
         this.idIR = idIR;
         this.nameIR = nameIR;
         this.dateIR = dateIR;
+        this.NoteIR = noteIR;
         this.trIR = trIR;
     }
 

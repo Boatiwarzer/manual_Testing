@@ -198,7 +198,7 @@ public class IRTestresultController {
                             text.setText(item);
                             text.wrappingWidthProperty().bind(column.widthProperty().subtract(10)); // ตั้งค่าการห่อข้อความตามขนาดคอลัมน์
                             if (item.equals("Low")) {
-                                text.setFill(Color.YELLOW);
+                                text.setFill(Color.DARKGOLDENROD);
                             } else if (item.equals("Medium")) {
                                 text.setFill(Color.ORANGE);
                             } else if (item.equals("High")) {

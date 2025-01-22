@@ -57,7 +57,8 @@ public class IRreportListFileDataSource implements DataSource<IRreportList>, Man
                             data[1].trim(), // data[1]
                             data[2].trim(), // data[2]
                             data[3].trim(),  // data[3]
-                            data[4].trim()
+                            data[4].trim(),
+                            data[5].trim()
                     );
                     iRreportList.addOrUpdateIRreport(iRreport);
                 }
@@ -184,6 +185,7 @@ public class IRreportListFileDataSource implements DataSource<IRreportList>, Man
                 + iRreport.getIdIR() + ","
                 + iRreport.getNameIR() + ","
                 + iRreport.getDateIR() + ","
+                + iRreport.getNoteIR() + ","
                 + iRreport.getTrIR();
     }
 }

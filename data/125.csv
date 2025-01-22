@@ -46,8 +46,8 @@ useCaseDetail,UC-687,system,1,รับข้อมูล username และ pas
 useCaseDetail,UC-687,system,2,ไม่ไปหน้า home
 useCaseDetail,UC-473,actor,1,TEsts
 useCaseDetail,UC-473,system,1,TEsts
-testResult,TR-996,Login,2024-12-19 16:17:09,,In Tester
+testResult,TR-996,Login,2025-01-22 14:47:34,,In Tester
 testResultDetail,TRD-286,001,TS-001 : Login,TC-321 : Login,User,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,String : Username|String : Password|Button : Button login,1. กรอก username|2. กรอก password|3. กด ปุ่ม login|,สามารถเข้าสู่ระบบได้,สามารถเข้าสู่ระบบได้,Pass,None,19-12-2024,Tester,...,Waiting,Remark,TR-996
 testResultDetail,TRD-21,002,TS-002 : Incorrect Login,TC-321 : Login,User,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,String : Username|String : Password|Button : Button login,1. กรอก username ผิด|2. กรอก password ผิด|3. กดปุ่ม login|,ไม่สามารถเข้าสู่ระบบได้,เข้าสู่ระบบได้,Fail,High,19-12-2024,Tester,...,Waiting,Remark,TR-996
-iRreport,IR-455,Login,2024-12-26 11:21:19,TR-996
-iRreportDetail,IRD-535,1,Tester,TS-002 : Incorrect Login,TC-321 : Login,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,-,...,High,,,In Manager,,IR-455
+iRreport,IR-597,Login,2025-01-22 16:14:53,TR-996
+iRreportDetail,IRD-240,1,Tester,TS-002 : Incorrect Login,TC-321 : Login,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,-,...,High,,,In Test,,IR-597,TRD-21

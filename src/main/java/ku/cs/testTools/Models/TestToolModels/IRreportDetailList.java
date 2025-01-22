@@ -3,6 +3,7 @@ package ku.cs.testTools.Models.TestToolModels;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class IRreportDetailList {
@@ -16,8 +17,8 @@ public class IRreportDetailList {
         iRreportDetailList.add(iRreportDetail);
     }
 
-    public void clearIRDetail(String irID) {
-        iRreportDetailList.removeIf(iRreportDetail -> iRreportDetail.getIdIR().equals(irID));
+    public void clearIRDetail(String irdID) {
+        iRreportDetailList.removeIf(iRreportDetail -> iRreportDetail.getIdIRD().equals(irdID));
     }
 
     public void addOrUpdateIRreportDetail(IRreportDetail iRreportDetail) {
@@ -52,13 +53,34 @@ public class IRreportDetailList {
         }
     }
 
-    public IRreportDetail findIRDById(String id) {
+    public boolean isIdTRDExist(String idTRD) {
         for (IRreportDetail iRreportDetail : iRreportDetailList) {
-            if (iRreportDetail.isId(id) ) {
+            if (iRreportDetail.getIdTRD().equals(idTRD)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+    public IRreportDetail findIRDByTRD(String id) {
+        for (IRreportDetail iRreportDetail : iRreportDetailList) {
+            if (iRreportDetail.isTrd(id) ) {
                 return iRreportDetail;
             }
         }
         return null;
+    }
+
+    public List<IRreportDetail> findAllIRDinIRById (String idIR) {
+        List<IRreportDetail> result = new ArrayList<>();
+        for (IRreportDetail ird : iRreportDetailList) {
+            if (ird.getIdIR().equals(idIR)) {
+                result.add(ird);
+            }
+        }
+        return result;
     }
 
     public void clearItems() {

@@ -28,8 +28,6 @@ public class Main extends Application {
 //            Application.setUserAgentStylesheet(getClass().getResource("/style/Themes/cupertino-light.css").toExternalForm());
 //            Application.setUserAgentStylesheet(getClass().getResource("/style/Themes/nord-dark.css").toExternalForm());
 //            Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
-//        } catch (SQLException e) {
-//            e.printStackTrace();
             // Display an error message to the user or handle the exception as needed
         } catch (IOException e) {
             e.printStackTrace();
@@ -72,8 +70,12 @@ public class Main extends Application {
         FXRouter.when("LabelPage", packageStr1 + "label-page.fxml");
         FXRouter.when("test_result_ir", packageStr1 + "test_result_ir.fxml");
 
-//        FXRouter.when("testflow_manager", packageStr1 + "testflow_manager.fxml");
-//        FXRouter.when("testresult_manager", packageStr1 + "testresult_manager.fxml");
+        FXRouter.when("test_flow_manager", packageStr1 + "test_flow_manager.fxml");
+        FXRouter.when("use_case_manager", packageStr1 + "use_case_manager.fxml");
+        FXRouter.when("test_result_manager", packageStr1 + "test_result_manager.fxml");
+        FXRouter.when("test_result_edit_manager", packageStr1 + "test_result_edit_manager.fxml");
+        FXRouter.when("ir_manager", packageStr1 + "ir_manager.fxml");
+//        FXRouter.when("ir_edit_manager", packageStr1 + "ir_edit_manager.fxml");
 
         // Config route
     }
