@@ -33,10 +33,7 @@ import ku.cs.testTools.Services.DataSourceCSV.*;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 public class TestFlowController {
     @FXML
@@ -131,6 +128,8 @@ public class TestFlowController {
     private StackPane stackPane;
     private Circle circle;
     private List<StackPane> stackPaneList = new ArrayList<>();
+    //private Map<Integer, StackPane> testScriptPaneMap; // Mapping positionID -> StackPane
+
     @FXML
     void initialize() {
         onDesignArea.getChildren().clear();
@@ -164,6 +163,8 @@ public class TestFlowController {
             }
         });
     }
+
+
     public void handleExportMenuItem(ActionEvent actionEvent) {
         boolean noteAdded = false;
         // add note to the top left corner of the designPane
@@ -1006,6 +1007,16 @@ public class TestFlowController {
             }
         }
     }
+    private Point2D getCenterBottom(StackPane node) {
+        Bounds bounds = node.getBoundsInParent();
+        return new Point2D(bounds.getMinX() + bounds.getWidth() / 2, bounds.getMaxY());
+    }
+
+    private Point2D getCenterTop(StackPane node) {
+        Bounds bounds = node.getBoundsInParent();
+        return new Point2D(bounds.getMinX() + bounds.getWidth() / 2, bounds.getMinY());
+    }
+
     private void hideOtherBorders(StackPane selectedStackPane) {
         for (StackPane sp : stackPaneList) {
             if (!sp.equals(selectedStackPane)) {
@@ -1065,6 +1076,7 @@ public class TestFlowController {
 
         // เพิ่ม Drag Handler ให้ StackPane
         makeDraggable(stackPane, anchors, rectangle,border,"testscript",positionID);
+
         // Make the stackPane draggable and selectable
         makeSelectable(stackPane, "testscript", positionID);
         onDesignArea.setOnMouseClicked(mouseEvent -> {
@@ -1710,17 +1722,6 @@ public class TestFlowController {
 
 
     private void makeSelectable(Node node, String type, int ID) {
-//        node.setOnMouseClicked(event -> {
-//            // แสดง Border ของ StackPane ที่เลือก
-//            stackPane.getChildren().stream()
-//                    .filter(child -> child instanceof Rectangle) // ตรวจสอบว่าเป็น Border
-//                    .forEach(child -> child.setVisible(true)); // แสดง Border
-//
-//            // ซ่อน Border ของ StackPane อื่น
-//            hideOtherBorders(stackPane);
-//
-//            // เพิ่มการจัดการเพิ่มเติมถ้าจำเป็น เช่น บันทึกสถานะการเลือก
-//        });
         // Create a context menu
         ContextMenu contextMenu = new ContextMenu();
 
@@ -1728,12 +1729,14 @@ public class TestFlowController {
         MenuItem resizeItem = new MenuItem("Resize");
         //MenuItem propertiesItem = new MenuItem("Properties");
         MenuItem deleteItem = new MenuItem("Delete");
+        MenuItem generate = new MenuItem("Generate Line");
         if (!Objects.equals(type,"line")|| !Objects.equals(type, "arrow")) {
             contextMenu.getItems().add(resizeItem);
         }
         contextMenu.getItems().add(resizeItem);
         //contextMenu.getItems().add(propertiesItem);
         contextMenu.getItems().add(deleteItem);
+        contextMenu.getItems().add(generate);
         //set the action for resize menu item
         resizeItem.setOnAction(e -> {
             System.out.println("Edit Clicked");
@@ -1820,6 +1823,27 @@ public class TestFlowController {
                 System.out.println("Item Removed");
             }
         });
+        generate.setOnAction(e -> {
+            // ค้นหา TestScript ที่เกี่ยวข้อง (สมมติว่ามีวิธีหา testScriptStackPane)
+            TestCase testCase = testCaseList.findTCByPosition(ID);
+            if (testCase != null) {
+                String useCaseID = testCase.getUseCase();
+                TestScript relatedScript = testScriptList.findByUseCaseID(useCaseID);
+                if (relatedScript != null) {
+                    StackPane relatedPane = testScriptList.findStackPaneByPosition(relatedScript.getPosition());
+                    if (relatedPane != null) {
+                        // วาดเส้นระหว่าง TestCase กับ TestScript
+                        Point2D start = getCenterBottom((StackPane) node);
+                        Point2D end = getCenterTop(relatedPane);
+                        drawLine(connectionList.findLastConnectionID(), start.getX(), start.getY(), end.getX(), end.getY(),
+                                "TestCase -> TestScript", "arrow", "solid", null);
+                    }
+                }
+            }
+
+
+        });
+
         node.setOnMouseReleased(mouseEvent -> {
             node.setOnMouseDragged(null);
             saveProject();
@@ -1839,8 +1863,6 @@ public class TestFlowController {
             }
         });
     }
-
-
 
 
 

@@ -1,18 +1,18 @@
 package ku.cs.testTools.Models.TestToolModels;
 
 import jakarta.persistence.Entity;
+import javafx.scene.layout.StackPane;
 import ku.cs.testTools.Services.TestScriptComparable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
 
 @Data
 public class TestScriptList {
     private ArrayList<TestScript> testScriptList;
+    private Map<Integer, StackPane> testScriptPaneMap; // Mapping positionID -> StackPane
 
     public TestScriptList() {
         testScriptList = new ArrayList<TestScript>();
@@ -118,5 +118,28 @@ public class TestScriptList {
             System.out.println("No TestScript found with position ID: " + id);
         }
     }
+
+    public TestScript findByUseCaseID(String useCaseID) {
+        for (TestScript script : this.testScriptList) { // this.testScripts คือรายการ TestScript ที่คุณเก็บอยู่
+            if (script.getUseCase().equals(useCaseID)) { // เปรียบเทียบ UseCase ID
+                return script;
+            }
+        }
+        return null; // หากไม่มี TestScript ที่ตรงกับ UseCase ID
+    }
+    public List<TestScript> findAllByUseCaseID(String useCaseID) {
+        List<TestScript> result = new ArrayList<>();
+        for (TestScript script : this.testScriptList) {
+            if (script.getUseCase().equals(useCaseID)) {
+                result.add(script);
+            }
+        }
+        return result;
+    }
+    public StackPane findStackPaneByPosition(int positionID) {
+        return testScriptPaneMap.get(positionID); // ค้นหา StackPane โดยใช้ positionID
+    }
+
+
 
 }
