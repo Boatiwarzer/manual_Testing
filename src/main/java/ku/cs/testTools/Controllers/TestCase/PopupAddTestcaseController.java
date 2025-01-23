@@ -138,6 +138,7 @@ public class PopupAddTestcaseController {
             setDateTCD();
             testCaseDetail = new TestCaseDetail(id,TsNo, Name, Type, dateTCD,idTC);
             testCaseDetailList.addOrUpdateTestCase(testCaseDetail);
+            objects();
             route(event,objects);
         } catch (IOException e) {
             System.err.println("ไปที่หน้า home ไม่ได้");

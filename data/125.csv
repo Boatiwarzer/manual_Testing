@@ -27,8 +27,9 @@ testScriptDetail,TSD-358,003,กด ปุ่ม login,Button : Button login,เ
 testScriptDetail,TSD-975,001,กรอก username ผิด,String : Username,สามารถกรอกได้...,TS-002,22-01-2025
 testScriptDetail,TSD-140,002,กรอก password ผิด,String : Password,สามารถกรอกได้,TS-002,19-12-2024
 testCase,TC-885,tset,22-01-2025,UC-687 : Incorrect Login,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,-,279,-,ไม่สามารถเข้าสู่ระบบได้
-testCase,TC-321,Login,19-12-2024,UC-776 : Login,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,-,292,-,สามารถเข้าสู่ระบบได้
 testCase,TC-361,aaa,22-01-2025,UC-687 : Incorrect Login,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,,0,-,ไม่สามารถเข้าสู่ระบบได้
+testCase,TC-321,Login,19-12-2024,UC-776 : Login,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,-,292,-,สามารถเข้าสู่ระบบได้
+testCase,TC-912,s,22-01-2025,None,s,s,0,ss,s
 testCaseDetail,TCD-151,001,Username,String,19-12-2024,TC-321
 testCaseDetail,TCD-165,002,Password,String,19-12-2024,TC-321
 testCaseDetail,TCD-42,003,Button login,Button,19-12-2024,TC-321

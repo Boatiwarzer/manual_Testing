@@ -565,7 +565,7 @@ public class TestResultEditController {
             currentNewData();
             objects();
             objects.add("edit");
-            objects.add(selectedItem);
+            objects.add(null);
             if (testResultDetailList != null){
                 FXRouter.popup("popup_add_testresult",objects,true);
             }
@@ -674,8 +674,8 @@ public class TestResultEditController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
-            objects.add("none");
-            FXRouter.goTo("test_resultt", objects);
+            objects.add(null);
+            FXRouter.goTo("test_result", objects);
             Node source = (Node) event.getSource();
             Stage stage = (Stage) source.getScene().getWindow();
             stage.close();
@@ -718,8 +718,8 @@ public class TestResultEditController {
         try {
             currentNewData();
             objects();
-            objects.add("edit");
-            objects.add(selectedItem);
+//            objects.add("edit");
+//            objects.add(selectedItem);
             testResultList.addOrUpdateTestResult(testResult);
 
             // Write data to respective files

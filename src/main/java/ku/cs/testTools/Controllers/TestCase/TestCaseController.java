@@ -86,7 +86,7 @@ public class TestCaseController {
     private UseCaseList useCaseList = new UseCaseList();
     @FXML
     void initialize() {
-
+        setTable();
         if (FXRouter.getData() != null) {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
@@ -102,18 +102,7 @@ public class TestCaseController {
             }
             searchSet();
 
-        } else {
-            setTable();
-                loadListView(testCaseList);
-                selected();
-                for (TestCase testCase : testCaseList.getTestCaseList()) {
-                    word.add(testCase.getNameTC());
-                }
-                searchSet();
-            }
-
-
-
+        }
 
     }
     public void handleExportMenuItem(ActionEvent actionEvent) {
@@ -513,7 +502,7 @@ public class TestCaseController {
             objects.add(selectedTestCase);
             objects.add(testCaseDetailList);
             objects.add("new");
-            FXRouter.goTo("test_case_edit",selectedTestCase);
+            FXRouter.goTo("test_case_edit",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
