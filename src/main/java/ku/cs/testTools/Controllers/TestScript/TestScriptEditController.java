@@ -650,7 +650,7 @@ public class TestScriptEditController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
-            objects.add("none");
+            objects.add(null);
             FXRouter.goTo("test_script", objects);
             Node source = (Node) event.getSource();
             Stage stage = (Stage) source.getScene().getWindow();

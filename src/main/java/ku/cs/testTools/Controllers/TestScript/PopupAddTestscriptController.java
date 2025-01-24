@@ -113,7 +113,14 @@ public class PopupAddTestscriptController {
         objects.add(typeTS);
         objects.add(testScript);
         objects.add(testScriptDetailList);
+        objects.add(testCaseDetailList);
         objects.add(type);
+    }
+    private void objectsend() {
+        objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(null);
     }
 
     @FXML

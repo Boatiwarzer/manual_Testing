@@ -772,9 +772,12 @@ public class TestResultAddController {
 
             // Write data to respective files
             saveProject();
-            showAlert("Success", "Test case saved successfully!");
+            objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add(testResult);            showAlert("Success", "Test case saved successfully!");
 
-            FXRouter.goTo("test_result",testResult,true);
+            FXRouter.goTo("test_result",objects,true);
 
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -402,10 +402,7 @@ public class PopupAddTestresultController {
     @FXML
     void onCancelButton(ActionEvent event) {
         try {
-            objects = new ArrayList<>();
-            objects.add(projectName);
-            objects.add(directory);
-            objects.add(null);
+            objects();
             clearInfo();
             route(event, objects);
         } catch (IOException e) {
