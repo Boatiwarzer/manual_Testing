@@ -150,7 +150,8 @@ public class TestScriptEditController {
             if (objects.get(3) != null){
                 testScript = (TestScript) objects.get(3);
                 testScriptDetailList = (TestScriptDetailList) objects.get(4);
-                type = (String) objects.get(5);
+                testCaseDetailList = (TestCaseDetailList) objects.get(5);
+                type = (String) objects.get(6);
 
             }
             setDataTS();

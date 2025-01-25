@@ -12,7 +12,6 @@ import java.util.*;
 @Data
 public class TestScriptList {
     private ArrayList<TestScript> testScriptList;
-    private Map<Integer, StackPane> testScriptPaneMap; // Mapping positionID -> StackPane
 
     public TestScriptList() {
         testScriptList = new ArrayList<TestScript>();
@@ -135,9 +134,6 @@ public class TestScriptList {
             }
         }
         return result;
-    }
-    public StackPane findStackPaneByPosition(int positionID) {
-        return testScriptPaneMap.get(positionID); // ค้นหา StackPane โดยใช้ positionID
     }
 
 

@@ -522,7 +522,7 @@ public class TestCaseEditController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
-            objects.add("none");
+            objects.add(testCase);
             FXRouter.goTo("test_case", objects);
             Node source = (Node) event.getSource();
             Stage stage = (Stage) source.getScene().getWindow();
@@ -538,7 +538,10 @@ public class TestCaseEditController {
     void onSubmitButton(ActionEvent event) {
         try {
             currentNewData();
-            objects();
+            objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add(testCase);
             testCaseList.addOrUpdateTestCase(testCase);
 
             // Write data to respective files
