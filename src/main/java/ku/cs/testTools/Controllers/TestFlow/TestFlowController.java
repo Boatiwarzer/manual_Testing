@@ -129,6 +129,8 @@ public class TestFlowController {
     private Circle circle;
     private List<StackPane> stackPaneList = new ArrayList<>();
     //private Map<Integer, StackPane> testScriptPaneMap; // Mapping positionID -> StackPane
+    private Map<Integer, Point2D> testScriptPositionMap = new HashMap<>();
+
 
     @FXML
     void initialize() {
@@ -1065,7 +1067,8 @@ public class TestFlowController {
         onDesignArea.getChildren().add(stackPane);
         onDesignArea.getChildren().addAll(anchors);
         stackPaneList.add(stackPane);
-
+        //testScriptPaneMap.put(positionID, stackPane);
+        testScriptPositionMap.put(positionID, new Point2D(layoutX, layoutY));
         BoundShape(anchors, rectangle, border, stackPane, "testscript",positionID);
 
         // อัปเดตตำแหน่ง Anchor Points
@@ -1730,13 +1733,14 @@ public class TestFlowController {
         //MenuItem propertiesItem = new MenuItem("Properties");
         MenuItem deleteItem = new MenuItem("Delete");
         MenuItem generate = new MenuItem("Generate Line");
-        if (!Objects.equals(type,"line")|| !Objects.equals(type, "arrow")) {
+        if (!Objects.equals(type,"line") && !Objects.equals(type, "arrow")) {
             contextMenu.getItems().add(resizeItem);
         }
-        contextMenu.getItems().add(resizeItem);
-        //contextMenu.getItems().add(propertiesItem);
+        if (Objects.equals(type,"testcase")) {
+            contextMenu.getItems().add(generate);
+        }
         contextMenu.getItems().add(deleteItem);
-        contextMenu.getItems().add(generate);
+        //contextMenu.getItems().add(generate);
         //set the action for resize menu item
         resizeItem.setOnAction(e -> {
             System.out.println("Edit Clicked");
@@ -1824,25 +1828,55 @@ public class TestFlowController {
             }
         });
         generate.setOnAction(e -> {
-            // ค้นหา TestScript ที่เกี่ยวข้อง (สมมติว่ามีวิธีหา testScriptStackPane)
             TestCase testCase = testCaseList.findTCByPosition(ID);
             if (testCase != null) {
                 String useCaseID = testCase.getUseCase();
                 TestScript relatedScript = testScriptList.findByUseCaseID(useCaseID);
-                if (relatedScript != null) {
-                    StackPane relatedPane = testScriptList.findStackPaneByPosition(relatedScript.getPosition());
-                    if (relatedPane != null) {
-                        // วาดเส้นระหว่าง TestCase กับ TestScript
-                        Point2D start = getCenterBottom((StackPane) node);
-                        Point2D end = getCenterTop(relatedPane);
-                        drawLine(connectionList.findLastConnectionID(), start.getX(), start.getY(), end.getX(), end.getY(),
-                                "TestCase -> TestScript", "arrow", "solid", null);
-                    }
-                }
+                TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(relatedScript.getPosition());
+                // คำนวณตำแหน่ง TestScript (ใช้ขนาดและตำแหน่ง)
+                double relatedWidth = testFlowPosition.getFitWidth();
+                double relatedHeight = testFlowPosition.getFitHeight();
+                Point2D relatedPosition = new Point2D(testFlowPosition.getXPosition(), testFlowPosition.getYPosition());
+
+                // คำนวณตำแหน่งตรงกลางของ TestScript
+                double centerX = relatedPosition.getX() + (relatedWidth / 2); // คำนวณตรงกลางแกน X
+                double topY = relatedPosition.getY(); // ขอบบนสุดของ TestScript
+
+                Point2D end = new Point2D(centerX, topY); // ปรับตำแหน่งเป็นด้านบนตรงกลาง
+
+
+                // สร้างตำแหน่งเริ่มต้น
+                Point2D start = getCenterBottom((StackPane) node);
+
+                // วาดเส้น
+                drawLine(
+                        connectionList.findLastConnectionID(),
+                        start.getX(),
+                        start.getY(),
+                        end.getX(),
+                        end.getY(),
+                        "Arrow",
+                        "none",
+                        "line",
+                        "open"
+                );
+
+                // บันทึกการเชื่อมต่อ
+                addToConnectionList(
+                        start.getX(),
+                        start.getY(),
+                        end.getX(),
+                        end.getY(),
+                        "Arrow",
+                        "none",
+                        "line",
+                        "open",
+                        "line"
+                );
+                saveProject();
             }
-
-
         });
+
 
         node.setOnMouseReleased(mouseEvent -> {
             node.setOnMouseDragged(null);

@@ -769,7 +769,11 @@ public class TestResultAddController {
                 showAlert("Input Error", "Please fill in all required fields.");
                 return;
             }
-
+            DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
+            TestResultDetailList testResultDetailList1 = testResultDetailListDataSource.readData();
+            for (TestResultDetail testResultDetail : testResultDetailList1.getTestResultDetailList()){
+                testResultDetailList.addOrUpdateTestResultDetail(testResultDetail);
+            }
             testResultList.addOrUpdateTestResult(testResult);
 
             // Write data to respective files

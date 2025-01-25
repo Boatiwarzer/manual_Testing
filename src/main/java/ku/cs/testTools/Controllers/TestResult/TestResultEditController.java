@@ -719,13 +719,18 @@ public class TestResultEditController {
 
         try {
             currentNewData();
-            objects();
+
 //            objects.add("edit");
 //            objects.add(selectedItem);
             testResultList.addOrUpdateTestResult(testResult);
 
             // Write data to respective files
             saveProject();
+            showAlert("Success", "Test Result saved successfully!");
+            objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add(testResult);
             showAlert("Success", "Test Result saved successfully!");
 
             FXRouter.goTo("test_result",objects,true);

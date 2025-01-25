@@ -97,7 +97,7 @@ public class PopupAddTestscriptController {
     @FXML
     void onCancelButton(ActionEvent event) {
         try {
-            objects();
+            objectsend();
             clearInfo();
             route(event, objects);
         } catch (IOException e) {

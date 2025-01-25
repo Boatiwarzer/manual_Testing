@@ -497,6 +497,7 @@ public class TestScriptController {
             objects.add("editTS");
             objects.add(selectedTestScript);
             objects.add(testScriptDetailList);
+            objects.add(testCaseDetailList);
             objects.add("new");
             FXRouter.goTo("test_script_edit",objects);
         } catch (IOException e) {
