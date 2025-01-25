@@ -21,12 +21,12 @@
                <children>
                   <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0" spacing="20.0">
                      <children>
-                        <Label prefWidth="100.0" text="Manager">
+                        <Label prefWidth="100.0" text="Tester">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="onManagerField" onAction="#onManagerField" prefHeight="30.0" prefWidth="200.0">
+                        <TextField fx:id="onTesterField" onAction="#onTesterField" prefHeight="30.0" prefWidth="200.0">
                            <font>
                               <Font size="14.0" />
                            </font>

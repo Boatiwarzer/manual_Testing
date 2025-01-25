@@ -83,6 +83,7 @@ public class LandingController {
             String packageStr1 = "views/";
             FXRouter.when("home_tester", packageStr1 + "home_tester.fxml", "TestTools | " + projectName);
             FXRouter.goTo("home_tester", objects);
+            FXRouter.popup("landing_openproject", objects);
             // Close the current window
             Node source = (Node) actionEvent.getSource();
             Stage stage = (Stage) source.getScene().getWindow();
@@ -140,7 +141,7 @@ public class LandingController {
             String packageStr1 = "views/";
             FXRouter.when("home_manager", packageStr1 + "home_manager.fxml", "TestTools | " + projectName);
             FXRouter.goTo("home_manager", objects);
-            FXRouter.popup("landing_openproject", objects);
+//            FXRouter.popup("landing_openproject", objects);
             // Close the current window
             Node source = (Node) actionEvent.getSource();
             Stage stage = (Stage) source.getScene().getWindow();

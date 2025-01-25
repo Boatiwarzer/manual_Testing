@@ -46,7 +46,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.testTools.Controllers.TestFlow.TestFlowController">
+<BorderPane xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.testTools.Controllers.Manager.TFmanagerController">
    <center>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0">
          <children>
@@ -55,7 +55,7 @@
                      <Font size="14.0" />
                  </font>
              </TitledPane>
-              <Pane fx:id="onDesignArea" layoutX="15.0" layoutY="46.0" onDragDropped="#paneDragDropped" onDragOver="#paneDragOver" prefHeight="610.0" prefWidth="1062.0" style="-fx-background-color: white; -fx-border-color: silver;" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="27.199999999999818" AnchorPane.topAnchor="50.0" />
+              <Pane fx:id="onDesignArea" disable="true" layoutX="15.0" layoutY="46.0" prefHeight="610.0" prefWidth="1062.0" style="-fx-background-color: white; -fx-border-color: silver;" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="27.199999999999818" AnchorPane.topAnchor="50.0" />
          </children>
       </AnchorPane>
    </center>

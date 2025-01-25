@@ -1,4 +1,4 @@
-package ku.cs.testTools.Controllers.TestResult;
+package ku.cs.testTools.Controllers.Manager;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -23,23 +23,20 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class PopupAddTestresultController {
-
+public class PopupTREdit {
     @FXML
-    private TextField onTestNo, onInputdata;
+    private TextField onInputdata, onRemark;
     @FXML
     private TextArea onTeststeps, onActual;
 
     @FXML
-    private Button onCancelButton, onConfirmButton, onUploadButton;
+    private Button onCancelButton, onConfirmButton;
 
     @FXML
-    private Label onDate, onDescription, testResultIDLabel, testResultNameLabel, onExpected, onTester, onImage, onActor;
-
-    @FXML
-    private ComboBox<String> onTestscriptIDComboBox;
+    private Label onTestcaseIDComboBox, onTestscriptIDComboBox, onTestNo, onDate, onDescription, testResultIDLabel, testResultNameLabel, onExpected, onTester, onImage, onActor;
 
     @FXML
     private ComboBox<String> onStatusComboBox;
@@ -48,7 +45,7 @@ public class PopupAddTestresultController {
     private ComboBox<String> onPriorityComboBox;
 
     @FXML
-    private ComboBox<String> onTestcaseIDComboBox;
+    private CheckBox onNotapproveCheck, onApproveCheck;
 
     private TestResultList testResultList = new TestResultList();
     private TestResultDetailList testResultDetailList = new TestResultDetailList();
@@ -98,7 +95,6 @@ public class PopupAddTestresultController {
             idTR = testResult.getIdTR();
             type = (String) objects.get(5);
             loadProject();
-            selectedComboBox();
             if (objects.get(6) != null && type.equals("edit")) {
                 testResultDetail = (TestResultDetail) objects.get(6);
                 testResultDetail = testResultDetailList.findTRDById(testResultDetail.getIdTRD());
@@ -133,7 +129,6 @@ public class PopupAddTestresultController {
         testFlowPositionList = testFlowPositionListDataSource.readData();
         connectionList = connectionListDataSource.readData();
         useCaseList = useCaseListDataSource.readData();
-
     }
     private void saveProject() {
         DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
@@ -154,7 +149,6 @@ public class PopupAddTestresultController {
         testCaseListDataSource.writeData(testCaseList);
         testCaseDetailListDataSource.writeData(testCaseDetailList);
         connectionListDataSource.writeData(connectionList);
-
     }
     private void setData() {
         testResultNameLabel.setText(testResult.getNameTR());
@@ -165,8 +159,8 @@ public class PopupAddTestresultController {
 //        testResultNameLabel.setText(testResult.getNameTR());
 //        testResultIDLabel.setText(testResult.getIdTR());
         onTestNo.setText(testResultDetail.getTestNo());
-        onTestscriptIDComboBox.getSelectionModel().select(testResultDetail.getTsIdTRD());
-        onTestcaseIDComboBox.getSelectionModel().select(testResultDetail.getTcIdTRD());
+        onTestscriptIDComboBox.setText(testResultDetail.getTsIdTRD());
+        onTestcaseIDComboBox.setText(testResultDetail.getTcIdTRD());
         onDescription.setText(testResultDetail.getDescriptTRD());
         onActor.setText(testResultDetail.getActorTRD());
         onInputdata.setText(testResultDetail.getInputdataTRD().replace("|", ", "));
@@ -178,6 +172,15 @@ public class PopupAddTestresultController {
         onDate.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
         onTester.setText(testResultDetail.getTesterTRD());
         onImage.setText(testResultDetail.getImageTRD());
+        if(testResultDetail.getApproveTRD().equals("Approved")){
+            onApproveCheck.setSelected(true);
+        } else if (testResultDetail.getApproveTRD().equals("Not approved")){
+            onNotapproveCheck.setSelected(true);
+        } else {
+            onApproveCheck.setSelected(false);
+            onNotapproveCheck.setSelected(false);
+        }
+        onRemark.setText(testResultDetail.getRemarkTRD());
     }
 
     private void setDateTRD() {
@@ -196,7 +199,7 @@ public class PopupAddTestresultController {
     }
 
     private void setStatus() {
-        onStatusComboBox.setItems(FXCollections.observableArrayList("None", "Pass", "Fail"));
+        onStatusComboBox.setItems(FXCollections.observableArrayList("None", "Pass", "Fail", "Withdraw"));
         onStatusComboBox.setValue("None");
     }
 
@@ -207,17 +210,22 @@ public class PopupAddTestresultController {
 
     private void clearInfo() {
         id = "";
-        onTestNo.setText("");
+        onTestNo.setText("-");
         onDate.setText("-");
         onDescription.setText("-");
         onActual.setText("");
         onTeststeps.setText("");
         onExpected.setText("-");
-        onActor.setText("");
-        onTester.setText("Tester");
+        onActor.setText("-");
+        onTester.setText("-");
         onImage.setText("...");
+        onTestcaseIDComboBox.setText("-");
+        onTestscriptIDComboBox.setText("-");
         testResultIDLabel.setText("");
         testResultNameLabel.setText("");
+        onApproveCheck.setSelected(false);
+        onNotapproveCheck.setSelected(false);
+        onRemark.setText("");
     }
 
     public void randomId() {
@@ -227,159 +235,6 @@ public class PopupAddTestresultController {
         this.id = String.format("TRD-%s", random1);
     }
 
-    @FXML
-    void onUploadButton(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select an Image");
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg")
-        );
-
-        selectedFile = fileChooser.showOpenDialog(null);
-
-        if (selectedFile != null) {
-            String targetDirectory = getTargetDirectory();
-
-            try {
-                Path targetPath = Path.of(targetDirectory, selectedFile.getName());
-                Files.createDirectories(Path.of(targetDirectory)); // สร้างโฟลเดอร์หากยังไม่มี
-                Files.copy(selectedFile.toPath(), targetPath, StandardCopyOption.REPLACE_EXISTING);
-                savedImagePath = targetPath.toString();
-
-                onImage.setText(selectedFile.getName() + " : " + savedImagePath);
-            } catch (IOException e) {
-                e.printStackTrace();
-                onImage.setText("Error: " + e.getMessage());
-            }
-        }
-    }
-
-    // ฟังก์ชันแปลงไฟล์เป็น Base64
-//    private String encodeFileToBase64Binary(File file) throws IOException {
-//        try (FileInputStream fileInputStream = new FileInputStream(file)) {
-//            byte[] fileBytes = fileInputStream.readAllBytes();
-//            return Base64.getEncoder().encodeToString(fileBytes);
-//        }
-//    }
-
-    private String getTargetDirectory() {
-        String userHome = System.getProperty("user.home");
-        String osName = System.getProperty("os.name").toLowerCase();
-
-        if (osName.contains("win")) {
-            return userHome + "\\Pictures\\Image_ManaualTesttools";
-        } else {
-            return userHome + "/Downloads/Image_ManaualTesttools";
-        }
-    }
-
-    private String getCSVFilePath() {
-        String userHome = System.getProperty("user.home");
-        return userHome + File.separator + "image_paths.csv";
-    }
-
-    private void selectedComboBox(){
-        onTestscriptIDComboBox.getItems().clear();
-        onTestscriptIDComboBox.setItems(FXCollections.observableArrayList("None"));
-
-        new AutoCompleteComboBoxListener<>(onTestscriptIDComboBox);
-        TextField editorTsId = onTestscriptIDComboBox.getEditor();
-        onTestscriptIDComboBox.getSelectionModel().selectFirst();
-        IdTSCombobox();
-        onTestscriptIDComboBox.setOnAction(event -> {
-            String selectedItem = onTestscriptIDComboBox.getSelectionModel().getSelectedItem();
-            if (selectedItem != null) {
-                editorTsId.setText(selectedItem);
-                //editor.setEditable(true);
-                editorTsId.requestFocus();
-
-                Platform.runLater(editorTsId::end);
-
-                String selectedId = onTestscriptIDComboBox.getValue(); // ดึง ID จาก ComboBox
-                String[] parts = selectedId.split(" : "); // แยกข้อความตาม " : "
-                String tsId = parts[0]; // ดึงส่วนแรกออกมา
-                if (tsId != null && !tsId.trim().isEmpty()) {
-                    TestScript script = testScriptList.findTSById(tsId.trim()); // ค้นหา TestScript โดย ID
-                    if (script != null) {
-                        onDescription.setText(script.getDescriptionTS());
-                        onExpected.setText(script.getPostCon());// แสดงผลใน Label
-                        String uc = script.getUseCase();
-                        String[] partsUc = uc.split(" : "); // แยกข้อความตาม " : "
-                        String ucId = partsUc[0]; // ดึงส่วนแรกออกมา
-                        UseCase ucActor = useCaseList.findByUseCaseId(ucId.trim());
-                        System.out.println(ucId);
-                        System.out.println(ucActor);
-                        onActor.setText(ucActor.getActor());
-
-                        String selectedTcId = testScriptList.findTSById(tsId).getTestCase();
-//                        String[] partsTC = selectedTcId.split(" : "); // แยกข้อความตาม " : "
-//                        String tcId = partsTC[0]; // ดึงส่วนแรกออกมา
-
-                        if (!onTestcaseIDComboBox.getItems().contains(selectedTcId)) {
-                            onTestcaseIDComboBox.getItems().add(selectedTcId);
-                            onTestcaseIDComboBox.setValue(selectedTcId);
-                        } else {
-                            onTestcaseIDComboBox.getItems().add("None");
-                        }
-
-
-                    } else {
-                        onDescription.setText("No script found for ID: " + tsId);
-                        onExpected.setText("No Expected found for ID: " + tsId);
-                        onActual.setText("No Actor found for ID: " + tsId);
-                    }
-                }
-                DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-                List<TestScriptDetail> testScriptDetailList = testScriptDetailListDataSource.readData().getTestScriptDetailList();
-
-                List<String> matchingSteps = new ArrayList<>();
-                List<String> matchingInput = new ArrayList<>();
-
-                // ค้นหาข้อมูล testSteps สำหรับ id ที่ตรง
-                for (TestScriptDetail testScriptDetail : testScriptDetailList) {
-                    // ตรวจสอบว่า id ของ testScriptDetail ตรงกับ tsId หรือไม่
-                    if (testScriptDetail.getIdTS().equals(tsId)) {
-                        // ถ้าตรง ก็เพิ่ม testSteps ลงใน List
-                        matchingSteps.add(testScriptDetail.getSteps());
-                        matchingInput.add(testScriptDetail.getInputData());
-                    }
-                }
-
-                // แสดงผลข้อมูลที่ค้นพบ
-                if (!matchingSteps.isEmpty()) {
-                    StringBuilder formattedText = new StringBuilder();
-                    for (int i = 0; i < matchingSteps.size(); i++) {
-                        formattedText.append(i + 1).append(". ").append(matchingSteps.get(i)).append("\n");
-                    }
-                    onTeststeps.setText(formattedText.toString());
-                    System.out.println("Test Steps for " + tsId + ": " + matchingSteps);
-                } else {
-                    System.out.println("No test steps found for " + tsId);
-                }
-
-                if (!matchingInput.isEmpty()) {
-                    String formattedText = String.join(", ", matchingInput);
-                    onInputdata.setText(formattedText);
-                    System.out.println("Test Input for " + tsId + ": " + matchingInput);
-                } else {
-                    System.out.println("No test Input found for " + tsId);
-                }
-            }
-        });
-
-//        for (Equipment equipment : equipmentList.getEquipmentList()){
-//            if (!categoryBox.getItems().contains(equipment.getType_equipment())) {
-//                categoryBox.getItems().add(equipment.getType_equipment());
-//            }
-//        }
-    }
-
-    private void IdTSCombobox() {
-        for (TestScript testScript : testScriptList.getTestScriptList()){
-            String IdTS_combobox = testScript.getIdTS()+ " : " + testScript.getNameTS();
-            onTestscriptIDComboBox.getItems().add(IdTS_combobox);
-        }
-    }
     private void objects() {
         objects = new ArrayList<>();
         objects.add(projectName);
@@ -391,9 +246,7 @@ public class PopupAddTestresultController {
     }
     private void route(ActionEvent event, ArrayList<Object> objects) throws IOException {
         if (typeTR.equals("editTR")){
-            FXRouter.goTo("test_result_edit", objects);
-        }else {
-            FXRouter.goTo("test_result_add", objects);
+            FXRouter.goTo("test_result_edit_manager", objects);
         }
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
@@ -419,13 +272,8 @@ public class PopupAddTestresultController {
         }
 
         String TrNo = onTestNo.getText();
-        String IdTS = onTestscriptIDComboBox.getValue();
-
-        String[] parts = IdTS.split(" : "); // แยกข้อความตาม " : "
-        String result = parts[0]; // ดึงส่วนแรกออกมา
-        System.out.println(result);
-
-        String IdTC = onTestcaseIDComboBox.getValue();
+        String IdTS = onTestscriptIDComboBox.getText();
+        String IdTC = onTestcaseIDComboBox.getText();
         String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String descript = onDescription.getText();
         String actor = onActor.getText();
@@ -437,8 +285,10 @@ public class PopupAddTestresultController {
         String priority = onPriorityComboBox.getValue();
         String tester = onTester.getText();
         String image = onImage.getText();
+        String approve = onApproveCheck.isSelected() ? "Approved" : "Not approved";
+        String remark = onRemark.getText();
 
-        testResultDetail = new TestResultDetail(id, TrNo, IdTS, IdTC, actor, descript, inputdata, teststeps, expected, actual, status, priority, date, tester, image, "Waiting", "", idTR);
+        testResultDetail = new TestResultDetail(id, TrNo, IdTS, IdTC, actor, descript, inputdata, teststeps, expected, actual, status, priority, date, tester, image, approve, remark, idTR);
         testResultDetailList.addOrUpdateTestResultDetail(testResultDetail);
 
         try {
@@ -454,35 +304,6 @@ public class PopupAddTestresultController {
 
     @FXML
     boolean handleSaveAction() {
-        if (onTestNo.getText() == null || onTestNo.getText().trim().isEmpty()) {
-            showAlert("กรุณากรอกข้อมูล Test No.");
-            return false;
-        }
-
-        if (onTestscriptIDComboBox.getValue() == null || onTestscriptIDComboBox.getValue().trim().isEmpty() || onTestscriptIDComboBox.getValue().equals("None")) {
-            showAlert("กรุณาเลือก Test Script ID.");
-            return false;
-        }
-
-        if (onDescription.getText() == null || onDescription.getText().trim().isEmpty()) {
-            showAlert("กรุณากรอก Description.");
-            return false;
-        }
-
-        if (onInputdata.getText() == null || onInputdata.getText().trim().isEmpty()) {
-            showAlert("กรุณากรอก Input Data.");
-            return false;
-        }
-
-        if (onTeststeps.getText() == null || onTeststeps.getText().trim().isEmpty()) {
-            showAlert("กรุณากรอก Test Steps.");
-            return false;
-        }
-
-        if (onActual.getText() == null || onActual.getText().trim().isEmpty()) {
-            showAlert("กรุณากรอก Actual.");
-            return false;
-        }
 
         if (onStatusComboBox.getValue() == null || onStatusComboBox.getValue().trim().isEmpty()) {
             showAlert("กรุณาเลือก Status.");
@@ -494,10 +315,11 @@ public class PopupAddTestresultController {
             return false;
         }
 
-        if (onTester.getText() == null || onTester.getText().trim().isEmpty()) {
-            showAlert("กรุณากรอก Tester.");
+        if (!onApproveCheck.isSelected() && !onNotapproveCheck.isSelected()) {
+            showAlert("กรุณาเลือก Approval");
             return false;
         }
+
         return true;
     }
 
@@ -526,13 +348,21 @@ public class PopupAddTestresultController {
     }
 
     @FXML
-    void onTestscriptIDComboBox(ActionEvent event) {
+    void onRemark(ActionEvent event) {
 
     }
 
     @FXML
-    void onTestcaseIDComboBox(ActionEvent event) {
-
+    void handleApprove (ActionEvent event) {
+        if(onApproveCheck.isSelected()){
+            onApproveCheck.setSelected(true);
+            onNotapproveCheck.setSelected(false);
+        } else if (onNotapproveCheck.isSelected()){
+            onApproveCheck.setSelected(false);
+            onNotapproveCheck.setSelected(true);
+        } else {
+            onApproveCheck.setSelected(false);
+            onNotapproveCheck.setSelected(false);
+        }
     }
-
 }

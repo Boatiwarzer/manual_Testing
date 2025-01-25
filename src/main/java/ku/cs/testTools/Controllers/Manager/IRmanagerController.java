@@ -535,4 +535,8 @@ public class IRmanagerController {
         onSearchList.getItems().addAll(searchList(onSearchField.getText(),iRreportList.getIRreportList()));
     }
 
+    @FXML
+    void onTestNoteField(ActionEvent event) {
+
+    }
 }

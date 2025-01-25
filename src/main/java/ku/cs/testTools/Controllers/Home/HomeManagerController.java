@@ -81,7 +81,7 @@ public class HomeManagerController {
     }
 
     @FXML
-    void handleNewMenuItem(ActionEvent event) throws IOException {
+    void handleNewMenuItem (ActionEvent event) throws IOException {
         FXRouter.popup("landing_newproject");
     }
 

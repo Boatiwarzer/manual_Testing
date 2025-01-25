@@ -381,6 +381,8 @@ public class TestResultEditController {
                                 text.setFill(javafx.scene.paint.Color.GREEN); // สีเขียวสำหรับ "Pass"
                             } else if (item.equals("Fail")) {
                                 text.setFill(javafx.scene.paint.Color.RED); // สีแดงสำหรับ "Fail"
+                            } else if (item.equals("Withdraw")) {
+                                text.setFill(javafx.scene.paint.Color.BLUE);
                             } else {
                                 text.setFill(javafx.scene.paint.Color.BLACK); // สีปกติสำหรับค่าอื่น ๆ
                             }
@@ -724,7 +726,7 @@ public class TestResultEditController {
 
             // Write data to respective files
             saveProject();
-            showAlert("Success", "Test case saved successfully!");
+            showAlert("Success", "Test Result saved successfully!");
 
             FXRouter.goTo("test_result",objects,true);
 

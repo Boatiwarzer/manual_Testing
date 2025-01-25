@@ -31,6 +31,7 @@ module ku.cs {
     opens ku.cs.testTools.Controllers.TestScript to javafx.fxml, org.hibernate.orm.core;
     opens ku.cs.testTools.Controllers.TestFlow to javafx.fxml, org.hibernate.orm.core;
     opens ku.cs.testTools.Controllers.TestResult to javafx.fxml, org.hibernate.orm.core;
+    opens ku.cs.testTools.Controllers.Manager to javafx.fxml, org.hibernate.orm.core;
     opens ku.cs.testTools.Models.TestToolModels to jakarta.persistence,jakarta.validation,jakarta.inject, org.hibernate.orm.core;
     opens ku.cs.testTools.Models.Manager to jakarta.persistence,jakarta.validation,jakarta.inject, org.hibernate.orm.core;
 
@@ -41,6 +42,7 @@ module ku.cs {
     exports ku.cs.testTools.Controllers.TestScript;
     exports ku.cs.testTools.Controllers.TestFlow;
     exports ku.cs.testTools.Controllers.TestResult;
+    exports ku.cs.testTools.Controllers.Manager;
     exports ku.cs;
     exports ku.cs.testTools.Models.TestToolModels;
     exports ku.cs.testTools.Models.Manager;

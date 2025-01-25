@@ -30,7 +30,7 @@ public class NewProjectController {
     private Button onSelectButton;
 
     @FXML
-    private TextField onTesterField;
+    private TextField onManagerField;
 
     @FXML
     void onProjectNameField(ActionEvent event) {
@@ -42,7 +42,7 @@ public class NewProjectController {
     @FXML
     void onCancelButton(ActionEvent actionEvent) throws IOException{
         //แก้พาท
-        FXRouter.popup("landing_page_tester",true);
+        FXRouter.popup("landing_page_manager",true);
         Node source = (Node) actionEvent.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
@@ -70,6 +70,7 @@ public class NewProjectController {
 
         // Set value for projectName
         String projectName = onProjectNameField.getText();
+        String managerName = onManagerField.getText();
 
         setWindowTitle(projectName);
 
@@ -81,7 +82,7 @@ public class NewProjectController {
         FXRouter.setData3("Tester");
         //แก้พาท
         String packageStr1 = "views/";
-        FXRouter.when("home", packageStr1 + "home_tester.fxml","TestTools | " + projectName);
+        FXRouter.when("home", packageStr1 + "home_manager.fxml","TestTools | " + projectName);
         FXRouter.goTo("home", objects);
 
         // Close the current window
@@ -114,7 +115,7 @@ public class NewProjectController {
     }
 
     @FXML
-    void onTesterField(ActionEvent event) {
+    void onManagerField(ActionEvent event) {
 
     }
 }

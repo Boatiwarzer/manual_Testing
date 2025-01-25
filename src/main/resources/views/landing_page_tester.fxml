@@ -25,15 +25,7 @@
             </Label>
             <HBox alignment="CENTER" prefHeight="80.0" prefWidth="500.0" spacing="50.0">
                <children>
-                  <Button fx:id="onNewfileButton" contentDisplay="TOP" mnemonicParsing="false" onAction="#onNewfileButton" prefHeight="70.0" prefWidth="70.0" text="New file">
-                     <graphic>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../icon/newfile_icon.png" />
-                           </image></ImageView>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="onOpenfileTesterButton" contentDisplay="TOP" mnemonicParsing="false" onAction="#onOpenfileTesterButton" prefHeight="70.0" prefWidth="70.0" text="Open file">
+                  <Button fx:id="onOpenfileTesterButton" contentDisplay="TOP" mnemonicParsing="false" onAction="#onOpenfileTesterButton" prefHeight="70.0" prefWidth="80.0" text="Open file">
                      <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                            <image>

@@ -96,8 +96,8 @@ public class TRmanagerController {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            if (objects.get(2) != null){
-                testResult = (TestResult) objects.get(2);
+            if (objects.get(3) != null){
+                testResult = (TestResult) objects.get(3);
             }
             clearInfo();
             loadProject();
@@ -442,6 +442,8 @@ public class TRmanagerController {
                                 text.setFill(javafx.scene.paint.Color.GREEN); // สีเขียวสำหรับ "Pass"
                             } else if (item.equals("Fail")) {
                                 text.setFill(javafx.scene.paint.Color.RED); // สีแดงสำหรับ "Fail"
+                            } else if (item.equals("Withdraw")) {
+                                text.setFill(javafx.scene.paint.Color.BLUE);
                             } else {
                                 text.setFill(javafx.scene.paint.Color.BLACK); // สีปกติสำหรับค่าอื่น ๆ
                             }

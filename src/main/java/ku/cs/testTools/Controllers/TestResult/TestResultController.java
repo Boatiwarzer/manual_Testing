@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -104,8 +105,8 @@ public class TestResultController {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            if (objects.get(2) != null){
-                testResult = (TestResult) objects.get(2);
+            if (objects.get(3) != null){
+                testResult = (TestResult) objects.get(3);
             }
             clearInfo();
             loadProject();
@@ -471,6 +472,8 @@ public class TestResultController {
                                 text.setFill(javafx.scene.paint.Color.GREEN); // สีเขียวสำหรับ "Pass"
                             } else if (item.equals("Fail")) {
                                 text.setFill(javafx.scene.paint.Color.RED); // สีแดงสำหรับ "Fail"
+                            } else if (item.equals("Withdraw")) {
+                                text.setFill(javafx.scene.paint.Color.BLUE);
                             } else {
                                 text.setFill(javafx.scene.paint.Color.BLACK); // สีปกติสำหรับค่าอื่น ๆ
                             }
@@ -675,7 +678,7 @@ public class TestResultController {
             String noteIR = ir.getNoteIR();
             String dateIR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             iRreportList.clearIR(idIR);
-            IRreport newIR = new IRreport(idIR, nameIR, dateIR, noteIR , idTR);
+            IRreport newIR = new IRreport(idIR, nameIR, dateIR, noteIR, idTR);
             iRreportList.addIR(newIR);
 
 //            iRreportDetailList.clearIRDetail(idIR);
