@@ -241,7 +241,7 @@ public class TestCaseController {
 
     private void selected() {
         if (testCase != null){
-            onSearchList.getSelectionModel().select(testCase);
+            onSearchList.getSelectionModel().getSelectedItems();
             onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue == null) {
                     clearInfo();

@@ -570,8 +570,8 @@ public class TestCaseEditController {
     void onClickTestcase(ActionEvent event) {
         try {
             objects = new ArrayList<>();
-            objects.add(directory);
             objects.add(projectName);
+            objects.add(directory);
             objects.add(null);
             FXRouter.goTo("test_case",objects);
         } catch (IOException e) {
@@ -583,8 +583,8 @@ public class TestCaseEditController {
     void onClickTestflow(ActionEvent event) {
         try {
             objects = new ArrayList<>();
-            objects.add(directory);
             objects.add(projectName);
+            objects.add(directory);
             objects.add(null);
             FXRouter.goTo("test_flow",objects);
         } catch (IOException e) {
@@ -596,8 +596,8 @@ public class TestCaseEditController {
     void onClickTestresult(ActionEvent event) {
         try {
             objects = new ArrayList<>();
-            objects.add(directory);
             objects.add(projectName);
+            objects.add(directory);
             objects.add(null);
             FXRouter.goTo("test_result",objects);
         } catch (IOException e) {
@@ -609,8 +609,8 @@ public class TestCaseEditController {
     void onClickTestscript(ActionEvent event) {
         try {
             objects = new ArrayList<>();
-            objects.add(directory);
             objects.add(projectName);
+            objects.add(directory);
             objects.add(null);
             FXRouter.goTo("test_script",objects);
         } catch (IOException e) {
@@ -622,8 +622,8 @@ public class TestCaseEditController {
     void onClickUsecase(ActionEvent event) {
         try {
             objects = new ArrayList<>();
-            objects.add(directory);
             objects.add(projectName);
+            objects.add(directory);
             objects.add(null);
             FXRouter.goTo("use_case",objects);
         } catch (IOException e) {
@@ -636,8 +636,8 @@ public class TestCaseEditController {
     void onCancelButton(ActionEvent event) {
         try {
             objects = new ArrayList<>();
-            objects.add(directory);
             objects.add(projectName);
+            objects.add(directory);
             objects.add(null);
             FXRouter.goTo("test_case",objects);
         } catch (IOException e) {

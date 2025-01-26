@@ -357,6 +357,8 @@ public class PopupInfoTestscriptController {
             infoDescriptLabel.setText(testScript.getDescriptionTS());
             infoPostconLabel.setText(testScript.getPostCon());
             onTestNoteField.setText(testScript.getFreeText());
+
+            onTableTestscript.getItems().clear();
             for (TestScriptDetail testScriptDetail : testScriptDetailListTemp.getTestScriptDetailList()) {
                 if (testScript.getIdTS().trim().equals(testScriptDetail.getIdTS().trim())){
                     testScriptDetailList.addOrUpdateTestScriptDetail(testScriptDetail);
@@ -606,7 +608,6 @@ public class PopupInfoTestscriptController {
         ArrayList<Object>objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
-        objects.add("d");
         try {
             FXRouter.goTo("test_flow",objects);
             Node source = (Node) event.getSource();

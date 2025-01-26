@@ -542,7 +542,6 @@ public class PopupInfoTestcaseController {
             ArrayList<Object>objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
-            objects.add("d");
 
             // Show success message
             showAlert("Success", "Test case saved successfully!");

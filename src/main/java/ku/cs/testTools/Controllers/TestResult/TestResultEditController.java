@@ -613,7 +613,10 @@ public class TestResultEditController {
     @FXML
     void onClickTestcase(ActionEvent event) {
         try {
-            objects();
+            objects = new ArrayList<>();
+            objects.add(directory);
+            objects.add(projectName);
+            objects.add(null);
             FXRouter.goTo("test_case",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -623,7 +626,10 @@ public class TestResultEditController {
     @FXML
     void onClickTestflow(ActionEvent event) {
         try {
-            objects();
+            objects = new ArrayList<>();
+            objects.add(directory);
+            objects.add(projectName);
+            objects.add(null);
             FXRouter.goTo("test_flow",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -633,7 +639,10 @@ public class TestResultEditController {
     @FXML
     void onClickTestresult(ActionEvent event) {
         try {
-            objects();
+            objects = new ArrayList<>();
+            objects.add(directory);
+            objects.add(projectName);
+            objects.add(null);
             FXRouter.goTo("test_result",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -643,7 +652,10 @@ public class TestResultEditController {
     @FXML
     void onClickTestscript(ActionEvent event) {
         try {
-            objects();
+            objects = new ArrayList<>();
+            objects.add(directory);
+            objects.add(projectName);
+            objects.add(null);
             FXRouter.goTo("test_script",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -653,7 +665,10 @@ public class TestResultEditController {
     @FXML
     void onClickUsecase(ActionEvent event) {
         try {
-            objects();
+            objects = new ArrayList<>();
+            objects.add(directory);
+            objects.add(projectName);
+            objects.add(null);
             FXRouter.goTo("use_case",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
