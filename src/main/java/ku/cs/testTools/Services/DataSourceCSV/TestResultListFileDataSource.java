@@ -53,8 +53,7 @@ public class TestResultListFileDataSource implements DataSource<TestResultList>,
                             data[1].trim(), // data[1]
                             data[2].trim(), // data[2]
                             data[3].trim(), // data[3]
-                            data[4].trim(), // data[4]
-                            data[5].trim()  // data[5]
+                            data[4].trim() // data[5]
                     );
                     testResultList.addOrUpdateTestResult(testResult);
                 }
@@ -189,8 +188,7 @@ public class TestResultListFileDataSource implements DataSource<TestResultList>,
                 + testResult.getIdTR() + ","
                 + testResult.getNameTR() + ","
                 + testResult.getDateTR() + ","
-                + testResult.getNoteTR() + ","
-                + testResult.getStatusTR();
+                + testResult.getNoteTR();
     }
 
     //            List<String> fileLines = new ArrayList<>();

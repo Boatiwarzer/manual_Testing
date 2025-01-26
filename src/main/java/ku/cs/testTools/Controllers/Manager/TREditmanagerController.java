@@ -88,6 +88,7 @@ public class TREditmanagerController {
 
     @FXML
     void initialize() {
+        onClickTestresult.getStyleClass().add("selected");
         clearInfo();
         setButtonVisible();
         {
@@ -303,6 +304,8 @@ public class TREditmanagerController {
                 col.setMaxWidth(120);
                 col.setMinWidth(120); // ตั้งค่าขนาดคอลัมน์แรก
             }
+            col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
+            index++;
             if (!conf.get("field").equals("imageTRD")) {
                 col.setCellFactory(tc -> {
                     TableCell<TestResultDetail, String> cell = new TableCell<>() {
@@ -536,7 +539,7 @@ public class TREditmanagerController {
         String nameTR = onTestNameField.getText();
         String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         String noteTR = onTestNoteField.getText();
-        testResult = new TestResult(idTR, nameTR, dateTR, noteTR, "In Tester");
+        testResult = new TestResult(idTR, nameTR, dateTR, noteTR);
         if (nameTR == null || nameTR.isEmpty()) {
             showAlert("Input Error", "Please fill in all required fields.");
         }
@@ -545,8 +548,8 @@ public class TREditmanagerController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
-        objects.add(testResult);
         objects.add(typeTR);
+        objects.add(testResult);
         objects.add(testResultDetailList);
     }
 
@@ -607,46 +610,19 @@ public class TREditmanagerController {
 
     @FXML
     void onSubmitButton(ActionEvent event) {
-//        String idTR = trId;
-//        String nameTR = onTestNameField.getText();
-//        String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-//        String noteTR = onTestNoteField.getText();
-//
-//        // Check if mandatory fields are empty
-//        if (nameTR == null || nameTR.isEmpty()) {
-//            showAlert("Input Error", "Please fill in all required fields.");
-//            return;
-//        }
-//
-//        // Create a new TestScript object
-//        testResult = new TestResult(idTR, nameTR, dateTR, noteTR,"In Tester");
-//
-//        // Add or update test script
-//        testResultList.addOrUpdateTestResult(testResult);
-//
-//        // Write data to respective files
-//        testResultListDataSource.writeData(testResultList);
-//        testResultDetailListDataSource.writeData(testResultDetailListTemp);
-//
-//        // Show success message
-//        showAlert("Success", "Test script saved successfully!");
-//        try {
-//            FXRouter.goTo("test_result",testResult);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-
         try {
             currentNewData();
-            objects();
 //            objects.add("edit");
 //            objects.add(selectedItem);
             testResultList.addOrUpdateTestResult(testResult);
-
             // Write data to respective files
             saveProject();
-            showAlert("Success", "Test Result saved successfully!");
 
+            objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add(testResult);
+            showAlert("Success", "Test Result saved successfully!");
             FXRouter.goTo("test_result_manager",objects,true);
 
         } catch (IOException e) {

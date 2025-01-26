@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="780.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.testTools.Controllers.Manager.PopupIRmanager">
+   <children>
+      <VBox prefHeight="780.0" prefWidth="800.0" spacing="10.0">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="800.0" spacing="10.0">
+               <children>
+                  <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" prefHeight="100.0" prefWidth="200.0" text="Test Result">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="irNameLabel" alignment="BOTTOM_LEFT" contentDisplay="CENTER" prefHeight="100.0" prefWidth="400.0" text="Name">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="irIDLabel" alignment="BOTTOM_LEFT" contentDisplay="CENTER" prefHeight="100.0" prefWidth="150.0" text="ID">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <Label prefHeight="30.0" prefWidth="120.0" text="Test No.">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="onTestNo" prefHeight="30.0" prefWidth="450.0" text="Label" wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <Label prefHeight="30.0" prefWidth="120.0" text="Tester">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="onTester" prefHeight="30.0" prefWidth="450.0" text="Label" wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <Label prefHeight="30.0" prefWidth="120.0" text="Test Script ID">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="onTestscriptIDComboBox" prefHeight="30.0" prefWidth="450.0" text="Label" wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <Label prefHeight="30.0" prefWidth="120.0" text="Test Case ID">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="onTestcaseIDComboBox" prefHeight="30.0" prefWidth="450.0" text="Label" wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="60.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <Label alignment="TOP_LEFT" prefHeight="30.0" prefWidth="120.0" text="Description">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="onDescription" alignment="TOP_LEFT" prefHeight="60.0" prefWidth="450.0" text="Label" wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <Label prefHeight="30.0" prefWidth="120.0" text="Condition">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="onCondition" prefHeight="30.0" prefWidth="450.0" text="Label" wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <Label prefHeight="30.0" prefWidth="120.0" text="Image Result">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="onImage" prefHeight="30.0" prefWidth="450.0" text="Label" wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <Label prefHeight="30.0" prefWidth="120.0" text="Review by">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="onManager" prefHeight="30.0" prefWidth="450.0" text="Label" wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <Label prefHeight="30.0" prefWidth="120.0" text="Priority">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="onPriorityComboBox" onAction="#onPriority" prefHeight="30.0" prefWidth="135.0" />
+                  <Label prefHeight="30.0" prefWidth="120.0" text="Status">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="onStatusComboBox" onAction="#onStatus" prefHeight="30.0" prefWidth="135.0" />
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="60.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <Label prefHeight="30.0" prefWidth="120.0" text="RCA">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <TextArea fx:id="onRCA" prefHeight="60.0" prefWidth="450.0" wrapText="true" />
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <CheckBox fx:id="onBug" mnemonicParsing="false" onAction="#handleRCA" prefHeight="30.0" prefWidth="160.0" text="Bugs in program">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </CheckBox>
+                  <CheckBox fx:id="onUxui" mnemonicParsing="false" onAction="#handleRCA" prefHeight="30.0" prefWidth="160.0" text="UX/UI Issues">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </CheckBox>
+                  <CheckBox fx:id="onPerformance" mnemonicParsing="false" onAction="#handleRCA" prefHeight="30.0" prefWidth="160.0" text="Performance Issues">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </CheckBox>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <CheckBox fx:id="onSecurity" mnemonicParsing="false" onAction="#handleRCA" prefHeight="30.0" prefWidth="160.0" text="Security Issues">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </CheckBox>
+                  <CheckBox fx:id="onLogical" mnemonicParsing="false" onAction="#handleRCA" prefHeight="30.0" prefWidth="160.0" text="Logical Errors">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </CheckBox>
+                  <CheckBox fx:id="onHandling" mnemonicParsing="false" onAction="#handleRCA" prefHeight="30.0" prefWidth="160.0" text="Error Handling">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </CheckBox>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0" spacing="10.0">
+               <children>
+                  <Label prefHeight="30.0" prefWidth="120.0" />
+                  <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../icon/info.png" />
+                     </image>
+                  </ImageView>
+                  <Label prefHeight="30.0" prefWidth="450.0" text="Select one or fill in other RCA information." wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <Label prefHeight="30.0" prefWidth="120.0" text="Remark">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="onRemark" accessibleRole="TEXT_AREA" alignment="TOP_LEFT" onAction="#onRemark" prefHeight="30.0" prefWidth="450.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0" spacing="50.0">
+               <children>
+                  <Button fx:id="onConfirmButton" mnemonicParsing="false" onAction="#onConfirmButton" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #6fadac;" text="Confirm">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="onCancelButton" mnemonicParsing="false" onAction="#onCancelButton" prefHeight="30.0" prefWidth="80.0" text="Cancel">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

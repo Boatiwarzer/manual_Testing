@@ -1,6 +1,6 @@
 package ku.cs.testTools.Controllers.Manager;
 
-import javafx.application.Platform;
+import jakarta.persistence.Id;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -8,51 +8,48 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
-import ku.cs.testTools.Services.AutoCompleteComboBoxListener;
 import ku.cs.testTools.Services.DataSource;
 import ku.cs.testTools.Services.DataSourceCSV.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 
-public class PopupTREdit {
-    @FXML
-    private TextField onInputdata, onRemark;
-    @FXML
-    private TextArea onTeststeps, onActual;
+public class PopupIRmanager {
 
     @FXML
-    private Button onCancelButton, onConfirmButton;
+    private CheckBox onUxui, onBug, onHandling, onLogical, onPerformance, onSecurity;
 
     @FXML
-    private Label onTestcaseIDComboBox, onTestscriptIDComboBox, onTestNo, onDate, onDescription, testResultIDLabel, testResultNameLabel, onExpected, onTester, onImage, onActor;
+    private Button onConfirmButton, onCancelButton;
 
     @FXML
-    private ComboBox<String> onStatusComboBox;
+    private Label irNameLabel, irIDLabel, onTester, onTestscriptIDComboBox, onTestcaseIDComboBox, onTestNo, onManager, onImage, onCondition, onDescription;
 
     @FXML
     private ComboBox<String> onPriorityComboBox;
 
     @FXML
-    private CheckBox onNotapproveCheck, onApproveCheck;
+    private ComboBox<String> onStatusComboBox;
 
-    private TestResultList testResultList = new TestResultList();
-    private TestResultDetailList testResultDetailList = new TestResultDetailList();
-    private TestResult testResult = new TestResult();
-    private TestResultDetail testResultDetail = new TestResultDetail();
+    @FXML
+    private TextArea onRCA;
+
+    @FXML
+    private TextField onRemark;
+
+    private IRreportList iRreportList = new IRreportList();
+    private IRreportDetailList iRreportDetailList = new IRreportDetailList();
+    private IRreport iRreport = new IRreport();
+    private IRreportDetail iRreportDetail = new IRreportDetail();
     private String id;
-    private String idTR;
+    private String idIR;
+    private String idTrd;
     private String date;
     private boolean isGenerated = false;
     private File selectedFile;
@@ -68,18 +65,19 @@ public class PopupTREdit {
     private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
     private TestCase testCase = new TestCase();
     private TestCaseDetail testCaseDetail = new TestCaseDetail();
-    private ObservableList<TestResult> imageItems = FXCollections.observableArrayList();
+    private ObservableList<IRreport> imageItems = FXCollections.observableArrayList();
     private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
     private TestScriptDetailList testScriptDetailListTemp = new TestScriptDetailList();
     private ConnectionList connectionList = new ConnectionList();
-    private TestResultDetailList testResultDetailListTemp;
+    private IRreportDetailList iRreportDetailListTemp;
     private ArrayList<Object> objects;
-    private IRreport iRreport;
-    private IRreportList iRreportList = new IRreportList();
-    private IRreportDetail iRreportDetail = new IRreportDetail();
-    private IRreportDetailList iRreportDetailList = new IRreportDetailList();
+    private TestResult testResult;
+    private TestResultList testResultList = new TestResultList();
+    private TestResultDetail testResultDetail = new TestResultDetail();
+    private TestResultDetailList testResultDetailList = new TestResultDetailList();
     private String type;
-    private String typeTR;
+    private String typeIR;
+
     @FXML
     void initialize() {
         setStatus();
@@ -89,16 +87,19 @@ public class PopupTREdit {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            typeTR = (String) objects.get(2);
-            testResult = (TestResult) objects.get(3);
-            testResultDetailList = (TestResultDetailList) objects.get(4);
-            idTR = testResult.getIdTR();
+            typeIR = (String) objects.get(2);
+            iRreport = (IRreport) objects.get(3);
+            iRreportDetailList = (IRreportDetailList) objects.get(4);
+            idIR = iRreport.getIdIR();
+            IRreportDetail trd = iRreportDetailList.findIRDByirId(idIR);
+            idTrd = trd.getIdTRD();
+            System.out.println(idIR + " " + idTrd);
             type = (String) objects.get(5);
             loadProject();
             if (objects.get(6) != null && type.equals("edit")) {
-                testResultDetail = (TestResultDetail) objects.get(6);
-                testResultDetail = testResultDetailList.findTRDById(testResultDetail.getIdTRD());
-                id = testResultDetail.getIdTRD();
+                iRreportDetail = (IRreportDetail) objects.get(6);
+                iRreportDetail = iRreportDetailList.findIRDById(iRreportDetail.getIdIRD());
+                id = iRreportDetail.getIdIRD();
                 setTextEdit();
             }else {
                 randomId();
@@ -118,10 +119,10 @@ public class PopupTREdit {
         DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
         DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
         DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
-        testResultList = testResultListDataSource.readData();
-        testResultDetailListTemp = testResultDetailListDataSource.readData();
         iRreportList = iRreportListDataSource.readData();
-        iRreportDetailList = iRreportDetailListDataSource.readData();
+        iRreportDetailListTemp = iRreportDetailListDataSource.readData();
+        testResultList = testResultListDataSource.readData();
+        testResultDetailList = testResultDetailListDataSource.readData();
         testScriptList = testScriptListDataSource.readData();
         testScriptDetailList = testScriptDetailListDataSource.readData();
         testCaseList = testCaseListDataSource.readData();
@@ -151,55 +152,69 @@ public class PopupTREdit {
         connectionListDataSource.writeData(connectionList);
     }
     private void setData() {
-        testResultNameLabel.setText(testResult.getNameTR());
-        testResultIDLabel.setText(testResult.getIdTR());
+        irNameLabel.setText(iRreport.getNameIR());
+        irIDLabel.setText(iRreport.getIdIR());
     }
 
     private void setTextEdit() {
-//        testResultNameLabel.setText(testResult.getNameTR());
-//        testResultIDLabel.setText(testResult.getIdTR());
-        onTestNo.setText(testResultDetail.getTestNo());
-        onTestscriptIDComboBox.setText(testResultDetail.getTsIdTRD());
-        onTestcaseIDComboBox.setText(testResultDetail.getTcIdTRD());
-        onDescription.setText(testResultDetail.getDescriptTRD());
-        onActor.setText(testResultDetail.getActorTRD());
-        onInputdata.setText(testResultDetail.getInputdataTRD().replace("|", ", "));
-        onTeststeps.setText(testResultDetail.getStepsTRD().replace("|", "\n"));
-        onExpected.setText(testResultDetail.getExpectedTRD());
-        onActual.setText(testResultDetail.getActualTRD());
-        onStatusComboBox.getSelectionModel().select(testResultDetail.getStatusTRD());
-        onPriorityComboBox.getSelectionModel().select(testResultDetail.getPriorityTRD());
-        onDate.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-        onTester.setText(testResultDetail.getTesterTRD());
-        onImage.setText(testResultDetail.getImageTRD());
-        if(testResultDetail.getApproveTRD().equals("Approved")){
-            onApproveCheck.setSelected(true);
-        } else if (testResultDetail.getApproveTRD().equals("Not approved")){
-            onNotapproveCheck.setSelected(true);
+        onTestNo.setText(iRreportDetail.getTestNoIRD());
+        onTester.setText(iRreportDetail.getTesterIRD());
+        onTestscriptIDComboBox.setText(iRreportDetail.getTsIdIRD());
+        onTestcaseIDComboBox.setText(iRreportDetail.getTcIdIRD());
+        onDescription.setText(iRreportDetail.getDescriptIRD());
+        onCondition.setText(iRreportDetail.getConditionIRD());
+        onImage.setText(iRreportDetail.getImageIRD());
+        onManager.setText(iRreportDetail.getManagerIRD());
+        onStatusComboBox.getSelectionModel().select(iRreportDetail.getStatusIRD());
+        onPriorityComboBox.getSelectionModel().select(iRreportDetail.getPriorityIRD());
+        onRemark.setText(iRreportDetail.getRemarkIRD());
+
+        if(iRreportDetail.getRcaIRD().equals("Bugs in program")){
+            onBug.setSelected(true);
+            onRCA.setEditable(false);
+        } else if (iRreportDetail.getRcaIRD().equals("UX/UI Issues")){
+            onUxui.setSelected(true);
+            onRCA.setEditable(false);
+        } else if (iRreportDetail.getRcaIRD().equals("Performance Issues")){
+            onPerformance.setSelected(true);
+            onRCA.setEditable(false);
+        } else if (iRreportDetail.getRcaIRD().equals("Security Issues")){
+            onSecurity.setSelected(true);
+            onRCA.setEditable(false);
+        } else if (iRreportDetail.getRcaIRD().equals("Logical Errors")){
+            onLogical.setSelected(true);
+            onRCA.setEditable(false);
+        } else if (iRreportDetail.getRcaIRD().equals("Error Handling")){
+            onHandling.setSelected(true);
+            onRCA.setEditable(false);
         } else {
-            onApproveCheck.setSelected(false);
-            onNotapproveCheck.setSelected(false);
-        }
-        onRemark.setText(testResultDetail.getRemarkTRD());
-    }
-
-    private void setDateTRD() {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        LocalDateTime now = LocalDateTime.now();
-        this.date = now.format(dtf);
-        onDate.setText(date);
-    }
-
-    @FXML
-    void GenerateDate(KeyEvent event) {
-        if (!isGenerated) {  // ถ้ายังไม่ได้ทำงานมาก่อน
-            setDateTRD();
-            isGenerated = true;  // ตั้งค่าว่าทำงานแล้ว
+            onRCA.setText(iRreportDetail.getRcaIRD());
+            onBug.setSelected(false);
+            onUxui.setSelected(false);
+            onPerformance.setSelected(false);
+            onSecurity.setSelected(false);
+            onLogical.setSelected(false);
+            onHandling.setSelected(false);
         }
     }
+
+//    private void setDateTRD() {
+//        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//        LocalDateTime now = LocalDateTime.now();
+//        this.date = now.format(dtf);
+//        onDate.setText(date);
+//    }
+
+//    @FXML
+//    void GenerateDate(KeyEvent event) {
+//        if (!isGenerated) {  // ถ้ายังไม่ได้ทำงานมาก่อน
+//            setDateTRD();
+//            isGenerated = true;  // ตั้งค่าว่าทำงานแล้ว
+//        }
+//    }
 
     private void setStatus() {
-        onStatusComboBox.setItems(FXCollections.observableArrayList("None", "Pass", "Fail", "Withdraw"));
+        onStatusComboBox.setItems(FXCollections.observableArrayList( "In Manager", "In Tester", "In Developer"));
         onStatusComboBox.setValue("None");
     }
 
@@ -209,44 +224,45 @@ public class PopupTREdit {
     }
 
     private void clearInfo() {
-        id = "";
         onTestNo.setText("-");
-        onDate.setText("-");
-        onDescription.setText("-");
-        onActual.setText("");
-        onTeststeps.setText("");
-        onExpected.setText("-");
-        onActor.setText("-");
         onTester.setText("-");
-        onImage.setText("...");
-        onTestcaseIDComboBox.setText("-");
         onTestscriptIDComboBox.setText("-");
-        testResultIDLabel.setText("");
-        testResultNameLabel.setText("");
-        onApproveCheck.setSelected(false);
-        onNotapproveCheck.setSelected(false);
+        onTestcaseIDComboBox.setText("-");
+        onDescription.setText("-");
+        onCondition.setText("-");
+        onImage.setText("...");
+        onManager.setText("-");
+        onStatusComboBox.getSelectionModel().select(iRreportDetail.getStatusIRD());
+        onPriorityComboBox.getSelectionModel().select(iRreportDetail.getPriorityIRD());
         onRemark.setText("");
+        onRCA.setText("");
+        onUxui.setSelected(false);
+        onPerformance.setSelected(false);
+        onSecurity.setSelected(false);
+        onLogical.setSelected(false);
+        onHandling.setSelected(false);
+        onBug.setSelected(false);
     }
 
     public void randomId() {
         int min = 1;
         int upperbound = 999;
         String random1 = String.valueOf((int) Math.floor(Math.random() * (upperbound - min + 1) + min));
-        this.id = String.format("TRD-%s", random1);
+        this.id = String.format("IRD-%s", random1);
     }
 
     private void objects() {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
-        objects.add(typeTR);
-        objects.add(testResult);
-        objects.add(testResultDetailList);
+        objects.add(typeIR);
+        objects.add(iRreport);
+        objects.add(iRreportDetailList);
         objects.add(type);
     }
     private void route(ActionEvent event, ArrayList<Object> objects) throws IOException {
-        if (typeTR.equals("editTR")){
-            FXRouter.goTo("test_result_edit_manager", objects);
+        if (typeIR.equals("editIR")){
+            FXRouter.goTo("ir_edit_manager", objects);
         }
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
@@ -264,7 +280,6 @@ public class PopupTREdit {
         }
     }
 
-
     @FXML
     void onConfirmButton(ActionEvent event) {
         if (!handleSaveAction()) {
@@ -272,24 +287,35 @@ public class PopupTREdit {
         }
 
         String TrNo = onTestNo.getText();
+        String tester = onTester.getText();
         String IdTS = onTestscriptIDComboBox.getText();
         String IdTC = onTestcaseIDComboBox.getText();
-        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String descript = onDescription.getText();
-        String actor = onActor.getText();
-        String inputdata = onInputdata.getText();
-        String teststeps = onTeststeps.getText();;
-        String expected = onExpected.getText();
-        String actual = onActual.getText();
+        String condition = onCondition.getText();
+        String image = onImage.getText();
+        String manager = onManager.getText();
         String status = onStatusComboBox.getValue();
         String priority = onPriorityComboBox.getValue();
-        String tester = onTester.getText();
-        String image = onImage.getText();
-        String approve = onApproveCheck.isSelected() ? "Approved" : "Not approved";
         String remark = onRemark.getText();
+        String rca;
+        if(onBug.isSelected()){
+            rca = onBug.getText();
+        } else if (onUxui.isSelected()){
+            rca = onUxui.getText();
+        } else if (onPerformance.isSelected()){
+            rca = onPerformance.getText();
+        } else if (onSecurity.isSelected()){
+            rca = onSecurity.getText();
+        } else if (onLogical.isSelected()){
+            rca = onLogical.getText();
+        } else if (onHandling.isSelected()){
+            rca = onHandling.getText();
+        } else {
+            rca = onRCA.getText();
+        }
 
-        testResultDetail = new TestResultDetail(id, TrNo, IdTS, IdTC, actor, descript, inputdata, teststeps, expected, actual, status, priority, date, tester, image, approve, remark, idTR);
-        testResultDetailList.addOrUpdateTestResultDetail(testResultDetail);
+        iRreportDetail = new IRreportDetail(id, TrNo, tester, IdTS, IdTC, descript, condition, image, priority, rca, manager, status, remark, idIR, idTrd);
+        iRreportDetailList.addOrUpdateIRreportDetail(iRreportDetail);
 
         try {
             objects();
@@ -315,8 +341,8 @@ public class PopupTREdit {
             return false;
         }
 
-        if (!onApproveCheck.isSelected() && !onNotapproveCheck.isSelected()) {
-            showAlert("กรุณาเลือก Approval");
+        if (!onBug.isSelected() && !onUxui.isSelected() && !onPerformance.isSelected() && !onSecurity.isSelected() && !onLogical.isSelected() && !onHandling.isSelected() && onRCA.getText().trim().isEmpty()) {
+            showAlert("กรุณาเลือก RCA หรือ กรอกข้อมูล RCA อื่นๆ");
             return false;
         }
 
@@ -343,27 +369,82 @@ public class PopupTREdit {
     }
 
     @FXML
-    void onInputdata(ActionEvent event) {
-
-    }
-
-    @FXML
     void onRemark(ActionEvent event) {
 
     }
 
     @FXML
-    void handleApprove (ActionEvent event) {
-        if(onApproveCheck.isSelected()){
-            onApproveCheck.setSelected(true);
-            onNotapproveCheck.setSelected(false);
-        } else if (onNotapproveCheck.isSelected()){
-            onApproveCheck.setSelected(false);
-            onNotapproveCheck.setSelected(true);
+    void handleRCA (ActionEvent event) {
+        if (onBug.isSelected()){
+            onRCA.setText("");
+            onRCA.setEditable(false);
+            onBug.setSelected(true);
+            onUxui.setSelected(false);
+            onPerformance.setSelected(false);
+            onSecurity.setSelected(false);
+            onLogical.setSelected(false);
+            onHandling.setSelected(false);
+        } else if (onUxui.isSelected()){
+            onRCA.setText("");
+            onRCA.setEditable(false);
+            onBug.setSelected(false);
+            onUxui.setSelected(true);
+            onPerformance.setSelected(false);
+            onSecurity.setSelected(false);
+            onLogical.setSelected(false);
+            onHandling.setSelected(false);
+        } else if (onPerformance.isSelected()){
+            onRCA.setText("");
+            onRCA.setEditable(false);
+            onBug.setSelected(false);
+            onUxui.setSelected(false);
+            onPerformance.setSelected(true);
+            onSecurity.setSelected(false);
+            onLogical.setSelected(false);
+            onHandling.setSelected(false);
+        } else if (onSecurity.isSelected()){
+            onRCA.setText("");
+            onRCA.setEditable(false);
+            onBug.setSelected(false);
+            onUxui.setSelected(false);
+            onPerformance.setSelected(false);
+            onSecurity.setSelected(true);
+            onLogical.setSelected(false);
+            onHandling.setSelected(false);
+        } else if (onLogical.isSelected()){
+            onRCA.setText("");
+            onRCA.setEditable(false);
+            onBug.setSelected(false);
+            onUxui.setSelected(false);
+            onPerformance.setSelected(false);
+            onSecurity.setSelected(false);
+            onLogical.setSelected(true);
+            onHandling.setSelected(false);
+        } else if (onHandling.isSelected()){
+            onRCA.setText("");
+            onRCA.setEditable(false);
+            onBug.setSelected(false);
+            onUxui.setSelected(false);
+            onPerformance.setSelected(false);
+            onSecurity.setSelected(false);
+            onLogical.setSelected(false);
+            onHandling.setSelected(true);
+        } else if (!(onRCA.getText() == null)) {
+            onRCA.setEditable(true);
+            onBug.setSelected(false);
+            onUxui.setSelected(false);
+            onPerformance.setSelected(false);
+            onSecurity.setSelected(false);
+            onLogical.setSelected(false);
+            onHandling.setSelected(false);
         } else {
-            onApproveCheck.setSelected(false);
-            onNotapproveCheck.setSelected(false);
+            onRCA.setEditable(false);
+            onBug.setSelected(false);
+            onUxui.setSelected(false);
+            onPerformance.setSelected(false);
+            onSecurity.setSelected(false);
+            onLogical.setSelected(false);
+            onHandling.setSelected(false);
         }
     }
-
 }

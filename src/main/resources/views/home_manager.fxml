@@ -16,7 +16,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="780.0" prefWidth="1360.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.testTools.Controllers.Home.HomeManagerController">
    <top>
-      <MenuBar prefHeight="30.0" BorderPane.alignment="CENTER">
+      <MenuBar prefHeight="30.0" style="-fx-background-color: #98aeca;" BorderPane.alignment="CENTER">
         <menus>
             <Menu mnemonicParsing="false" text="File">
                <items>
@@ -61,7 +61,7 @@
          <children>
             <AnchorPane>
                <children>
-                  <HBox alignment="CENTER" prefHeight="30.0" prefWidth="1680.0" spacing="150.0">
+                  <HBox alignment="CENTER" prefHeight="40.0" prefWidth="1680.0" spacing="150.0">
                      <children>
                         <Hyperlink fx:id="onClickUsecase" onAction="#onClickUsecase" text="Use Case">
                            <font>

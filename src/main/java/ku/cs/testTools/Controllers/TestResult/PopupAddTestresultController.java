@@ -214,7 +214,7 @@ public class PopupAddTestresultController {
         onTeststeps.setText("");
         onExpected.setText("-");
         onActor.setText("");
-        onTester.setText("Tester");
+        onTester.setText("-");
         onImage.setText("...");
         testResultIDLabel.setText("");
         testResultNameLabel.setText("");
@@ -489,7 +489,7 @@ public class PopupAddTestresultController {
             return false;
         }
 
-        if (onStatusComboBox.getValue().equals("Fail") || onPriorityComboBox.getValue() == null || onPriorityComboBox.getValue().trim().isEmpty()) {
+        if (onPriorityComboBox.getValue() == null || onPriorityComboBox.getValue().trim().isEmpty()) {
             showAlert("กรุณาเลือก Priority.");
             return false;
         }

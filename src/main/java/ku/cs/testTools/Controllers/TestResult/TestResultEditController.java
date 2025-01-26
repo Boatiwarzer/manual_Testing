@@ -81,6 +81,7 @@ public class TestResultEditController {
     private TestScriptDetailList testScriptDetailListTemp = new TestScriptDetailList();
     private ConnectionList connectionList = new ConnectionList();
     private UseCaseList useCaseList = new UseCaseList();
+    private IRreport iRreport;
     private IRreportList iRreportList = new IRreportList();
     private IRreportDetailList iRreportDetailList = new IRreportDetailList();
     private TestCaseList testCaseList;
@@ -92,6 +93,7 @@ public class TestResultEditController {
 
     @FXML
     void initialize() {
+        onClickTestresult.getStyleClass().add("selected");
         clearInfo();
         setButtonVisible();
         {
@@ -548,7 +550,7 @@ public class TestResultEditController {
         String nameTR = onTestNameField.getText();
         String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         String noteTR = onTestNoteField.getText();
-        testResult = new TestResult(idTR, nameTR, dateTR, noteTR, "In Tester");
+        testResult = new TestResult(idTR, nameTR, dateTR, noteTR);
         if (nameTR == null || nameTR.isEmpty()) {
             showAlert("Input Error", "Please fill in all required fields.");
         }
@@ -686,6 +688,12 @@ public class TestResultEditController {
             if (result.get() == ButtonType.OK) {
                 testResultList.deleteTestResult(testResult);
                 testResultDetailListTemp.deleteTestResultDetailByID(testResult.getIdTR());
+                IRreport irId = iRreportList.findTRById(testResult.getIdTR().trim());
+                String id = String.valueOf(irId);
+                String[] parts = id.split(" : "); // แยกข้อความตาม " : "
+                String idIR = parts[0];
+                iRreportList.deleteIRreport(irId);
+                iRreportDetailList.deleteIRreportDetailByID(idIR);
             }
             saveProject();
             objects = new ArrayList<>();
@@ -734,20 +742,17 @@ public class TestResultEditController {
 
         try {
             currentNewData();
-
 //            objects.add("edit");
 //            objects.add(selectedItem);
             testResultList.addOrUpdateTestResult(testResult);
 
             // Write data to respective files
             saveProject();
-            showAlert("Success", "Test Result saved successfully!");
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
             objects.add(testResult);
             showAlert("Success", "Test Result saved successfully!");
-
             FXRouter.goTo("test_result",objects,true);
 
         } catch (IOException e) {

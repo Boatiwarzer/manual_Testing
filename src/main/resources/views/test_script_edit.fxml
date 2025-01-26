@@ -56,7 +56,7 @@
    <center>
       <AnchorPane prefWidth="1680.0" BorderPane.alignment="CENTER">
          <children>
-            <HBox alignment="BOTTOM_CENTER" prefHeight="30.0" prefWidth="1680.0" spacing="150.0">
+            <HBox alignment="BOTTOM_CENTER" prefHeight="40.0" prefWidth="1680.0" spacing="150.0">
                <children>
                   <Hyperlink fx:id="onClickUsecase" onAction="#onClickUsecase" text="Use Case">
                      <font>

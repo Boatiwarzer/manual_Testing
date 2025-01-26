@@ -100,13 +100,14 @@ public class TestResultController {
 
     @FXML
     void initialize() {
-
+        onClickTestresult.getStyleClass().add("selected");
         if (FXRouter.getData() != null) {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            if (objects.get(3) != null){
-                testResult = (TestResult) objects.get(3);
+            if (objects.get(2) != null){
+                testResult = (TestResult) objects.get(2);
+                testResult = (TestResult) objects.get(2);
             }
             clearInfo();
             loadProject();
@@ -253,11 +254,6 @@ public class TestResultController {
             onSearchList.getItems().clear();
 
             if (!typedText.isEmpty()) {
-                // กรองคำที่ตรงกับข้อความที่พิมพ์
-//                List<String> filteredList = word.stream()
-//                        .filter(item -> item.toLowerCase().contains(typedText))
-//                        .collect(Collectors.toList());
-
                 // เพิ่มคำที่กรองได้ไปยัง ListView
                 onSearchList.getItems().addAll(searchList(onSearchField.getText(), testResultList.getTestResultList()));
             } else {
@@ -815,10 +811,8 @@ public class TestResultController {
             saveProject();
         }
 
-        // Show success message
-        showAlert("Success", "IR Report saved successfully!");
+//        showAlert("Success", "IR Report saved successfully!");
         try {
-//            FXRouter.popup("test_result_ir");
             DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
             DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
             IRreportDetailList iRreportDetailList = iRreportDetailListDataSource.readData();
@@ -829,9 +823,6 @@ public class TestResultController {
             objects.add(directory);
             objects.add(iRreportDetailList);
             objects.add(iRreportList);
-//            HashMap<String, Object> params = new HashMap<>();
-//            params.put("iRreportDetailList", iRreportDetailList);
-//            params.put("iRreportList", iRreportList);
 
             // เปิด Popup ด้วย FXRouter
             FXRouter.popup("test_result_ir", objects);

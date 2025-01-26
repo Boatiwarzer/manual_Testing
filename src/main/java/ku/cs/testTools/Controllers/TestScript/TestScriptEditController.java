@@ -133,9 +133,9 @@ public class TestScriptEditController {
 
     @FXML
     void initialize() {
+        onClickTestscript.getStyleClass().add("selected");
         setDate();
         clearInfo();
-
         setButtonVisible();
         if (FXRouter.getData() != null) {
             objects = (ArrayList) FXRouter.getData();

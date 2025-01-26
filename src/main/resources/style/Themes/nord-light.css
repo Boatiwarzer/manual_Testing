@@ -127,6 +127,29 @@
   -fx-stroke: transparent;
 }
 
+.hyperlink {
+  -fx-text-fill: #98aeca; /* สีข้อความปกติ */
+  -fx-underline: false;    /* ขีดเส้นใต้ */
+  -fx-background-color: transparent; /* ไม่มีพื้นหลัง */
+  -fx-padding: 5px 10px; /* ระยะห่างรอบข้อความ */
+  -fx-background-radius: 10px; /* ขอบมน */
+  -fx-cursor: hand; /* เปลี่ยน cursor เมื่อ hover */
+}
+
+.hyperlink:hover {
+  -fx-background-color: rgba(26, 115, 232, 0.1); /* พื้นหลังจางเมื่อ hover */
+  -fx-background-radius: 10px;
+}
+
+.hyperlink.selected {
+  -fx-underline: false;
+  -fx-text-fill: black; /* สีข้อความเมื่อเลือก */
+  -fx-background-color: #98aeca; /* สีพื้นหลังเมื่อเลือก */
+  -fx-background-radius: 10px; /* ขอบมน */
+  -fx-padding: 5px 10px; /* ระยะห่างรอบข้อความ */
+  /*-fx-font-weight: bold; !* เน้นข้อความ *!*/
+}
+
 .text {
   -fx-font-smoothing-type: gray;
   -fx-bounds-type: logical_vertical_center;

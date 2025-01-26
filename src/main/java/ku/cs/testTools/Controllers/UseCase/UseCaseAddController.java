@@ -95,34 +95,32 @@ public class UseCaseAddController {
 
     @FXML
     public void initialize() {
-        {
-            if (FXRouter.getData() != null) {
-                ArrayList<Object> objects = (ArrayList) FXRouter.getData();
-                projectName = (String) objects.get(0);
-                directory = (String) objects.get(1);
-                typeUC = (String) objects.get(2);
-                loadProject();
+        onClickUsecase.getStyleClass().add("selected");
+        if (FXRouter.getData() != null) {
+            ArrayList<Object> objects = (ArrayList) FXRouter.getData();
+            projectName = (String) objects.get(0);
+            directory = (String) objects.get(1);
+            typeUC = (String) objects.get(2);
+            loadProject();
 
-                clearInfo();
-                selectedComboBox();
-                selectedListView();
+            clearInfo();
+            selectedComboBox();
+            selectedListView();
 
-                if (objects.get(3) != null){
-                    useCase = (UseCase) objects.get(3);
-                    useCaseDetailList = (UseCaseDetailList) objects.get(4);
-                    setData();
-                }
-
-                loadListView(useCaseList);
-
-                for (UseCase useCase : useCaseList.getUseCaseList()) {
-                    word.add(useCase.getUseCaseName());
-                }
-                searchSet();
-
+            if (objects.get(3) != null) {
+                useCase = (UseCase) objects.get(3);
+                useCaseDetailList = (UseCaseDetailList) objects.get(4);
+                setData();
             }
 
+            loadListView(useCaseList);
+
+            for (UseCase useCase : useCaseList.getUseCaseList()) {
+                word.add(useCase.getUseCaseName());
+            }
+            searchSet();
         }
+
         System.out.println(useCaseDetailList);
     }
     private void loadProject() {

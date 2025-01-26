@@ -14,9 +14,8 @@ import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.DataSource;
+import ku.cs.testTools.Services.DataSourceCSV.*;
 import ku.cs.testTools.Services.StringConfiguration;
-import ku.cs.testTools.Services.DataSourceCSV.IRreportDetailListFileDataSource;
-import ku.cs.testTools.Services.DataSourceCSV.IRreportListFileDataSource;
 import ku.cs.testTools.Services.TableColumns;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -47,41 +46,32 @@ public class IRTestresultController {
     private String irId;
     private String irdId;
     private String id;
-    private String projectName = "125", directory = "data";
+    private String projectName, directory;
     private IRreport iRreport;
     private IRreportList iRreportList = new IRreportList();
     private IRreportDetail iRreportDetail = new IRreportDetail();
     private IRreportDetailList iRreportDetailList = new IRreportDetailList();
-    private final DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
-    private final DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
+    private TestResultList testResultList = new TestResultList();
+    private TestResultDetailList testResultDetailList = new TestResultDetailList();
+    private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
+    private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
+    private ConnectionList connectionList = new ConnectionList();
+    private UseCaseList useCaseList = new UseCaseList();
+    private TestScriptList testScriptList = new TestScriptList();
+    private TestCaseList testCaseList;
+    private TestCaseDetailList testCaseDetailList;
 
     @FXML
     void initialize() {
 //        clearInfo();
         setTable();
-//        iRreportList = iRreportListDataSource.readData();
-//        if (FXRouter.getData() != null) {
-//            iRreportDetailList = (IRreportDetailList) FXRouter.getData();
-//            iRreport = (IRreport) FXRouter.getData2();
-//            irId = iRreport.getIdIR();
-//            if (FXRouter.getData3() != null) {
-//                iRreportDetail = (IRreportDetail) FXRouter.getData3();
-//                iRreportDetailList.findTSById(iRreportDetail.getIdIRD());
-//                id = iRreportDetail.getIdIRD();
-//                setTextEdit();
-//            }
-//            setTableInfo(iRreportDetailList);
-//        }
+
         try {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
             iRreportDetailList = (IRreportDetailList) objects.get(2);
             iRreportList = (IRreportList) objects.get(3);
-//            HashMap<String, Object> params = (HashMap<String, Object>) FXRouter.getData();
-//            IRreportDetailList iRreportDetailList = (IRreportDetailList) params.get("iRreportDetailList");
-//            IRreportList iRreportList = (IRreportList) params.get("iRreportList");
-
             // ตั้งค่า TableView
             setTableInfo(iRreportDetailList);
 
@@ -93,6 +83,53 @@ public class IRTestresultController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+    }
+
+    private void loadProject() {
+        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
+        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
+        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+        DataSource<TestResultList> testResultListDataSource = new TestResultListFileDataSource(directory, projectName + ".csv");
+        DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
+        DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
+        DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
+        testResultList = testResultListDataSource.readData();
+        testResultDetailList = testResultDetailListDataSource.readData();
+        iRreportList = iRreportListDataSource.readData();
+        iRreportDetailList = iRreportDetailListDataSource.readData();
+        testScriptList = testScriptListDataSource.readData();
+        testScriptDetailList = testScriptDetailListDataSource.readData();
+        testCaseList = testCaseListDataSource.readData();
+        testCaseDetailList = testCaseDetailListDataSource.readData();
+        testFlowPositionList = testFlowPositionListDataSource.readData();
+        connectionList = connectionListDataSource.readData();
+        useCaseList = useCaseListDataSource.readData();
+
+    }
+    private void saveProject() {
+        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
+        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+        DataSource<TestResultList> testResultListDataSource = new TestResultListFileDataSource(directory, projectName + ".csv");
+        DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
+        DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
+        DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
+        testResultListDataSource.writeData(testResultList);
+        testResultDetailListDataSource.writeData(testResultDetailList);
+        iRreportListDataSource.writeData(iRreportList);
+        iRreportDetailListDataSource.writeData(iRreportDetailList);
+        testFlowPositionListDataSource.writeData(testFlowPositionList);
+        testScriptDetailListDataSource.writeData(testScriptDetailList);
+        testCaseListDataSource.writeData(testCaseList);
+        testCaseDetailListDataSource.writeData(testCaseDetailList);
+        connectionListDataSource.writeData(connectionList);
 
     }
 
@@ -257,8 +294,8 @@ public class IRTestresultController {
     public void saveAsExcel(ActionEvent event) {
         Stage stage = (Stage) onTableIR.getScene().getWindow();
         List<IRreportDetail> irReportDetails = onTableIR.getItems();
-        String csvFileName = "your_csv_file_name.csv"; // แทนด้วยชื่อไฟล์ CSV ที่คุณต้องการ
-        saveToExcel(stage, irReportDetails, "example.csv");
+        String csvFileName = projectName; // แทนด้วยชื่อไฟล์ CSV ที่คุณต้องการ
+        saveToExcel(stage, irReportDetails, csvFileName);
     }
 
 //     ฟังก์ชันสำหรับบันทึกข้อมูลลงไฟล์ Excel
@@ -280,7 +317,7 @@ public class IRTestresultController {
         // เพิ่มชื่อไฟล์ CSV
         Row csvFileNameRow = sheet.createRow(currentRow++);
         Cell csvFileNameCell = csvFileNameRow.createCell(0);
-        csvFileNameCell.setCellValue("Source CSV File: " + csvFileName);
+        csvFileNameCell.setCellValue("Project Name: " + csvFileName);
 
         // เว้นแถวก่อนเริ่มหัวข้อข้อมูลตาราง
         currentRow++;
@@ -331,7 +368,7 @@ public class IRTestresultController {
 
         // ดึงข้อมูลจาก TableView โดยใช้ getItems()
         List<IRreportDetail> irReportDetails = onTableIR.getItems();
-        String csvFileName = "example.csv";
+        String csvFileName = projectName;
 
         // เรียกฟังก์ชัน saveAsExcel
         saveToExcel(stage, irReportDetails, csvFileName);

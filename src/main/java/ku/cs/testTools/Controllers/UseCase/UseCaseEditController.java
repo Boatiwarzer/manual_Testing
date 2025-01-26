@@ -92,13 +92,8 @@ public class UseCaseEditController {
 
     @FXML
     public void initialize() {
-        // รับข้อมูล selectedUseCase จาก FXRouter
-        //Object data = FXRouter.getData();
+        onClickUsecase.getStyleClass().add("selected");
         clearInfo();
-//        if (data instanceof UseCase) {
-//            selectedUseCase = (UseCase) objects.get(3);;
-//            showInfo(selectedUseCase);
-//        }
         if (FXRouter.getData() != null) {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
