@@ -91,6 +91,8 @@ public class TestCaseDetailFileDataSource implements DataSource<TestCaseDetailLi
         IRreportDetailList iRreportDetailList = iRreportDetailListFileDataSource.readData();
         ConnectionListFileDataSource connectionListFileDataSource = new ConnectionListFileDataSource(directory, fileName);
         ConnectionList connectionList = connectionListFileDataSource.readData();
+        NoteListFileDataSource noteListFileDataSource = new NoteListFileDataSource(directory,fileName);
+        NoteList noteList = noteListFileDataSource.readData();
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
         FileWriter writer = null;
@@ -158,7 +160,11 @@ public class TestCaseDetailFileDataSource implements DataSource<TestCaseDetailLi
                 buffer.append(line);
                 buffer.newLine();
             }
-
+            for (Note note : noteList.getNoteList()){
+                String line = noteListFileDataSource.createLine(note);
+                buffer.append(line);
+                buffer.newLine();
+            }
 
             buffer.close();
 

@@ -130,6 +130,7 @@ public class TestFlowController {
     private List<StackPane> stackPaneList = new ArrayList<>();
     //private Map<Integer, StackPane> testScriptPaneMap; // Mapping positionID -> StackPane
     private Map<Integer, Point2D> testScriptPositionMap = new HashMap<>();
+    private NoteList noteList;
 
 
     @FXML
@@ -144,6 +145,12 @@ public class TestFlowController {
 //            String type =  (String) objects.get(2);
         }
         loadProject();
+        onNoteTextArea.setOnKeyTyped(keyEvent -> {
+            if (onNoteTextArea.getText() != null) {
+                Note note = new Note("1",onNoteTextArea.getText());
+                noteList.addNote(note);
+            }
+        });
         saveProject();
         onDesignArea.setOnMouseReleased(mouseEvent -> {
             hideBorderAndAnchors(border,anchors);
@@ -170,13 +177,13 @@ public class TestFlowController {
     public void handleExportMenuItem(ActionEvent actionEvent) {
         boolean noteAdded = false;
         // add note to the top left corner of the designPane
-//        if (noteTextArea.getText() != null) {
-//            Label note = new Label(noteTextArea.getText());
-//            note.setLayoutX(10);
-//            note.setLayoutY(10);
-//            designPane.getChildren().add(note);
-//            noteAdded = true;
-//        }
+        if (onNoteTextArea.getText() != null) {
+            Label note = new Label(onNoteTextArea.getText());
+            note.setLayoutX(10);
+            note.setLayoutY(10);
+            onDesignArea.getChildren().add(note);
+            noteAdded = true;
+        }
 
         onDesignArea.getChildren().removeIf(node -> node instanceof Circle && ((Circle) node).getFill().equals(Color.RED));
 
@@ -260,6 +267,7 @@ public class TestFlowController {
         System.out.println(testFlowPositionList);
         System.out.println(testScriptList);
         onDesignArea.getChildren().clear();
+        onNoteTextArea.clear();
         DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
         DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
         DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
@@ -267,7 +275,7 @@ public class TestFlowController {
         DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory,projectName + ".csv");
         DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
         //DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
-
+        DataSource<NoteList> noteListDataSource = new NoteListFileDataSource(directory,projectName + ".csv");
         //testScriptDetailList.clearItems();
         //onNoteTextArea.clear();
 
@@ -277,6 +285,7 @@ public class TestFlowController {
         testCaseDetailList = testCaseDetailListDataSource.readData();
         testFlowPositionList = testFlowPositionListDataSource.readData();
         connectionList = connectionListDataSource.readData();
+        noteList = noteListDataSource.readData();
         //useCaseList = useCaseListDataSource.readData();
 
         testScriptList.getTestScriptList().forEach(testScript -> {
@@ -330,6 +339,12 @@ public class TestFlowController {
             }
 
         });
+        Note note = noteList.findBynoteID("1");
+        if (note != null){
+            if (!Objects.equals(note.getNote(), "!@#$%^&*()_+")) {
+                onNoteTextArea.setText(note.getNote());
+            }
+        }
     }
     private void saveProject() {
         DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
@@ -339,12 +354,14 @@ public class TestFlowController {
         DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory,projectName + ".csv");
         DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
         DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
+        DataSource<NoteList> noteListDataSource = new NoteListFileDataSource(directory,projectName + ".csv");
         testFlowPositionListDataSource.writeData(testFlowPositionList);
         testScriptListDataSource.writeData(testScriptList);
         testScriptDetailListDataSource.writeData(testScriptDetailList);
         testCaseListDataSource.writeData(testCaseList);
         testCaseDetailListDataSource.writeData(testCaseDetailList);
         connectionListDataSource.writeData(connectionList);
+        noteListDataSource.writeData(noteList);
         //useCaseListDataSource.writeData(useCaseList);
         System.out.println("Project Saved");
 

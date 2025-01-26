@@ -109,6 +109,8 @@ public class TestScriptFileDataSource implements DataSource<TestScriptList>, Man
         IRreportDetailList iRreportDetailList = iRreportDetailListFileDataSource.readData();
         ConnectionListFileDataSource connectionListFileDataSource = new ConnectionListFileDataSource(directory, fileName);
         ConnectionList connectionList = connectionListFileDataSource.readData();
+        NoteListFileDataSource noteListFileDataSource = new NoteListFileDataSource(directory,fileName);
+        NoteList noteList = noteListFileDataSource.readData();
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
         FileWriter writer = null;
@@ -176,7 +178,11 @@ public class TestScriptFileDataSource implements DataSource<TestScriptList>, Man
                 buffer.append(line);
                 buffer.newLine();
             }
-
+            for (Note note : noteList.getNoteList()){
+                String line = noteListFileDataSource.createLine(note);
+                buffer.append(line);
+                buffer.newLine();
+            }
             buffer.close();
 
         } catch (Exception e) {

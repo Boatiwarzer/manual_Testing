@@ -76,7 +76,7 @@
                         <Menu fx:id="exportMenu" mnemonicParsing="false" text="Export">
                            <items>
                               <MenuItem fx:id="exportMenuItem" mnemonicParsing="false" onAction="#handleExportMenuItem" text="Export..." />
-                              <MenuItem fx:id="exportPDF" mnemonicParsing="false" onAction="#handleExportPDF" text="Export All..." />
+                              <MenuItem fx:id="exportPDF" mnemonicParsing="false" onAction="#handleExportPDF" text="Export PDF..." />
                            </items>
                         </Menu>
                   <SeparatorMenuItem mnemonicParsing="false" />
@@ -177,15 +177,11 @@
                   </TitledPane>
                   <TitledPane fx:id="noteTitlePane" animated="false" collapsible="false" prefHeight="120.0" prefWidth="240.0" text="Note">
                      <content>
-                        <AnchorPane prefHeight="95.0" prefWidth="240.0">
-                           <children>
-                              <TextArea fx:id="onNoteTextArea" prefHeight="100.0" prefWidth="240.0" promptText="Write your note here..">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </TextArea>
-                           </children>
-                        </AnchorPane>
+                        <TextArea fx:id="onNoteTextArea" prefHeight="100.0" prefWidth="252.0" promptText="Write your note here.." wrapText="true">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </TextArea>
                      </content>
                      <font>
                         <Font size="14.0" />
