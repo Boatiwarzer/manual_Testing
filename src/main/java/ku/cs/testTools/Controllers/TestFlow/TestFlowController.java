@@ -124,7 +124,6 @@ public class TestFlowController {
     private ArrayList<Object> objects;
     private Rectangle border;
     private Rectangle[] anchors;
-    private Rectangle rectangle;
     private StackPane stackPane;
     private Circle circle;
     private List<StackPane> stackPaneList = new ArrayList<>();
@@ -153,25 +152,25 @@ public class TestFlowController {
             }
         });
         saveProject();
-        onDesignArea.setOnMouseReleased(mouseEvent -> {
-            hideBorderAndAnchors(border,anchors);
-        });
-        onDesignArea.setOnMouseDragOver(mouseDragEvent -> {
-            hideBorderAndAnchors(border,anchors);
-        });
-        onDesignArea.setOnMousePressed(mouseDragEvent ->{
-            hideBorderAndAnchors(border,anchors);
-        });
-        onDesignArea.setOnMouseClicked(mouseEvent -> {
-            hideBorderAndAnchors(border, anchors);
-        });
-        onDesignArea.setOnKeyPressed((KeyEvent event) -> {
-            // ตรวจสอบว่าเป็นการกด Ctrl + Z
-            if (event.isControlDown() && event.getCode() == KeyCode.Z) {
-                // ถ้ากด Ctrl + Z, เรียกใช้ฟังก์ชัน Undo
-                undoAction();
-            }
-        });
+//        onDesignArea.setOnMouseReleased(mouseEvent -> {
+//            hideBorderAndAnchors(border,anchors);
+//        });
+//        onDesignArea.setOnMouseDragOver(mouseDragEvent -> {
+//            hideBorderAndAnchors(border,anchors);
+//        });
+//        onDesignArea.setOnMousePressed(mouseDragEvent ->{
+//            hideBorderAndAnchors(border,anchors);
+//        });
+//        onDesignArea.setOnMouseClicked(mouseEvent -> {
+//            hideBorderAndAnchors(border, anchors);
+//        });
+//        onDesignArea.setOnKeyPressed((KeyEvent event) -> {
+//            // ตรวจสอบว่าเป็นการกด Ctrl + Z
+//            if (event.isControlDown() && event.getCode() == KeyCode.Z) {
+//                // ถ้ากด Ctrl + Z, เรียกใช้ฟังก์ชัน Undo
+//                undoAction();
+//            }
+//        });
     }
 
 

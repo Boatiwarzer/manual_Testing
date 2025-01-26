@@ -32,21 +32,17 @@ public class LabelPageController {
     private String projectName, directory;
     private String editType;
     private int editID, subSystemID;
-    private final DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-    private final DataSource<TestScriptDetailList> testScriptDetailListListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
     private TestFlowPosition testFlowPosition = new TestFlowPosition();
     private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
     private TestScript testScript = new TestScript();
     private TestScriptList testScriptList = new TestScriptList();
     private TestCaseList testCaseList = new TestCaseList();
     private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
+    private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
     private TestCaseDetail testCaseDetail;
+    private ConnectionList connectionList;
+    private NoteList noteList;
     private TestCase testCase = new TestCase();
-    private final DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
-    private final DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory,projectName + ".csv");
-    private final DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory,projectName + ".csv");
-    private final DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
-    private ConnectionList connectionList = new ConnectionList();
     private int id;
     private String objectID;
     @FXML
@@ -60,56 +56,49 @@ public class LabelPageController {
             height = (double) objects.get(4);
             layoutX = (double) objects.get(5);
             layoutY = (double) objects.get(6);
-            if (Objects.equals(type, "Rectangle-curve")) {
-                labelTextField.setPrefWidth(130.0);
-                testScriptList = testScriptListDataSource.readData();
-                testFlowPositionList = testFlowPositionListDataSource.readData();
-
-            }else if (Objects.equals(type, "Rectangle")){
-                labelTextField.setPrefWidth(130.0);
-                testCaseList = testCaseListDataSource.readData();
-                testFlowPositionList = testFlowPositionListDataSource.readData();
-
-            } else if (Objects.equals(type, "Kite")){
-                labelTextField.setPrefWidth(130.0);
-                testFlowPositionList = testFlowPositionListDataSource.readData();
-                connectionList = connectionListDataSource.readData();
-
-            }
-//                if (testScriptList.findByPositionId(editID) != null) {
-//                    TestScript testScript = testScriptList.findByPositionId(editID);
-//                    labelTextField.setText(testScript.getNameTS());
-//                    if (!Objects.equals(testScript.getFreeText(), "!@#$%^&*()_+")) {
-//                        noteTextArea.setText(testScript.getFreeText());
-//                    }
-//                }else {
-//                    TestScript testScript = new TestScript();
-//                    labelTextField.setText(labelText.getText());
-//                    if (!Objects.equals(testScript.getFreeText(), "!@#$%^&*()_+")) {
-//                        noteTextArea.setText(testScript.getFreeText());
-//                    }
-//                }
-
-                    // find position of actor
-//                    DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
-//                    TestFlowPositionList testFlowPositionList = testFlowPositionListDataSource.readData();
-
-
-//                } else {
-//                    width = (double) objects.get(3);
-//                    height = (double) objects.get(4);
-//                    layoutX = (double) objects.get(5);
-//                    layoutY = (double) objects.get(6);
-//
-//                    if (Objects.equals(type, "testScript")) {
-//                        labelTextField.setPrefWidth(130.0);
-//                    }
-                //}
+            loadProject();
 
             }
 
     }
+    private void loadProject() {
+        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
+        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory, projectName + ".csv");
+        DataSource<NoteList> noteListDataSource = new NoteListFileDataSource(directory, projectName + ".csv");
 
+        testScriptList = testScriptListDataSource.readData();
+        testScriptDetailList = testScriptDetailListDataSource.readData();
+        testCaseList = testCaseListDataSource.readData();
+        testCaseDetailList = testCaseDetailListDataSource.readData();
+        testFlowPositionList = testFlowPositionListDataSource.readData();
+        connectionList = connectionListDataSource.readData();
+        noteList = noteListDataSource.readData();
+    }
+    private void saveProject() {
+        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory,projectName + ".csv");
+        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory,projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
+        DataSource<NoteList> noteListDataSource = new NoteListFileDataSource(directory,projectName + ".csv");
+        testFlowPositionListDataSource.writeData(testFlowPositionList);
+        testScriptListDataSource.writeData(testScriptList);
+        testScriptDetailListDataSource.writeData(testScriptDetailList);
+        testCaseListDataSource.writeData(testCaseList);
+        testCaseDetailListDataSource.writeData(testCaseDetailList);
+        connectionListDataSource.writeData(connectionList);
+        noteListDataSource.writeData(noteList);
+        //useCaseListDataSource.writeData(useCaseList);
+        System.out.println("Project Saved");
+
+
+    }
     public void handleConfirmButton(ActionEvent actionEvent) throws IOException {
         String note = noteTextArea.getText();
         if (noteTextArea.getText().isEmpty()) {
@@ -139,8 +128,7 @@ public class LabelPageController {
             testScriptList.addOrUpdateTestScript(testScript);
             testFlowPosition = new TestFlowPosition(id,width,height,layoutX,layoutY,0,"testscript");
             testFlowPositionList.addPosition(testFlowPosition);
-            testFlowPositionListDataSource.writeData(testFlowPositionList);
-            testScriptListDataSource.writeData(testScriptList);
+            saveProject();
             //objects.add(testScript);
         }else if (type.equals("Rectangle")){
             randomIdTC();
@@ -149,8 +137,7 @@ public class LabelPageController {
             testCaseList.addOrUpdateTestCase(testCase);
             testFlowPosition = new TestFlowPosition(id,width,height,layoutX,layoutY,0,"testcase");
             testFlowPositionList.addPosition(testFlowPosition);
-            testFlowPositionListDataSource.writeData(testFlowPositionList);
-            testCaseListDataSource.writeData(testCaseList);
+            saveProject();
             //objects.add(testCase);
 
         }else if (type.equals("Kite")){
@@ -158,8 +145,7 @@ public class LabelPageController {
             connectionList.addOrUpdate(connection);
             testFlowPosition = new TestFlowPosition(connectionList.findLastConnectionID(),width,height,layoutX,layoutY,0,"decision");
             testFlowPositionList.addPosition(testFlowPosition);
-            testFlowPositionListDataSource.writeData(testFlowPositionList);
-            connectionListDataSource.writeData(connectionList);
+            saveProject();
 
         }
             FXRouter.goTo("test_flow", objects);
