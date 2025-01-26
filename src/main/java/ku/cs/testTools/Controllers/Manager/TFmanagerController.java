@@ -97,12 +97,20 @@ public class TFmanagerController {
         }
         loadProject();
         onNoteTextArea.setOnKeyTyped(keyEvent -> {
-            if (onNoteTextArea.getText() != null) {
-                Note note = new Note("1",onNoteTextArea.getText());
-                noteList.addNote(note);
-                DataSource<NoteList> noteListDataSource = new NoteListFileDataSource(directory,projectName + ".csv");
-                noteListDataSource.writeData(noteList);
+            if (noteList.findBynoteID("1") == null) {
+                if (!onNoteTextArea.getText().isEmpty()) {
+                    noteList.addNote(new Note("1", onNoteTextArea.getText()));
+                } else {
+                    noteList.addNote(new Note("1", "!@#$%^&*()_+"));
+                }
+            } else {
+                if (!onNoteTextArea.getText().isEmpty()) {
+                    noteList.updateNoteBynoteID("1", onNoteTextArea.getText());
+                } else {
+                    noteList.updateNoteBynoteID("1", "!@#$%^&*()_+");
+                }
             }
+            saveProject();
         });
     }
 

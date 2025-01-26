@@ -130,6 +130,7 @@ public class TestFlowController {
     //private Map<Integer, StackPane> testScriptPaneMap; // Mapping positionID -> StackPane
     private Map<Integer, Point2D> testScriptPositionMap = new HashMap<>();
     private NoteList noteList;
+    private Note note;
 
 
     @FXML
@@ -146,11 +147,29 @@ public class TestFlowController {
         }
         loadProject();
         onNoteTextArea.setOnKeyTyped(keyEvent -> {
-            if (onNoteTextArea.getText() != null) {
-                Note note = new Note("1",onNoteTextArea.getText());
-                noteList.addNote(note);
+            if (noteList.findBynoteID("1") == null) {
+                if (!onNoteTextArea.getText().isEmpty()) {
+                    noteList.addNote(new Note("1", onNoteTextArea.getText()));
+                } else {
+                    noteList.addNote(new Note("1", "!@#$%^&*()_+"));
+                }
+            } else {
+                if (!onNoteTextArea.getText().isEmpty()) {
+                    noteList.updateNoteBynoteID("1", onNoteTextArea.getText());
+                } else {
+                    noteList.updateNoteBynoteID("1", "!@#$%^&*()_+");
+                }
             }
+            saveProject();
         });
+//        onNoteTextArea.setOnKeyPressed(keyEvent -> {
+//            if (onNoteTextArea.getText() != null) {
+//                Note note = new Note("1",onNoteTextArea.getText());
+//                noteList.addNote(note);
+//                saveProject();
+//            }
+//        });
+
         saveProject();
 //        onDesignArea.setOnMouseReleased(mouseEvent -> {
 //            hideBorderAndAnchors(border,anchors);

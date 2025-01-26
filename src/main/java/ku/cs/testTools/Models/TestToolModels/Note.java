@@ -28,6 +28,6 @@ public class Note {
     }
 
     public boolean isId(String noteID) {
-        return Objects.equals(this.noteID, noteID);
+        return this.noteID.equals(noteID);
     }
 }

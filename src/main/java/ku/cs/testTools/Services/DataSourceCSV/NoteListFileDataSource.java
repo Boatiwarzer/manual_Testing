@@ -182,6 +182,7 @@ public class NoteListFileDataSource implements DataSource<NoteList>, ManageDataS
 
     @Override
     public String createLine(Note note) {
-        return null;
+        return "note," + note.getNoteID() + "," + note.getNote();
     }
+
 }
