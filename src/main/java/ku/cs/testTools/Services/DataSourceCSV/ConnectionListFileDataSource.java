@@ -107,6 +107,8 @@ public class ConnectionListFileDataSource implements DataSource<ConnectionList>,
         IRreportList iRreportList = iRreportListFileDataSource.readData();
         IRreportDetailListFileDataSource iRreportDetailListFileDataSource = new IRreportDetailListFileDataSource(directory,fileName);
         IRreportDetailList iRreportDetailList = iRreportDetailListFileDataSource.readData();
+        NoteListFileDataSource noteListFileDataSource = new NoteListFileDataSource(directory,fileName);
+        NoteList noteList = noteListFileDataSource.readData();
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
         FileWriter writer = null;
@@ -174,7 +176,11 @@ public class ConnectionListFileDataSource implements DataSource<ConnectionList>,
                 buffer.append(line);
                 buffer.newLine();
             }
-
+            for (Note note : noteList.getNoteList()){
+                String line = noteListFileDataSource.createLine(note);
+                buffer.append(line);
+                buffer.newLine();
+            }
             buffer.close();
 
         } catch (Exception e) {

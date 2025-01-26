@@ -15,9 +15,8 @@
         <class>ku.cs.testTools.Models.TestToolModels.Connection</class>
 
         <properties>
-
             <!-- Database Connection -->
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/test_db"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://127.0.0.1:3306/test_db"/>
             <property name="jakarta.persistence.jdbc.user" value="root"/>
             <property name="jakarta.persistence.jdbc.password" value=""/>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
@@ -30,4 +29,3 @@
         </properties>
     </persistence-unit>
 </persistence>
-

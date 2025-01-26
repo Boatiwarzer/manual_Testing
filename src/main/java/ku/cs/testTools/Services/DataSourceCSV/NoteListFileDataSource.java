@@ -1,20 +1,18 @@
 package ku.cs.testTools.Services.DataSourceCSV;
 
 import ku.cs.testTools.Models.TestToolModels.*;
+import ku.cs.testTools.Models.TestToolModels.NoteList;
 import ku.cs.testTools.Services.DataSource;
 import ku.cs.testTools.Services.ManageDataSource;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
 
-public class TestCaseFileDataSource implements DataSource<TestCaseList>, ManageDataSource<TestCase> {
+public class NoteListFileDataSource implements DataSource<NoteList>, ManageDataSource<Note> {
     private String directory;
     private String fileName;
 
-    public TestCaseFileDataSource(String directory, String fileName) {
+    public NoteListFileDataSource(String directory, String fileName) {
         this.directory = directory;
         this.fileName = fileName;
         checkFileIsExisted();
@@ -35,50 +33,57 @@ public class TestCaseFileDataSource implements DataSource<TestCaseList>, ManageD
             }
         }
     }
-    @Override
-    public TestCaseList readData() {
-        TestCaseList testCaseList = new TestCaseList();
-        String filePath = directory + File.separator + fileName;
 
-        try (BufferedReader buffer = new BufferedReader(new FileReader(filePath, StandardCharsets.UTF_8))) {
-            String line;
+    @Override
+    public NoteList readData() {
+        NoteList noteList = new NoteList();
+        String filePath = directory + File.separator + fileName;
+        File file = new File(filePath);
+        FileReader reader = null;
+        BufferedReader buffer = null;
+
+        try {
+            reader = new FileReader(file, StandardCharsets.UTF_8);
+            buffer = new BufferedReader(reader);
+
+            String line = "";
             while ((line = buffer.readLine()) != null) {
                 String[] data = line.split(",");
-
-                if (data[0].trim().equals("testCase")) {
-                    // Create the TestScriptDetail object
-                    TestCase testCase = new TestCase(
-                            data[1].trim(), // idTSD
-                            data[2].trim(), // testNo
-                            data[3].trim(), // steps
-                            data[4].trim(), // inputData
-                            data[5].trim(),
-                            data[6].trim(),// expected
-                            Integer.parseInt(data[7].trim()),
-                            data[8].trim(),
-                            data[9].trim()// expected
-
+                if (data[0].trim().equals("note")) {
+                    Note note = new Note(
+                            data[1].trim(), // data[1]
+                            data[2].trim() // data[2]
                     );
-
-                    // Add the detail to the list
-                    testCaseList.addOrUpdateTestCase(testCase);
+                    noteList.addNote(note);
                 }
             }
-        } catch (IOException e) {
-            throw new RuntimeException("Error reading data", e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (buffer != null) {
+                    buffer.close();
+                }
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
 
-        return testCaseList;
-    }
+        return noteList;    }
 
     @Override
-    public void writeData(TestCaseList testCaseList) {
+    public void writeData(NoteList noteList) {
         TestFlowPositionListFileDataSource testFlowPositionListFileDataSource = new TestFlowPositionListFileDataSource(directory,fileName);
         TestFlowPositionList testFlowPositionList = testFlowPositionListFileDataSource.readData();
         TestScriptFileDataSource testScriptListDataSource = new TestScriptFileDataSource(directory, fileName);
         TestScriptList testScriptList = testScriptListDataSource.readData();
         TestScriptDetailFIleDataSource testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, fileName);
         TestScriptDetailList testScriptDetailList = testScriptDetailListDataSource.readData();
+        TestCaseFileDataSource testCaseListDataSource = new TestCaseFileDataSource(directory,fileName);
+        TestCaseList testCaseList = testCaseListDataSource.readData();
         TestCaseDetailFileDataSource testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory,fileName);
         TestCaseDetailList testCaseDetailList = testCaseDetailListDataSource.readData();
         UseCaseListFileDataSource useCaseListFileDataSource = new UseCaseListFileDataSource(directory,fileName);
@@ -95,8 +100,6 @@ public class TestCaseFileDataSource implements DataSource<TestCaseList>, ManageD
         IRreportDetailList iRreportDetailList = iRreportDetailListFileDataSource.readData();
         ConnectionListFileDataSource connectionListFileDataSource = new ConnectionListFileDataSource(directory, fileName);
         ConnectionList connectionList = connectionListFileDataSource.readData();
-        NoteListFileDataSource noteListFileDataSource = new NoteListFileDataSource(directory,fileName);
-        NoteList noteList = noteListFileDataSource.readData();
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
         FileWriter writer = null;
@@ -125,7 +128,7 @@ public class TestCaseFileDataSource implements DataSource<TestCaseList>, ManageD
                 buffer.newLine();
             }
             for (TestCase testCase : testCaseList.getTestCaseList()){
-                String line = createLine(testCase);
+                String line = testCaseListDataSource.createLine(testCase);
                 buffer.append(line);
                 buffer.newLine();
             }
@@ -165,7 +168,7 @@ public class TestCaseFileDataSource implements DataSource<TestCaseList>, ManageD
                 buffer.newLine();
             }
             for (Note note : noteList.getNoteList()){
-                String line = noteListFileDataSource.createLine(note);
+                String line = createLine(note);
                 buffer.append(line);
                 buffer.newLine();
             }
@@ -174,20 +177,11 @@ public class TestCaseFileDataSource implements DataSource<TestCaseList>, ManageD
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
     }
 
-
     @Override
-    public String createLine(TestCase testCase) {
-        return "testCase," +
-                testCase.getIdTC() + "," +
-                testCase.getNameTC() + "," +
-                testCase.getDateTC() + "," +
-                testCase.getUseCase() + "," +
-                testCase.getDescriptionTC() + "," +
-                testCase.getNote() + "," +
-                testCase.getPosition()+ "," +
-                testCase.getPreCon() + "," +
-                testCase.getPostCon();
+    public String createLine(Note note) {
+        return null;
     }
 }
