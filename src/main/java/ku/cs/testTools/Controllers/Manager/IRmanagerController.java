@@ -287,7 +287,7 @@ public class IRmanagerController {
         String dateTR = iRreport.getDateIR();
         setTableInfo(iRreport);
 
-        System.out.println("select " + iRreportList.findTRById(testIDLabel.getText()));
+        System.out.println("select " + iRreportList.findIRById(testIDLabel.getText()));
 
     }
 
@@ -359,7 +359,7 @@ public class IRmanagerController {
         for (StringConfiguration conf : configs) {
             TableColumn<IRreportDetail, String> col = new TableColumn<>(conf.get("title"));
             col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
-            if (index != 14 && index <= 16) {  // ถ้าเป็นคอลัมน์แรก
+            if (index != 7 && index <= 12) {  // ถ้าเป็นคอลัมน์แรก
                 col.setPrefWidth(120);
                 col.setMaxWidth(120);
                 col.setMinWidth(120); // ตั้งค่าขนาดคอลัมน์แรก
@@ -414,6 +414,35 @@ public class IRmanagerController {
                         }
                     }
                 });
+            }
+            if (conf.get("field").equals("imageIRD")) {
+                col.setCellFactory(column -> new TableCell<>() {
+                    private final ImageView imageView = new ImageView();
+
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null || item.isEmpty()) {
+                            setGraphic(null); // หากไม่มีข้อมูลให้เคลียร์กราฟิก
+                        } else {
+                            // แยก path จากข้อมูล
+                            String[] parts = item.split(" : ");
+                            String imagePath = parts.length > 1 ? parts[1] : ""; // ใช้ส่วนหลังจาก " : "
+
+                            File file = new File(imagePath);
+                            if (file.exists()) {
+                                Image image = new Image(file.toURI().toString());
+                                imageView.setImage(image);
+                                imageView.setFitWidth(160); // กำหนดความกว้าง
+                                imageView.setFitHeight(90); // กำหนดความสูง
+                                imageView.setPreserveRatio(true); // รักษาสัดส่วนภาพ
+                                setGraphic(imageView); // แสดงผลในเซลล์
+                            } else {
+                                setGraphic(null); // path ไม่ถูกต้อง ให้เว้นว่าง
+                            }
+                        }
+                    }
+                });
                 col.setPrefWidth(160);
                 col.setMaxWidth(160);
                 col.setMinWidth(160);
@@ -436,7 +465,6 @@ public class IRmanagerController {
         onTableIR.getColumns().clear();
         onTableIR.getItems().clear();
         onTableIR.refresh();
-//        onTableTestresult.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         ArrayList<StringConfiguration> configs = new ArrayList<>();
         configs.add(new StringConfiguration("title:IRD-ID."));

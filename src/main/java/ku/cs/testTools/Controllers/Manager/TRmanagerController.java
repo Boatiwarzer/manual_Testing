@@ -96,8 +96,8 @@ public class TRmanagerController {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            if (objects.get(3) != null){
-                testResult = (TestResult) objects.get(3);
+            if (objects.get(2) != null){
+                testResult = (TestResult) objects.get(2);
             }
             clearInfo();
             loadProject();

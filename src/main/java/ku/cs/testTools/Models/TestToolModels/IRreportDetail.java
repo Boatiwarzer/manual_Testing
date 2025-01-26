@@ -91,6 +91,9 @@ public class IRreportDetail {
     public boolean isId(String id) {
         return this.idIRD != null && this.idIRD.equals(id);
     }
+    public boolean isIrd(String id) {
+        return this.idIR!= null && this.idIR.equals(id);
+    }
     public boolean isTrd(String id) {
         return this.idTRD.equals(id);
     }

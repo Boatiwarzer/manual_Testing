@@ -3,6 +3,7 @@ package ku.cs.testTools.Models.TestToolModels;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Data
@@ -53,6 +54,25 @@ public class IRreportDetailList {
         }
     }
 
+    public void deleteIRreportDetailByID(String id) {
+        boolean found = false;
+
+        // Use an iterator to safely remove items while iterating
+        Iterator<IRreportDetail> iterator = iRreportDetailList.iterator();
+        while (iterator.hasNext()) {
+            IRreportDetail existing = iterator.next();
+            if (existing.getIdIR().equals(id)) {
+                iterator.remove(); // Safely remove the item
+                found = true;
+            }
+        }
+
+        // Log or handle the case where no matching item was found
+        if (!found) {
+            System.out.println("No IRreportDetail found with ID: " + id);
+        }
+    }
+
     public boolean isIdTRDExist(String idTRD) {
         for (IRreportDetail iRreportDetail : iRreportDetailList) {
             if (iRreportDetail.getIdTRD().equals(idTRD)) {
@@ -67,6 +87,23 @@ public class IRreportDetailList {
     public IRreportDetail findIRDByTRD(String id) {
         for (IRreportDetail iRreportDetail : iRreportDetailList) {
             if (iRreportDetail.isTrd(id) ) {
+                return iRreportDetail;
+            }
+        }
+        return null;
+    }
+    public IRreportDetail findIRDById(String id) {
+        for (IRreportDetail iRreportDetail : iRreportDetailList) {
+            if (iRreportDetail.isId(id) ) {
+                return iRreportDetail;
+            }
+        }
+        return null;
+    }
+
+    public IRreportDetail findIRDByirId(String id) {
+        for (IRreportDetail iRreportDetail : iRreportDetailList) {
+            if (iRreportDetail.isIrd(id) ) {
                 return iRreportDetail;
             }
         }

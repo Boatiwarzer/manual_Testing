@@ -621,7 +621,7 @@ public class TestResultAddController {
         String nameTR = onTestNameField.getText();
         String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         String noteTR = onTestNoteField.getText();
-        testResult = new TestResult(idTR, nameTR, dateTR, noteTR, "In Tester");
+        testResult = new TestResult(idTR, nameTR, dateTR, noteTR);
     }
     @FXML
     void onAddButton(ActionEvent event) {
@@ -763,7 +763,7 @@ public class TestResultAddController {
             String nameTR = onTestNameField.getText();
             String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             String noteTR = onTestNoteField.getText();
-            testResult = new TestResult(idTR, nameTR, dateTR, noteTR, "In Tester");
+            testResult = new TestResult(idTR, nameTR, dateTR, noteTR);
 
             if (nameTR == null || nameTR.isEmpty()) {
                 showAlert("Input Error", "Please fill in all required fields.");

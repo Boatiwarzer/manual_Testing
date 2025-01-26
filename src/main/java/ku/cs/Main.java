@@ -75,8 +75,9 @@ public class Main extends Application {
         FXRouter.when("test_result_manager", packageStr1 + "test_result_manager.fxml");
         FXRouter.when("test_result_edit_manager", packageStr1 + "test_result_edit_manager.fxml");
         FXRouter.when("ir_manager", packageStr1 + "ir_manager.fxml");
-//        FXRouter.when("ir_edit_manager", packageStr1 + "ir_edit_manager.fxml");
+        FXRouter.when("ir_edit_manager", packageStr1 + "ir_edit_manager.fxml");
         FXRouter.when("popup_add_testresult_manager", packageStr1 + "popup_add_testresult_manager.fxml");
+        FXRouter.when("popup_add_ir_manager", packageStr1 + "popup_add_ir_manager.fxml");
         // Config route
     }
     private static Parent loadFXML(String fxml) throws IOException {

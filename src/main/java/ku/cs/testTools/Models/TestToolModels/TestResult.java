@@ -29,18 +29,14 @@ public class TestResult {
     @Column(name = "noteTR")  // Add the Column annotation
     private String noteTR;
 
-    @Column(name = "statusTR")  // Add the Column annotation
-    private String statusTR;
-
     @Column(name = "markedForDeletion")  // Add the Column annotation
     private boolean markedForDeletion = false;
 
-    public TestResult(String idTR, String nameTR, String dateTR, String noteTR, String statusTR) {
+    public TestResult(String idTR, String nameTR, String dateTR, String noteTR) {
         this.idTR = idTR;
         this.nameTR = nameTR;
         this.dateTR = dateTR;
         this.noteTR = noteTR;
-        this.statusTR = statusTR;
     }
 
     public String setDateTR() {
