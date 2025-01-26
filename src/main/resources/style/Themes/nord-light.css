@@ -143,7 +143,7 @@
 
 .hyperlink.selected {
   -fx-underline: false;
-  -fx-text-fill: black; /* สีข้อความเมื่อเลือก */
+  -fx-text-fill: #2E3440; /* สีข้อความเมื่อเลือก */
   -fx-background-color: #98aeca; /* สีพื้นหลังเมื่อเลือก */
   -fx-background-radius: 10px; /* ขอบมน */
   -fx-padding: 5px 10px; /* ระยะห่างรอบข้อความ */

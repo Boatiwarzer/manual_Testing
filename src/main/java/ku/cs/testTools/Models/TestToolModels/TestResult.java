@@ -36,7 +36,8 @@ public class TestResult {
         this.idTR = idTR;
         this.nameTR = nameTR;
         this.dateTR = dateTR;
-        this.noteTR = noteTR;
+//        this.noteTR = noteTR;
+        this.noteTR = "-";
     }
 
     public String setDateTR() {

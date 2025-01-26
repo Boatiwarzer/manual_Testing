@@ -117,19 +117,15 @@
    <left>
       <AnchorPane BorderPane.alignment="CENTER">
          <children>
-            <VBox layoutX="15.0" layoutY="15.0" prefHeight="645.0" prefWidth="265.0" spacing="10.0" AnchorPane.leftAnchor="15.0">
+            <VBox layoutX="15.0" layoutY="15.0" prefHeight="670.0" prefWidth="265.0" spacing="10.0" AnchorPane.leftAnchor="15.0">
                <children>
-                  <TitledPane fx:id="noteTitlePane" animated="false" collapsible="false" prefHeight="635.0" prefWidth="265.0" text="Note">
+                  <TitledPane fx:id="noteTitlePane" animated="false" collapsible="false" prefHeight="665.0" prefWidth="265.0" text="Note">
                      <content>
-                        <AnchorPane prefHeight="95.0" prefWidth="240.0">
-                           <children>
-                              <TextArea fx:id="onNoteTextArea" prefHeight="590.0" prefWidth="240.0" promptText="Write your note here..">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </TextArea>
-                           </children>
-                        </AnchorPane>
+                        <TextArea fx:id="onNoteTextArea" prefHeight="590.0" prefWidth="240.0" promptText="Write your note here..">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </TextArea>
                      </content>
                      <font>
                         <Font size="14.0" />

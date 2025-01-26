@@ -60,7 +60,9 @@ public class TestResultController {
     private ArrayList<String> word = new ArrayList<>();
     private String irId;
     private String irdId;
+    private String idTR;
     private IRreport iRreport;
+    private IRreport newIRreport;
     private IRreportList iRreportList = new IRreportList();
     private IRreportDetail iRreportDetail = new IRreportDetail();
     private IRreportDetailList iRreportDetailList = new IRreportDetailList();
@@ -106,7 +108,6 @@ public class TestResultController {
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
             if (objects.get(2) != null){
-                testResult = (TestResult) objects.get(2);
                 testResult = (TestResult) objects.get(2);
             }
             clearInfo();
@@ -286,6 +287,7 @@ public class TestResultController {
                     onIRButton.setVisible(newValue.getIdTR() != null);
                     selectedTestResult = newValue;
                     showInfo(newValue);
+                    idTR = newValue.getIdTR();
                 }
             });
         } else {
@@ -664,57 +666,135 @@ public class TestResultController {
 
     @FXML
     void onIRButton(ActionEvent event) {
-        String idTR = testIDLabel.getText();
+        try {
+//        String idTR = testIDLabel.getText();
+            if (iRreportList.isIdTRExist(idTR)) {
+                System.out.println("ID " + idTR + " already exists in the file.");
+                IRreport ir = iRreportList.findTRById(idTR);
+                String idIR = ir.getIdIR();
+                String nameIR = ir.getNameIR();
+                String noteIR = ir.getNoteIR();
+                String dateIR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                System.out.println(idIR);
+                iRreportList.clearIR(idIR);
+                IRreport newIR = new IRreport(idIR, nameIR, dateIR, noteIR, idTR);
+                iRreportList.addIR(newIR);
+                newIRreport = newIR;
 
-        if (iRreportList.isIdTRExist(idTR)) {
-            System.out.println("ID " + idTR + " already exists in the file.");
-            IRreport ir = iRreportList.findTRById(idTR);
-            String idIR = ir.getIdIR();
-            String nameIR = ir.getNameIR();
-            String noteIR = ir.getNoteIR();
-            String dateIR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            iRreportList.clearIR(idIR);
-            IRreport newIR = new IRreport(idIR, nameIR, dateIR, noteIR, idTR);
-            iRreportList.addIR(newIR);
+//            iRreport = new IRreport(idIR, nameIR, dateIR, noteIR, idTR);
+//            iRreportList.addOrUpdateIRreport(iRreport);
 
-//            iRreportDetailList.clearIRDetail(idIR);
-            List<TestResultDetail> trdList = testResultDetailList.findAllTRinTRDById(idTR.trim());
-            for (TestResultDetail trd : trdList) {
-                System.out.println("trd " + trd);
-            }
+                List<TestResultDetail> trdList = testResultDetailList.findAllTRinTRDById(idTR.trim());
+                for (TestResultDetail trd : trdList) {
+                    System.out.println("trd " + trd);
+                }
 
-            List<TestResultDetail> failedResult = trdList.stream()
-                    .filter(faildetail -> faildetail.getIdTR().equals(idTR) && faildetail.getStatusTRD().equals("Fail"))
-                    .collect(Collectors.toList());
-            int counter = 1;
-            for (TestResultDetail detail : failedResult) {
-                String irdID;
-                String idTrd = detail.getIdTRD();
-                if (iRreportDetailList.isIdTRDExist(idTrd)) {
-                    String testNo = String.format("%d", counter);
-                    counter++;
-                    IRreportDetail id = iRreportDetailList.findIRDByTRD(idTrd);
-                    String idIRD = id.getIdIRD();
-                    String testerIRD = id.getTesterIRD();
-                    String tsIdIRD = id.getTsIdIRD();
-                    String tcIdIRD = id.getTcIdIRD();
-                    String descriptIRD = id.getDescriptIRD();
-                    String conditionIRD = id.getConditionIRD();
-                    String imageIRD = id.getImageIRD();
-                    String priorityIRD = id.getPriorityIRD();
-                    String rcaIRD = id.getRcaIRD();
-                    String managerIRD = id.getManagerIRD();
-                    String statusIRD = id.getStatusIRD();
-                    String remarkIRD = id.getRemarkIRD();
+                List<TestResultDetail> failedResult = trdList.stream()
+                        .filter(faildetail -> faildetail.getIdTR().equals(idTR) && faildetail.getStatusTRD().equals("Fail"))
+                        .collect(Collectors.toList());
+                int counter = 1;
+                for (TestResultDetail detail : failedResult) {
+                    String irdID;
+                    String idTrd = detail.getIdTRD();
+                    System.out.println("idtrd " + idTrd);
+                    if (iRreportDetailList.isIdTRDExist(idTrd)) {
+                        String testNo = String.format("%d", counter);
+                        counter++;
+                        IRreportDetail id = iRreportDetailList.findIRDByTRD(idTrd);
+                        String idIRD = id.getIdIRD();
+                        String testerIRD = id.getTesterIRD();
+                        String tsIdIRD = id.getTsIdIRD();
+                        String tcIdIRD = id.getTcIdIRD();
+                        String descriptIRD = id.getDescriptIRD();
+                        String conditionIRD = id.getConditionIRD();
+                        String imageIRD = id.getImageIRD();
+                        String priorityIRD = id.getPriorityIRD();
+                        String rcaIRD = id.getRcaIRD();
+                        String managerIRD = id.getManagerIRD();
+                        String statusIRD = id.getStatusIRD();
+                        String remarkIRD = id.getRemarkIRD();
 
-                    iRreportDetailList.clearIRDetail(idIRD);
-                    IRreportDetail newIRDetail = new IRreportDetail(idIRD, testNo, testerIRD, tsIdIRD, tcIdIRD, descriptIRD, conditionIRD, imageIRD, priorityIRD, rcaIRD, managerIRD, statusIRD, remarkIRD, idIR, idTrd);
-                    iRreportDetailList.addIRreportDetail(newIRDetail);
-                } else {
+                        iRreportDetailList.clearIRDetail(idIRD);
+                        IRreportDetail newIRDetail = new IRreportDetail(idIRD, testNo, testerIRD, tsIdIRD, tcIdIRD, descriptIRD, conditionIRD, imageIRD, priorityIRD, rcaIRD, managerIRD, statusIRD, remarkIRD, idIR, idTrd);
+                        iRreportDetailList.addIRreportDetail(newIRDetail);
+                    } else {
+                        randomIdIRD();
+                        irdID = irdId;
+                        String testNo = String.format("%d", counter);
+                        counter++;
+                        String testerIRD = "Tester";
+                        String tsIdIRD = detail.getTsIdTRD();
+                        String tcIdIRD = detail.getTcIdTRD();
+                        System.out.println("tsId " + tsIdIRD);
+                        String descriptIRD = detail.getDescriptTRD();
+
+                        String selectedId = tsIdIRD; // ดึง ID จาก ComboBox
+                        String[] parts = selectedId.split(" : "); // แยกข้อความตาม " : "
+                        String tsId = parts[0]; // ดึงส่วนแรกออกมา
+                        TestScript selectedCon = testScriptList.findByTestScriptId(tsId.trim());
+                        System.out.println("con " + selectedCon);
+
+                        String conditionIRD = selectedCon.getPreCon();
+                        String imageIRD = detail.getImageTRD();
+                        String priorityIRD = detail.getPriorityTRD();
+                        String rcaIRD = "";
+                        String managerIRD = "";
+                        String statusIRD = "In Manager";
+                        String remarkIRD = "";
+
+                        IRreportDetail newIRDetail = new IRreportDetail(irdID, testNo, testerIRD, tsIdIRD, tcIdIRD, descriptIRD, conditionIRD, imageIRD, priorityIRD, rcaIRD, managerIRD, statusIRD, remarkIRD, idIR, idTrd);
+                        iRreportDetailList.addIRreportDetail(newIRDetail);
+                    }
+                }
+
+                List<IRreportDetail> irdList = iRreportDetailList.findAllIRDinIRById(idIR.trim());
+                for (IRreportDetail ird : irdList) {
+                    System.out.println("ird " + ird);
+                }
+
+                List<IRreportDetail> idIRDetail = irdList.stream()
+                        .filter(idIRD -> idIRD.getIdIR().equals(idIR))
+                        .collect(Collectors.toList());
+                System.out.println("idIRDetail: " + idIRDetail);
+
+                for (IRreportDetail idIRdetail : idIRDetail) {
+                    String idTrd = idIRdetail.getIdTRD();
+                    if (!testResultDetailList.isIdTRDExist(idTrd)) {
+                        String idIrd = idIRdetail.getIdIRD();
+                        iRreportDetailList.clearIRDetail(idIrd);
+                    }
+                }
+
+                saveProject();
+            } else {
+                System.out.println("ID " + idTR + " does not exist in the file.");
+                randomIdIR();
+                String idIR = irId;
+                String nameIR = testNameLabel.getText();
+                String noteIR = "";
+                String dateIR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                System.out.println(idIR);
+                iRreport = new IRreport(idIR, nameIR, dateIR, noteIR, idTR);
+                iRreportList.addOrUpdateIRreport(iRreport);
+                newIRreport = iRreport;
+
+                List<TestResultDetail> trdList = testResultDetailList.findAllTRinTRDById(idTR.trim());
+                for (TestResultDetail trd : trdList) {
+                    System.out.println("trd " + trd);
+                }
+
+                List<TestResultDetail> failedResult = trdList.stream()
+                        .filter(faildetail -> faildetail.getIdTR().equals(idTR) && faildetail.getStatusTRD().equals("Fail"))
+                        .collect(Collectors.toList());
+                System.out.println("failedResult: " + failedResult);
+
+                int counter = 1;
+                for (TestResultDetail detail : failedResult) {
+                    String idTrd = detail.getIdTRD();
                     randomIdIRD();
-                    irdID = irdId;
+                    String irID = irdId;
                     String testNo = String.format("%d", counter);
-                    counter++;
+                    counter++; // เพิ่มค่าตัวนับ
                     String testerIRD = "Tester";
                     String tsIdIRD = detail.getTsIdTRD();
                     String tcIdIRD = detail.getTcIdTRD();
@@ -735,94 +815,19 @@ public class TestResultController {
                     String statusIRD = "In Manager";
                     String remarkIRD = "";
 
-                    IRreportDetail newIRDetail = new IRreportDetail(irdID, testNo, testerIRD, tsIdIRD, tcIdIRD, descriptIRD, conditionIRD, imageIRD, priorityIRD, rcaIRD, managerIRD, statusIRD, remarkIRD, irId, idTrd);
-                    iRreportDetailList.addIRreportDetail(newIRDetail);
+                    iRreportDetail = new IRreportDetail(irID, testNo, testerIRD, tsIdIRD, tcIdIRD, descriptIRD, conditionIRD, imageIRD, priorityIRD, rcaIRD, managerIRD, statusIRD, remarkIRD, irId, idTrd);
+                    iRreportDetailList.addOrUpdateIRreportDetail(iRreportDetail);
                 }
+                saveProject();
             }
 
-            List<IRreportDetail> irdList = iRreportDetailList.findAllIRDinIRById(idIR.trim());
-            for (IRreportDetail ird : irdList) {
-                System.out.println("ird " + ird);
-            }
-
-            List<IRreportDetail> idIRDetail = irdList.stream()
-                    .filter(idIRD -> idIRD.getIdIR().equals(idIR))
-                    .collect(Collectors.toList());
-            System.out.println("idIRDetail: " + idIRDetail);
-
-            for (IRreportDetail idIRdetail : idIRDetail) {
-                String idTrd = idIRdetail.getIdTRD();
-                if (!testResultDetailList.isIdTRDExist(idTrd)) {
-                    String idIrd = idIRdetail.getIdIRD();
-                    iRreportDetailList.clearIRDetail(idIrd);
-                }
-            }
-
-            saveProject();
-        } else {
-            System.out.println("ID " + idTR + " does not exist in the file.");
-            String idIR = irId;
-            String nameIR = testNameLabel.getText();
-            String noteIR = "";
-            String dateIR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-
-            iRreport = new IRreport(idIR, nameIR, dateIR, noteIR, idTR);
-            iRreportList.addOrUpdateIRreport(iRreport);
-            List<TestResultDetail> trdList = testResultDetailList.findAllTRinTRDById(idTR.trim());
-            for (TestResultDetail trd : trdList) {
-                System.out.println("trd " + trd);
-            }
-
-            List<TestResultDetail> failedResult = trdList.stream()
-                    .filter(faildetail -> faildetail.getIdTR().equals(idTR) && faildetail.getStatusTRD().equals("Fail"))
-                    .collect(Collectors.toList());
-            System.out.println("failedResult: " + failedResult);
-
-            int counter = 1;
-            for (TestResultDetail detail : failedResult) {
-                String idTrd = detail.getIdTRD();
-                randomIdIRD();
-                String irID = irdId;
-                String testNo = String.format("%d", counter);
-                counter++; // เพิ่มค่าตัวนับ
-                String testerIRD = "Tester";
-                String tsIdIRD = detail.getTsIdTRD();
-                String tcIdIRD = detail.getTcIdTRD();
-                System.out.println("tsId " + tsIdIRD);
-                String descriptIRD = detail.getDescriptTRD();
-
-                String selectedId = tsIdIRD; // ดึง ID จาก ComboBox
-                String[] parts = selectedId.split(" : "); // แยกข้อความตาม " : "
-                String tsId = parts[0]; // ดึงส่วนแรกออกมา
-                TestScript selectedCon = testScriptList.findByTestScriptId(tsId.trim());
-                System.out.println("con " + selectedCon);
-
-                String conditionIRD = selectedCon.getPreCon();
-                String imageIRD = detail.getImageTRD();
-                String priorityIRD = detail.getPriorityTRD();
-                String rcaIRD = "";
-                String managerIRD = "";
-                String statusIRD = "In Manager";
-                String remarkIRD = "";
-
-                iRreportDetail = new IRreportDetail(irID, testNo, testerIRD, tsIdIRD, tcIdIRD, descriptIRD, conditionIRD, imageIRD, priorityIRD, rcaIRD, managerIRD, statusIRD, remarkIRD, irId, idTrd);
-                iRreportDetailList.addOrUpdateIRreportDetail(iRreportDetail);
-            }
-            saveProject();
-        }
-
-//        showAlert("Success", "IR Report saved successfully!");
-        try {
-            DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
-            DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
-            IRreportDetailList iRreportDetailList = iRreportDetailListDataSource.readData();
-            IRreportList iRreportList = iRreportListDataSource.readData();
+//            showAlert("Success", "IR Report saved successfully!");
             // โหลด FXML ของ Popup
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
             objects.add(iRreportDetailList);
-            objects.add(iRreportList);
+            objects.add(newIRreport);
 
             // เปิด Popup ด้วย FXRouter
             FXRouter.popup("test_result_ir", objects);

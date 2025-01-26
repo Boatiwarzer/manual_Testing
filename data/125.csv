@@ -47,11 +47,12 @@ useCaseDetail,UC-687,system,1,รับข้อมูล username และ pas
 useCaseDetail,UC-687,system,2,ไม่ไปหน้า home
 useCaseDetail,UC-158,actor,1,tsts
 useCaseDetail,UC-158,system,1,stes
-testResult,TR-753,zTest,2025-01-26 03:12:33,atset
-testResult,TR-507,sa,2025-01-26 00:09:41,sa
+testResult,TR-753,zTest,2025-01-26 03:12:33,-
+testResult,TR-507,sa,2025-01-26 00:09:41,-
 testResultDetail,TRD-595,s,TS-340 : tset,-,User,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,None,1. a|,ไม่สามารถเข้าสู่ระบบได้,s,None,None,2025-01-26,Tester,115772579_p12_master1200.jpg : C:\Users\wizar\Pictures\Image_ManaualTesttools\115772579_p12_master1200.jpg,Not approved,,TR-507
 testResultDetail,TRD-835,a,TS-001 : Login,TC-321 : Login,User,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,String : Username|String : Password|Button : Button login,1. กรอก username|2. กรอก password|3. กด ปุ่ม login|,สามารถเข้าสู่ระบบได้,a,None,None,25-01-2025,Tester,...,Waiting,Remark,TR-502
 testResultDetail,TRD-371,s,TS-001 : Login,TC-321 : Login,User,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,String : Username|String : Password|Button : Button login,1. กรอก username|2. กรอก password|3. กด ปุ่ม login|,สามารถเข้าสู่ระบบได้,s,Fail,High,2025-01-26,Tester,...,Waiting,,TR-753
 testResultDetail,TRD-468,1,TS-340 : tset,-,User,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,None,1. a|,ไม่สามารถเข้าสู่ระบบได้,1,None,None,25-01-2025,Tester,...,Waiting,Remark,TR-996
-iRreport,IR-211,zTest,2025-01-26 19:55:10,,TR-753
+iRreport,IR-985,sa,2025-01-26 23:05:14,,TR-507
+iRreport,IR-211,zTest,2025-01-26 23:05:20,,TR-753
 iRreportDetail,IRD-771,1,Tester,TS-001 : Login,TC-321 : Login,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,-,...,High,UX/UI Issues,,In Manager,,IR-211,TRD-371

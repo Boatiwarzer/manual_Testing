@@ -39,7 +39,7 @@ public class IRreportList {
     }
 
     public void clearIR(String idIR) {
-        iRreportList.removeIf(iRreport -> iRreport.getIdIR().equals(idIR));
+        iRreportList.removeIf(iRreport -> iRreport.getTrIR().equals(idIR));
     }
 
     public void addIR(IRreport iRreport) {

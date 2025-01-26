@@ -7,6 +7,8 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -17,6 +19,7 @@ import ku.cs.testTools.Services.DataSource;
 import ku.cs.testTools.Services.DataSourceCSV.*;
 import ku.cs.testTools.Services.StringConfiguration;
 import ku.cs.testTools.Services.TableColumns;
+import ku.cs.testTools.Services.TableviewSet;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -65,21 +68,21 @@ public class IRTestresultController {
     void initialize() {
 //        clearInfo();
         setTable();
-
         try {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
             iRreportDetailList = (IRreportDetailList) objects.get(2);
-            iRreportList = (IRreportList) objects.get(3);
+            iRreport = (IRreport) objects.get(3);
+            loadProject();
             // ตั้งค่า TableView
             setTableInfo(iRreportDetailList);
 
-            if (iRreportList != null && !iRreportList.getIRreportList().isEmpty()) {
-                IRreport irReport = iRreportList.getIRreportList().get(0); // ดึงข้อมูลตัวแรก
-                IRNameLabel.setText("Name : " + irReport.getNameIR()); // แสดงชื่อ
-                IRIDLabel.setText(irReport.getIdIR());    // แสดง ID
+            if (iRreport != null ) {
+                IRNameLabel.setText("Name : " + iRreport.getNameIR()); // แสดงชื่อ
+                IRIDLabel.setText(iRreport.getIdIR());    // แสดง ID
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -169,9 +172,10 @@ public class IRTestresultController {
     }
 
     public void setTableInfo(IRreportDetailList iRreportDetailList) {
-        onTableIR.getColumns().clear();
-        onTableIR.getItems().clear();
-        onTableIR.refresh();
+//        onTableIR.getColumns().clear();
+//        onTableIR.getItems().clear();
+//        onTableIR.refresh();
+        new TableviewSet<>(onTableIR);
 
         // Define column configurations
         ArrayList<StringConfiguration> configs = new ArrayList<>();
@@ -194,14 +198,14 @@ public class IRTestresultController {
         for (StringConfiguration conf : configs) {
             TableColumn<IRreportDetail, String> col = new TableColumn<>(conf.get("title"));
             col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
-            if (index != 14 && index <= 16) {  // ถ้าเป็นคอลัมน์แรก
+            if (index != 7 && index <= 12) {  // ถ้าเป็นคอลัมน์แรก
                 col.setPrefWidth(120);
                 col.setMaxWidth(120);
                 col.setMinWidth(120); // ตั้งค่าขนาดคอลัมน์แรก
             }
             col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
             index++;
-            if (!conf.get("field").equals("imageTRD")) {
+            if (!conf.get("field").equals("imageIRD")) {
                 col.setCellFactory(tc -> {
                     TableCell<IRreportDetail, String> cell = new TableCell<>() {
                         private final Text text = new Text();
@@ -250,19 +254,53 @@ public class IRTestresultController {
                     }
                 });
             }
+
+            if (conf.get("field").equals("imageIRD")) {
+                col.setCellFactory(column -> new TableCell<>() {
+                    private final ImageView imageView = new ImageView();
+
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null || item.isEmpty()) {
+                            setGraphic(null); // หากไม่มีข้อมูลให้เคลียร์กราฟิก
+                        } else {
+                            // แยก path จากข้อมูล
+                            String[] parts = item.split(" : ");
+                            String imagePath = parts.length > 1 ? parts[1] : ""; // ใช้ส่วนหลังจาก " : "
+
+                            File file = new File(imagePath);
+                            if (file.exists()) {
+                                Image image = new Image(file.toURI().toString());
+                                imageView.setImage(image);
+                                imageView.setFitWidth(160); // กำหนดความกว้าง
+                                imageView.setFitHeight(90); // กำหนดความสูง
+                                imageView.setPreserveRatio(true); // รักษาสัดส่วนภาพ
+                                setGraphic(imageView); // แสดงผลในเซลล์
+                            } else {
+                                setGraphic(null); // path ไม่ถูกต้อง ให้เว้นว่าง
+                            }
+                        }
+                    }
+                });
+                col.setPrefWidth(160);
+                col.setMaxWidth(160);
+                col.setMinWidth(160);
+            }
+
             new TableColumns(col);
             onTableIR.getColumns().add(col);
         }
 
-//        for (IRreportDetail iRreportDetail : iRreportDetailList.getIRreportDetailList()) {
-//            if (iRreportDetail.getIdIR().trim().equals(iRreport.getIdIR().trim())){
-//                onTableIR.getItems().add(iRreportDetail);
-//            }
-//        }
+        for (IRreportDetail iRreportDetail : iRreportDetailList.getIRreportDetailList()) {
+            if (iRreportDetail.getIdIR().trim().equals(iRreport.getIdIR().trim())){
+                onTableIR.getItems().add(iRreportDetail);
+            }
+        }
 
         // เพิ่มข้อมูลลงใน TableView
-        ObservableList<IRreportDetail> observableList = FXCollections.observableArrayList(iRreportDetailList.getIRreportDetailList());
-        onTableIR.setItems(observableList);
+//        ObservableList<IRreportDetail> observableList = FXCollections.observableArrayList(iRreportDetailList.getIRreportDetailList());
+//        onTableIR.setItems(observableList);
     }
 
     @FXML

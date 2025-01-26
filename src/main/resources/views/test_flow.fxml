@@ -125,7 +125,7 @@
    <left>
       <AnchorPane BorderPane.alignment="CENTER">
          <children>
-            <VBox layoutX="15.0" layoutY="15.0" prefHeight="630.0" prefWidth="240.0" spacing="10.0" AnchorPane.leftAnchor="15.0">
+            <VBox layoutX="15.0" layoutY="15.0" prefHeight="670.0" prefWidth="240.0" spacing="10.0" AnchorPane.leftAnchor="15.0">
                <children>
                   <TitledPane fx:id="componentTitlePane" animated="false" collapsible="false" prefHeight="445.0" prefWidth="265.0" text="Component">
                     <content>
@@ -175,9 +175,9 @@
                         <Font size="14.0" />
                      </font>
                   </TitledPane>
-                  <TitledPane fx:id="noteTitlePane" animated="false" collapsible="false" prefHeight="120.0" prefWidth="240.0" text="Note">
+                  <TitledPane fx:id="noteTitlePane" animated="false" collapsible="false" prefHeight="210.0" prefWidth="240.0" text="Note">
                      <content>
-                        <TextArea fx:id="onNoteTextArea" prefHeight="100.0" prefWidth="252.0" promptText="Write your note here.." wrapText="true">
+                        <TextArea fx:id="onNoteTextArea" prefHeight="100.0" prefWidth="240.0" promptText="Write your note here.." wrapText="true">
                            <font>
                               <Font size="14.0" />
                            </font>
