@@ -461,7 +461,6 @@ public class UseCaseEditController {
 
                     useCaseList.addUseCase(newUseCase);
                     saveProject();
-                    errorLabel.setText("Use case added successfully!");
                 } else {
                     errorLabel.setText("Use case name already exists.");
                 }
@@ -496,7 +495,7 @@ public class UseCaseEditController {
             }
 
             saveProject();
-            showAlert("Success", "Test case saved successfully!");
+            showAlert("Success", "Use Case saved successfully!");
 
             FXRouter.goTo("use_case");
 
