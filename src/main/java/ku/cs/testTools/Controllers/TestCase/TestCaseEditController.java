@@ -108,6 +108,7 @@ public class TestCaseEditController {
 
     @FXML
     void initialize() {
+        onClickTestcase.getStyleClass().add("selected");
         if (FXRouter.getData() != null) {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);

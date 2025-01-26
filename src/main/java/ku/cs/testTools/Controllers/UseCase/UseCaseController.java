@@ -81,6 +81,7 @@ public class UseCaseController {
 
     @FXML
     void initialize() {
+        onClickUsecase.getStyleClass().add("selected");
         clearInfo();
         if (FXRouter.getData() != null) {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();

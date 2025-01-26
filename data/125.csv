@@ -53,5 +53,5 @@ testResultDetail,TRD-595,s,TS-340 : tset,-,User,กรอกข้อมูล u
 testResultDetail,TRD-835,a,TS-001 : Login,TC-321 : Login,User,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,String : Username|String : Password|Button : Button login,1. กรอก username|2. กรอก password|3. กด ปุ่ม login|,สามารถเข้าสู่ระบบได้,a,None,None,25-01-2025,Tester,...,Waiting,Remark,TR-502
 testResultDetail,TRD-371,s,TS-001 : Login,TC-321 : Login,User,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,String : Username|String : Password|Button : Button login,1. กรอก username|2. กรอก password|3. กด ปุ่ม login|,สามารถเข้าสู่ระบบได้,s,Fail,High,2025-01-26,Tester,...,Waiting,,TR-753
 testResultDetail,TRD-468,1,TS-340 : tset,-,User,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,None,1. a|,ไม่สามารถเข้าสู่ระบบได้,1,None,None,25-01-2025,Tester,...,Waiting,Remark,TR-996
-iRreport,IR-211,zTest,2025-01-26 15:11:06,,TR-753
+iRreport,IR-211,zTest,2025-01-26 19:55:10,,TR-753
 iRreportDetail,IRD-771,1,Tester,TS-001 : Login,TC-321 : Login,กรอกข้อมูล username และ password เพื่อเข้าสู่ระบบ,-,...,High,UX/UI Issues,,In Manager,,IR-211,TRD-371

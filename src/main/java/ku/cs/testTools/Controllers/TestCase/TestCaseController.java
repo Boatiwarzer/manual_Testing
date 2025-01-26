@@ -86,6 +86,7 @@ public class TestCaseController {
     private UseCaseList useCaseList = new UseCaseList();
     @FXML
     void initialize() {
+        onClickTestcase.getStyleClass().add("selected");
         setTable();
         if (FXRouter.getData() != null) {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();

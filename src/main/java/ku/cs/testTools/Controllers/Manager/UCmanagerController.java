@@ -35,7 +35,7 @@ public class UCmanagerController {
     private Label testIDLabel;
 
     @FXML
-    private Hyperlink onClickTestflow, onClickTestresult, onClickUsecase;
+    private Hyperlink onClickTestflow, onClickTestresult, onClickUsecase, onClickIR;
 
     @FXML
     private Button onSearchButton;
@@ -80,6 +80,7 @@ public class UCmanagerController {
 
     @FXML
     void initialize() {
+        onClickUsecase.getStyleClass().add("selected");
         clearInfo();
         if (FXRouter.getData() != null) {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();

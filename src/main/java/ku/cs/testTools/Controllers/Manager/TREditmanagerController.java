@@ -88,6 +88,7 @@ public class TREditmanagerController {
 
     @FXML
     void initialize() {
+        onClickTestresult.getStyleClass().add("selected");
         clearInfo();
         setButtonVisible();
         {

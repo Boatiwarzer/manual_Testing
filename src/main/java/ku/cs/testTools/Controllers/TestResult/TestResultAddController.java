@@ -91,34 +91,34 @@ public class TestResultAddController {
 
     @FXML
     void initialize() {
-        {
-            if (FXRouter.getData() != null) {
-                objects = (ArrayList) FXRouter.getData();
-                projectName = (String) objects.get(0);
-                directory = (String) objects.get(1);
-                typeTR = (String) objects.get(2);
-                onTableTestresult.isFocused();
-                clearInfo();
-                loadProject();
-                setButtonVisible();
-                selectedTRD();
-                selectedListView();
-                if (objects.get(3) != null){
-                    testResult = (TestResult) objects.get(3);
-                    testResultDetailList = (TestResultDetailList) objects.get(4);
-                    type = (String) objects.get(5);
-                    setDataTR();
-                }else {
-                    randomId();
-                }
-                loadTable(testResultDetailList);
-                loadListView(testResultList);
-                for (TestResult testResult : testResultList.getTestResultList()) {
-                    word.add(testResult.getNameTR());
-                }
-                searchSet();
+        onClickTestresult.getStyleClass().add("selected");
+        if (FXRouter.getData() != null) {
+            objects = (ArrayList) FXRouter.getData();
+            projectName = (String) objects.get(0);
+            directory = (String) objects.get(1);
+            typeTR = (String) objects.get(2);
+            onTableTestresult.isFocused();
+            clearInfo();
+            loadProject();
+            setButtonVisible();
+            selectedTRD();
+            selectedListView();
+            if (objects.get(3) != null) {
+                testResult = (TestResult) objects.get(3);
+                testResultDetailList = (TestResultDetailList) objects.get(4);
+                type = (String) objects.get(5);
+                setDataTR();
+            } else {
+                randomId();
             }
+            loadTable(testResultDetailList);
+            loadListView(testResultList);
+            for (TestResult testResult : testResultList.getTestResultList()) {
+                word.add(testResult.getNameTR());
+            }
+            searchSet();
         }
+
         System.out.println(testResultDetailList);
 
     }

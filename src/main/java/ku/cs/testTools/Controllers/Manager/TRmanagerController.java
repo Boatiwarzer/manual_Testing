@@ -91,7 +91,7 @@ public class TRmanagerController {
 
     @FXML
     void initialize() {
-
+        onClickTestresult.getStyleClass().add("selected");
         if (FXRouter.getData() != null) {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);

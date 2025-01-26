@@ -85,6 +85,7 @@ public class TFmanagerController {
 
     @FXML
     void initialize() {
+        onClickTestflow.getStyleClass().add("selected");
         onDesignArea.getChildren().clear();
         //onDesignArea.setOnMouseClicked(event -> hideBorderAndAnchors());
 

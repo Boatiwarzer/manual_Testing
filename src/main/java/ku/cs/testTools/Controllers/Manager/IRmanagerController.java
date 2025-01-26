@@ -90,7 +90,7 @@ public class IRmanagerController {
 
     @FXML
     void initialize() {
-
+        onClickIR.getStyleClass().add("selected");
         if (FXRouter.getData() != null) {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
@@ -526,6 +526,8 @@ public class IRmanagerController {
     @FXML
     void onClickUsecase(ActionEvent event) {
         try {
+//            resetHyperlinkStyles(); // ล้างสถานะ selected ทั้งหมด
+//            onClickUsecase.getStyleClass().add("selected");
             objects();
             FXRouter.goTo("use_case_manager",objects);
         } catch (IOException e) {
@@ -567,4 +569,11 @@ public class IRmanagerController {
     void onTestNoteField(ActionEvent event) {
 
     }
+
+//    private void resetHyperlinkStyles() {
+//        onClickIR.getStyleClass().remove("selected");
+//        onClickTestflow.getStyleClass().remove("selected");
+//        onClickTestresult.getStyleClass().remove("selected");
+//        onClickUsecase.getStyleClass().remove("selected");
+//    }
 }

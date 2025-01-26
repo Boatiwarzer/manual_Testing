@@ -100,7 +100,7 @@ public class TestResultController {
 
     @FXML
     void initialize() {
-
+        onClickTestresult.getStyleClass().add("selected");
         if (FXRouter.getData() != null) {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
@@ -811,10 +811,8 @@ public class TestResultController {
             saveProject();
         }
 
-        // Show success message
 //        showAlert("Success", "IR Report saved successfully!");
         try {
-//            FXRouter.popup("test_result_ir");
             DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
             DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
             IRreportDetailList iRreportDetailList = iRreportDetailListDataSource.readData();
@@ -825,9 +823,6 @@ public class TestResultController {
             objects.add(directory);
             objects.add(iRreportDetailList);
             objects.add(iRreportList);
-//            HashMap<String, Object> params = new HashMap<>();
-//            params.put("iRreportDetailList", iRreportDetailList);
-//            params.put("iRreportList", iRreportList);
 
             // เปิด Popup ด้วย FXRouter
             FXRouter.popup("test_result_ir", objects);

@@ -93,6 +93,7 @@ public class TestResultEditController {
 
     @FXML
     void initialize() {
+        onClickTestresult.getStyleClass().add("selected");
         clearInfo();
         setButtonVisible();
         {
