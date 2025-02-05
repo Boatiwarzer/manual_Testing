@@ -50,6 +50,7 @@ public class HomeManagerController {
     private String projectName, directory;
     private TestScriptList testScriptList = new TestScriptList();
     private ArrayList<Object> objects;
+    private String name;
 
     @FXML
     void initialize() {
@@ -58,7 +59,7 @@ public class HomeManagerController {
             // Load the project
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            String name = (String) FXRouter.getData3();
+            name = (String) objects.get(2);
             System.out.println(name);
             System.out.println("Project Name: " + projectName);
             System.out.println("Directory: " + directory);

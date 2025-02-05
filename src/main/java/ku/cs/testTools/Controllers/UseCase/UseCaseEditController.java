@@ -89,6 +89,7 @@ public class UseCaseEditController {
     private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
     private ConnectionList connectionList = new ConnectionList();
     private String typeUC;
+    private String name;
 
     @FXML
     public void initialize() {
@@ -98,13 +99,14 @@ public class UseCaseEditController {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            typeUC = (String) objects.get(2);
+            name = (String) objects.get(2);
+            typeUC = (String) objects.get(3);
             loadProject();
             selectedComboBox();
             System.out.println("if"+useCaseId);
-            if (objects.get(3) != null){
-                selectedUseCase = (UseCase) objects.get(3);
-                useCaseDetailList = (UseCaseDetailList) objects.get(4);
+            if (objects.get(4) != null){
+                selectedUseCase = (UseCase) objects.get(4);
+                useCaseDetailList = (UseCaseDetailList) objects.get(5);
                 showInfo(selectedUseCase);
             }
                 loadListView(useCaseList);
@@ -628,6 +630,7 @@ public class UseCaseEditController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(name);
         objects.add(null);
     }
     @FXML

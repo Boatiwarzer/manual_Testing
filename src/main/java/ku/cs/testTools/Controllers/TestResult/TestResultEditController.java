@@ -90,6 +90,7 @@ public class TestResultEditController {
     private String typeTR;
     private String type;
     private TestScriptList testScriptList;
+    private String name;
 
     @FXML
     void initialize() {
@@ -101,17 +102,18 @@ public class TestResultEditController {
                 objects = (ArrayList) FXRouter.getData();
                 projectName = (String) objects.get(0);
                 directory = (String) objects.get(1);
-                typeTR = (String) objects.get(2);
+                name = (String) objects.get(2);
+                typeTR = (String) objects.get(3);
                 System.out.println(typeTR);
                 System.out.println(objects.get(3));
                 onTableTestresult.isFocused();
                 selectedTRD();
                 selectedListView();
                 loadProject();
-                if (objects.get(3) != null){
-                    testResult = (TestResult) objects.get(3);
-                    testResultDetailList = (TestResultDetailList) objects.get(4);
-                    type = (String) objects.get(5);
+                if (objects.get(4) != null){
+                    testResult = (TestResult) objects.get(4);
+                    testResultDetailList = (TestResultDetailList) objects.get(5);
+                    type = (String) objects.get(6);
                     System.out.println(type);
 
                 }
@@ -559,6 +561,7 @@ public class TestResultEditController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(name);
         objects.add(typeTR);
         objects.add(testResult);
         objects.add(testResultDetailList);
@@ -618,6 +621,7 @@ public class TestResultEditController {
             objects = new ArrayList<>();
             objects.add(directory);
             objects.add(projectName);
+            objects.add(name);
             objects.add(null);
             FXRouter.goTo("test_case",objects);
         } catch (IOException e) {
@@ -631,6 +635,7 @@ public class TestResultEditController {
             objects = new ArrayList<>();
             objects.add(directory);
             objects.add(projectName);
+            objects.add(name);
             objects.add(null);
             FXRouter.goTo("test_flow",objects);
         } catch (IOException e) {
@@ -644,6 +649,7 @@ public class TestResultEditController {
             objects = new ArrayList<>();
             objects.add(directory);
             objects.add(projectName);
+            objects.add(name);
             objects.add(null);
             FXRouter.goTo("test_result",objects);
         } catch (IOException e) {
@@ -657,6 +663,7 @@ public class TestResultEditController {
             objects = new ArrayList<>();
             objects.add(directory);
             objects.add(projectName);
+            objects.add(name);
             objects.add(null);
             FXRouter.goTo("test_script",objects);
         } catch (IOException e) {
@@ -670,6 +677,7 @@ public class TestResultEditController {
             objects = new ArrayList<>();
             objects.add(directory);
             objects.add(projectName);
+            objects.add(name);
             objects.add(null);
             FXRouter.goTo("use_case",objects);
         } catch (IOException e) {
@@ -699,6 +707,7 @@ public class TestResultEditController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(name);
             objects.add(null);
             FXRouter.goTo("test_result", objects);
             Node source = (Node) event.getSource();
@@ -751,6 +760,7 @@ public class TestResultEditController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(name);
             objects.add(testResult);
             showAlert("Success", "Test Result saved successfully!");
             FXRouter.goTo("test_result",objects,true);
@@ -783,6 +793,7 @@ public class TestResultEditController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(name);
             objects.add(null);
             FXRouter.goTo("test_result",objects);
         } catch (IOException e) {

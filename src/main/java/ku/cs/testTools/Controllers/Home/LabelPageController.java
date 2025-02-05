@@ -45,17 +45,20 @@ public class LabelPageController {
     private TestCase testCase = new TestCase();
     private int id;
     private String objectID;
+    private String name;
+
     @FXML
     void initialize() {
         if (FXRouter.getData() != null) {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            type = (String) objects.get(2);
-            width = (double) objects.get(3);
-            height = (double) objects.get(4);
-            layoutX = (double) objects.get(5);
-            layoutY = (double) objects.get(6);
+            name = (String) objects.get(2);
+            type = (String) objects.get(3);
+            width = (double) objects.get(4);
+            height = (double) objects.get(5);
+            layoutX = (double) objects.get(6);
+            layoutY = (double) objects.get(7);
             loadProject();
 
             }
@@ -119,31 +122,31 @@ public class LabelPageController {
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
-            //objects.add(type);
+            objects.add(name);
             //objects.add(ID);
         if (type.equals("Rectangle-curve")){
             randomIdTS();
             randomId();
-            testScript = new TestScript(objectID,label,"-","-","-","-","-","-","-",id);
+            testScript = new TestScript(objectID,label,"-","-","-","-","-","-","-",testFlowPositionList.findLastPositionId()+1);
             testScriptList.addOrUpdateTestScript(testScript);
-            testFlowPosition = new TestFlowPosition(id,width,height,layoutX,layoutY,0,"testscript");
+            testFlowPosition = new TestFlowPosition(testFlowPositionList.findLastPositionId()+1,width,height,layoutX,layoutY,0,"testscript",projectName,name);
             testFlowPositionList.addPosition(testFlowPosition);
             saveProject();
             //objects.add(testScript);
         }else if (type.equals("Rectangle")){
             randomIdTC();
             randomId();
-            testCase = new TestCase(objectID,label,"-","-","-","-",id,"-","-");
+            testCase = new TestCase(objectID,label,"-","-","-","-",testFlowPositionList.findLastPositionId()+1,"-","-");
             testCaseList.addOrUpdateTestCase(testCase);
-            testFlowPosition = new TestFlowPosition(id,width,height,layoutX,layoutY,0,"testcase");
+            testFlowPosition = new TestFlowPosition(testFlowPositionList.findLastPositionId()+1,width,height,layoutX,layoutY,0,"testcase",projectName,name);
             testFlowPositionList.addPosition(testFlowPosition);
             saveProject();
             //objects.add(testCase);
 
         }else if (type.equals("Kite")){
-            Connection connection = new Connection(connectionList.findLastConnectionID() + 1,width,height,layoutX,layoutY, label, "none", "none", "none","!@#$%^&*()_+","decision");
+            Connection connection = new Connection(connectionList.findLastConnectionID() + 1,width,height,layoutX,layoutY, label, "none", "none", "none","!@#$%^&*()_+","decision",projectName,name);
             connectionList.addOrUpdate(connection);
-            testFlowPosition = new TestFlowPosition(connectionList.findLastConnectionID(),width,height,layoutX,layoutY,0,"decision");
+            testFlowPosition = new TestFlowPosition(connectionList.findLastConnectionID(),width,height,layoutX,layoutY,0,"decision",projectName,name);
             testFlowPositionList.addPosition(testFlowPosition);
             saveProject();
 
@@ -155,25 +158,6 @@ public class LabelPageController {
             Stage stage = (Stage) source.getScene().getWindow();
             stage.close();
         }
-    }
-    public void addToConnectionList(double startX, double startY, double endX, double endY, String label,
-                                    String arrowHead, String lineType, String arrowTail,String type) {
-        // Save the connection
-        Connection connection = new Connection(
-                connectionList.findLastConnectionID() + 1,  // connectionID
-                startX,  // startX
-                startY,  // startY
-                endX,  // endX
-                endY,  // endY
-                label,  // label
-                arrowHead,  // arrowHead
-                lineType,  // lineType
-                arrowTail,  // arrowTail
-                "!@#$%^&*()_+",//note
-                type); //type
-        connectionList.addConnection(connection);
-
-
     }
     private void randomId() {
         int min = 1;

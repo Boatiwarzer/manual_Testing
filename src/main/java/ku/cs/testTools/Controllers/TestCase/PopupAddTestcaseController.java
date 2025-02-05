@@ -52,6 +52,7 @@ public class PopupAddTestcaseController {
     private String type;
     private String typeTC;
     private ArrayList<Object> objects;
+    private String name;
 
     @FXML
     void initialize() {
@@ -59,15 +60,16 @@ public class PopupAddTestcaseController {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            typeTC = (String) objects.get(2);
-            testCase = (TestCase) objects.get(3);
-            testCaseDetailList = (TestCaseDetailList) objects.get(4);
+            name = (String) objects.get(2);
+            typeTC = (String) objects.get(3);
+            testCase = (TestCase) objects.get(4);
+            testCaseDetailList = (TestCaseDetailList) objects.get(5);
             idTC = testCase.getIdTC();
-            type = (String) objects.get(5);
+            type = (String) objects.get(6);
             System.out.println(type);
             System.out.println(testCaseDetailList);
-            if (objects.get(6) != null && type.equals("edit")){
-                testCaseDetail = (TestCaseDetail) objects.get(6);
+            if (objects.get(7) != null && type.equals("edit")){
+                testCaseDetail = (TestCaseDetail) objects.get(7);
                 testCaseDetail = testCaseDetailList.findTCById(testCaseDetail.getIdTCD());
                 id = testCaseDetail.getIdTCD();
                 setTextEdit();
@@ -102,6 +104,7 @@ public class PopupAddTestcaseController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(name);
         objects.add(typeTC);
         objects.add(testCase);
         objects.add(testCaseDetailList);

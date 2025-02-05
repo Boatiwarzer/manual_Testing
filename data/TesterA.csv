@@ -1,0 +1,28 @@
+testFlowPosition,916,75.0,75.0,276.2,144.4,0.0,testcase
+testFlowPosition,989,99.19998779296878,68.0000061035156,262.59999999999997,275.6,0.0,testscript
+testFlowPosition,1,221.2,-45.80000000000001,295.8,39.80000000000001,0.0,start
+testFlowPosition,916,75.0,75.0,276.2,144.4,0.0,testcase
+testFlowPosition,3,75.0,75.0,277.00000000000006,393.20000000000005,0.0,decision
+testFlowPosition,6,227.59999999999997,430.20000000000005,291.80000000000007,528.6,0.0,end
+connection,1,251.2,74.19999999999999,341.2,-15.800000000000011,Start,none,none,none,!@#$%^&*()_+,start
+connection,2,314.20001220703125,220.39999389648438,312.59999999999997,275.6,Arrow,none,line,open,!@#$%^&*()_+,line
+connection,3,75.0,75.0,337.00000000000006,431.6,Pass,none,none,none,!@#$%^&*()_+,decision
+connection,4,311.40000000000003,72.4,314.59999999999997,146.8,Arrow,none,line,open,!@#$%^&*()_+,line
+connection,5,311.40000000000003,348.4,313.8,390.79999999999995,Arrow,none,line,open,!@#$%^&*()_+,line
+connection,6,257.59999999999997,550.2,347.59999999999997,460.20000000000005,End,none,none,none,!@#$%^&*()_+,end
+connection,7,312.2,472.4,303.40000000000003,523.6,Arrow,none,line,open,!@#$%^&*()_+,line
+testScript,TS-576,teset,27-01-2025,UC-984 : Login,test,TC-49 : Test,Test,test,-,989
+testScriptDetail,TSD-120,01,กรอก username,String : username,กรอกข้อมูลได้,TS-576,27-01-2025
+testCase,TC-49,Test,27-01-2025,UC-984 : Login,test,-,916,Test,test
+testCaseDetail,TCD-318,01,username,String,27-01-2025,TC-49
+useCase,UC-984,Login,Login,test,Test,test,tst,2025-01-27 09:32:55
+useCaseDetail,UC-984,actor,1,test
+useCaseDetail,UC-984,system,1,test
+testResult,TR-997,as,2025-01-27 09:38:28,-
+testResult,TR-332,Test,2025-01-27 09:37:27,-
+testResultDetail,TRD-105,As,TS-576 : teset,TC-49 : Test,Login,test,String : username,1. กรอก username|,test,as,Fail,Low,2025-01-27,-,...,Waiting,,TR-997
+testResultDetail,TRD-989,01,TS-576 : teset,TC-49 : Test,Login,test,String : username,1. กรอก username|,test,Test,Pass,Low,2025-01-27,-,TesterA.png : C:\Users\wizar\Pictures\Image_ManaualTesttools\TesterA.png,Waiting,,TR-332
+iRreport,IR-136,as,2025-01-27 09:59:00,,TR-997
+iRreport,IR-474,Test,2025-01-27 09:37:59,,TR-332
+iRreportDetail,IRD-132,1,Tester,TS-576 : teset,TC-49 : Test,test,Test,...,Medium,UX/UI Issues,,In Manager,,IR-136,TRD-105
+note,1,Testing

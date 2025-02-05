@@ -105,6 +105,7 @@ public class TestCaseEditController {
     private String type;
     private String typeTC;
     private int position = 0;
+    private String name;
 
     @FXML
     void initialize() {
@@ -113,7 +114,8 @@ public class TestCaseEditController {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            typeTC = (String) objects.get(2);
+            name = (String) objects.get(2);
+            typeTC = (String) objects.get(3);
             loadProject();
             setDate();
             clearInfo();
@@ -122,10 +124,10 @@ public class TestCaseEditController {
             onTableTestcase.isFocused();
             selectedTCD();
             selectedListView();
-            if (objects.get(3) != null){
-                testCase = (TestCase) objects.get(3);
-                testCaseDetailList = (TestCaseDetailList) objects.get(4);
-                type = (String) objects.get(5);
+            if (objects.get(4) != null){
+                testCase = (TestCase) objects.get(4);
+                testCaseDetailList = (TestCaseDetailList) objects.get(5);
+                type = (String) objects.get(6);
 
             }
             setDataTC();
@@ -449,6 +451,7 @@ public class TestCaseEditController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(name);
         objects.add(typeTC);
         objects.add(testCase);
         objects.add(testCaseDetailList);
@@ -573,6 +576,7 @@ public class TestCaseEditController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(name);
             objects.add(null);
             FXRouter.goTo("test_case",objects);
         } catch (IOException e) {
@@ -586,6 +590,7 @@ public class TestCaseEditController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(name);
             objects.add(null);
             FXRouter.goTo("test_flow",objects);
         } catch (IOException e) {
@@ -599,6 +604,7 @@ public class TestCaseEditController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(name);
             objects.add(null);
             FXRouter.goTo("test_result",objects);
         } catch (IOException e) {
@@ -612,6 +618,7 @@ public class TestCaseEditController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(name);
             objects.add(null);
             FXRouter.goTo("test_script",objects);
         } catch (IOException e) {
@@ -625,6 +632,7 @@ public class TestCaseEditController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(name);
             objects.add(null);
             FXRouter.goTo("use_case",objects);
         } catch (IOException e) {
@@ -639,6 +647,7 @@ public class TestCaseEditController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(name);
             objects.add(null);
             FXRouter.goTo("test_case",objects);
         } catch (IOException e) {

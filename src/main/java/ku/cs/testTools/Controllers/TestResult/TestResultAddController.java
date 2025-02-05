@@ -88,6 +88,7 @@ public class TestResultAddController {
     private String typeTR;
     private String type;
     private TestScriptList testScriptList;
+    private String name;
 
     @FXML
     void initialize() {
@@ -96,17 +97,18 @@ public class TestResultAddController {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            typeTR = (String) objects.get(2);
+            name = (String) objects.get(2);
+            typeTR = (String) objects.get(3);
             onTableTestresult.isFocused();
             clearInfo();
             loadProject();
             setButtonVisible();
             selectedTRD();
             selectedListView();
-            if (objects.get(3) != null) {
-                testResult = (TestResult) objects.get(3);
-                testResultDetailList = (TestResultDetailList) objects.get(4);
-                type = (String) objects.get(5);
+            if (objects.get(4) != null) {
+                testResult = (TestResult) objects.get(4);
+                testResultDetailList = (TestResultDetailList) objects.get(5);
+                type = (String) objects.get(6);
                 setDataTR();
             } else {
                 randomId();
@@ -605,6 +607,7 @@ public class TestResultAddController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(name);
         objects.add(typeTR);
         objects.add(testResult);
         objects.add(testResultDetailList);
@@ -613,6 +616,7 @@ public class TestResultAddController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(name);
         objects.add(null);
 
     }
@@ -630,6 +634,7 @@ public class TestResultAddController {
             objects();
             objects.add("new");
             objects.add(null);
+            objects.add(name);
             if (testResultDetailList != null){
                 FXRouter.popup("popup_add_testresult",objects,true);
             }
@@ -644,6 +649,7 @@ public class TestResultAddController {
             objects();
             objects.add("edit");
             objects.add(selectedItem);
+            objects.add(name);
             if (testResultDetailList != null){
                 FXRouter.popup("popup_add_testresult",objects,true);
             }
@@ -781,6 +787,7 @@ public class TestResultAddController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(name);
             objects.add(testResult);
 
             showAlert("Success", "Test Result saved successfully!");

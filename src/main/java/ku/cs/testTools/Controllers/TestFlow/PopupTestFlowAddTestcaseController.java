@@ -53,6 +53,8 @@ public class PopupTestFlowAddTestcaseController {
     private int position;
     private String projectName, directory;
     private String type;
+    private String name;
+    private ArrayList<Object> objects;
 
     @FXML
     void initialize() {
@@ -63,13 +65,14 @@ public class PopupTestFlowAddTestcaseController {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            position = (int) objects.get(2);
-            testCase = (TestCase) objects.get(3);
-            testCaseDetailList = (TestCaseDetailList) objects.get(4);
-            type = (String) objects.get(5);
+            name = (String) objects.get(2);
+            position = (int) objects.get(3);
+            testCase = (TestCase) objects.get(4);
+            testCaseDetailList = (TestCaseDetailList) objects.get(5);
+            type = (String) objects.get(6);
             idTC = testCase.getIdTC();
-            if (objects.get(6) != null && type.equals("edit")){
-                testCaseDetail = (TestCaseDetail) objects.get(6);
+            if (objects.get(7) != null && type.equals("edit")){
+                testCaseDetail = (TestCaseDetail) objects.get(7);
                 testCaseDetailList.findTCById(testCaseDetail.getIdTCD());
                 id = testCaseDetail.getIdTCD();
                 setTextEdit();
@@ -102,10 +105,11 @@ public class PopupTestFlowAddTestcaseController {
 
     @FXML
     void onCancelButton(ActionEvent event) {
-        ArrayList<Object> objects = (ArrayList) FXRouter.getData();
-        projectName = (String) objects.get(0);
-        directory = (String) objects.get(1);
-        position = (int) objects.get(2);
+        objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(name);
+        objects.add(null);
         clearInfo();
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
@@ -127,6 +131,7 @@ public class PopupTestFlowAddTestcaseController {
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(name);
             objects.add(position);
             objects.add(testCase);
             objects.add(testCaseDetailList);

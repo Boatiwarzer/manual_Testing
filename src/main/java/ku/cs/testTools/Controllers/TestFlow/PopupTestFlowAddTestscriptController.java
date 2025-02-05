@@ -53,6 +53,8 @@ public class PopupTestFlowAddTestscriptController {
     private int position;
     private String type;
     private ArrayList<Object> objects;
+    private String name;
+
     @FXML
     void initialize() {
         clearInfo();
@@ -62,18 +64,19 @@ public class PopupTestFlowAddTestscriptController {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            position = (int) objects.get(2);
-            testScript = (TestScript) objects.get(3);
+            name = (String) objects.get(2);
+            position = (int) objects.get(3);
+            testScript = (TestScript) objects.get(4);
             System.out.println(testScript);
-            testScriptDetailList = (TestScriptDetailList) objects.get(4);
+            testScriptDetailList = (TestScriptDetailList) objects.get(5);
             idTS = testScript.getIdTS();
-            testCaseDetailList = (TestCaseDetailList) objects.get(5);
-            type = (String) objects.get(6);
+            testCaseDetailList = (TestCaseDetailList) objects.get(6);
+            type = (String) objects.get(7);
             System.out.println(type);
             selectedComboBox();
             System.out.println(testCaseDetailList);
-            if (objects.get(7) != null && type.equals("edit")){
-                testScriptDetail = (TestScriptDetail) objects.get(7);
+            if (objects.get(8) != null && type.equals("edit")){
+                testScriptDetail = (TestScriptDetail) objects.get(8);
                 testScriptDetail = testScriptDetailList.findTSById(testScriptDetail.getIdTSD());
                 id = testScriptDetail.getIdTSD();
                 setTextEdit();
@@ -97,9 +100,10 @@ public class PopupTestFlowAddTestscriptController {
     @FXML
     void onCancelButton(ActionEvent event) {
         objects = new ArrayList<>();
-        projectName = (String) objects.get(0);
-        directory = (String) objects.get(1);
-        position = (int) objects.get(2);
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(name);
+        objects.add(null);
         clearInfo();
         System.out.println(testScriptDetail);
         Node source = (Node) event.getSource();
@@ -121,6 +125,7 @@ public class PopupTestFlowAddTestscriptController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(name);
         objects.add(position);
         objects.add(testScript);
         objects.add(testScriptDetailList);

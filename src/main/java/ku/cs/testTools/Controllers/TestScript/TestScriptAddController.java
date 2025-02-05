@@ -106,6 +106,7 @@ public class TestScriptAddController {
     private String type = "new";
     private String typeTS = "new";
     private ArrayList<Object> objects;
+    private String name;
 
     @FXML
     void initialize() {
@@ -114,7 +115,8 @@ public class TestScriptAddController {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            typeTS = (String) objects.get(2);
+            name = (String) objects.get(2);
+            typeTS = (String) objects.get(3);
             onTableTestscript.isFocused();
             clearInfo();
             loadProject();
@@ -123,11 +125,11 @@ public class TestScriptAddController {
             setButtonVisible();
             selectedTSD();
             selectedListView();
-            if (objects.get(3) != null){
-                testScript = (TestScript) objects.get(3);
-                testScriptDetailList = (TestScriptDetailList) objects.get(4);
-                testCaseDetailList = (TestCaseDetailList) objects.get(5);
-                type = (String) objects.get(6);
+            if (objects.get(4) != null){
+                testScript = (TestScript) objects.get(4);
+                testScriptDetailList = (TestScriptDetailList) objects.get(5);
+                testCaseDetailList = (TestCaseDetailList) objects.get(6);
+                type = (String) objects.get(7);
                 setDataTS();
             }else {
                 randomId();
@@ -451,6 +453,7 @@ public class TestScriptAddController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(name);
         objects.add(typeTS);
         objects.add(testScript);
         objects.add(testScriptDetailList);
@@ -460,6 +463,7 @@ public class TestScriptAddController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(name);
         objects.add(null);
     }
 
@@ -539,6 +543,7 @@ public class TestScriptAddController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(name);
             objects.add(testScript);
             // Show success message
             showAlert("Success", "Test script saved successfully!");

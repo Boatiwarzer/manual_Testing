@@ -61,7 +61,9 @@ public class ConnectionListFileDataSource implements DataSource<ConnectionList>,
                             data[8].trim(), // lineType
                             data[9].trim(), // arrowTail
                             data[10].trim(), // note
-                            data[11].trim() // type
+                            data[11].trim(),
+                            data[12].trim(), // note
+                            data[13].trim()// type
                     );
                     connectionList.addOrUpdate(connection);
                 }
@@ -201,7 +203,9 @@ public class ConnectionListFileDataSource implements DataSource<ConnectionList>,
                 + connection.getLineType() + ","
                 + connection.getArrowTail() + ","
                 + connection.getNote() + ","
-                + connection.getType();
+                + connection.getType() + ","
+                + connection.getProjectName() + ","
+                + connection.getTester();
     }
 
 

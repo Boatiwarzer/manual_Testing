@@ -61,7 +61,9 @@ public class TestFlowPositionListFileDataSource implements DataSource<TestFlowPo
                             Double.parseDouble(data[4].trim()), // fitWidth
                             Double.parseDouble(data[5].trim()), // fitHeight
                             Double.parseDouble(data[6].trim()),
-                            data[7].trim()
+                            data[7].trim(),
+                            data[8].trim(),
+                            data[9].trim()
                             //data[7].trim()// rotation
                             //Integer.parseInt(data[7].trim()) // subsystemID
                     );
@@ -200,6 +202,10 @@ public class TestFlowPositionListFileDataSource implements DataSource<TestFlowPo
                 + testFlowPosition.getXPosition() + ","
                 + testFlowPosition.getYPosition() + ","
                 + testFlowPosition.getRotation() + ","
-                + testFlowPosition.getType();
+                + testFlowPosition.getType() + ","
+                + testFlowPosition.getProjectName() + ","
+                + testFlowPosition.getTester();
+
+
     }
 }

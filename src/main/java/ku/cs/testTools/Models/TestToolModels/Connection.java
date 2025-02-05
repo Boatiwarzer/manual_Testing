@@ -44,8 +44,12 @@ public class Connection {
 
     @Column(name = "type", length = 100)
     private String type;
+    @Column(name = "projectName", nullable = false, precision = 10, scale = 2)
+    private String projectName;
+    @Column(name = "tester", nullable = false, precision = 10, scale = 2)
+    private String tester;
 
-    public Connection(int connectionID, double startX, double startY, double endX, double endY, String label, String arrowHead, String lineType, String arrowTail, String note, String type) {
+    public Connection(int connectionID, double startX, double startY, double endX, double endY, String label, String arrowHead, String lineType, String arrowTail, String note, String type, String projectName, String tester) {
         this.connectionID = connectionID;
         this.startX = startX;
         this.startY = startY;
@@ -57,7 +61,10 @@ public class Connection {
         this.arrowTail = arrowTail;
         this.note = note;
         this.type = type;
+        this.projectName = projectName;
+        this.tester = tester;
     }
+
 
     public boolean isId(int idDS) {
         return this.connectionID == idDS;

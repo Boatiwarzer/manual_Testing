@@ -6,6 +6,7 @@ import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Objects;
 
 @Data
 public class TestFlowPositionList {
@@ -44,6 +45,22 @@ public class TestFlowPositionList {
     public TestFlowPosition findByPositionId(int positionId) {
         for (TestFlowPosition position : positionList) {
             if (position.getPositionID() == positionId) {
+                return position;
+            }
+        }
+        return null;
+    }
+    public TestFlowPosition findByPositionIdNamePT(int positionId,String project,String name) {
+        for (TestFlowPosition position : positionList) {
+            if (position.getPositionID() == positionId && Objects.equals(position.getTester().trim(), name.trim())) {
+                return position;
+            }
+        }
+        return null;
+    }
+    public TestFlowPosition findByPositionIdNamePT(int positionId,String name) {
+        for (TestFlowPosition position : positionList) {
+            if (position.getPositionID() == positionId && position.getTester().equals(name)) {
                 return position;
             }
         }
@@ -134,8 +151,8 @@ public class TestFlowPositionList {
         return null;
     }
 
-    public double findLastPositionId() {
-        double lastPositionId = 0;
+    public int findLastPositionId() {
+        int lastPositionId = 0;
         for (TestFlowPosition position : positionList) {
             if (position.getPositionID() > lastPositionId) {
                 lastPositionId = position.getPositionID();

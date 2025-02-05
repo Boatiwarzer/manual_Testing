@@ -130,6 +130,7 @@ public class TestScriptEditController {
     private TestScriptDetailList testScriptDetailListTemp;
     private String typeTS;
     private ArrayList<Object> objects;
+    private String name;
 
     @FXML
     void initialize() {
@@ -141,17 +142,18 @@ public class TestScriptEditController {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            typeTS = (String) objects.get(2);
+            name = (String) objects.get(2);
+            typeTS = (String) objects.get(3);
             onTableTestscript.isFocused();
             loadProject();
             selectedComboBox();
             selectedTSD();
             selectedListView();
-            if (objects.get(3) != null){
-                testScript = (TestScript) objects.get(3);
-                testScriptDetailList = (TestScriptDetailList) objects.get(4);
-                testCaseDetailList = (TestCaseDetailList) objects.get(5);
-                type = (String) objects.get(6);
+            if (objects.get(4) != null){
+                testScript = (TestScript) objects.get(4);
+                testScriptDetailList = (TestScriptDetailList) objects.get(5);
+                testCaseDetailList = (TestCaseDetailList) objects.get(6);
+                type = (String) objects.get(7);
 
             }
             setDataTS();
@@ -546,6 +548,7 @@ public class TestScriptEditController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(name);
             objects.add(typeTS);
             objects.add(testScript);
             objects.add(testScriptDetailList);
@@ -570,6 +573,7 @@ public class TestScriptEditController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(name);
             objects.add(typeTS);
             objects.add(testScript);
             objects.add(testScriptDetailList);
@@ -621,6 +625,7 @@ public class TestScriptEditController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(name);
         objects.add(testScript);
         // Show success message
         showAlert("Success", "Test script saved successfully!");
@@ -651,6 +656,7 @@ public class TestScriptEditController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(name);
             objects.add(null);
             FXRouter.goTo("test_script", objects);
             Node source = (Node) event.getSource();
@@ -733,6 +739,7 @@ public class TestScriptEditController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(name);
         objects.add(null);
     }
     @FXML

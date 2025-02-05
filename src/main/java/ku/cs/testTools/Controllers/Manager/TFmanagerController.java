@@ -31,9 +31,8 @@ import ku.cs.testTools.Services.DataSourceCSV.*;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class TFmanagerController {
 
@@ -67,7 +66,12 @@ public class TFmanagerController {
     private MenuBar homePageMenuBar;
     @FXML
     private MenuItem saveMenuItem;
-
+    @FXML
+    private Button onSearchButton;
+    @FXML
+    private TextField onSearchField;
+    @FXML
+    private ListView<String> onSearchList;
     private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
     private double startX, startY;
     private TestScriptList testScriptList = new TestScriptList();
@@ -82,6 +86,8 @@ public class TFmanagerController {
     private List<StackPane> stackPaneList = new ArrayList<>();
     private ArrayList<Object> objects;
     private String projectName, directory;
+    private String nameManager;
+    private String nameTester, projectNameTester;
 
     @FXML
     void initialize() {
@@ -93,15 +99,18 @@ public class TFmanagerController {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
+            nameManager = (String) objects.get(2);
 //            String type =  (String) objects.get(2);
         }
         loadProject();
+        loadListView();
+        selected();
         onNoteTextArea.setOnKeyTyped(keyEvent -> {
             if (noteList.findBynoteID("1") == null) {
                 if (!onNoteTextArea.getText().isEmpty()) {
-                    noteList.addNote(new Note("1", onNoteTextArea.getText()));
+                    noteList.addNote(new Note("1", onNoteTextArea.getText(),projectName,nameManager));
                 } else {
-                    noteList.addNote(new Note("1", "!@#$%^&*()_+"));
+                    noteList.addNote(new Note("1", "!@#$%^&*()_+",projectName,nameManager));
                 }
             } else {
                 if (!onNoteTextArea.getText().isEmpty()) {
@@ -113,6 +122,49 @@ public class TFmanagerController {
             saveProject();
         });
     }
+
+    private void selected() {
+        onSearchList.getSelectionModel().getSelectedItems();
+        onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                clearInfo();
+
+            } else{
+                showInfo(newValue);
+                //selectedTestScript = newValue;
+            }
+        });
+    }
+
+    private void showInfo(String newValue) {
+        String[] data = newValue.split("[:,]");
+        projectName = data[0].trim();
+        nameTester = data[1].trim();
+        System.out.println(projectName);
+        System.out.println(nameTester);
+
+        loadProject();
+        loadData(projectName,nameTester);
+
+    }
+
+    private void clearInfo() {
+        nameTester = "";
+
+    }
+
+    private void loadListView() {
+        Set<String> uniqueEntries = new HashSet<>();
+
+        testFlowPositionList.getPositionList().forEach(testFlowPosition -> {
+            String entry = testFlowPosition.getProjectName().toLowerCase() + " : " + testFlowPosition.getTester().toLowerCase();
+            uniqueEntries.add(entry);
+            System.out.println(entry);
+// ใช้ Set ป้องกันค่าซ้ำ
+        });
+        onSearchList.getItems().addAll(uniqueEntries); // เพิ่มรายการทั้งหมดที่ไม่ซ้ำลงใน ListView
+    }
+
 
     public void handleExportMenuItem(ActionEvent actionEvent) {
         boolean noteAdded = false;
@@ -199,90 +251,139 @@ public class TFmanagerController {
         objects.add(directory);
         objects.add(null);
     }
-    private void undoAction() {
+    @FXML
+    void onSearchButton(ActionEvent event) {
+        onSearchList.getItems().clear();
+        //onSearchList.getItems().addAll(searchList(onSearchField.getText(),testFlowPositionList.getPositionList()));
     }
+//    private List<TestFlowPosition> searchList(String searchWords, ArrayList<TestFlowPosition> flowPositionArrayList) {
+//
+//        // Split searchWords into a list of individual words
+//        List<String> searchWordsArray = Arrays.asList(searchWords.trim().split("\\s+"));
+//
+//        // Filter the list of TestScript objects
+//        return flowPositionArrayList.stream()
+//                .filter(testCase ->
+//                        searchWordsArray.stream().allMatch(word ->
+//                                testCase.getIdTC().toLowerCase().contains(word.toLowerCase()) ||
+//                                        testCase.getNameTC().toLowerCase().contains(word.toLowerCase())
+//
+//                        )
+//                )
+//                .collect(Collectors.toList());  // Return the filtered list
+//    }
+private void loadProject() {
+    System.out.println(testFlowPositionList);
+    System.out.println(testScriptList);
+    onDesignArea.getChildren().clear();
+    onNoteTextArea.clear();
+    DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+    DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+    DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+    DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory,projectName + ".csv");
+    DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory,projectName + ".csv");
+    DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+    //DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
+    DataSource<NoteList> noteListDataSource = new NoteListFileDataSource(directory,projectName + ".csv");
+    //testScriptDetailList.clearItems();
+    //onNoteTextArea.clear();
 
-    private void loadProject() {
-        System.out.println(testFlowPositionList);
-        System.out.println(testScriptList);
-        onDesignArea.getChildren().clear();
-        onNoteTextArea.clear();
-        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
-        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory,projectName + ".csv");
-        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory,projectName + ".csv");
-        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
-        //DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
-        DataSource<NoteList> noteListDataSource = new NoteListFileDataSource(directory,projectName + ".csv");
-        //testScriptDetailList.clearItems();
-        //onNoteTextArea.clear();
+    testScriptList = testScriptListDataSource.readData();
+    testScriptDetailList = testScriptDetailListDataSource.readData();
+    testCaseList = testCaseListDataSource.readData();
+    testCaseDetailList = testCaseDetailListDataSource.readData();
+    testFlowPositionList = testFlowPositionListDataSource.readData();
+    connectionList = connectionListDataSource.readData();
+    noteList = noteListDataSource.readData();
+    //useCaseList = useCaseListDataSource.readData();
 
-        testScriptList = testScriptListDataSource.readData();
-        testScriptDetailList = testScriptDetailListDataSource.readData();
-        testCaseList = testCaseListDataSource.readData();
-        testCaseDetailList = testCaseDetailListDataSource.readData();
-        testFlowPositionList = testFlowPositionListDataSource.readData();
-        connectionList = connectionListDataSource.readData();
-        noteList = noteListDataSource.readData();
-        //useCaseList = useCaseListDataSource.readData();
+}
+
+    private void loadData(String projectName, String nameTester) {
+        if (projectName == null || projectName.trim().isEmpty() ||
+                nameTester == null || nameTester.trim().isEmpty()) {
+            System.out.println("Error: projectName or nameTester is invalid.");
+            return;
+        }
+
+        // แปลงค่าให้เป็นตัวพิมพ์เล็กทั้งหมดเพื่อให้เปรียบเทียบได้แบบ case-insensitive
+        String projectNameLower = projectName.toLowerCase();
+        String nameTesterLower = nameTester.toLowerCase();
 
         testScriptList.getTestScriptList().forEach(testScript -> {
-            // Find the position of the use case
             TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(testScript.getPosition());
-            if (testFlowPosition != null) {
-                drawTestScript(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),testScript.getIdTS() + " : " + testScript.getNameTS(), testFlowPosition.getPositionID());
+            if (testFlowPosition != null
+                    && projectNameLower.equals(testFlowPosition.getProjectName().toLowerCase())
+                    && nameTesterLower.equals(testFlowPosition.getTester().toLowerCase())) {
+
+                drawTestScript(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
+                        testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
+                        testScript.getIdTS() + " : " + testScript.getNameTS(),
+                        testFlowPosition.getPositionID());
             }
         });
+
         testCaseList.getTestCaseList().forEach(testCase -> {
-            // Find the position of the use case
             TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(testCase.getPosition());
-            if (testFlowPosition != null) {
-                drawTestCase(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(), testCase.getIdTC() + " : " + testCase.getNameTC(), testFlowPosition.getPositionID());
+            if (testFlowPosition != null
+                    && projectNameLower.equals(testFlowPosition.getProjectName().toLowerCase())
+                    && nameTesterLower.equals(testFlowPosition.getTester().toLowerCase())) {
+
+                drawTestCase(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
+                        testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
+                        testCase.getIdTC() + " : " + testCase.getNameTC(),
+                        testFlowPosition.getPositionID());
+            }
+        });
+
+        connectionList.getConnectionList().forEach(connection -> {
+            TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(connection.getConnectionID());
+            if (testFlowPosition != null
+                    && projectNameLower.equals(testFlowPosition.getProjectName().toLowerCase())
+                    && nameTesterLower.equals(testFlowPosition.getTester().toLowerCase())) {
+
+                switch (testFlowPosition.getType()) {
+                    case "start":
+                        drawStart(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
+                                testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
+                                "start", testFlowPosition.getPositionID());
+                        break;
+                    case "end":
+                        drawEnd(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
+                                testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
+                                "end", testFlowPosition.getPositionID());
+                        break;
+                    case "decision":
+                        drawDecision(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
+                                testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
+                                connection.getLabel(), testFlowPosition.getPositionID());
+                        break;
+//                    default:
+//                        String type = connection.getType();
+//                        if (type.equals("line")) {
+//                            drawLine(connection.getConnectionID(), connection.getStartX(), connection.getStartY(), connection.getEndX(), connection.getEndY(), connection.getLabel(), connection.getArrowHead(), connection.getLineType(), connection.getArrowTail());
+//                        } else if (type.equals("arrow")) {
+//                            drawLine(connection.getConnectionID(), connection.getStartX(), connection.getStartY(), connection.getEndX(), connection.getEndY(), connection.getLabel(), connection.getArrowHead(), connection.getLineType(), connection.getArrowTail());
+//                        }
+                }
             }
         });
         connectionList.getConnectionList().forEach(connection -> {
             String type = connection.getType();
-            if (type.equals("line")) {
-                drawLine(connection.getConnectionID(), connection.getStartX(), connection.getStartY(), connection.getEndX(), connection.getEndY(), connection.getLabel(), connection.getArrowHead(), connection.getLineType(), connection.getArrowTail());
-            } else if (type.equals("arrow")) {
-                drawLine(connection.getConnectionID(), connection.getStartX(), connection.getStartY(), connection.getEndX(), connection.getEndY(), connection.getLabel(), connection.getArrowHead(), connection.getLineType(), connection.getArrowTail());
+            if(projectNameLower.equals(connection.getProjectName().toLowerCase())
+                    && nameTesterLower.equals(connection.getTester().toLowerCase())){
+                if (type.equals("line")) {
+                    drawLine(connection.getConnectionID(), connection.getStartX(), connection.getStartY(), connection.getEndX(), connection.getEndY(), connection.getLabel(), connection.getArrowHead(), connection.getLineType(), connection.getArrowTail());
+                } else if (type.equals("arrow")) {
+                    drawLine(connection.getConnectionID(), connection.getStartX(), connection.getStartY(), connection.getEndX(), connection.getEndY(), connection.getLabel(), connection.getArrowHead(), connection.getLineType(), connection.getArrowTail());
 
-            }
-        });
-
-        connectionList.getConnectionList().forEach(connection -> {
-            TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(connection.getConnectionID());
-            if (testFlowPosition != null){
-                if (testFlowPosition.getType().equals("start")) {
-                    drawStart(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(), "start", testFlowPosition.getPositionID());
-                }
-            }
-
-        });
-        connectionList.getConnectionList().forEach(connection -> {
-            TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(connection.getConnectionID());
-            if (testFlowPosition != null){
-                if (testFlowPosition.getType().equals("end")) {
-                    drawEnd(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(), "end", testFlowPosition.getPositionID());
-                }
-            }
-
-        });
-        connectionList.getConnectionList().forEach(connection -> {
-            TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(connection.getConnectionID());
-            if (testFlowPosition != null){
-                if (testFlowPosition.getType().equals("decision")) {
-                    drawDecision(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(), connection.getLabel(), testFlowPosition.getPositionID());
                 }
             }
 
         });
         Note note = noteList.findBynoteID("1");
-        if (note != null){
-            if (!Objects.equals(note.getNote(), "!@#$%^&*()_+")) {
-                onNoteTextArea.setText(note.getNote());
-            }
+        if (note != null && !Objects.equals(note.getNote(), "!@#$%^&*()_+")) {
+            onNoteTextArea.setText(note.getNote());
         }
     }
     private void saveProject() {
@@ -578,25 +679,7 @@ public class TFmanagerController {
         return kite;
     }
 
-    public void addToConnectionList(double startX, double startY, double endX, double endY, String label,
-                                    String arrowHead, String lineType, String arrowTail,String type) {
-        // Save the connection
-        Connection connection = new Connection(
-                connectionList.findLastConnectionID() + 1,  // connectionID
-                startX,  // startX
-                startY,  // startY
-                endX,  // endX
-                endY,  // endY
-                label,  // label
-                arrowHead,  // arrowHead
-                lineType,  // lineType
-                arrowTail,  // arrowTail
-                "!@#$%^&*()_+",//note
-                type); //type
 
-        connectionList.addConnection(connection);
-        saveProject();
-    }
 
     @FXML
     void onClickIR(ActionEvent event) {

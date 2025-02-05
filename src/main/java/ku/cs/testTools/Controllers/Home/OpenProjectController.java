@@ -62,8 +62,7 @@ public class OpenProjectController {
         ArrayList<Object> objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
-        objects.add(null);
-        FXRouter.setData3("Tester");
+        objects.add(testerName);
         //แก้พาท
         String packageStr1 = "views/";
         FXRouter.when("home_tester", packageStr1 + "home_tester.fxml","TestTools | " + projectName);

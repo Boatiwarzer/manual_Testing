@@ -84,6 +84,8 @@ public class TestCaseController {
     private TestScriptDetailList testScriptDetailListTemp = new TestScriptDetailList();
     private ConnectionList connectionList = new ConnectionList();
     private UseCaseList useCaseList = new UseCaseList();
+    private String name;
+
     @FXML
     void initialize() {
         onClickTestcase.getStyleClass().add("selected");
@@ -92,8 +94,9 @@ public class TestCaseController {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            if (objects.get(2) != null){
-                testCase = (TestCase) objects.get(2);
+            name = (String) objects.get(2);
+            if (objects.get(3) != null){
+                testCase = (TestCase) objects.get(3);
             }
             loadProject();
             loadListView(testCaseList);
@@ -200,6 +203,7 @@ public class TestCaseController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(name);
         objects.add(null);
     }
     private void searchSet() {
@@ -485,6 +489,7 @@ public class TestCaseController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(name);
             objects.add("newTC");
             objects.add(null);
             FXRouter.goTo("test_case_add",objects);
@@ -499,6 +504,7 @@ public class TestCaseController {
            objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(name);
             objects.add("editTC");
             objects.add(selectedTestCase);
             objects.add(testCaseDetailList);
