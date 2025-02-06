@@ -92,6 +92,7 @@ public class UseCaseAddController {
     private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
     private ConnectionList connectionList = new ConnectionList();
     private String typeUC;
+    private String name;
 
     @FXML
     public void initialize() {
@@ -100,16 +101,17 @@ public class UseCaseAddController {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            typeUC = (String) objects.get(2);
+            name = (String) objects.get(2);
+            typeUC = (String) objects.get(3);
             loadProject();
 
             clearInfo();
             selectedComboBox();
             selectedListView();
 
-            if (objects.get(3) != null) {
-                useCase = (UseCase) objects.get(3);
-                useCaseDetailList = (UseCaseDetailList) objects.get(4);
+            if (objects.get(4) != null) {
+                useCase = (UseCase) objects.get(4);
+                useCaseDetailList = (UseCaseDetailList) objects.get(5);
                 setData();
             }
 
@@ -592,6 +594,7 @@ public class UseCaseAddController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(name);
         objects.add(null);
     }
     @FXML

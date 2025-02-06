@@ -53,6 +53,7 @@ public class PopupAddTestscriptController {
     private String type;
     private String typeTS;
     private ArrayList<Object> objects;
+    private String name;
 
     @FXML
     void initialize() {
@@ -60,18 +61,19 @@ public class PopupAddTestscriptController {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            typeTS = (String) objects.get(2);
-            testScript = (TestScript) objects.get(3);
+            name = (String) objects.get(2);
+            typeTS = (String) objects.get(3);
+            testScript = (TestScript) objects.get(4);
             System.out.println(testScript);
-            testScriptDetailList = (TestScriptDetailList) objects.get(4);
+            testScriptDetailList = (TestScriptDetailList) objects.get(5);
             idTS = testScript.getIdTS();
-            testCaseDetailList = (TestCaseDetailList) objects.get(5);
-            type = (String) objects.get(6);
+            testCaseDetailList = (TestCaseDetailList) objects.get(6);
+            type = (String) objects.get(7);
             System.out.println(type);
             selectedComboBox();
             System.out.println(testCaseDetailList);
-            if (objects.get(7) != null && type.equals("edit")){
-                testScriptDetail = (TestScriptDetail) objects.get(7);
+            if (objects.get(8) != null && type.equals("edit")){
+                testScriptDetail = (TestScriptDetail) objects.get(8);
                 testScriptDetail = testScriptDetailList.findTSById(testScriptDetail.getIdTSD());
                 id = testScriptDetail.getIdTSD();
                 setTextEdit();
@@ -110,6 +112,7 @@ public class PopupAddTestscriptController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(name);
         objects.add(typeTS);
         objects.add(testScript);
         objects.add(testScriptDetailList);
@@ -120,6 +123,7 @@ public class PopupAddTestscriptController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(name);
         objects.add(null);
     }
 

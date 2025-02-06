@@ -102,6 +102,7 @@ public class TestCaseAddController {
     private String typeTC = "new";
     private ArrayList<Object> objects;
     private TestCaseDetailList testCaseDetailListTemp;
+    private String name;
 
     @FXML
     void initialize() {
@@ -110,7 +111,8 @@ public class TestCaseAddController {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            typeTC = (String) objects.get(2);
+            name = (String) objects.get(2);
+            typeTC = (String) objects.get(3);
             onTableTestcase.isFocused();
             clearInfo();
             loadProject();
@@ -119,10 +121,10 @@ public class TestCaseAddController {
             setButtonVisible();
             selectedTCD();
             selectedListView();
-            if (objects.get(3) != null){
-                testCase = (TestCase) objects.get(3);
-                testCaseDetailList = (TestCaseDetailList) objects.get(4);
-                type = (String) objects.get(5);
+            if (objects.get(4) != null){
+                testCase = (TestCase) objects.get(4);
+                testCaseDetailList = (TestCaseDetailList) objects.get(5);
+                type = (String) objects.get(6);
                 setDataTC();
             }else {
                 randomId();
@@ -502,6 +504,7 @@ public class TestCaseAddController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(name);
         objects.add(typeTC);
         objects.add(testCase);
         objects.add(testCaseDetailList);

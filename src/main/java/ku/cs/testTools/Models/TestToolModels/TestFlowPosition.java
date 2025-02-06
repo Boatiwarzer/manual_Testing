@@ -39,6 +39,10 @@ public class TestFlowPosition {
     @Column(name = "type", nullable = false, length = 50)
     private String type;
 
+    @Column(name = "projectName", nullable = false, precision = 10, scale = 2)
+    private String projectName;
+    @Column(name = "tester", nullable = false, precision = 10, scale = 2)
+    private String tester;
     public TestFlowPosition(int positionID, double fitWidth, double fitHeight, double xPosition, double yPosition, double rotation, String type) {
         this.positionID = positionID;
         this.fitWidth = fitWidth;
@@ -47,6 +51,18 @@ public class TestFlowPosition {
         this.yPosition = yPosition;
         this.rotation = rotation;
         this.type = type;
+    }
+
+    public TestFlowPosition(int positionID, double fitWidth, double fitHeight, double xPosition, double yPosition, double rotation, String type, String projectName, String tester) {
+        this.positionID = positionID;
+        this.fitWidth = fitWidth;
+        this.fitHeight = fitHeight;
+        this.xPosition = xPosition;
+        this.yPosition = yPosition;
+        this.rotation = rotation;
+        this.type = type;
+        this.projectName = projectName;
+        this.tester = tester;
     }
 
     public boolean isId(int id) {

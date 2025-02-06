@@ -113,6 +113,8 @@ public class TestScriptController {
     private TestCaseList testCaseList = new TestCaseList();
     private UseCaseList useCaseList = new UseCaseList();
     private ArrayList<Object> objects;
+    private String name;
+
     @FXML
     void initialize() {
         onClickTestscript.getStyleClass().add("selected");
@@ -120,8 +122,9 @@ public class TestScriptController {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            if (objects.get(2) != null){
-                testScript = (TestScript) objects.get(2);
+            name = (String) objects.get(2);
+            if (objects.get(3) != null){
+                testScript = (TestScript) objects.get(3);
             }
             loadProject();
             setEditable();
@@ -151,6 +154,7 @@ public class TestScriptController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(name);
         objects.add(null);
     }
     private void loadProject() {
@@ -480,6 +484,7 @@ public class TestScriptController {
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(name);
             objects.add("newTS");
             objects.add(null);
             FXRouter.goTo("test_script_add",objects);
@@ -494,6 +499,7 @@ public class TestScriptController {
             ArrayList<Object>objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(name);
             objects.add("editTS");
             objects.add(selectedTestScript);
             objects.add(testScriptDetailList);

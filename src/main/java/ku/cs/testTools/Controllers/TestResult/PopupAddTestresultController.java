@@ -83,6 +83,8 @@ public class PopupAddTestresultController {
     private IRreportDetailList iRreportDetailList = new IRreportDetailList();
     private String type;
     private String typeTR;
+    private String nameTester;
+
     @FXML
     void initialize() {
         setStatus();
@@ -93,15 +95,18 @@ public class PopupAddTestresultController {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            typeTR = (String) objects.get(2);
-            testResult = (TestResult) objects.get(3);
-            testResultDetailList = (TestResultDetailList) objects.get(4);
+            nameTester = (String) objects.get(2);;
+            typeTR = (String) objects.get(3);
+            testResult = (TestResult) objects.get(4);
+            testResultDetailList = (TestResultDetailList) objects.get(5);
             idTR = testResult.getIdTR();
-            type = (String) objects.get(5);
+            type = (String) objects.get(6);
+            System.out.println(nameTester);
             loadProject();
             selectedComboBox();
-            if (objects.get(6) != null && type.equals("edit")) {
-                testResultDetail = (TestResultDetail) objects.get(6);
+            onTester.setText(nameTester);
+            if (objects.get(7) != null && type.equals("edit")) {
+                testResultDetail = (TestResultDetail) objects.get(7);
                 testResultDetail = testResultDetailList.findTRDById(testResultDetail.getIdTRD());
                 id = testResultDetail.getIdTRD();
                 setTextEdit();
@@ -216,7 +221,7 @@ public class PopupAddTestresultController {
         onTeststeps.setText("");
         onExpected.setText("-");
         onActor.setText("");
-        onTester.setText("-");
+        //onTester.setText("-");
         onImage.setText("...");
         testResultIDLabel.setText("");
         testResultNameLabel.setText("");
@@ -397,6 +402,7 @@ public class PopupAddTestresultController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(nameTester);
         objects.add(typeTR);
         objects.add(testResult);
         objects.add(testResultDetailList);
@@ -458,6 +464,7 @@ public class PopupAddTestresultController {
             objects();
             clearInfo();
             route(event, objects);
+            FXRouter.setData3(nameTester);
         } catch (IOException e) {
             System.err.println("ไปที่หน้า home ไม่ได้");
             System.err.println("ให้ตรวจสอบการกำหนด route");

@@ -82,6 +82,7 @@ public class PopupInfoTestcaseController {
     private TestCaseList testCaseList = new TestCaseList();
     private UseCaseList useCaseList = new UseCaseList();
     private String type = "new";
+    private String name;
 
 
     @FXML
@@ -91,17 +92,18 @@ public class PopupInfoTestcaseController {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            position = (int) objects.get(2);
+            name = (String) objects.get(2);
+            position = (int) objects.get(3);
             onTableTestCase.isFocused();
             selectedTCD();
             loadProject();
             setDate();
             selectedComboBox();
             setButtonVisible();
-            if (objects.get(3) != null){
-                testCase = (TestCase) objects.get(3);
-                testCaseDetailList = (TestCaseDetailList) objects.get(4);
-                type = (String) objects.get(5);
+            if (objects.get(4) != null){
+                testCase = (TestCase) objects.get(5);
+                testCaseDetailList = (TestCaseDetailList) objects.get(6);
+                type = (String) objects.get(7);
             }else {
                 testCase = testCaseList.findByPositionId(position);
             }
@@ -399,6 +401,7 @@ public class PopupInfoTestcaseController {
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(name);
             objects.add(position);
             objects.add(testCase);
             objects.add(testCaseDetailList);
@@ -421,6 +424,7 @@ public class PopupInfoTestcaseController {
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(name);
             objects.add(null);
             FXRouter.goTo("test_flow", objects);
             Node source = (Node) event.getSource();
@@ -453,6 +457,7 @@ public class PopupInfoTestcaseController {
                 ArrayList<Object> objects = new ArrayList<>();
                 objects.add(projectName);
                 objects.add(directory);
+                objects.add(name);
                 objects.add("none");
                 FXRouter.goTo("test_flow", objects);
                 Node source = (Node) event.getSource();
@@ -500,6 +505,7 @@ public class PopupInfoTestcaseController {
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(name);
             objects.add(position);
             objects.add(testCase);
             objects.add(testCaseDetailList);
@@ -542,7 +548,7 @@ public class PopupInfoTestcaseController {
             ArrayList<Object>objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
-
+            objects.add(name);
             // Show success message
             showAlert("Success", "Test case saved successfully!");
             FXRouter.goTo("test_flow",objects);

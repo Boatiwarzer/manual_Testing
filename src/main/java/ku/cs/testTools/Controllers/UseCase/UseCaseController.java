@@ -78,6 +78,7 @@ public class UseCaseController {
     private ArrayList<Object> objects;
     private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
     private ConnectionList connectionList = new ConnectionList();
+    private String name;
 
     @FXML
     void initialize() {
@@ -87,8 +88,9 @@ public class UseCaseController {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            if (objects.get(2) != null){
-                useCase = (UseCase) objects.get(2);
+            name = (String) objects.get(2);
+            if (objects.get(3) != null){
+                useCase = (UseCase) objects.get(3);
             }
             loadProject();
             loadListView(useCaseList);
@@ -152,6 +154,7 @@ public class UseCaseController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(name);
         objects.add(null);
     }
     private void loadProject() {
@@ -364,6 +367,7 @@ public class UseCaseController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(name);
             objects.add("newUC");
             objects.add(null);
             FXRouter.goTo("use_case_add",objects);
@@ -378,6 +382,7 @@ public class UseCaseController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(name);
             objects.add("editUC");
             objects.add(selectedUseCase);
             objects.add(useCaseDetailList);

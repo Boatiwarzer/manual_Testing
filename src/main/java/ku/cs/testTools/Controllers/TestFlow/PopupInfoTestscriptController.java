@@ -86,6 +86,8 @@ public class PopupInfoTestscriptController {
     private TestScriptDetailList testScriptDetailListTemp = new TestScriptDetailList();
     private ConnectionList connectionList;
     private String type = "new";
+    private String name;
+
     @FXML
     void initialize() {
 
@@ -94,17 +96,18 @@ public class PopupInfoTestscriptController {
                 ArrayList<Object> objects = (ArrayList) FXRouter.getData();
                 projectName = (String) objects.get(0);
                 directory = (String) objects.get(1);
-                position = (int) objects.get(2);
+                name = (String) objects.get(2);
+                position = (int) objects.get(3);
                 onTableTestscript.isFocused();
                 selectedTSD();
                 loadProject();
                 setDate();
                 selectedComboBox();
                 setButtonVisible();
-                if (objects.get(3) != null){
-                    testScript = (TestScript) objects.get(3);
-                    testScriptDetailList = (TestScriptDetailList) objects.get(4);
-                    type = (String) objects.get(5);
+                if (objects.get(4) != null){
+                    testScript = (TestScript) objects.get(4);
+                    testScriptDetailList = (TestScriptDetailList) objects.get(5);
+                    type = (String) objects.get(6);
                 }else {
                     testScript = testScriptList.findByPositionId(position);
                     System.out.println(testScript);
@@ -463,6 +466,7 @@ public class PopupInfoTestscriptController {
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(name);
             objects.add(position);
             objects.add(testScript);
             objects.add(testScriptDetailList);
@@ -486,6 +490,7 @@ public class PopupInfoTestscriptController {
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(name);
             objects.add(null);
             FXRouter.goTo("test_flow", objects);
             Node source = (Node) event.getSource();
@@ -517,6 +522,7 @@ public class PopupInfoTestscriptController {
                 ArrayList<Object> objects = new ArrayList<>();
                 objects.add(projectName);
                 objects.add(directory);
+                objects.add(name);
                 objects.add("none");
                 FXRouter.goTo("test_flow", objects);
                 Node source = (Node) event.getSource();
@@ -564,6 +570,7 @@ public class PopupInfoTestscriptController {
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(name);
             objects.add(position);
             objects.add(testScript);
             objects.add(testScriptDetailList);
@@ -608,6 +615,7 @@ public class PopupInfoTestscriptController {
         ArrayList<Object>objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(name);
         try {
             FXRouter.goTo("test_flow",objects);
             Node source = (Node) event.getSource();

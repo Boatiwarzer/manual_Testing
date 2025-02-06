@@ -403,6 +403,7 @@ public class FXRouter {
     public static void setData3(Object data3) {
         currentRoute.data3 = data3;
 
+
     }
     public static void setPart(Object setPart) {
         RouteScene.setPart = setPart;

@@ -1,9 +1,6 @@
 package ku.cs.testTools.Models.TestToolModels;
 
-import jakarta.persistence.Access;
-import jakarta.persistence.AccessType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +16,10 @@ public class Note {
     @Access(AccessType.FIELD)
     private String noteID;
     private String note;
-
+    @Column(name = "projectName", nullable = false, precision = 10, scale = 2)
+    private String projectName;
+    @Column(name = "tester", nullable = false, precision = 10, scale = 2)
+    private String tester;
 
 
 

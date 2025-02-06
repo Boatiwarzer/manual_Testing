@@ -63,6 +63,7 @@ public class IRTestresultController {
     private TestScriptList testScriptList = new TestScriptList();
     private TestCaseList testCaseList;
     private TestCaseDetailList testCaseDetailList;
+    private String name;
 
     @FXML
     void initialize() {
@@ -72,8 +73,9 @@ public class IRTestresultController {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            iRreportDetailList = (IRreportDetailList) objects.get(2);
-            iRreport = (IRreport) objects.get(3);
+            name = (String) objects.get(2);
+            iRreportDetailList = (IRreportDetailList) objects.get(3);
+            iRreport = (IRreport) objects.get(4);
             loadProject();
             // ตั้งค่า TableView
             setTableInfo(iRreportDetailList);

@@ -98,6 +98,7 @@ public class TestResultController {
     private TestCaseDetailList testCaseDetailList;
     private TestResultDetailList testResultDetailListTemp;
     private ArrayList<Object> objects;
+    private String nameTester;
 
 
     @FXML
@@ -107,9 +108,11 @@ public class TestResultController {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            if (objects.get(2) != null){
-                testResult = (TestResult) objects.get(2);
+            nameTester = (String) objects.get(2);
+            if (objects.get(3) != null){
+                testResult = (TestResult) objects.get(3);
             }
+            System.out.println(nameTester+"1");
             clearInfo();
             loadProject();
             randomIdIR();
@@ -192,6 +195,7 @@ public class TestResultController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(nameTester);
         objects.add(null);
     }
     private void loadProject() {
@@ -628,6 +632,7 @@ public class TestResultController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(nameTester);
             objects.add("newTR");
             objects.add(null);
             FXRouter.goTo("test_result_add",objects);
@@ -642,6 +647,7 @@ public class TestResultController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(nameTester);
             objects.add("editTR");
             objects.add(selectedTestResult);
             objects.add(testResultDetailList);
@@ -828,6 +834,7 @@ public class TestResultController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(nameTester);
             objects.add(iRreportDetailList);
             objects.add(newIRreport);
 

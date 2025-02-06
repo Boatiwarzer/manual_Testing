@@ -32,13 +32,18 @@
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -119,6 +124,25 @@
          <children>
             <VBox layoutX="15.0" layoutY="15.0" prefHeight="670.0" prefWidth="265.0" spacing="10.0" AnchorPane.leftAnchor="15.0">
                <children>
+                  <HBox prefHeight="30.0" prefWidth="240.0">
+                     <children>
+                        <TextField fx:id="onSearchField" prefHeight="30.0" prefWidth="222.0" promptText="Search">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </TextField>
+                        <Button fx:id="onSearchButton" mnemonicParsing="false" onAction="#onSearchButton" prefHeight="31.0" prefWidth="40.0" underline="true">
+                           <graphic>
+                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../icon/search_icon.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <ListView fx:id="onSearchList" prefHeight="560.0" prefWidth="240.0" />
                   <TitledPane fx:id="noteTitlePane" animated="false" collapsible="false" prefHeight="665.0" prefWidth="265.0" text="Note">
                      <content>
                         <TextArea fx:id="onNoteTextArea" prefHeight="590.0" prefWidth="240.0" promptText="Write your note here..">
