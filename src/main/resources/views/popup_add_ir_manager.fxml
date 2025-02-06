@@ -19,7 +19,7 @@
          <children>
             <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="800.0" spacing="10.0">
                <children>
-                  <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" prefHeight="100.0" prefWidth="200.0" text="Test Result">
+                  <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" prefHeight="100.0" prefWidth="200.0" text="IR Report">
                      <font>
                         <Font size="24.0" />
                      </font>

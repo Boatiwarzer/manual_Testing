@@ -19,6 +19,9 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.StringJoiner;
 
 public class PopupIRmanager {
 
@@ -84,6 +87,7 @@ public class PopupIRmanager {
         setPriority();
         clearInfo();
         if (FXRouter.getData() != null) {
+            setLabel();
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
@@ -151,6 +155,17 @@ public class PopupIRmanager {
         testCaseDetailListDataSource.writeData(testCaseDetailList);
         connectionListDataSource.writeData(connectionList);
     }
+
+    private void setLabel() {
+        onTester.getStyleClass().add("custom-label");
+        onTestscriptIDComboBox.getStyleClass().add("custom-label");
+        onTestcaseIDComboBox.getStyleClass().add("custom-label");
+        onTestNo.getStyleClass().add("custom-label");
+        onManager.getStyleClass().add("custom-label");
+        onImage.getStyleClass().add("custom-label");
+        onCondition.getStyleClass().add("custom-label");
+        onDescription.getStyleClass().add("custom-label");
+    }
     private void setData() {
         irNameLabel.setText(iRreport.getNameIR());
         irIDLabel.setText(iRreport.getIdIR());
@@ -169,33 +184,32 @@ public class PopupIRmanager {
         onPriorityComboBox.getSelectionModel().select(iRreportDetail.getPriorityIRD());
         onRemark.setText(iRreportDetail.getRemarkIRD());
 
-        if(iRreportDetail.getRcaIRD().equals("Bugs in program")){
-            onBug.setSelected(true);
-            onRCA.setEditable(false);
-        } else if (iRreportDetail.getRcaIRD().equals("UX/UI Issues")){
-            onUxui.setSelected(true);
-            onRCA.setEditable(false);
-        } else if (iRreportDetail.getRcaIRD().equals("Performance Issues")){
-            onPerformance.setSelected(true);
-            onRCA.setEditable(false);
-        } else if (iRreportDetail.getRcaIRD().equals("Security Issues")){
-            onSecurity.setSelected(true);
-            onRCA.setEditable(false);
-        } else if (iRreportDetail.getRcaIRD().equals("Logical Errors")){
-            onLogical.setSelected(true);
-            onRCA.setEditable(false);
-        } else if (iRreportDetail.getRcaIRD().equals("Error Handling")){
-            onHandling.setSelected(true);
-            onRCA.setEditable(false);
-        } else {
-            onRCA.setText(iRreportDetail.getRcaIRD());
-            onBug.setSelected(false);
-            onUxui.setSelected(false);
-            onPerformance.setSelected(false);
-            onSecurity.setSelected(false);
-            onLogical.setSelected(false);
-            onHandling.setSelected(false);
+        String[] selectedRCA = iRreportDetail.getRcaIRD().split("\\s*\\|\\s*");
+        List<CheckBox> checkBoxes = List.of(onUxui, onBug, onHandling, onLogical, onPerformance, onSecurity);
+        List<String> unselectedRCA = new ArrayList<>();
+
+//        for (CheckBox checkBox : checkBoxes) {
+//            checkBox.setSelected(Arrays.asList(selectedRCA).contains(checkBox.getText()));
+//        }
+
+        for (String rca : selectedRCA) {
+            boolean found = false; // ใช้ตรวจสอบว่าค่ามีอยู่ใน CheckBox หรือไม่
+            for (CheckBox checkBox : checkBoxes) {
+                if (checkBox.getText().equals(rca)) {
+                    checkBox.setSelected(true);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                unselectedRCA.add(rca);
+            }
         }
+
+        if (!unselectedRCA.isEmpty()) {
+            onRCA.setText(String.join("|", unselectedRCA));
+        }
+
     }
 
 //    private void setDateTRD() {
@@ -214,7 +228,7 @@ public class PopupIRmanager {
 //    }
 
     private void setStatus() {
-        onStatusComboBox.setItems(FXCollections.observableArrayList( "In Manager", "In Tester", "In Developer"));
+        onStatusComboBox.setItems(FXCollections.observableArrayList( "In Manager", "In Tester", "In Developer", "Done", "Withdraw"));
         onStatusComboBox.setValue("None");
     }
 
@@ -297,22 +311,21 @@ public class PopupIRmanager {
         String status = onStatusComboBox.getValue();
         String priority = onPriorityComboBox.getValue();
         String remark = onRemark.getText();
-        String rca;
-        if(onBug.isSelected()){
-            rca = onBug.getText();
-        } else if (onUxui.isSelected()){
-            rca = onUxui.getText();
-        } else if (onPerformance.isSelected()){
-            rca = onPerformance.getText();
-        } else if (onSecurity.isSelected()){
-            rca = onSecurity.getText();
-        } else if (onLogical.isSelected()){
-            rca = onLogical.getText();
-        } else if (onHandling.isSelected()){
-            rca = onHandling.getText();
-        } else {
-            rca = onRCA.getText();
+
+        StringJoiner joiner = new StringJoiner("|");
+        if (!onRCA.equals("")){
+            joiner.add(onRCA.getText());
         }
+
+        List<CheckBox> checkBoxes = List.of(onUxui, onBug, onHandling, onLogical, onPerformance, onSecurity);
+        for (CheckBox checkBox : checkBoxes) {
+            if (checkBox.isSelected()) {
+                joiner.add(checkBox.getText());
+            }
+        }
+
+        String rca = joiner.toString();
+        System.out.println(rca);
 
         iRreportDetail = new IRreportDetail(id, TrNo, tester, IdTS, IdTC, descript, condition, image, priority, rca, manager, status, remark, idIR, idTrd);
         iRreportDetailList.addOrUpdateIRreportDetail(iRreportDetail);
@@ -375,76 +388,76 @@ public class PopupIRmanager {
 
     @FXML
     void handleRCA (ActionEvent event) {
-        if (onBug.isSelected()){
-            onRCA.setText("");
-            onRCA.setEditable(false);
-            onBug.setSelected(true);
-            onUxui.setSelected(false);
-            onPerformance.setSelected(false);
-            onSecurity.setSelected(false);
-            onLogical.setSelected(false);
-            onHandling.setSelected(false);
-        } else if (onUxui.isSelected()){
-            onRCA.setText("");
-            onRCA.setEditable(false);
-            onBug.setSelected(false);
-            onUxui.setSelected(true);
-            onPerformance.setSelected(false);
-            onSecurity.setSelected(false);
-            onLogical.setSelected(false);
-            onHandling.setSelected(false);
-        } else if (onPerformance.isSelected()){
-            onRCA.setText("");
-            onRCA.setEditable(false);
-            onBug.setSelected(false);
-            onUxui.setSelected(false);
-            onPerformance.setSelected(true);
-            onSecurity.setSelected(false);
-            onLogical.setSelected(false);
-            onHandling.setSelected(false);
-        } else if (onSecurity.isSelected()){
-            onRCA.setText("");
-            onRCA.setEditable(false);
-            onBug.setSelected(false);
-            onUxui.setSelected(false);
-            onPerformance.setSelected(false);
-            onSecurity.setSelected(true);
-            onLogical.setSelected(false);
-            onHandling.setSelected(false);
-        } else if (onLogical.isSelected()){
-            onRCA.setText("");
-            onRCA.setEditable(false);
-            onBug.setSelected(false);
-            onUxui.setSelected(false);
-            onPerformance.setSelected(false);
-            onSecurity.setSelected(false);
-            onLogical.setSelected(true);
-            onHandling.setSelected(false);
-        } else if (onHandling.isSelected()){
-            onRCA.setText("");
-            onRCA.setEditable(false);
-            onBug.setSelected(false);
-            onUxui.setSelected(false);
-            onPerformance.setSelected(false);
-            onSecurity.setSelected(false);
-            onLogical.setSelected(false);
-            onHandling.setSelected(true);
-        } else if (!(onRCA.getText() == null)) {
-            onRCA.setEditable(true);
-            onBug.setSelected(false);
-            onUxui.setSelected(false);
-            onPerformance.setSelected(false);
-            onSecurity.setSelected(false);
-            onLogical.setSelected(false);
-            onHandling.setSelected(false);
-        } else {
-            onRCA.setEditable(false);
-            onBug.setSelected(false);
-            onUxui.setSelected(false);
-            onPerformance.setSelected(false);
-            onSecurity.setSelected(false);
-            onLogical.setSelected(false);
-            onHandling.setSelected(false);
-        }
+//        if (onBug.isSelected()){
+//            onRCA.setText("");
+//            onRCA.setEditable(false);
+//            onBug.setSelected(true);
+//            onUxui.setSelected(false);
+//            onPerformance.setSelected(false);
+//            onSecurity.setSelected(false);
+//            onLogical.setSelected(false);
+//            onHandling.setSelected(false);
+//        } else if (onUxui.isSelected()){
+//            onRCA.setText("");
+//            onRCA.setEditable(false);
+//            onBug.setSelected(false);
+//            onUxui.setSelected(true);
+//            onPerformance.setSelected(false);
+//            onSecurity.setSelected(false);
+//            onLogical.setSelected(false);
+//            onHandling.setSelected(false);
+//        } else if (onPerformance.isSelected()){
+//            onRCA.setText("");
+//            onRCA.setEditable(false);
+//            onBug.setSelected(false);
+//            onUxui.setSelected(false);
+//            onPerformance.setSelected(true);
+//            onSecurity.setSelected(false);
+//            onLogical.setSelected(false);
+//            onHandling.setSelected(false);
+//        } else if (onSecurity.isSelected()){
+//            onRCA.setText("");
+//            onRCA.setEditable(false);
+//            onBug.setSelected(false);
+//            onUxui.setSelected(false);
+//            onPerformance.setSelected(false);
+//            onSecurity.setSelected(true);
+//            onLogical.setSelected(false);
+//            onHandling.setSelected(false);
+//        } else if (onLogical.isSelected()){
+//            onRCA.setText("");
+//            onRCA.setEditable(false);
+//            onBug.setSelected(false);
+//            onUxui.setSelected(false);
+//            onPerformance.setSelected(false);
+//            onSecurity.setSelected(false);
+//            onLogical.setSelected(true);
+//            onHandling.setSelected(false);
+//        } else if (onHandling.isSelected()){
+//            onRCA.setText("");
+//            onRCA.setEditable(false);
+//            onBug.setSelected(false);
+//            onUxui.setSelected(false);
+//            onPerformance.setSelected(false);
+//            onSecurity.setSelected(false);
+//            onLogical.setSelected(false);
+//            onHandling.setSelected(true);
+//        } else if (!(onRCA.getText() == null)) {
+//            onRCA.setEditable(true);
+//            onBug.setSelected(false);
+//            onUxui.setSelected(false);
+//            onPerformance.setSelected(false);
+//            onSecurity.setSelected(false);
+//            onLogical.setSelected(false);
+//            onHandling.setSelected(false);
+//        } else {
+//            onRCA.setEditable(false);
+//            onBug.setSelected(false);
+//            onUxui.setSelected(false);
+//            onPerformance.setSelected(false);
+//            onSecurity.setSelected(false);
+//            onLogical.setSelected(false);
+//            onHandling.setSelected(false);
+//        }
     }
 }

@@ -291,6 +291,7 @@ public class TREditmanagerController {
         configs.add(new StringConfiguration("title:Date.", "field:dateTRD"));
         configs.add(new StringConfiguration("title:Tester", "field:testerTRD"));
         configs.add(new StringConfiguration("title:Image Result", "field:imageTRD"));
+        configs.add(new StringConfiguration("title:Test times", "field:retestTRD"));
         configs.add(new StringConfiguration("title:Approval", "field:approveTRD"));
         configs.add(new StringConfiguration("title:Remark", "field:remarkTRD"));
 
@@ -299,13 +300,11 @@ public class TREditmanagerController {
         for (StringConfiguration conf : configs) {
             TableColumn<TestResultDetail, String> col = new TableColumn<>(conf.get("title"));
             col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
-            if (index != 14 && index <= 16) {  // ถ้าเป็นคอลัมน์แรก
+            if (index != 14 && index <= 17) {  // ถ้าเป็นคอลัมน์แรก
                 col.setPrefWidth(120);
                 col.setMaxWidth(120);
                 col.setMinWidth(120); // ตั้งค่าขนาดคอลัมน์แรก
             }
-            col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
-            index++;
             if (!conf.get("field").equals("imageTRD")) {
                 col.setCellFactory(tc -> {
                     TableCell<TestResultDetail, String> cell = new TableCell<>() {
@@ -461,6 +460,7 @@ public class TREditmanagerController {
         configs.add(new StringConfiguration("title:Date."));
         configs.add(new StringConfiguration("title:Tester"));
         configs.add(new StringConfiguration("title:Image Result"));
+        configs.add(new StringConfiguration("title:Test times"));
         configs.add(new StringConfiguration("title:Approval"));
         configs.add(new StringConfiguration("title:Remark"));
 

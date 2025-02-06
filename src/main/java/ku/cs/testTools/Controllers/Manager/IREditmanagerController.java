@@ -352,6 +352,23 @@ public class IREditmanagerController {
                     }
                 });
             }
+            if (conf.get("field").equals("rcaIRD")) {
+                col.setCellFactory(column -> new TableCell<>() {
+                    private final Text text = new Text();
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            setGraphic(null);
+                        } else {
+//                            setText(item.replace("|", ", "));
+                            text.setText(item.replace("|", ", "));
+                            text.wrappingWidthProperty().bind(column.widthProperty().subtract(10)); // ตั้งค่าการห่อข้อความตามขนาดคอลัมน์
+                            setGraphic(text); // แสดงผล Text Node
+                        }
+                    }
+                });
+            }
             if (conf.get("field").equals("imageIRD")) {
                 col.setCellFactory(column -> new TableCell<>() {
                     private final ImageView imageView = new ImageView();

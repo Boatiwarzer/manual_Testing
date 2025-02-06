@@ -150,6 +150,12 @@
   /*-fx-font-weight: bold; !* เน้นข้อความ *!*/
 }
 
+.custom-label {
+  -fx-background-color: #bccadc;
+  -fx-padding: 5px;
+  -fx-background-radius: 10px;
+}
+
 .text {
   -fx-font-smoothing-type: gray;
   -fx-bounds-type: logical_vertical_center;
