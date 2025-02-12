@@ -16,6 +16,8 @@ import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
 import ku.cs.testTools.Services.DataSourceCSV.*;
 
+import ku.cs.testTools.Services.Repository.TestScriptDetailRepository;
+import ku.cs.testTools.Services.Repository.TestScriptRepository;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.File;
@@ -97,6 +99,7 @@ public class TestScriptAddController {
     private TestScriptDetail selectedItem;
     private TestScript testScript;
     private TestScript selectedTestScript;
+    private TestScriptDetailList testScriptDetailListDelete = new TestScriptDetailList();
     private TestCaseList testCaseList = new TestCaseList();
     private UseCaseList useCaseList = new UseCaseList();
     private final int position = 0;
@@ -436,7 +439,8 @@ public class TestScriptAddController {
     }
 
 
-    private void currentNewData(){
+    private void currentNewData() {
+        // Retrieve the values from the fields
         String name = onTestNameField.getText();
         String idTS = tsId;
         String date = testDateLabel.getText();
@@ -446,8 +450,36 @@ public class TestScriptAddController {
         String preCon = infoPreconLabel.getText();
         String note = onTestNoteField.getText();
         String post = infoPostconLabel.getText();
-        testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post,note,position);
 
+        // Check if any required field is empty or null
+
+
+        // Only create the TestScript object after all fields are validated
+        testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, post, note, position);
+    }
+    private void currentNewDataForSubmit() {
+        // Retrieve the values from the fields
+        String name = onTestNameField.getText();
+        String idTS = tsId;
+        String date = testDateLabel.getText();
+        String useCase = onUsecaseCombobox.getValue();
+        String description = infoDescriptLabel.getText();
+        String tc = onTestcaseCombobox.getValue();
+        String preCon = infoPreconLabel.getText();
+        String note = onTestNoteField.getText();
+        String post = infoPostconLabel.getText();
+
+        // Check if any required field is empty or null
+        if (name.isEmpty() || idTS == null || idTS.isEmpty() || date.isEmpty() || useCase == null || useCase.isEmpty() || description.isEmpty()
+                || tc == null || tc.isEmpty() || preCon.isEmpty() || note.isEmpty() || post.isEmpty()) {
+
+            // Show an alert if any field is missing
+            showAlert("Input Error", "Please fill in all required fields.");
+            return; // Prevent further execution if the fields are incomplete
+        }
+
+        // Only create the TestScript object after all fields are validated
+        testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, post, note, position);
     }
     private void objects() {
         objects = new ArrayList<>();
@@ -490,6 +522,7 @@ public class TestScriptAddController {
             objects();
             objects.add("edit");
             objects.add(selectedItem);
+            objects.add(testScriptDetailListDelete);
             if (selectedItem != null){
                 FXRouter.popup("popup_add_testscript",objects,true);
             }
@@ -521,15 +554,15 @@ public class TestScriptAddController {
 
         try {
             // Validate fields
-            currentNewData();
+            currentNewDataForSubmit();
+
             // Check if mandatory fields are empty
-//            if (name == null || name.isEmpty() ||
-//                    useCase == null || useCase.isEmpty() ||
-//                    tc == null || tc.isEmpty()) {
-//                showAlert("Input Error", "Please fill in all required fields.");
-//                return;
-//            }
-//         TestScriptRepository testScriptRepository = new TestScriptRepository();
+
+            TestScriptRepository testScriptRepository = new TestScriptRepository();
+            TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
+            for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()){
+                testScriptDetailRepository.addTestScriptDetail(testScriptDetail);
+            }
             DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
             TestScriptDetailList testScriptDetailListTemp = testScriptDetailListDataSource.readData();
             for (TestScriptDetail testScriptDetail1 : testScriptDetailListTemp.getTestScriptDetailList()){
@@ -540,6 +573,8 @@ public class TestScriptAddController {
 
             // Write data to respective files
             saveProject();
+            testScriptRepository.addTestScript(testScript);
+
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);

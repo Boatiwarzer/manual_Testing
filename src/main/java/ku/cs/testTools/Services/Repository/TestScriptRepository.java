@@ -2,50 +2,48 @@ package ku.cs.testTools.Services.Repository;
 
 import jakarta.persistence.*;
 import ku.cs.testTools.Models.TestToolModels.TestScript;
+import ku.cs.testTools.Services.JpaUtil;
 
 import java.util.List;
 
 public class TestScriptRepository {
 
     private final EntityManager entityManager;
-    private final EntityManagerFactory emf;
-
-    // Constructor to inject EntityManager
 
     public TestScriptRepository() {
-        this.emf = Persistence.createEntityManagerFactory("test_db");
-        this.entityManager = this.emf.createEntityManager();
+        this.entityManager = JpaUtil.getEntityManager();
     }
-
-    public TestScriptRepository(String pu) {
-        this.emf = Persistence.createEntityManagerFactory(pu);
-        this.entityManager = this.emf.createEntityManager();    }
 
     // Create a new TestScript
     public void addTestScript(TestScript testScript) {
+        EntityTransaction transaction = entityManager.getTransaction();
         try {
-            entityManager.getTransaction().begin();
+            transaction.begin();
             entityManager.persist(testScript);
-            entityManager.getTransaction().commit();
-        }catch (RuntimeException e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
+            transaction.commit();
+        } catch (RuntimeException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
             }
             throw e;
         }
-
     }
-    public void findById(String id){
-        Query query = entityManager.createNamedQuery("find testscript by id");
-        query.setParameter("id",id);
-        query.getSingleResult();
+
+    // Find a TestScript by ID
+    public TestScript findById(String id) {
+        try {
+            TypedQuery<TestScript> query = entityManager.createNamedQuery("find testscript by id", TestScript.class);
+            query.setParameter("id", id);
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     // Retrieve all TestScripts
     public List<TestScript> getAllTestScripts() {
         String query = "SELECT t FROM TestScript t";
-        TypedQuery<TestScript> typedQuery = entityManager.createQuery(query, TestScript.class);
-        return typedQuery.getResultList();
+        return entityManager.createQuery(query, TestScript.class).getResultList();
     }
 
     // Retrieve a TestScript by ID
@@ -55,35 +53,41 @@ public class TestScriptRepository {
 
     // Update an existing TestScript
     public void updateTestScript(TestScript testScript) {
-        TestScript testScriptUpdate = getTestScriptById(testScript.getIdTS());
-
+        EntityTransaction transaction = entityManager.getTransaction();
         try {
-            entityManager.getTransaction().begin();
-            entityManager.merge(testScriptUpdate);  // Use merge for updating existing entities
-            entityManager.getTransaction().commit();
-        }catch (RuntimeException e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
+            transaction.begin();
+            entityManager.merge(testScript);
+            transaction.commit();
+        } catch (RuntimeException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
             }
             throw e;
         }
-
     }
 
     // Delete a TestScript by ID
     public void deleteTestScript(String idTS) {
+        EntityTransaction transaction = entityManager.getTransaction();
         try {
-            entityManager.getTransaction().begin();
+            transaction.begin();
             TestScript testScript = entityManager.find(TestScript.class, idTS);
             if (testScript != null) {
-                entityManager.remove(testScript);  // Remove the entity from the database
+                entityManager.remove(testScript);
             }
-            entityManager.getTransaction().commit();
+            transaction.commit();
         } catch (RuntimeException e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
+            if (transaction.isActive()) {
+                transaction.rollback();
             }
             throw e;
+        }
+    }
+
+    // Close EntityManager
+    public void close() {
+        if (entityManager.isOpen()) {
+            entityManager.close();
         }
     }
 }

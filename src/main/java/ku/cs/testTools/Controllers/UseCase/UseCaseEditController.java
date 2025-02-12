@@ -20,6 +20,8 @@ import ku.cs.testTools.Services.DataSourceCSV.ConnectionListFileDataSource;
 import ku.cs.testTools.Services.DataSourceCSV.TestFlowPositionListFileDataSource;
 import ku.cs.testTools.Services.DataSourceCSV.UseCaseDetailListFileDataSource;
 import ku.cs.testTools.Services.DataSourceCSV.UseCaseListFileDataSource;
+import ku.cs.testTools.Services.Repository.UseCaseDetailRepository;
+import ku.cs.testTools.Services.Repository.UseCaseRepository;
 import ku.cs.testTools.Services.UseCaseComparable;
 import org.controlsfx.control.textfield.TextFields;
 
@@ -90,6 +92,7 @@ public class UseCaseEditController {
     private ConnectionList connectionList = new ConnectionList();
     private String typeUC;
     private String name;
+    private UseCaseDetailList useCaseDetailListDelete = new UseCaseDetailList();
 
     @FXML
     public void initialize() {
@@ -495,7 +498,15 @@ public class UseCaseEditController {
                     systemNumber++;
                 }
             }
-
+            UseCaseRepository useCaseRepository = new UseCaseRepository();
+            UseCaseDetailRepository useCaseDetailRepository = new UseCaseDetailRepository();
+            for (UseCaseDetail useCaseDetail1 : useCaseDetailList.getUseCaseDetailList()){
+                useCaseDetailRepository.updateUseCaseDetail(useCaseDetail1);
+            }
+            for (UseCaseDetail useCaseDetail1 : useCaseDetailListDelete.getUseCaseDetailList()){
+                useCaseDetailRepository.deleteUseCaseDetail(useCaseDetail1.getUseCaseID());
+            }
+            useCaseRepository.updateUseCase(useCase);
             saveProject();
             showAlert("Success", "Use Case saved successfully!");
 

@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @Entity
 @Data
 @RequiredArgsConstructor
-@Table(name = "Decision")
+@Table(name = "Connection")
 @NamedQuery(name = "find Connection by id", query = "Select t from Connection t where t.connectionID = :id")
 public class Connection {
     @Id

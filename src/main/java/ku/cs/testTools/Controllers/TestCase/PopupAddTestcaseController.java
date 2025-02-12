@@ -3,6 +3,7 @@ package ku.cs.testTools.Controllers.TestCase;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -53,6 +54,7 @@ public class PopupAddTestcaseController {
     private String typeTC;
     private ArrayList<Object> objects;
     private String name;
+    private TestCaseDetailList testCaseDetailListDelete = new TestCaseDetailList();
 
     @FXML
     void initialize() {
@@ -70,6 +72,7 @@ public class PopupAddTestcaseController {
             System.out.println(testCaseDetailList);
             if (objects.get(7) != null && type.equals("edit")){
                 testCaseDetail = (TestCaseDetail) objects.get(7);
+                testCaseDetailListDelete = (TestCaseDetailList)  objects.get(8);
                 testCaseDetail = testCaseDetailList.findTCById(testCaseDetail.getIdTCD());
                 id = testCaseDetail.getIdTCD();
                 setTextEdit();
@@ -109,6 +112,8 @@ public class PopupAddTestcaseController {
         objects.add(testCase);
         objects.add(testCaseDetailList);
         objects.add(type);
+        objects.add(testCaseDetailListDelete);
+
     }
     private void route(ActionEvent event, ArrayList<Object> objects) throws IOException {
         if (typeTC.equals("editTC")){
@@ -131,15 +136,35 @@ public class PopupAddTestcaseController {
             System.err.println("ให้ตรวจสอบการกำหนด route");
         }
     }
+    private void currentNewData() {
+        // Retrieve the values from the fields
+        String TsNo = onTestNo.getText();
+        String Name = onNameVariablesField.getText();
+        String Type = onTypeVariableField.getText();
 
+        setDateTCD(); // Ensure this method correctly sets dateTCD
+
+        // Validate that required fields are not empty
+        if (TsNo.isEmpty() || Name.isEmpty() || Type.isEmpty() || idTC == null || idTC.isEmpty()) {
+            // Show an alert if any field is missing
+            showAlert("Input Error", "Please fill in all required fields.");
+            return; // Stop execution if validation fails
+        }
+
+        // Create a new TestCaseDetail object
+        testCaseDetail = new TestCaseDetail(id, TsNo, Name, Type, dateTCD, idTC);
+    }
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
     @FXML
     void onConfirmButton(ActionEvent event) {
         try {
-            String TsNo = onTestNo.getText();
-            String Name = onNameVariablesField.getText();
-            String Type = onTypeVariableField.getText();
-            setDateTCD();
-            testCaseDetail = new TestCaseDetail(id,TsNo, Name, Type, dateTCD,idTC);
+            currentNewData();
             testCaseDetailList.addOrUpdateTestCase(testCaseDetail);
             objects();
             route(event,objects);

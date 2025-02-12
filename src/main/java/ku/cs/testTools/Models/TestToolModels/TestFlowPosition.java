@@ -20,28 +20,28 @@ public class TestFlowPosition {
     @Column(name = "position_id", nullable = false, unique = true)
     private int positionID;
 
-    @Column(name = "fit_width", nullable = false, precision = 10, scale = 2)
+    @Column(name = "fit_width", nullable = false, precision = 10)
     private double fitWidth;
 
-    @Column(name = "fit_height", nullable = false, precision = 10, scale = 2)
+    @Column(name = "fit_height", nullable = false, precision = 10)
     private double fitHeight;
 
-    @Column(name = "x_position", nullable = false, precision = 10, scale = 2)
+    @Column(name = "x_position", nullable = false, precision = 10)
     private double xPosition;
 
-    @Column(name = "y_position", nullable = false, precision = 10, scale = 2)
+    @Column(name = "y_position", nullable = false, precision = 10)
     private double yPosition;
 
-    @Column(name = "rotation", nullable = false, precision = 10, scale = 2)
+    @Column(name = "rotation", nullable = false, precision = 10)
     private double rotation;
 
     @NotNull
     @Column(name = "type", nullable = false, length = 50)
     private String type;
 
-    @Column(name = "projectName", nullable = false, precision = 10, scale = 2)
+    @Column(name = "projectName", nullable = false, precision = 10)
     private String projectName;
-    @Column(name = "tester", nullable = false, precision = 10, scale = 2)
+    @Column(name = "tester", nullable = false, precision = 10)
     private String tester;
     public TestFlowPosition(int positionID, double fitWidth, double fitHeight, double xPosition, double yPosition, double rotation, String type) {
         this.positionID = positionID;

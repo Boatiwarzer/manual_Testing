@@ -13,6 +13,9 @@ import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
 import ku.cs.testTools.Services.DataSourceCSV.*;
+import ku.cs.testTools.Services.Repository.TestCaseDetailRepository;
+import ku.cs.testTools.Services.Repository.TestCaseRepository;
+import ku.cs.testTools.Services.Repository.TestFlowPositionRepository;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -83,6 +86,7 @@ public class PopupInfoTestcaseController {
     private UseCaseList useCaseList = new UseCaseList();
     private String type = "new";
     private String name;
+    private TestCaseDetailList testCaseDetailListDelete = new TestCaseDetailList();
 
 
     @FXML
@@ -104,6 +108,7 @@ public class PopupInfoTestcaseController {
                 testCase = (TestCase) objects.get(5);
                 testCaseDetailList = (TestCaseDetailList) objects.get(6);
                 type = (String) objects.get(7);
+                testCaseDetailListDelete = (TestCaseDetailList) objects.get(8);
             }else {
                 testCase = testCaseList.findByPositionId(position);
             }
@@ -387,17 +392,16 @@ public class PopupInfoTestcaseController {
     @FXML
     void onAddButton(ActionEvent event) {
         String name = onTestNameCombobox.getValue();
-        String idTS = tsId;
+        String idTC = tsId;
         String date = testDateLabel.getText();
         String useCase = onUsecaseCombobox.getValue();
         String description = infoDescriptLabel.getText();
         String preCon = infoPreconLabel.getText();
         String note = onTestNoteField.getText();
         String post = infoPostconLabel.getText();
-
         try {
 
-            testCase = new TestCase(idTS, name, date, useCase, description,note,position,preCon,post);
+            testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post);
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
@@ -407,6 +411,7 @@ public class PopupInfoTestcaseController {
             objects.add(testCaseDetailList);
             objects.add("new");
             objects.add(null);
+            objects.add(testCaseDetailListDelete);
             if (testCaseDetailList != null){
                 FXRouter.popup("popup_testflow_add_testcase",objects,true);
             }
@@ -452,6 +457,14 @@ public class PopupInfoTestcaseController {
             testCaseList.deleteTestCaseByPositionID(position);
             testCaseDetailList.deleteTestCaseDetailByTestScriptID(testCase.getIdTC());
             testFlowPositionList.removePositionByID(position);
+            TestCaseRepository testCaseRepository = new TestCaseRepository();
+            testCaseRepository.deleteTestCase(testCase.getIdTC());
+            TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
+            for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()){
+                testCaseDetailRepository.deleteTestCaseDetail(testCaseDetail.getIdTCD());
+            }
+            TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
+            testFlowRepository.deleteTestFlowPosition(position);
             saveProject();
             try {
                 ArrayList<Object> objects = new ArrayList<>();
@@ -480,6 +493,7 @@ public class PopupInfoTestcaseController {
         alert.setContentText("Press OK to confirm, or Cancel to go back.");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
+            testCaseDetailListDelete.addTestCaseDetail(selectedItem);
             testCaseDetailList.deleteTestCase(selectedItem);
             onTableTestCase.getItems().clear();
             loadTable(testCaseDetailList);
@@ -493,14 +507,15 @@ public class PopupInfoTestcaseController {
 
         try {
             String name = onTestNameCombobox.getValue();
-            String idTS = tsId;
+            String idTC = tsId;
             String date = testDateLabel.getText();
             String useCase = onUsecaseCombobox.getValue();
             String description = infoDescriptLabel.getText();
             String preCon = infoPreconLabel.getText();
             String note = onTestNoteField.getText();
             String post = infoPostconLabel.getText();
-            testCase = new TestCase(idTS, name, date, useCase, description,note,position,preCon,post);
+
+            testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post);
             onEditListButton.setOnAction(event1 -> onTableTestCase.requestFocus());
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
@@ -511,6 +526,7 @@ public class PopupInfoTestcaseController {
             objects.add(testCaseDetailList);
             objects.add("edit");
             objects.add(selectedItem);
+            objects.add(testCaseDetailListDelete);
             if (selectedItem != null){
                 FXRouter.popup("popup_testflow_add_testcase",objects,true);
             }
@@ -532,9 +548,15 @@ public class PopupInfoTestcaseController {
             String preCon = infoPreconLabel.getText();
             String note = onTestNoteField.getText();
             String post = infoPostconLabel.getText();
-
+            if (name.isEmpty() || idTC == null || idTC.isEmpty() || date.isEmpty() || useCase == null || useCase.isEmpty()
+                    || description.isEmpty() || note.isEmpty() || preCon.isEmpty() || post.isEmpty()) {
+                // Show an alert if any field is missing or invalid
+                showAlert("Input Error", "Please fill in all required fields.");
+                return; // Prevent further execution if the fields are incomplete
+            }
             testCase = testCaseList.findTCById(idTC);
             // Create a new TestScript object
+
             testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post);
 
 
@@ -542,6 +564,17 @@ public class PopupInfoTestcaseController {
             testCaseList.addTestCase(testCase);
             TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(position);
             testFlowPositionList.addPosition(testFlowPosition);
+            TestCaseRepository testCaseRepository = new TestCaseRepository();
+            TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
+            for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()){
+                testCaseDetailRepository.updateTestCaseDetail(testCaseDetail);
+            }
+            for (TestCaseDetail testCaseDetail : testCaseDetailListDelete.getTestCaseDetailList()){
+                testCaseDetailRepository.deleteTestCaseDetail(testCaseDetail.getIdTCD());
+            }
+            testCaseRepository.updateTestCase(testCase);
+            TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
+            testFlowRepository.updateTestFlowPosition(testFlowPosition);
             // Write data to respective files
             saveProject();
             loadProject();

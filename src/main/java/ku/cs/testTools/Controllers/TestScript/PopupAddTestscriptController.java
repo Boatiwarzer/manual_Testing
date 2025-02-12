@@ -50,6 +50,7 @@ public class PopupAddTestscriptController {
     private String idTS;
     private String date;
     private TestCaseDetailList testCaseDetailList;
+    private TestScriptDetailList testScriptDetailListDelete;
     private String type;
     private String typeTS;
     private ArrayList<Object> objects;
@@ -74,6 +75,7 @@ public class PopupAddTestscriptController {
             System.out.println(testCaseDetailList);
             if (objects.get(8) != null && type.equals("edit")){
                 testScriptDetail = (TestScriptDetail) objects.get(8);
+                testScriptDetailListDelete = (TestScriptDetailList)  objects.get(9);
                 testScriptDetail = testScriptDetailList.findTSById(testScriptDetail.getIdTSD());
                 id = testScriptDetail.getIdTSD();
                 setTextEdit();
@@ -99,7 +101,7 @@ public class PopupAddTestscriptController {
     @FXML
     void onCancelButton(ActionEvent event) {
         try {
-            objectsend();
+            objects();
             clearInfo();
             route(event, objects);
         } catch (IOException e) {
@@ -118,6 +120,7 @@ public class PopupAddTestscriptController {
         objects.add(testScriptDetailList);
         objects.add(testCaseDetailList);
         objects.add(type);
+        objects.add(testScriptDetailListDelete);
     }
     private void objectsend() {
         objects = new ArrayList<>();
@@ -143,14 +146,33 @@ public class PopupAddTestscriptController {
 //        }
 
     }
-    private void currentNewData(){
+    private void currentNewData() {
+        // Retrieve the values from the fields
         String TsNo = onTestNo.getText();
         String TsStep = onTeststepsArea.getText().toLowerCase();
         String Input = onInputDataCombobox.getValue();
         String Expect = onExpectedArea.getText();
-        setDateTSD();
-        testScriptDetail = new TestScriptDetail(id,TsNo, TsStep, Input, Expect,idTS,date);
+        setDateTSD();  // Assuming this method sets the date, make sure it's valid
+
+        // Check if any required field is empty
+        if (TsNo.isEmpty() || TsStep.isEmpty() || Input == null || Input.isEmpty() || Expect.isEmpty()) {
+            // Show an alert if any field is missing or invalid
+            showAlert("Input Error", "Please fill in all required fields.");
+            return; // Prevent further execution if the fields are incomplete
+        }
+
+        // Create a new TestScriptDetail object and add it to the list
+        testScriptDetail = new TestScriptDetail(id, TsNo, TsStep, Input, Expect, idTS, date);
+
+        // Add or update the TestScriptDetail in the list
         testScriptDetailList.addOrUpdateTestScriptDetail(testScriptDetail);
+    }
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
     private void route(ActionEvent event, ArrayList<Object> objects) throws IOException {

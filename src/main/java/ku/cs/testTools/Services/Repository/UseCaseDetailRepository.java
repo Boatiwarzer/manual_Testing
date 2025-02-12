@@ -2,87 +2,98 @@ package ku.cs.testTools.Services.Repository;
 
 import jakarta.persistence.*;
 import ku.cs.testTools.Models.TestToolModels.UseCaseDetail;
+import ku.cs.testTools.Services.JpaUtil;
 
 import java.util.List;
 
 public class UseCaseDetailRepository {
     private final EntityManager entityManager;
-    private final EntityManagerFactory emf;
 
-    // Constructor to inject EntityManager
-
+    // Constructor to inject EntityManager using JpaUtil
     public UseCaseDetailRepository() {
-        this.emf = Persistence.createEntityManagerFactory("test_db");
-        this.entityManager = this.emf.createEntityManager();
+        this.entityManager = JpaUtil.getEntityManager();
     }
-
-    public UseCaseDetailRepository(String pu) {
-        this.emf = Persistence.createEntityManagerFactory(pu);
-        this.entityManager = this.emf.createEntityManager();    }
 
     // Create a new UseCaseDetail
     public void addUseCaseDetail(UseCaseDetail useCaseDetail) {
+        EntityTransaction transaction = entityManager.getTransaction();
         try {
-            entityManager.getTransaction().begin();
+            transaction.begin();
             entityManager.persist(useCaseDetail);
-            entityManager.getTransaction().commit();
-        }catch (RuntimeException e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
+            transaction.commit();
+        } catch (RuntimeException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
             }
             throw e;
+        } finally {
+            // Ensure that the EntityManager is closed after the transaction
+            close();
         }
-
     }
-    public void findById(String id){
-        Query query = entityManager.createNamedQuery("find usecasedetail by id");
-        query.setParameter("id",id);
-        query.getSingleResult();
+
+    // Find a UseCaseDetail by ID
+    public UseCaseDetail findById(String id) {
+        try {
+            return entityManager.find(UseCaseDetail.class, id);
+        } catch (NoResultException e) {
+            return null; // Return null if no result found
+        } finally {
+            close();
+        }
     }
 
     // Retrieve all UseCaseDetails
     public List<UseCaseDetail> getAllUseCaseDetails() {
         String query = "SELECT t FROM UseCaseDetail t";
-        TypedQuery<UseCaseDetail> typedQuery = entityManager.createQuery(query, UseCaseDetail.class);
-        return typedQuery.getResultList();
-    }
-
-    // Retrieve a UseCaseDetail by ID
-    public UseCaseDetail getUseCaseDetailById(String idUCD) {
-        return entityManager.find(UseCaseDetail.class, idUCD);
+        try {
+            return entityManager.createQuery(query, UseCaseDetail.class).getResultList();
+        } finally {
+            close();
+        }
     }
 
     // Update an existing UseCaseDetail
     public void updateUseCaseDetail(UseCaseDetail useCaseDetail) {
-        UseCaseDetail useCaseDetailUpdate = getUseCaseDetailById(useCaseDetail.getUseCaseID());
-
+        EntityTransaction transaction = entityManager.getTransaction();
         try {
-            entityManager.getTransaction().begin();
-            entityManager.merge(useCaseDetailUpdate);  // Use merge for updating existing entities
-            entityManager.getTransaction().commit();
-        }catch (RuntimeException e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
+            transaction.begin();
+            entityManager.merge(useCaseDetail);
+            transaction.commit();
+        } catch (RuntimeException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
             }
             throw e;
+        } finally {
+            close();
         }
-
     }
 
     // Delete a UseCaseDetail by ID
     public void deleteUseCaseDetail(String idUCD) {
+        EntityTransaction transaction = entityManager.getTransaction();
         try {
-            entityManager.getTransaction().begin();
+            transaction.begin();
             UseCaseDetail useCaseDetail = entityManager.find(UseCaseDetail.class, idUCD);
             if (useCaseDetail != null) {
-                entityManager.remove(useCaseDetail);  // Remove the entity from the database
+                entityManager.remove(useCaseDetail);
             }
-            entityManager.getTransaction().commit();
+            transaction.commit();
         } catch (RuntimeException e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
+            if (transaction.isActive()) {
+                transaction.rollback();
             }
             throw e;
+        } finally {
+            close();
+        }
+    }
+
+    // Close EntityManager after usage
+    private void close() {
+        if (entityManager.isOpen()) {
+            entityManager.close();
         }
     }
 }

@@ -3,6 +3,7 @@ package ku.cs.testTools.Controllers.TestFlow;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -55,6 +56,7 @@ public class PopupTestFlowAddTestcaseController {
     private String type;
     private String name;
     private ArrayList<Object> objects;
+    private TestCaseDetailList testCaseDetailListDelete = new TestCaseDetailList();
 
     @FXML
     void initialize() {
@@ -73,6 +75,7 @@ public class PopupTestFlowAddTestcaseController {
             idTC = testCase.getIdTC();
             if (objects.get(7) != null && type.equals("edit")){
                 testCaseDetail = (TestCaseDetail) objects.get(7);
+                testCaseDetailListDelete = (TestCaseDetailList)  objects.get(8);
                 testCaseDetailList.findTCById(testCaseDetail.getIdTCD());
                 id = testCaseDetail.getIdTCD();
                 setTextEdit();
@@ -109,7 +112,11 @@ public class PopupTestFlowAddTestcaseController {
         objects.add(projectName);
         objects.add(directory);
         objects.add(name);
-        objects.add(null);
+        objects.add(position);
+        objects.add(testCase);
+        objects.add(testCaseDetailList);
+        objects.add(type);
+        objects.add(testCaseDetailListDelete);
         clearInfo();
         Node source = (Node) event.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
@@ -125,10 +132,14 @@ public class PopupTestFlowAddTestcaseController {
             String Name = onNameVariablesField.getText();
             String Type = onTypeVariableField.getText();
             setDateTCD();
-
+            if (TsNo.isEmpty() || Name.isEmpty() || Type.isEmpty() || idTC == null || idTC.isEmpty()) {
+                // Show an alert if any field is missing
+                showAlert("Input Error", "Please fill in all required fields.");
+                return; // Stop execution if validation fails
+            }
             testCaseDetail = new TestCaseDetail(id, TsNo, Name, Type, dateTCD, idTC);
             testCaseDetailList.addOrUpdateTestCase(testCaseDetail);
-            ArrayList<Object> objects = new ArrayList<>();
+            objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
             objects.add(name);
@@ -136,6 +147,7 @@ public class PopupTestFlowAddTestcaseController {
             objects.add(testCase);
             objects.add(testCaseDetailList);
             objects.add(type);
+            objects.add(testCaseDetailListDelete);
             FXRouter.newPopup("popup_info_testcase", objects, true);
             System.out.println(testCaseDetail);
             Node source = (Node) event.getSource();
@@ -147,7 +159,13 @@ public class PopupTestFlowAddTestcaseController {
             throw new RuntimeException(e);
         }
     }
-
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
         private void setDateTCD() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         LocalDateTime now = LocalDateTime.now();

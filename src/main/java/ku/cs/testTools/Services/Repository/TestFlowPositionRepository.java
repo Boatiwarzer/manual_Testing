@@ -2,49 +2,48 @@ package ku.cs.testTools.Services.Repository;
 
 import jakarta.persistence.*;
 import ku.cs.testTools.Models.TestToolModels.TestFlowPosition;
+import ku.cs.testTools.Services.JpaUtil;
 
 import java.util.List;
 
 public class TestFlowPositionRepository {
     private final EntityManager entityManager;
-    private final EntityManagerFactory emf;
 
-    // Constructor to inject EntityManager
-
+    // Constructor
     public TestFlowPositionRepository() {
-        this.emf = Persistence.createEntityManagerFactory("test_db");
-        this.entityManager = this.emf.createEntityManager();
+        this.entityManager = JpaUtil.getEntityManager();
     }
-
-    public TestFlowPositionRepository(String pu) {
-        this.emf = Persistence.createEntityManagerFactory(pu);
-        this.entityManager = this.emf.createEntityManager();    }
 
     // Create a new TestFlowPosition
     public void addTestFlowPosition(TestFlowPosition testFlowPosition) {
+        EntityTransaction transaction = entityManager.getTransaction();
         try {
-            entityManager.getTransaction().begin();
+            transaction.begin();
             entityManager.persist(testFlowPosition);
-            entityManager.getTransaction().commit();
-        }catch (RuntimeException e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
+            transaction.commit();
+        } catch (RuntimeException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
             }
             throw e;
         }
-
     }
-    public void findById(String id){
-        Query query = entityManager.createNamedQuery("find testflowposition by id");
-        query.setParameter("id",id);
-        query.getSingleResult();
+
+    // Find a TestFlowPosition by ID
+    public TestFlowPosition findById(int id) {
+        try {
+            TypedQuery<TestFlowPosition> query = entityManager.createNamedQuery("find testflowposition by id", TestFlowPosition.class);
+            query.setParameter("id", id);
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     // Retrieve all TestFlowPositions
     public List<TestFlowPosition> getAllTestFlowPositions() {
         String query = "SELECT t FROM TestFlowPosition t";
-        TypedQuery<TestFlowPosition> typedQuery = entityManager.createQuery(query, TestFlowPosition.class);
-        return typedQuery.getResultList();
+        return entityManager.createQuery(query, TestFlowPosition.class).getResultList();
     }
 
     // Retrieve a TestFlowPosition by ID
@@ -53,37 +52,42 @@ public class TestFlowPositionRepository {
     }
 
     // Update an existing TestFlowPosition
-    public void updateTestFlowPosition(TestFlowPosition TestFlowPosition) {
-        TestFlowPosition TestFlowPositionUpdate = getTestFlowPositionById(TestFlowPosition.getPositionID());
-
+    public void updateTestFlowPosition(TestFlowPosition testFlowPosition) {
+        EntityTransaction transaction = entityManager.getTransaction();
         try {
-            entityManager.getTransaction().begin();
-            entityManager.merge(TestFlowPositionUpdate);  // Use merge for updating existing entities
-            entityManager.getTransaction().commit();
-        }catch (RuntimeException e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
+            transaction.begin();
+            entityManager.merge(testFlowPosition);
+            transaction.commit();
+        } catch (RuntimeException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
             }
             throw e;
         }
-
     }
 
     // Delete a TestFlowPosition by ID
-    public void deleteTestFlowPosition(String idTS) {
+    public void deleteTestFlowPosition(int idTS) {
+        EntityTransaction transaction = entityManager.getTransaction();
         try {
-            entityManager.getTransaction().begin();
-            TestFlowPosition TestFlowPosition = entityManager.find(TestFlowPosition.class, idTS);
-            if (TestFlowPosition != null) {
-                entityManager.remove(TestFlowPosition);  // Remove the entity from the database
+            transaction.begin();
+            TestFlowPosition testFlowPosition = entityManager.find(TestFlowPosition.class, idTS);
+            if (testFlowPosition != null) {
+                entityManager.remove(testFlowPosition);
             }
-            entityManager.getTransaction().commit();
+            transaction.commit();
         } catch (RuntimeException e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
+            if (transaction.isActive()) {
+                transaction.rollback();
             }
             throw e;
         }
     }
 
+    // Close EntityManager
+    public void close() {
+        if (entityManager.isOpen()) {
+            entityManager.close();
+        }
+    }
 }

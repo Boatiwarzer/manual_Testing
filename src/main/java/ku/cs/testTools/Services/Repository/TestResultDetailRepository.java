@@ -2,87 +2,98 @@ package ku.cs.testTools.Services.Repository;
 
 import jakarta.persistence.*;
 import ku.cs.testTools.Models.TestToolModels.TestResultDetail;
+import ku.cs.testTools.Services.JpaUtil;
 
 import java.util.List;
 
 public class TestResultDetailRepository {
     private final EntityManager entityManager;
-    private final EntityManagerFactory emf;
 
-    // Constructor to inject EntityManager
-
+    // Constructor to inject EntityManager using JpaUtil
     public TestResultDetailRepository() {
-        this.emf = Persistence.createEntityManagerFactory("test_db");
-        this.entityManager = this.emf.createEntityManager();
+        this.entityManager = JpaUtil.getEntityManager();
     }
 
-    public TestResultDetailRepository(String pu) {
-        this.emf = Persistence.createEntityManagerFactory(pu);
-        this.entityManager = this.emf.createEntityManager();    }
-
-    // Create a new TestScript
+    // Create a new TestResultDetail
     public void addTestResultDetail(TestResultDetail testResultDetail) {
+        EntityTransaction transaction = entityManager.getTransaction();
         try {
-            entityManager.getTransaction().begin();
+            transaction.begin();
             entityManager.persist(testResultDetail);
-            entityManager.getTransaction().commit();
-        }catch (RuntimeException e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
+            transaction.commit();
+        } catch (RuntimeException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
             }
             throw e;
+        } finally {
+            // Ensure that the EntityManager is closed after the transaction
+            close();
         }
-
-    }
-    public void findById(String id){
-        Query query = entityManager.createNamedQuery("find testresultdetail by id");
-        query.setParameter("id",id);
-        query.getSingleResult();
     }
 
-    // Retrieve all TestScripts
+    // Find a TestResultDetail by ID
+    public TestResultDetail findById(String id) {
+        try {
+            return entityManager.find(TestResultDetail.class, id);
+        } catch (NoResultException e) {
+            return null; // Return null if no result found
+        } finally {
+            close();
+        }
+    }
+
+    // Retrieve all TestResultDetails
     public List<TestResultDetail> getAllTestResultDetails() {
         String query = "SELECT t FROM TestResultDetail t";
-        TypedQuery<TestResultDetail> typedQuery = entityManager.createQuery(query, TestResultDetail.class);
-        return typedQuery.getResultList();
-    }
-
-    // Retrieve a TestScript by ID
-    public TestResultDetail getTestResultDetailById(String idTRD) {
-        return entityManager.find(TestResultDetail.class, idTRD);
-    }
-
-    // Update an existing TestScript
-    public void updateTestResultDetail(TestResultDetail testResultDetail) {
-        TestResultDetail testResultDetailUpdate = getTestResultDetailById(testResultDetail.getIdTRD());
-
         try {
-            entityManager.getTransaction().begin();
-            entityManager.merge(testResultDetailUpdate);  // Use merge for updating existing entities
-            entityManager.getTransaction().commit();
-        }catch (RuntimeException e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
+            return entityManager.createQuery(query, TestResultDetail.class).getResultList();
+        } finally {
+            close();
+        }
+    }
+
+    // Update an existing TestResultDetail
+    public void updateTestResultDetail(TestResultDetail testResultDetail) {
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            entityManager.merge(testResultDetail);
+            transaction.commit();
+        } catch (RuntimeException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
             }
             throw e;
+        } finally {
+            close();
         }
-
     }
 
-    // Delete a TestScript by ID
+    // Delete a TestResultDetail by ID
     public void deleteTestResultDetail(String idTC) {
+        EntityTransaction transaction = entityManager.getTransaction();
         try {
-            entityManager.getTransaction().begin();
+            transaction.begin();
             TestResultDetail testResultDetail = entityManager.find(TestResultDetail.class, idTC);
             if (testResultDetail != null) {
-                entityManager.remove(testResultDetail);  // Remove the entity from the database
+                entityManager.remove(testResultDetail);
             }
-            entityManager.getTransaction().commit();
+            transaction.commit();
         } catch (RuntimeException e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
+            if (transaction.isActive()) {
+                transaction.rollback();
             }
             throw e;
+        } finally {
+            close();
+        }
+    }
+
+    // Close EntityManager after usage
+    private void close() {
+        if (entityManager.isOpen()) {
+            entityManager.close();
         }
     }
 }
