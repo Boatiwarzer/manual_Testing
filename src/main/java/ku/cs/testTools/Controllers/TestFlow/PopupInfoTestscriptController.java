@@ -15,6 +15,9 @@ import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
 import ku.cs.testTools.Services.DataSourceCSV.*;
+import ku.cs.testTools.Services.Repository.TestFlowPositionRepository;
+import ku.cs.testTools.Services.Repository.TestScriptDetailRepository;
+import ku.cs.testTools.Services.Repository.TestScriptRepository;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -87,6 +90,7 @@ public class PopupInfoTestscriptController {
     private ConnectionList connectionList;
     private String type = "new";
     private String name;
+    private TestScriptDetailList testScriptDetailListDelete = new TestScriptDetailList();
 
     @FXML
     void initialize() {
@@ -108,6 +112,7 @@ public class PopupInfoTestscriptController {
                     testScript = (TestScript) objects.get(4);
                     testScriptDetailList = (TestScriptDetailList) objects.get(5);
                     type = (String) objects.get(6);
+                    testScriptDetailListDelete = (TestScriptDetailList) objects.get(7);
                 }else {
                     testScript = testScriptList.findByPositionId(position);
                     System.out.println(testScript);
@@ -459,7 +464,6 @@ public class PopupInfoTestscriptController {
         String preCon = infoPreconLabel.getText();
         String note = onTestNoteField.getText();
         String post = infoPostconLabel.getText();
-
         try {
 
             testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post,note,position);
@@ -473,6 +477,7 @@ public class PopupInfoTestscriptController {
             objects.add(testCaseDetailList);
             objects.add("new");
             objects.add(null);
+            objects.add(testScriptDetailListDelete);
             if (testScriptDetailList != null){
                 FXRouter.popup("popup_testflow_add_testscript",objects,true);
             }
@@ -517,6 +522,15 @@ public class PopupInfoTestscriptController {
             testScriptList.deleteTestScriptByPositionID(position);
             testScriptDetailList.deleteTestScriptDetailByTestScriptID(testScript.getIdTS());
             testFlowPositionList.removePositionByID(position);
+            TestScriptRepository testScriptRepository = new TestScriptRepository();
+            testScriptRepository.deleteTestScript(testScript.getIdTS());
+            TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
+            for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()){
+                testScriptDetailRepository.deleteTestScriptDetail(testScriptDetail.getIdTSD());
+            }
+            TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
+            testFlowRepository.deleteTestFlowPosition(position);
+
             saveProject();
             try {
                 ArrayList<Object> objects = new ArrayList<>();
@@ -545,6 +559,7 @@ public class PopupInfoTestscriptController {
         alert.setContentText("Press OK to confirm, or Cancel to go back.");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
+            testScriptDetailListDelete.addTestScriptDetail(selectedItem);
             testScriptDetailList.deleteTestScriptDetail(selectedItem);
             onTableTestscript.getItems().clear();
             loadTable(testScriptDetailList);
@@ -566,6 +581,7 @@ public class PopupInfoTestscriptController {
             String preCon = infoPreconLabel.getText();
             String note = onTestNoteField.getText();
             String post = infoPostconLabel.getText();
+
             testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, post,note,position);
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
@@ -577,6 +593,7 @@ public class PopupInfoTestscriptController {
             objects.add(testCaseDetailList);
             objects.add("edit");
             objects.add(selectedItem);
+            objects.add(testScriptDetailListDelete);
             if (selectedItem != null){
                 FXRouter.popup("popup_testflow_add_testscript",objects,true);
             }
@@ -598,14 +615,31 @@ public class PopupInfoTestscriptController {
         String preCon = infoPreconLabel.getText();
         String note = onTestNoteField.getText();
         String post = infoPostconLabel.getText();
+        if (name.isEmpty() || idTS == null || idTS.isEmpty() || date.isEmpty() || useCase == null || useCase.isEmpty() || description.isEmpty()
+                || tc == null || tc.isEmpty() || preCon.isEmpty() || note.isEmpty() || post.isEmpty()) {
 
+            // Show an alert if any field is missing
+            showAlert("Input Error", "Please fill in all required fields.");
+            return; // Prevent further execution if the fields are incomplete
+        }
         // Create a new TestScript object
         testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post, note,position);
 
-
+        TestScriptRepository testScriptRepository = new TestScriptRepository();
+        TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
+        for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()){
+            testScriptDetailRepository.updateTestScriptDetail(testScriptDetail);
+        }
+        for (TestScriptDetail testScriptDetail : testScriptDetailListDelete.getTestScriptDetailList()){
+            testScriptDetailRepository.deleteTestScriptDetail(testScriptDetail.getIdTSD());
+        }
+        testScriptRepository.updateTestScript(testScript);
         // Add or update test script
         testScriptList.addOrUpdateTestScript(testScript);
-
+        TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(position);
+        testFlowPositionList.addPosition(testFlowPosition);
+        TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
+        testFlowRepository.updateTestFlowPosition(testFlowPosition);
         // Write data to respective files
 
         // Show success message

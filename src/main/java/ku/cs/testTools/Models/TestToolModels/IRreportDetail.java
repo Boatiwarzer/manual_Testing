@@ -9,8 +9,10 @@ import java.util.Objects;
 @Data
 @NoArgsConstructor
 @Entity
+@NamedQuery(name = "find IRreportDetail by id", query = "Select t from IRreportDetail t where t.idIRD = :id")
 public class IRreportDetail {
     @Id
+    @Access(AccessType.FIELD)
     @Column(name = "id_ird", nullable = false, unique = true)
     private String idIRD;
 
@@ -52,7 +54,7 @@ public class IRreportDetail {
 
 
     @ManyToOne
-    @JoinColumn(name = "id_ir", referencedColumnName = "idIR", nullable = false)
+    //@JoinColumn(name = "id_ir", referencedColumnName = "idIR", nullable = false)
     private IRreport iRreport;
     private String idIR;
     private String idTRD;

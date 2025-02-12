@@ -13,6 +13,8 @@ import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.TestScriptList;
 import ku.cs.testTools.Services.DataSource;
 import ku.cs.testTools.Services.DataSourceCSV.TestScriptFileDataSource;
+import ku.cs.testTools.Services.Repository.TestScriptDetailRepository;
+import ku.cs.testTools.Services.Repository.TestScriptRepository;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,6 +64,8 @@ public class HomeTesterController {
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
             name = (String) objects.get(2);
+            TestScriptRepository testScriptRepository = new TestScriptRepository();
+            testScriptRepository.getAllTestScripts();
             System.out.println(name);
             System.out.println("Project Name: " + projectName);
             System.out.println("Directory: " + directory);

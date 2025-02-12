@@ -38,6 +38,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -122,7 +123,7 @@
    <left>
       <AnchorPane BorderPane.alignment="CENTER">
          <children>
-            <VBox layoutX="15.0" layoutY="15.0" prefHeight="670.0" prefWidth="265.0" spacing="10.0" AnchorPane.leftAnchor="15.0">
+            <VBox layoutX="15.0" layoutY="14.0" prefHeight="258.0" prefWidth="266.0">
                <children>
                   <HBox prefHeight="30.0" prefWidth="240.0">
                      <children>
@@ -142,6 +143,38 @@
                         </Button>
                      </children>
                   </HBox>
+                  <ScrollPane>
+                     <content>
+                        <VBox prefHeight="430.0" prefWidth="266.0">
+                           <children>
+                              <TitledPane expanded="false" text="untitled" underline="true" wrapText="true">
+                                 <content>
+                                    <ListView prefHeight="103.0" prefWidth="265.0" />
+                                 </content>
+                              </TitledPane>
+                              <TitledPane expanded="false" layoutX="10.0" layoutY="10.0" text="untitled" underline="true" wrapText="true">
+                                 <content>
+                                    <ListView prefHeight="103.0" prefWidth="265.0" />
+                                 </content>
+                              </TitledPane>
+                              <TitledPane expanded="false" layoutX="10.0" layoutY="36.0" text="untitled" underline="true" wrapText="true">
+                                 <content>
+                                    <ListView prefHeight="103.0" prefWidth="265.0" />
+                                 </content>
+                              </TitledPane>
+                              <TitledPane expanded="false" layoutX="10.0" layoutY="61.0" text="untitled" underline="true" wrapText="true">
+                                 <content>
+                                    <ListView prefHeight="103.0" prefWidth="265.0" />
+                                 </content>
+                              </TitledPane>
+                           </children>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
+               </children>
+            </VBox>
+            <VBox layoutX="15.0" layoutY="323.0" prefHeight="362.0" prefWidth="266.0" spacing="10.0" AnchorPane.leftAnchor="15.0">
+               <children>
                   <ListView fx:id="onSearchList" prefHeight="560.0" prefWidth="240.0" />
                   <TitledPane fx:id="noteTitlePane" animated="false" collapsible="false" prefHeight="665.0" prefWidth="265.0" text="Note">
                      <content>

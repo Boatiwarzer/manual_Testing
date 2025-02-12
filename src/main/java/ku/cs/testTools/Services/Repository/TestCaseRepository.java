@@ -2,87 +2,92 @@ package ku.cs.testTools.Services.Repository;
 
 import jakarta.persistence.*;
 import ku.cs.testTools.Models.TestToolModels.TestCase;
+import ku.cs.testTools.Services.JpaUtil;
 
 import java.util.List;
 
 public class TestCaseRepository {
     private final EntityManager entityManager;
-    private final EntityManagerFactory emf;
 
-    // Constructor to inject EntityManager
-
+    // Constructor
     public TestCaseRepository() {
-        this.emf = Persistence.createEntityManagerFactory("test_db");
-        this.entityManager = this.emf.createEntityManager();
+        this.entityManager = JpaUtil.getEntityManager();
     }
 
-    public TestCaseRepository(String pu) {
-        this.emf = Persistence.createEntityManagerFactory(pu);
-        this.entityManager = this.emf.createEntityManager();    }
-
-    // Create a new TestScript
-    public void addTestCase(TestCase testcase) {
+    // Create a new TestCase
+    public void addTestCase(TestCase testCase) {
+        EntityTransaction transaction = entityManager.getTransaction();
         try {
-            entityManager.getTransaction().begin();
-            entityManager.persist(testcase);
-            entityManager.getTransaction().commit();
-        }catch (RuntimeException e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
+            transaction.begin();
+            entityManager.persist(testCase);
+            transaction.commit();
+        } catch (RuntimeException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
             }
             throw e;
         }
-
-    }
-    public void findById(String id){
-        Query query = entityManager.createNamedQuery("find testcase by id");
-        query.setParameter("id",id);
-        query.getSingleResult();
     }
 
-    // Retrieve all TestScripts
+    // Find a TestCase by ID
+    public TestCase findById(String id) {
+        try {
+            TypedQuery<TestCase> query = entityManager.createNamedQuery("find testcase by id", TestCase.class);
+            query.setParameter("id", id);
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    // Retrieve all TestCases
     public List<TestCase> getAllTestCases() {
-        String query = "SELECT t FROM TestScript t";
-        TypedQuery<TestCase> typedQuery = entityManager.createQuery(query, TestCase.class);
-        return typedQuery.getResultList();
+        String query = "SELECT t FROM TestCase t";
+        return entityManager.createQuery(query, TestCase.class).getResultList();
     }
 
-    // Retrieve a TestScript by ID
+    // Retrieve a TestCase by ID
     public TestCase getTestCaseById(String idTC) {
         return entityManager.find(TestCase.class, idTC);
     }
 
-    // Update an existing TestScript
+    // Update an existing TestCase
     public void updateTestCase(TestCase testCase) {
-        TestCase testCaseUpdate = getTestCaseById(testCase.getIdTC());
-
+        EntityTransaction transaction = entityManager.getTransaction();
         try {
-            entityManager.getTransaction().begin();
-            entityManager.merge(testCaseUpdate);  // Use merge for updating existing entities
-            entityManager.getTransaction().commit();
-        }catch (RuntimeException e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
+            transaction.begin();
+            entityManager.merge(testCase);
+            transaction.commit();
+        } catch (RuntimeException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
             }
             throw e;
         }
-
     }
 
-    // Delete a TestScript by ID
+    // Delete a TestCase by ID
     public void deleteTestCase(String idTC) {
+        EntityTransaction transaction = entityManager.getTransaction();
         try {
-            entityManager.getTransaction().begin();
+            transaction.begin();
             TestCase testCase = entityManager.find(TestCase.class, idTC);
             if (testCase != null) {
-                entityManager.remove(testCase);  // Remove the entity from the database
+                entityManager.remove(testCase);
             }
-            entityManager.getTransaction().commit();
+            transaction.commit();
         } catch (RuntimeException e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
+            if (transaction.isActive()) {
+                transaction.rollback();
             }
             throw e;
+        }
+    }
+
+    // Close EntityManager
+    public void close() {
+        if (entityManager.isOpen()) {
+            entityManager.close();
         }
     }
 }

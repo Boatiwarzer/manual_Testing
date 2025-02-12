@@ -84,6 +84,8 @@ public class PopupAddTestresultController {
     private String type;
     private String typeTR;
     private String nameTester;
+    private TestResultDetailList testResultDetailListDelete = new TestResultDetailList();
+
 
     @FXML
     void initialize() {
@@ -106,6 +108,7 @@ public class PopupAddTestresultController {
             onTester.setText(nameTester);
             if (objects.get(7) != null && type.equals("edit")) {
                 testResultDetail = (TestResultDetail) objects.get(7);
+                testResultDetailListDelete = (TestResultDetailList)  objects.get(8);
                 testResultDetail = testResultDetailList.findTRDById(testResultDetail.getIdTRD());
                 id = testResultDetail.getIdTRD();
                 setTextEdit();
@@ -394,6 +397,8 @@ public class PopupAddTestresultController {
         objects.add(testResult);
         objects.add(testResultDetailList);
         objects.add(type);
+        objects.add(testResultDetailListDelete);
+
     }
     private void route(ActionEvent event, ArrayList<Object> objects) throws IOException {
         if (typeTR.equals("editTR")){

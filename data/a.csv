@@ -19,8 +19,16 @@ connection,8,573.3999938964844,235.60000610351562,574.5999999999999,309.2,Arrow,
 connection,9,573.3999938964844,235.60000610351562,577.0,307.6,Arrow,none,line,open,!@#$%^&*()_+,line,a,TestJs
 connection,10,544.8,154.2,634.8,64.19999999999999,Start,none,none,none,!@#$%^&*()_+,start,a,TestJs
 connection,11,571.4000000000001,122.0,573.0,158.8,Arrow,none,line,open,!@#$%^&*()_+,line,a,TestJs
+testScript,TS-589,s,12-02-2025,None,s,None,s,s,s,0
+testScript,TS-313,a,12-02-2025,None,a,None,a,a,a,0
+testScript,TS-688,asf,12-02-2025,None,ff,None,ff,ff,ff,0
 testScript,TS-861,AAA,-,-,-,-,-,-,-,1
 testScript,TS-399,AAAA,-,-,-,-,-,-,-,9
 testScript,TS-721,AAA,-,-,-,-,-,-,-,11
+testScript,TS-474,asx,12-02-2025,None,xx,None,x,x,x,0
+testScriptDetail,TSD-615,d,d,None,d,TS-474,12-02-2025
+testScriptDetail,TSD-969,s,s,None,d,TS-474,12-02-2025
+testScriptDetail,TSD-446,f,f,None,f,TS-688,12-02-2025
+testScriptDetail,TSD-748,s,s,None,s,TS-589,12-02-2025
 testCase,TC-821,AAA,-,-,-,-,2,-,-
 testCase,TC-729,AAA,-,-,-,-,8,-,-

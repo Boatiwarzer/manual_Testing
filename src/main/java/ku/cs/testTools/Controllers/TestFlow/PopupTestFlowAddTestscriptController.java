@@ -54,6 +54,7 @@ public class PopupTestFlowAddTestscriptController {
     private String type;
     private ArrayList<Object> objects;
     private String name;
+    private TestScriptDetailList testScriptDetailListDelete;
 
     @FXML
     void initialize() {
@@ -77,6 +78,7 @@ public class PopupTestFlowAddTestscriptController {
             System.out.println(testCaseDetailList);
             if (objects.get(8) != null && type.equals("edit")){
                 testScriptDetail = (TestScriptDetail) objects.get(8);
+                testScriptDetailListDelete = (TestScriptDetailList)  objects.get(9);
                 testScriptDetail = testScriptDetailList.findTSById(testScriptDetail.getIdTSD());
                 id = testScriptDetail.getIdTSD();
                 setTextEdit();
@@ -118,8 +120,20 @@ public class PopupTestFlowAddTestscriptController {
         String Input = onInputDataCombobox.getValue();
         String Expect = onExpectedArea.getText();
         setDateTSD();
+        if (TsNo.isEmpty() || TsStep.isEmpty() || Input == null || Input.isEmpty() || Expect.isEmpty()) {
+            // Show an alert if any field is missing or invalid
+            showAlert("Input Error", "Please fill in all required fields.");
+            return; // Prevent further execution if the fields are incomplete
+        }
         testScriptDetail = new TestScriptDetail(id,TsNo, TsStep, Input, Expect,idTS,date);
         testScriptDetailList.addOrUpdateTestScriptDetail(testScriptDetail);
+    }
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
     private void objects() {
         objects = new ArrayList<>();
@@ -130,6 +144,7 @@ public class PopupTestFlowAddTestscriptController {
         objects.add(testScript);
         objects.add(testScriptDetailList);
         objects.add(type);
+        objects.add(testScriptDetailListDelete);
     }
     @FXML
     void onConfirmButton(ActionEvent event) {

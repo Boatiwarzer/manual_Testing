@@ -29,6 +29,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import ku.cs.testTools.Services.*;
+import ku.cs.testTools.Services.Repository.TestScriptDetailRepository;
+import ku.cs.testTools.Services.Repository.TestScriptRepository;
+import ku.cs.testTools.Services.Repository.UseCaseDetailRepository;
+import ku.cs.testTools.Services.Repository.UseCaseRepository;
 import org.controlsfx.control.textfield.TextFields;
 
 public class UseCaseAddController {
@@ -501,7 +505,12 @@ public class UseCaseAddController {
                     systemNumber++;
                 }
             }
-
+            UseCaseRepository useCaseRepository = new UseCaseRepository();
+            UseCaseDetailRepository useCaseDetailRepository = new UseCaseDetailRepository();
+            for (UseCaseDetail useCaseDetail1 : useCaseDetailList.getUseCaseDetailList()){
+               useCaseDetailRepository.addUseCaseDetail(useCaseDetail1);
+            }
+            useCaseRepository.addUseCase(useCase);
             saveProject();
             isGenerated = false;
             showAlert("Success", "Use Case saved successfully!");

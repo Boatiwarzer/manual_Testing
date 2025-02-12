@@ -1,25 +1,25 @@
 package ku.cs.testTools.Services.Repository;
 
 import jakarta.persistence.*;
-import ku.cs.testTools.Models.TestToolModels.TestScriptDetail;
+import ku.cs.testTools.Models.TestToolModels.IRreport;
 import ku.cs.testTools.Services.JpaUtil;
 
 import java.util.List;
 
-public class TestScriptDetailRepository {
+public class IRReportRepository {
     private final EntityManager entityManager;
 
     // Constructor
-    public TestScriptDetailRepository() {
+    public IRReportRepository() {
         this.entityManager = JpaUtil.getEntityManager();
     }
 
-    // Create a new TestScriptDetail
-    public void addTestScriptDetail(TestScriptDetail testScriptDetail) {
+    // Create a new IRReport
+    public void addIRReport(IRreport irReport) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            entityManager.persist(testScriptDetail);
+            entityManager.persist(irReport);
             transaction.commit();
         } catch (RuntimeException e) {
             if (transaction.isActive()) {
@@ -29,10 +29,10 @@ public class TestScriptDetailRepository {
         }
     }
 
-    // Find a TestScriptDetail by ID
-    public TestScriptDetail findById(String id) {
+    // Find an IRReport by ID
+    public IRreport findById(String id) {
         try {
-            TypedQuery<TestScriptDetail> query = entityManager.createNamedQuery("find testscriptdetail by id", TestScriptDetail.class);
+            TypedQuery<IRreport> query = entityManager.createNamedQuery("find IRreport by id", IRreport.class);
             query.setParameter("id", id);
             return query.getSingleResult();
         } catch (NoResultException e) {
@@ -40,23 +40,23 @@ public class TestScriptDetailRepository {
         }
     }
 
-    // Retrieve all TestScriptDetails
-    public List<TestScriptDetail> getAllTestScriptDetail() {
-        String query = "SELECT t FROM TestScriptDetail t";
-        return entityManager.createQuery(query, TestScriptDetail.class).getResultList();
+    // Retrieve all IRReports
+    public List<IRreport> getAllIRReports() {
+        String query = "SELECT t FROM IRreport t";
+        return entityManager.createQuery(query, IRreport.class).getResultList();
     }
 
-    // Retrieve a TestScriptDetail by ID
-    public TestScriptDetail getTestScriptDetailById(String idTSD) {
-        return entityManager.find(TestScriptDetail.class, idTSD);
+    // Retrieve an IRReport by ID
+    public IRreport getIRReportById(String id) {
+        return entityManager.find(IRreport.class, id);
     }
 
-    // Update an existing TestScriptDetail
-    public void updateTestScriptDetail(TestScriptDetail testScriptDetail) {
+    // Update an existing IRReport
+    public void updateIRReport(IRreport irReport) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            entityManager.merge(testScriptDetail);
+            entityManager.merge(irReport);
             transaction.commit();
         } catch (RuntimeException e) {
             if (transaction.isActive()) {
@@ -66,14 +66,14 @@ public class TestScriptDetailRepository {
         }
     }
 
-    // Delete a TestScriptDetail by ID
-    public void deleteTestScriptDetail(String idTSD) {
+    // Delete an IRReport by ID
+    public void deleteIRReport(String id) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            TestScriptDetail testScriptDetail = entityManager.find(TestScriptDetail.class, idTSD);
-            if (testScriptDetail != null) {
-                entityManager.remove(testScriptDetail);
+            IRreport irReport = entityManager.find(IRreport.class, id);
+            if (irReport != null) {
+                entityManager.remove(irReport);
             }
             transaction.commit();
         } catch (RuntimeException e) {

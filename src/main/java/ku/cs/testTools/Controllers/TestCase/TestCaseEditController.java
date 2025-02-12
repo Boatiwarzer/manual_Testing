@@ -15,6 +15,7 @@ import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
 import ku.cs.testTools.Services.DataSourceCSV.*;
+import ku.cs.testTools.Services.Repository.*;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.File;
@@ -106,6 +107,8 @@ public class TestCaseEditController {
     private String typeTC;
     private int position = 0;
     private String name;
+    private TestCaseDetailList testCaseDetailListDelete = new TestCaseDetailList();
+
 
     @FXML
     void initialize() {
@@ -128,6 +131,8 @@ public class TestCaseEditController {
                 testCase = (TestCase) objects.get(4);
                 testCaseDetailList = (TestCaseDetailList) objects.get(5);
                 type = (String) objects.get(6);
+                testCaseDetailListDelete = (TestCaseDetailList) objects.get(7);
+
 
             }
             setDataTC();
@@ -444,6 +449,25 @@ public class TestCaseEditController {
         String note = onTestNoteField.getText();
         String preCon = infoPreconField.getText();
         String post = infoPostconField.getText();
+
+        testCase = new TestCase(idTC, name, date, useCase, description,note,0,preCon,post);
+
+    }
+    private void currentNewDataForSubmit(){
+        String name = onTestNameField.getText();
+        String idTC = tcId;
+        String date = testDateLabel.getText();
+        String useCase = onUsecaseCombobox.getValue();
+        String description = infoDescriptField.getText();
+        String note = onTestNoteField.getText();
+        String preCon = infoPreconField.getText();
+        String post = infoPostconField.getText();
+        if (name.isEmpty() || idTC == null || idTC.isEmpty() || date.isEmpty() || useCase == null || useCase.isEmpty()
+                || description.isEmpty() || note.isEmpty() || preCon.isEmpty() || post.isEmpty()) {
+            // Show an alert if any field is missing or invalid
+            showAlert("Input Error", "Please fill in all required fields.");
+            return; // Prevent further execution if the fields are incomplete
+        }
         testCase = new TestCase(idTC, name, date, useCase, description,note,0,preCon,post);
 
     }
@@ -464,6 +488,7 @@ public class TestCaseEditController {
             objects();
             objects.add("edit");
             objects.add(selectedItem);
+            objects.add(testCaseDetailListDelete);
             if (selectedItem != null){
                 FXRouter.popup("popup_add_testcase",objects,true);
             }
@@ -480,6 +505,7 @@ public class TestCaseEditController {
             objects();
             objects.add("new");
             objects.add(null);
+            objects.add(testCaseDetailListDelete);
             if (testCaseDetailList != null){
                 FXRouter.popup("popup_add_testcase",objects,true);
             }
@@ -499,6 +525,7 @@ public class TestCaseEditController {
             alert.setContentText("Press OK to confirm, or Cancel to go back.");
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
+                testCaseDetailListDelete.addTestCaseDetail(selectedItem);
                 testCaseDetailList.deleteTestCase(selectedItem);
                 onTableTestcase.getItems().clear();
                 loadTable(testCaseDetailList);
@@ -521,6 +548,14 @@ public class TestCaseEditController {
                 testCaseList.deleteTestCaseByPositionID(position);
                 testCaseDetailList.deleteTestCaseDetailByTestScriptID(testCase.getIdTC());
                 testFlowPositionList.removePositionByID(position);
+                TestCaseRepository testCaseRepository = new TestCaseRepository();
+                testCaseRepository.deleteTestCase(testCase.getIdTC());
+                TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
+                for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()){
+                    testCaseDetailRepository.deleteTestCaseDetail(testCaseDetail.getIdTCD());
+                }
+                TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
+                testFlowRepository.deleteTestFlowPosition(position);
             }
             saveProject();
             objects = new ArrayList<>();
@@ -541,13 +576,21 @@ public class TestCaseEditController {
     @FXML
     void onSubmitButton(ActionEvent event) {
         try {
-            currentNewData();
+            currentNewDataForSubmit();
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
             objects.add(testCase);
             testCaseList.addOrUpdateTestCase(testCase);
-
+            TestCaseRepository testCaseRepository = new TestCaseRepository();
+            TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
+            for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()){
+                testCaseDetailRepository.updateTestCaseDetail(testCaseDetail);
+            }
+            for (TestCaseDetail testCaseDetail : testCaseDetailListDelete.getTestCaseDetailList()){
+                testCaseDetailRepository.deleteTestCaseDetail(testCaseDetail.getIdTCD());
+            }
+            testCaseRepository.updateTestCase(testCase);
             // Write data to respective files
             saveProject();
             showAlert("Success", "Test case saved successfully!");

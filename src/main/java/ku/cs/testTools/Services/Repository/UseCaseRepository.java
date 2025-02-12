@@ -2,87 +2,97 @@ package ku.cs.testTools.Services.Repository;
 
 import jakarta.persistence.*;
 import ku.cs.testTools.Models.TestToolModels.UseCase;
+import ku.cs.testTools.Services.JpaUtil;
 
 import java.util.List;
 
 public class UseCaseRepository {
     private final EntityManager entityManager;
-    private final EntityManagerFactory emf;
 
-    // Constructor to inject EntityManager
-
+    // Constructor to inject EntityManager using JpaUtil
     public UseCaseRepository() {
-        this.emf = Persistence.createEntityManagerFactory("test_db");
-        this.entityManager = this.emf.createEntityManager();
+        this.entityManager = JpaUtil.getEntityManager();
     }
-
-    public UseCaseRepository(String pu) {
-        this.emf = Persistence.createEntityManagerFactory(pu);
-        this.entityManager = this.emf.createEntityManager();    }
 
     // Create a new UseCase
-    public void addUseCase(UseCase UseCase) {
+    public void addUseCase(UseCase useCase) {
+        EntityTransaction transaction = entityManager.getTransaction();
         try {
-            entityManager.getTransaction().begin();
-            entityManager.persist(UseCase);
-            entityManager.getTransaction().commit();
-        }catch (RuntimeException e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
+            transaction.begin();
+            entityManager.persist(useCase);
+            transaction.commit();
+        } catch (RuntimeException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
             }
             throw e;
+        } finally {
+            close();
         }
-
     }
-    public void findById(String id){
-        Query query = entityManager.createNamedQuery("find usecase by id");
-        query.setParameter("id",id);
-        query.getSingleResult();
+
+    // Retrieve a UseCase by ID
+    public UseCase findById(String id) {
+        try {
+            return entityManager.find(UseCase.class, id);
+        } catch (NoResultException e) {
+            return null; // Return null if no result found
+        } finally {
+            close();
+        }
     }
 
     // Retrieve all UseCases
     public List<UseCase> getAllUseCases() {
         String query = "SELECT t FROM UseCase t";
-        TypedQuery<UseCase> typedQuery = entityManager.createQuery(query, UseCase.class);
-        return typedQuery.getResultList();
-    }
-
-    // Retrieve a UseCase by ID
-    public UseCase getUseCaseById(String idUC) {
-        return entityManager.find(UseCase.class, idUC);
+        try {
+            return entityManager.createQuery(query, UseCase.class).getResultList();
+        } finally {
+            close();
+        }
     }
 
     // Update an existing UseCase
     public void updateUseCase(UseCase useCase) {
-        UseCase useCaseUpdate = getUseCaseById(useCase.getUseCaseID());
-
+        EntityTransaction transaction = entityManager.getTransaction();
         try {
-            entityManager.getTransaction().begin();
-            entityManager.merge(useCaseUpdate);  // Use merge for updating existing entities
-            entityManager.getTransaction().commit();
-        }catch (RuntimeException e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
+            transaction.begin();
+            entityManager.merge(useCase); // Use merge for updating existing entities
+            transaction.commit();
+        } catch (RuntimeException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
             }
             throw e;
+        } finally {
+            close();
         }
-
     }
 
     // Delete a UseCase by ID
     public void deleteUseCase(String idUC) {
+        EntityTransaction transaction = entityManager.getTransaction();
         try {
-            entityManager.getTransaction().begin();
+            transaction.begin();
             UseCase useCase = entityManager.find(UseCase.class, idUC);
             if (useCase != null) {
-                entityManager.remove(useCase);  // Remove the entity from the database
+                entityManager.remove(useCase); // Remove the entity from the database
             }
-            entityManager.getTransaction().commit();
+            transaction.commit();
         } catch (RuntimeException e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
+            if (transaction.isActive()) {
+                transaction.rollback();
             }
             throw e;
+        } finally {
+            close();
+        }
+    }
+
+    // Close EntityManager after usage
+    private void close() {
+        if (entityManager.isOpen()) {
+            entityManager.close();
         }
     }
 }

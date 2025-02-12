@@ -17,6 +17,9 @@ import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
 import ku.cs.testTools.Services.DataSourceCSV.*;
+import ku.cs.testTools.Services.Repository.TestFlowPositionRepository;
+import ku.cs.testTools.Services.Repository.TestScriptDetailRepository;
+import ku.cs.testTools.Services.Repository.TestScriptRepository;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.File;
@@ -128,6 +131,7 @@ public class TestScriptEditController {
     private ArrayList <String> word = new ArrayList<>();
     private String type;
     private TestScriptDetailList testScriptDetailListTemp;
+    private TestScriptDetailList testScriptDetailListDelete = new TestScriptDetailList();
     private String typeTS;
     private ArrayList<Object> objects;
     private String name;
@@ -154,6 +158,7 @@ public class TestScriptEditController {
                 testScriptDetailList = (TestScriptDetailList) objects.get(5);
                 testCaseDetailList = (TestCaseDetailList) objects.get(6);
                 type = (String) objects.get(7);
+                testScriptDetailListDelete = (TestScriptDetailList) objects.get(8);
 
             }
             setDataTS();
@@ -532,14 +537,30 @@ public class TestScriptEditController {
         String preCon = infoPreconLabel.getText();
         String note = onTestNoteField.getText();
         String post = infoPostconLabel.getText();
-        testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post,note,position);
-        if (name == null || name.isEmpty() ||
-                useCase == null || useCase.isEmpty() ||
-                tc == null || tc.isEmpty()) {
-            showAlert("Input Error", "Please fill in all required fields.");
-        }
-    }
 
+        testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post,note,position);
+
+    }
+    private void currentNewDataForSubmit(){
+        String name = onTestNameField.getText();
+        String idTS = tsId;
+        String date = testDateLabel.getText();
+        String useCase = onUsecaseCombobox.getValue();
+        String description = infoDescriptLabel.getText();
+        String tc = onTestcaseCombobox.getValue();
+        String preCon = infoPreconLabel.getText();
+        String note = onTestNoteField.getText();
+        String post = infoPostconLabel.getText();
+        if (name.isEmpty() || idTS == null || idTS.isEmpty() || date.isEmpty() || useCase == null || useCase.isEmpty() || description.isEmpty()
+                || tc == null || tc.isEmpty() || preCon.isEmpty() || note.isEmpty() || post.isEmpty()) {
+
+            // Show an alert if any field is missing
+            showAlert("Input Error", "Please fill in all required fields.");
+            return; // Prevent further execution if the fields are incomplete
+        }
+        testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post,note,position);
+
+    }
     @FXML
     void onAddButton(ActionEvent event) {
 
@@ -555,6 +576,7 @@ public class TestScriptEditController {
             objects.add(testCaseDetailList);
             objects.add("edit");
             objects.add(selectedItem);
+            objects.add(testScriptDetailListDelete);
 
             if (testScriptDetailList != null){
                 FXRouter.popup("popup_add_testscript",objects,true);
@@ -580,6 +602,7 @@ public class TestScriptEditController {
             objects.add(testCaseDetailList);
             objects.add("edit");
             objects.add(selectedItem);
+            objects.add(testScriptDetailListDelete);
             if (selectedItem != null){
                 FXRouter.popup("popup_add_testscript",objects,true);
             }
@@ -597,6 +620,7 @@ public class TestScriptEditController {
             alert.setContentText("Press OK to confirm, or Cancel to go back.");
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
+                testScriptDetailListDelete.addTestScriptDetail(selectedItem);
                 testScriptDetailList.deleteTestScriptDetail(selectedItem);
                 onTableTestscript.getItems().clear();
                 loadTable(testScriptDetailList);
@@ -610,7 +634,7 @@ public class TestScriptEditController {
     @FXML
     void onSubmitButton(ActionEvent event) {
         // Validate fields
-        currentNewData();
+        currentNewDataForSubmit();
         // Check if mandatory fields are empty
 
 
@@ -620,8 +644,18 @@ public class TestScriptEditController {
         // Add or update test script
         testScriptList.addTestScript(testScript);
 
+
         // Write data to respective files
         saveProject();
+        TestScriptRepository testScriptRepository = new TestScriptRepository();
+        TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
+        for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()){
+            testScriptDetailRepository.updateTestScriptDetail(testScriptDetail);
+        }
+        for (TestScriptDetail testScriptDetail : testScriptDetailListDelete.getTestScriptDetailList()){
+            testScriptDetailRepository.deleteTestScriptDetail(testScriptDetail.getIdTSD());
+        }
+        testScriptRepository.updateTestScript(testScript);
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
@@ -651,6 +685,15 @@ public class TestScriptEditController {
                 testScriptList.deleteTestScriptByPositionID(position);
                 testScriptDetailList.deleteTestScriptDetailByTestScriptID(testScript.getIdTS());
                 testFlowPositionList.removePositionByID(position);
+                TestScriptRepository testScriptRepository = new TestScriptRepository();
+                testScriptRepository.deleteTestScript(testScript.getIdTS());
+                TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
+                for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()){
+                    testScriptDetailRepository.deleteTestScriptDetail(testScriptDetail.getIdTSD());
+                }
+                TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
+                testFlowRepository.deleteTestFlowPosition(position);
+
             }
             saveProject();
             objects = new ArrayList<>();

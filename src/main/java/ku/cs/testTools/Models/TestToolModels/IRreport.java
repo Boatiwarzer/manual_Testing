@@ -1,8 +1,6 @@
 package ku.cs.testTools.Models.TestToolModels;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -17,8 +15,10 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @Entity
+@NamedQuery(name = "find IRreport by id", query = "Select t from IRreport t where t.idIR = :id")
 public class IRreport {
     @Id
+    @Access(AccessType.FIELD)
     @Column(name = "id_ir", nullable = false, unique = true)
     private String idIR;
 

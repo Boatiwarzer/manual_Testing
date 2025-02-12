@@ -16,6 +16,10 @@ import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
 import ku.cs.testTools.Services.DataSourceCSV.*;
+import ku.cs.testTools.Services.Repository.TestCaseDetailRepository;
+import ku.cs.testTools.Services.Repository.TestCaseRepository;
+import ku.cs.testTools.Services.Repository.TestScriptDetailRepository;
+import ku.cs.testTools.Services.Repository.TestScriptRepository;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.File;
@@ -103,6 +107,8 @@ public class TestCaseAddController {
     private ArrayList<Object> objects;
     private TestCaseDetailList testCaseDetailListTemp;
     private String name;
+    private TestCaseDetailList testCaseDetailListDelete = new TestCaseDetailList();
+
 
     @FXML
     void initialize() {
@@ -488,7 +494,8 @@ public class TestCaseAddController {
             onUsecaseCombobox.getItems().add(uc_combobox);
         }
     }
-    private void currentNewData(){
+    private void currentNewData() {
+        // Retrieve the values from the fields
         String name = onTestNameField.getText();
         String idTC = tcId;
         String date = testDateLabel.getText();
@@ -497,9 +504,36 @@ public class TestCaseAddController {
         String note = onTestNoteField.getText();
         String preCon = infoPreconField.getText();
         String post = infoPostconField.getText();
-        testCase = new TestCase(idTC, name, date, useCase, description,note,0,preCon,post);
 
+        // Check if any required field is empty
+
+
+        // Create a new TestCase object
+        testCase = new TestCase(idTC, name, date, useCase, description, note, 0, preCon, post);
     }
+    private void currentNewDataForSubmit() {
+        // Retrieve the values from the fields
+        String name = onTestNameField.getText();
+        String idTC = tcId;
+        String date = testDateLabel.getText();
+        String useCase = onUsecaseCombobox.getValue();
+        String description = infoDescriptField.getText();
+        String note = onTestNoteField.getText();
+        String preCon = infoPreconField.getText();
+        String post = infoPostconField.getText();
+
+        // Check if any required field is empty
+        if (name.isEmpty() || idTC == null || idTC.isEmpty() || date.isEmpty() || useCase == null || useCase.isEmpty()
+                || description.isEmpty() || note.isEmpty() || preCon.isEmpty() || post.isEmpty()) {
+            // Show an alert if any field is missing or invalid
+            showAlert("Input Error", "Please fill in all required fields.");
+            return; // Prevent further execution if the fields are incomplete
+        }
+
+        // Create a new TestCase object
+        testCase = new TestCase(idTC, name, date, useCase, description, note, 0, preCon, post);
+    }
+
     private void objects() {
         objects = new ArrayList<>();
         objects.add(projectName);
@@ -532,6 +566,7 @@ public class TestCaseAddController {
             objects();
             objects.add("edit");
             objects.add(selectedItem);
+            objects.add(testCaseDetailListDelete);
             if (selectedItem != null){
                 FXRouter.popup("popup_add_testcase",objects,true);
             }
@@ -582,7 +617,13 @@ public class TestCaseAddController {
     @FXML
     void onSubmitButton(ActionEvent event) {
         try {
-            currentNewData();
+            currentNewDataForSubmit();
+            TestCaseRepository testCaseRepository = new TestCaseRepository();
+            TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
+            for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()){
+                testCaseDetailRepository.addTestCaseDetail(testCaseDetail);
+            }
+            testCaseRepository.addTestCase(testCase);
             DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
             TestCaseDetailList testCaseDetailListTemp = testCaseDetailListDataSource.readData();
             for (TestCaseDetail testCaseDetail : testCaseDetailListTemp.getTestCaseDetailList()){

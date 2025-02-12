@@ -1,25 +1,25 @@
 package ku.cs.testTools.Services.Repository;
 
 import jakarta.persistence.*;
-import ku.cs.testTools.Models.TestToolModels.TestScriptDetail;
+import ku.cs.testTools.Models.TestToolModels.Connection;
 import ku.cs.testTools.Services.JpaUtil;
 
 import java.util.List;
 
-public class TestScriptDetailRepository {
+public class ConnectionRepository {
     private final EntityManager entityManager;
 
     // Constructor
-    public TestScriptDetailRepository() {
+    public ConnectionRepository() {
         this.entityManager = JpaUtil.getEntityManager();
     }
 
-    // Create a new TestScriptDetail
-    public void addTestScriptDetail(TestScriptDetail testScriptDetail) {
+    // Create a new Connection
+    public void addConnection(Connection connection) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            entityManager.persist(testScriptDetail);
+            entityManager.persist(connection);
             transaction.commit();
         } catch (RuntimeException e) {
             if (transaction.isActive()) {
@@ -29,10 +29,10 @@ public class TestScriptDetailRepository {
         }
     }
 
-    // Find a TestScriptDetail by ID
-    public TestScriptDetail findById(String id) {
+    // Find a Connection by ID
+    public Connection findById(String id) {
         try {
-            TypedQuery<TestScriptDetail> query = entityManager.createNamedQuery("find testscriptdetail by id", TestScriptDetail.class);
+            TypedQuery<Connection> query = entityManager.createNamedQuery("find Connection by id", Connection.class);
             query.setParameter("id", id);
             return query.getSingleResult();
         } catch (NoResultException e) {
@@ -40,23 +40,23 @@ public class TestScriptDetailRepository {
         }
     }
 
-    // Retrieve all TestScriptDetails
-    public List<TestScriptDetail> getAllTestScriptDetail() {
-        String query = "SELECT t FROM TestScriptDetail t";
-        return entityManager.createQuery(query, TestScriptDetail.class).getResultList();
+    // Retrieve all Connections
+    public List<Connection> getAllConnections() {
+        String query = "SELECT c FROM Connection c";
+        return entityManager.createQuery(query, Connection.class).getResultList();
     }
 
-    // Retrieve a TestScriptDetail by ID
-    public TestScriptDetail getTestScriptDetailById(String idTSD) {
-        return entityManager.find(TestScriptDetail.class, idTSD);
+    // Retrieve a Connection by ID
+    public Connection getConnectionById(String id) {
+        return entityManager.find(Connection.class, id);
     }
 
-    // Update an existing TestScriptDetail
-    public void updateTestScriptDetail(TestScriptDetail testScriptDetail) {
+    // Update an existing Connection
+    public void updateConnection(Connection connection) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            entityManager.merge(testScriptDetail);
+            entityManager.merge(connection);
             transaction.commit();
         } catch (RuntimeException e) {
             if (transaction.isActive()) {
@@ -66,14 +66,14 @@ public class TestScriptDetailRepository {
         }
     }
 
-    // Delete a TestScriptDetail by ID
-    public void deleteTestScriptDetail(String idTSD) {
+    // Delete a Connection by ID
+    public void deleteConnection(String id) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            TestScriptDetail testScriptDetail = entityManager.find(TestScriptDetail.class, idTSD);
-            if (testScriptDetail != null) {
-                entityManager.remove(testScriptDetail);
+            Connection connection = entityManager.find(Connection.class, id);
+            if (connection != null) {
+                entityManager.remove(connection);
             }
             transaction.commit();
         } catch (RuntimeException e) {

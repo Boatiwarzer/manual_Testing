@@ -14,6 +14,7 @@ import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.DataSource;
 import ku.cs.testTools.Services.DataSourceCSV.*;
+import ku.cs.testTools.Services.Repository.TestFlowPositionRepository;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -131,6 +132,8 @@ public class LabelPageController {
             testScriptList.addOrUpdateTestScript(testScript);
             testFlowPosition = new TestFlowPosition(testFlowPositionList.findLastPositionId()+1,width,height,layoutX,layoutY,0,"testscript",projectName,name);
             testFlowPositionList.addPosition(testFlowPosition);
+            TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
+            testFlowRepository.addTestFlowPosition(testFlowPosition);
             saveProject();
             //objects.add(testScript);
         }else if (type.equals("Rectangle")){
@@ -140,6 +143,8 @@ public class LabelPageController {
             testCaseList.addOrUpdateTestCase(testCase);
             testFlowPosition = new TestFlowPosition(testFlowPositionList.findLastPositionId()+1,width,height,layoutX,layoutY,0,"testcase",projectName,name);
             testFlowPositionList.addPosition(testFlowPosition);
+            TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
+            testFlowRepository.addTestFlowPosition(testFlowPosition);
             saveProject();
             //objects.add(testCase);
 
@@ -148,6 +153,8 @@ public class LabelPageController {
             connectionList.addOrUpdate(connection);
             testFlowPosition = new TestFlowPosition(connectionList.findLastConnectionID(),width,height,layoutX,layoutY,0,"decision",projectName,name);
             testFlowPositionList.addPosition(testFlowPosition);
+            TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
+            testFlowRepository.addTestFlowPosition(testFlowPosition);
             saveProject();
 
         }

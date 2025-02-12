@@ -19,6 +19,7 @@ import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
 import ku.cs.testTools.Services.DataSourceCSV.*;
+import ku.cs.testTools.Services.Repository.*;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.File;
@@ -91,6 +92,8 @@ public class TestResultEditController {
     private String type;
     private TestScriptList testScriptList;
     private String name;
+    private TestResultDetailList testResultDetailListDelete = new TestResultDetailList();
+
 
     @FXML
     void initialize() {
@@ -114,6 +117,8 @@ public class TestResultEditController {
                     testResult = (TestResult) objects.get(4);
                     testResultDetailList = (TestResultDetailList) objects.get(5);
                     type = (String) objects.get(6);
+                    testResultDetailListDelete = (TestResultDetailList) objects.get(7);
+
                     System.out.println(type);
 
                 }
@@ -573,6 +578,7 @@ public class TestResultEditController {
             objects();
             objects.add("edit");
             objects.add(null);
+            objects.add(testResultDetailListDelete);
             if (testResultDetailList != null){
                 FXRouter.popup("popup_add_testresult",objects,true);
             }
@@ -588,6 +594,7 @@ public class TestResultEditController {
             objects();
             objects.add("edit");
             objects.add(selectedItem);
+            objects.add(testResultDetailListDelete);
             if (selectedItem != null){
                 FXRouter.popup("popup_add_testresult",objects,true);
             }
@@ -604,6 +611,7 @@ public class TestResultEditController {
             alert.setContentText("Press OK to confirm, or Cancel to go back.");
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
+                testResultDetailListDelete.addTestResultDetail(selectedItem);
                 testResultDetailList.deleteTestResultDetail(selectedItem);
                 onTableTestresult.getItems().clear();
                 loadTable(testResultDetailList);
@@ -702,6 +710,18 @@ public class TestResultEditController {
                 String idIR = parts[0];
                 iRreportList.deleteIRreport(irId);
                 iRreportDetailList.deleteIRreportDetailByID(idIR);
+                TestResultRepository testResultRepository = new TestResultRepository();
+                testResultRepository.deleteTestResult(testResult.getIdTR());
+                TestResultDetailRepository testResultDetailRepository = new TestResultDetailRepository();
+                for (TestResultDetail testResultDetail : testResultDetailList.getTestResultDetailList()){
+                    testResultDetailRepository.deleteTestResultDetail(testResultDetail.getIdTRD());
+                }
+                IRReportRepository iRreportRepository = new IRReportRepository();
+                iRreportRepository.deleteIRReport(iRreport.getIdIR());
+                IRDetailRepository iRreportDetailRepository = new IRDetailRepository();
+                for (IRreportDetail iRreportDetail : iRreportDetailList.getIRreportDetailList()){
+                    iRreportDetailRepository.deleteIRreportdetail(iRreportDetail.getIdTRD());
+                }
             }
             saveProject();
             objects = new ArrayList<>();
@@ -754,7 +774,15 @@ public class TestResultEditController {
 //            objects.add("edit");
 //            objects.add(selectedItem);
             testResultList.addOrUpdateTestResult(testResult);
-
+            TestResultRepository testResultRepository = new TestResultRepository();
+            TestResultDetailRepository testResultDetailRepository = new TestResultDetailRepository();
+            for (TestResultDetail testResultDetail : testResultDetailList.getTestResultDetailList()){
+                testResultDetailRepository.updateTestResultDetail(testResultDetail);
+            }
+            for (TestResultDetail testResultDetail : testResultDetailListDelete.getTestResultDetailList()){
+                testResultDetailRepository.deleteTestResultDetail(testResultDetail.getIdTRD());
+            }
+            testResultRepository.updateTestResult(testResult);
             // Write data to respective files
             saveProject();
             objects = new ArrayList<>();
