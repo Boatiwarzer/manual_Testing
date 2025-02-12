@@ -540,17 +540,17 @@ public class IRmanagerController {
         }
     }
 
-    @FXML
-    void onClickUsecase(ActionEvent event) {
-        try {
-//            resetHyperlinkStyles(); // ล้างสถานะ selected ทั้งหมด
-//            onClickUsecase.getStyleClass().add("selected");
-            objects();
-            FXRouter.goTo("use_case_manager",objects);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    @FXML
+//    void onClickUsecase(ActionEvent event) {
+//        try {
+////            resetHyperlinkStyles(); // ล้างสถานะ selected ทั้งหมด
+////            onClickUsecase.getStyleClass().add("selected");
+//            objects();
+//            FXRouter.goTo("use_case_manager",objects);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     @FXML
     void onEditButton(ActionEvent event) {

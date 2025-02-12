@@ -2,12 +2,13 @@ package ku.cs.testTools.Controllers.Home;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -27,10 +28,16 @@ public class NewProjectController {
     private TextField onProjectNameField;
 
     @FXML
-    private Button onSelectButton;
+    private Button onSelectButton, addTesterButton;
 
     @FXML
     private TextField onManagerField;
+
+    @FXML
+    private ScrollPane testerScrollPane;
+
+    @FXML
+    private VBox testerVBox;
 
     @FXML
     void onProjectNameField(ActionEvent event) {
@@ -116,5 +123,31 @@ public class NewProjectController {
     @FXML
     void onManagerField(ActionEvent event) {
 
+    }
+
+    @FXML
+    void handleAddTesterButton(ActionEvent actionEvent) {
+        if (!testerVBox.getChildren().isEmpty()) {
+            HBox lastHBox = (HBox) testerVBox.getChildren().get(testerVBox.getChildren().size() - 1);
+            TextArea lastTextArea = (TextArea) lastHBox.getChildren().get(0);
+        }
+        HBox hBox = new HBox();
+        // add the textArea to the testerVBox
+        TextArea textArea = new TextArea();
+        textArea.setMinSize(370, 36);
+        textArea.setMaxSize(370, 36);
+        textArea.setStyle("-fx-font-size: 14px;");
+        textArea.setWrapText(true);
+        // create a delete button to remove the textArea
+        Button deleteButton = new Button("-");
+        deleteButton.setPrefHeight(25);
+        deleteButton.setPrefWidth(25);
+        deleteButton.setOnAction(event -> {
+            testerVBox.getChildren().remove(hBox);
+        });
+        // Add textArea and delete button to the HBox
+        hBox.getChildren().add(textArea);
+        hBox.getChildren().add(deleteButton);
+        testerVBox.getChildren().add(hBox);
     }
 }

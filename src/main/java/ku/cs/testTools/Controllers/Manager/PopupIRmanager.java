@@ -313,7 +313,7 @@ public class PopupIRmanager {
         String remark = onRemark.getText();
 
         StringJoiner joiner = new StringJoiner("|");
-        if (!onRCA.equals("")){
+        if (!onRCA.getText().isEmpty()){
             joiner.add(onRCA.getText());
         }
 

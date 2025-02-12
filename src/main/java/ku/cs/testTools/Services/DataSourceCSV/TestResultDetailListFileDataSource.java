@@ -205,6 +205,7 @@ public class TestResultDetailListFileDataSource implements DataSource<TestResult
                 testResultDetail.getDateTRD() + "," +
                 testResultDetail.getTesterTRD() + "," +
                 testResultDetail.getImageTRD() + "," +
+                testResultDetail.getRemarkTRD() + "," +
                 testResultDetail.getApproveTRD() + "," +
                 testResultDetail.getRemarkTRD() + "," +
                 testResultDetail.getIdTR();

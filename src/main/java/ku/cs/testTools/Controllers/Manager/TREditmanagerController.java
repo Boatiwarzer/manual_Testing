@@ -598,15 +598,15 @@ public class TREditmanagerController {
         }
     }
 
-    @FXML
-    void onClickUsecase(ActionEvent event) {
-        try {
-            objects();
-            FXRouter.goTo("use_case_manager",objects);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    @FXML
+//    void onClickUsecase(ActionEvent event) {
+//        try {
+//            objects();
+//            FXRouter.goTo("use_case_manager",objects);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     @FXML
     void onSubmitButton(ActionEvent event) {
