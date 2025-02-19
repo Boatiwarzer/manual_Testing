@@ -343,6 +343,7 @@ public class IRmanagerController {
         configs.add(new StringConfiguration("title:IRD-ID.", "field:idIRD"));
         configs.add(new StringConfiguration("title:Test No.", "field:testNoIRD"));
         configs.add(new StringConfiguration("title:Tester", "field:testerIRD"));
+        configs.add(new StringConfiguration("title:Test times", "field:retestIRD"));
         configs.add(new StringConfiguration("title:TS-ID.", "field:tsIdIRD"));
         configs.add(new StringConfiguration("title:TC-ID.", "field:tcIdIRD"));
         configs.add(new StringConfiguration("title:Description", "field:descriptIRD"));
@@ -487,6 +488,7 @@ public class IRmanagerController {
         configs.add(new StringConfiguration("title:IRD-ID."));
         configs.add(new StringConfiguration("title:Test No."));
         configs.add(new StringConfiguration("title:Tester"));
+        configs.add(new StringConfiguration("title:Test times"));
         configs.add(new StringConfiguration("title:TS-ID."));
         configs.add(new StringConfiguration("title:TC-ID."));
         configs.add(new StringConfiguration("title:Description"));

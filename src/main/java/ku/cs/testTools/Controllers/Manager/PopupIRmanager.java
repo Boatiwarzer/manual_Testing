@@ -32,7 +32,7 @@ public class PopupIRmanager {
     private Button onConfirmButton, onCancelButton;
 
     @FXML
-    private Label irNameLabel, irIDLabel, onTester, onTestscriptIDComboBox, onTestcaseIDComboBox, onTestNo, onManager, onImage, onCondition, onDescription;
+    private Label onRetest, irNameLabel, irIDLabel, onTester, onTestscriptIDComboBox, onTestcaseIDComboBox, onTestNo, onManager, onImage, onCondition, onDescription;
 
     @FXML
     private ComboBox<String> onPriorityComboBox;
@@ -165,6 +165,7 @@ public class PopupIRmanager {
         onImage.getStyleClass().add("custom-label");
         onCondition.getStyleClass().add("custom-label");
         onDescription.getStyleClass().add("custom-label");
+        onRetest.getStyleClass().add("custom-label");
     }
     private void setData() {
         irNameLabel.setText(iRreport.getNameIR());
@@ -238,6 +239,8 @@ public class PopupIRmanager {
     }
 
     private void clearInfo() {
+        irNameLabel.setText("");
+        irIDLabel.setText("");
         onTestNo.setText("-");
         onTester.setText("-");
         onTestscriptIDComboBox.setText("-");
@@ -307,6 +310,7 @@ public class PopupIRmanager {
         String descript = onDescription.getText();
         String condition = onCondition.getText();
         String image = onImage.getText();
+        String retest = onRetest.getText();
         String manager = onManager.getText();
         String status = onStatusComboBox.getValue();
         String priority = onPriorityComboBox.getValue();
@@ -327,7 +331,7 @@ public class PopupIRmanager {
         String rca = joiner.toString();
         System.out.println(rca);
 
-        iRreportDetail = new IRreportDetail(id, TrNo, tester, IdTS, IdTC, descript, condition, image, priority, rca, manager, status, remark, idIR, idTrd);
+        iRreportDetail = new IRreportDetail(id, TrNo, tester, IdTS, IdTC, descript, condition, image, retest, priority, rca, manager, status, remark, idIR, idTrd);
         iRreportDetailList.addOrUpdateIRreportDetail(iRreportDetail);
 
         try {

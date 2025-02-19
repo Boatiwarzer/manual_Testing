@@ -37,6 +37,9 @@ public class IRreportDetail {
     @Column(name = "image_ird")
     private String imageIRD;
 
+    @Column(name = "retest_ird")
+    private String retestIRD;
+
     @Column(name = "priority_ird")
     private String priorityIRD;
 
@@ -59,7 +62,7 @@ public class IRreportDetail {
     private String idIR;
     private String idTRD;
 
-    public IRreportDetail(String idIRD, String testNoIRD, String testerIRD, String tsIdIRD, String tcIdIRD, String descriptIRD, String conditionIRD, String imageIRD, String priorityIRD, String rcaIRD, String managerIRD, String statusIRD, String remarkIRD, String idIR, String idTRD) {
+    public IRreportDetail(String idIRD, String testNoIRD, String testerIRD, String tsIdIRD, String tcIdIRD, String descriptIRD, String conditionIRD, String imageIRD, String retestIRD, String priorityIRD, String rcaIRD, String managerIRD, String statusIRD, String remarkIRD, String idIR, String idTRD) {
         this.idIRD = idIRD;
         this.testNoIRD = testNoIRD;
         this.testerIRD = testerIRD;
@@ -68,6 +71,7 @@ public class IRreportDetail {
         this.descriptIRD = descriptIRD;
         this.conditionIRD = conditionIRD;
         this.imageIRD = imageIRD;
+        this.retestIRD = retestIRD;
         this.priorityIRD = priorityIRD;
         this.rcaIRD = rcaIRD;
         this.managerIRD = managerIRD;
