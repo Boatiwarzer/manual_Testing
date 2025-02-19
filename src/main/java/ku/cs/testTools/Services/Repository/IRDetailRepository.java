@@ -3,23 +3,18 @@ package ku.cs.testTools.Services.Repository;
 import jakarta.persistence.*;
 import ku.cs.testTools.Models.TestToolModels.IRreport;
 import ku.cs.testTools.Models.TestToolModels.IRreportDetail;
+import ku.cs.testTools.Services.JpaUtil;
 
 import java.util.List;
 
 public class IRDetailRepository {
     private final EntityManager entityManager;
-    private final EntityManagerFactory emf;
 
     // Constructor to inject EntityManager
 
     public IRDetailRepository() {
-        this.emf = Persistence.createEntityManagerFactory("test_db");
-        this.entityManager = this.emf.createEntityManager();
+        this.entityManager = JpaUtil.getEntityManager();
     }
-
-    public IRDetailRepository(String pu) {
-        this.emf = Persistence.createEntityManagerFactory(pu);
-        this.entityManager = this.emf.createEntityManager();    }
 
     // Create a new TestScript
     public void addIRRepository(IRreportDetail iRreportDetail) {

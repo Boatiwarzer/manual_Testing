@@ -26,9 +26,6 @@ public class TestResultDetailRepository {
                 transaction.rollback();
             }
             throw e;
-        } finally {
-            // Ensure that the EntityManager is closed after the transaction
-            close();
         }
     }
 
@@ -38,8 +35,6 @@ public class TestResultDetailRepository {
             return entityManager.find(TestResultDetail.class, id);
         } catch (NoResultException e) {
             return null; // Return null if no result found
-        } finally {
-            close();
         }
     }
 
@@ -48,8 +43,8 @@ public class TestResultDetailRepository {
         String query = "SELECT t FROM TestResultDetail t";
         try {
             return entityManager.createQuery(query, TestResultDetail.class).getResultList();
-        } finally {
-            close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -87,9 +82,5 @@ public class TestResultDetailRepository {
     }
 
     // Close EntityManager after usage
-    private void close() {
-        if (entityManager.isOpen()) {
-            entityManager.close();
-        }
-    }
+
 }

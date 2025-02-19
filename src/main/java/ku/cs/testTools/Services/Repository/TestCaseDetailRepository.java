@@ -85,9 +85,5 @@ public class TestCaseDetailRepository {
     }
 
     // Close EntityManager
-    public void close() {
-        if (entityManager.isOpen()) {
-            entityManager.close();
-        }
-    }
+
 }
