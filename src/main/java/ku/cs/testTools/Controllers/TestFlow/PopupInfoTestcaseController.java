@@ -105,10 +105,10 @@ public class PopupInfoTestcaseController {
             selectedComboBox();
             setButtonVisible();
             if (objects.get(4) != null){
-                testCase = (TestCase) objects.get(5);
-                testCaseDetailList = (TestCaseDetailList) objects.get(6);
-                type = (String) objects.get(7);
-                testCaseDetailListDelete = (TestCaseDetailList) objects.get(8);
+                testCase = (TestCase) objects.get(4);
+                testCaseDetailList = (TestCaseDetailList) objects.get(5);
+                type = (String) objects.get(6);
+                testCaseDetailListDelete = (TestCaseDetailList) objects.get(7);
             }else {
                 testCase = testCaseList.findByPositionId(position);
             }

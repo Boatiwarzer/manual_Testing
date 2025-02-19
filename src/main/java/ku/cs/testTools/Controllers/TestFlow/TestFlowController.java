@@ -29,6 +29,7 @@ import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.DataSource;
 import ku.cs.testTools.Services.DataSourceCSV.*;
+import ku.cs.testTools.Services.Repository.*;
 
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -383,14 +384,16 @@ public class TestFlowController {
 
 
     private void saveProject() {
+        // สร้าง DataSource สำหรับแต่ละประเภทของข้อมูล
         DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
         DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
         DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
-        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory,projectName + ".csv");
-        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory,projectName + ".csv");
-        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
-        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
-        DataSource<NoteList> noteListDataSource = new NoteListFileDataSource(directory,projectName + ".csv");
+        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
+        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory, projectName + ".csv");
+        DataSource<NoteList> noteListDataSource = new NoteListFileDataSource(directory, projectName + ".csv");
+
+        // บันทึกข้อมูลลงไฟล์
         testFlowPositionListDataSource.writeData(testFlowPositionList);
         testScriptListDataSource.writeData(testScriptList);
         testScriptDetailListDataSource.writeData(testScriptDetailList);
@@ -398,11 +401,42 @@ public class TestFlowController {
         testCaseDetailListDataSource.writeData(testCaseDetailList);
         connectionListDataSource.writeData(connectionList);
         noteListDataSource.writeData(noteList);
-        //useCaseListDataSource.writeData(useCaseList);
+
+        // สร้างและอัพเดทแต่ละ Repository แยกกัน
+        TestScriptRepository testScriptRepository = new TestScriptRepository();
+        for (TestScript testScript : testScriptList.getTestScriptList()) {
+            testScriptRepository.updateTestScript(testScript);
+        }
+
+        TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
+        for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()) {
+            testScriptDetailRepository.updateTestScriptDetail(testScriptDetail);
+        }
+
+        TestCaseRepository testCaseRepository = new TestCaseRepository();
+        for (TestCase testCase : testCaseList.getTestCaseList()) {
+            testCaseRepository.updateTestCase(testCase);
+        }
+
+        TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
+        for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()) {
+            testCaseDetailRepository.updateTestCaseDetail(testCaseDetail);
+        }
+
+        ConnectionRepository connectionRepository = new ConnectionRepository();
+        for (Connection connection : connectionList.getConnectionList()) {
+            connectionRepository.updateConnection(connection);
+        }
+
+        NoteRepository noteRepository = new NoteRepository();
+        for (Note note : noteList.getNoteList()) {
+            noteRepository.updateNote(note);
+        }
+
         System.out.println("Project Saved");
-
-
     }
+
+
     public Rectangle drawBorder(double width, double height){
         Rectangle border = new Rectangle(width, height);
         border.setFill(Color.TRANSPARENT);
@@ -1672,6 +1706,8 @@ public class TestFlowController {
                 TestFlowPosition testFlowPosition = new TestFlowPosition(connectionList.findLastConnectionID(),75,75,event.getX()-75,event.getY()-75,0,"start",projectName,name);
                 testFlowPositionList.addPosition(testFlowPosition);
                 drawStart(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(), connection.getLabel(), testFlowPosition.getPositionID());
+                TestFlowPositionRepository testFlowPositionRepository = new TestFlowPositionRepository();
+                testFlowPositionRepository.addTestFlowPosition(testFlowPosition);
                 saveProject();
 
             }else if (event.getDragboard().getString().equals("BlackCircle")) {
@@ -1679,6 +1715,8 @@ public class TestFlowController {
                 TestFlowPosition testFlowPosition = new TestFlowPosition(connectionList.findLastConnectionID(),75,75,event.getX()-75,event.getY()-75,0,"end",projectName,name);
                 testFlowPositionList.addPosition(testFlowPosition);
                 drawEnd(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(), connection.getLabel(), testFlowPosition.getPositionID());
+                TestFlowPositionRepository testFlowPositionRepository = new TestFlowPositionRepository();
+                testFlowPositionRepository.addTestFlowPosition(testFlowPosition);
                 saveProject();
             }else if (event.getDragboard().getString().equals("Kite")) {
                 ArrayList<Object> objects = new ArrayList<>();
@@ -1723,6 +1761,8 @@ public class TestFlowController {
                 name);
 
         connectionList.addConnection(connection);
+        ConnectionRepository connectionRepository = new ConnectionRepository();
+        connectionRepository.addConnection(connection);
         saveProject();
     }
 

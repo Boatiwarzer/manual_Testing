@@ -1,6 +1,5 @@
 package ku.cs.testTools.Services;
 
-import ku.cs.testTools.Models.Manager.ManagerList;
 import ku.cs.testTools.Models.Manager.Manager;
 
 import java.io.*;
