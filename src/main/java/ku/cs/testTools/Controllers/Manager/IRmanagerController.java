@@ -415,6 +415,23 @@ public class IRmanagerController {
                     }
                 });
             }
+            if (conf.get("field").equals("rcaIRD")) {
+                col.setCellFactory(column -> new TableCell<>() {
+                    private final Text text = new Text();
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            setGraphic(null);
+                        } else {
+//                            setText(item.replace("|", ", "));
+                            text.setText(item.replace("|", ", "));
+                            text.wrappingWidthProperty().bind(column.widthProperty().subtract(10)); // ตั้งค่าการห่อข้อความตามขนาดคอลัมน์
+                            setGraphic(text); // แสดงผล Text Node
+                        }
+                    }
+                });
+            }
             if (conf.get("field").equals("imageIRD")) {
                 col.setCellFactory(column -> new TableCell<>() {
                     private final ImageView imageView = new ImageView();
@@ -523,17 +540,17 @@ public class IRmanagerController {
         }
     }
 
-    @FXML
-    void onClickUsecase(ActionEvent event) {
-        try {
-//            resetHyperlinkStyles(); // ล้างสถานะ selected ทั้งหมด
-//            onClickUsecase.getStyleClass().add("selected");
-            objects();
-            FXRouter.goTo("use_case_manager",objects);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    @FXML
+//    void onClickUsecase(ActionEvent event) {
+//        try {
+////            resetHyperlinkStyles(); // ล้างสถานะ selected ทั้งหมด
+////            onClickUsecase.getStyleClass().add("selected");
+//            objects();
+//            FXRouter.goTo("use_case_manager",objects);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     @FXML
     void onEditButton(ActionEvent event) {

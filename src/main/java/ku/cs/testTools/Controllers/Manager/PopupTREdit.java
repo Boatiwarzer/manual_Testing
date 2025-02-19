@@ -36,7 +36,7 @@ public class PopupTREdit {
     private Button onCancelButton, onConfirmButton;
 
     @FXML
-    private Label onTestcaseIDComboBox, onTestscriptIDComboBox, onTestNo, onDate, onDescription, testResultIDLabel, testResultNameLabel, onExpected, onTester, onImage, onActor;
+    private Label onRetest, onTestcaseIDComboBox, onTestscriptIDComboBox, onTestNo, onDate, onDescription, testResultIDLabel, testResultNameLabel, onExpected, onTester, onImage, onActor;
 
     @FXML
     private ComboBox<String> onStatusComboBox;
@@ -95,6 +95,7 @@ public class PopupTREdit {
             idTR = testResult.getIdTR();
             type = (String) objects.get(5);
             loadProject();
+            setLabel();
             if (objects.get(6) != null && type.equals("edit")) {
                 testResultDetail = (TestResultDetail) objects.get(6);
                 testResultDetail = testResultDetailList.findTRDById(testResultDetail.getIdTRD());
@@ -172,6 +173,7 @@ public class PopupTREdit {
         onDate.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
         onTester.setText(testResultDetail.getTesterTRD());
         onImage.setText(testResultDetail.getImageTRD());
+        onRetest.setText(testResultDetail.getRetestTRD());
         if(testResultDetail.getApproveTRD().equals("Approved")){
             onApproveCheck.setSelected(true);
         } else if (testResultDetail.getApproveTRD().equals("Not approved")){
@@ -207,6 +209,18 @@ public class PopupTREdit {
         onPriorityComboBox.setItems(FXCollections.observableArrayList("None", "Low", "Medium", "High", "Critical"));
         onPriorityComboBox.setValue("None");
     }
+    private void setLabel() {
+        onTestcaseIDComboBox.getStyleClass().add("custom-label");
+        onTestscriptIDComboBox.getStyleClass().add("custom-label");
+        onTestNo.getStyleClass().add("custom-label");
+        onDate.getStyleClass().add("custom-label");
+        onDescription.getStyleClass().add("custom-label");
+        onExpected.getStyleClass().add("custom-label");
+        onTester.getStyleClass().add("custom-label");
+        onImage.getStyleClass().add("custom-label");
+        onActor.getStyleClass().add("custom-label");
+        onRetest.getStyleClass().add("custom-label");
+    }
 
     private void clearInfo() {
         id = "";
@@ -226,6 +240,7 @@ public class PopupTREdit {
         onApproveCheck.setSelected(false);
         onNotapproveCheck.setSelected(false);
         onRemark.setText("");
+        onRetest.setText("-");
     }
 
     public void randomId() {
@@ -285,10 +300,16 @@ public class PopupTREdit {
         String priority = onPriorityComboBox.getValue();
         String tester = onTester.getText();
         String image = onImage.getText();
-        String approve = onApproveCheck.isSelected() ? "Approved" : "Not approved";
+        String retest = onRetest.getText();
+        String approve = "Waiting";
+        if (onApproveCheck.isSelected()){
+            approve = "Approved";
+        } else if (onNotapproveCheck.isSelected()){
+            approve = "Not Approved";
+        }
         String remark = onRemark.getText();
 
-        testResultDetail = new TestResultDetail(id, TrNo, IdTS, IdTC, actor, descript, inputdata, teststeps, expected, actual, status, priority, date, tester, image, approve, remark, idTR);
+        testResultDetail = new TestResultDetail(id, TrNo, IdTS, IdTC, actor, descript, inputdata, teststeps, expected, actual, status, priority, date, tester, image, retest, approve, remark, idTR);
         testResultDetailList.addOrUpdateTestResultDetail(testResultDetail);
 
         try {

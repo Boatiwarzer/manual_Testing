@@ -56,11 +56,6 @@
          <children>
             <HBox alignment="BOTTOM_CENTER" prefHeight="40.0" prefWidth="1680.0" spacing="150.0">
                <children>
-                  <Hyperlink fx:id="onClickUsecase" onAction="#onClickUsecase" text="Use Case">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Hyperlink>
                   <Hyperlink fx:id="onClickTestflow" onAction="#onClickTestflow" text="Test Flow">
                      <font>
                         <Font size="14.0" />

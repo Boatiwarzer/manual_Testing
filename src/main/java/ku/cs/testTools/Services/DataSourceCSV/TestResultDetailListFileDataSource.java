@@ -67,7 +67,8 @@ public class TestResultDetailListFileDataSource implements DataSource<TestResult
                             data[15].trim(),
                             data[16].trim(),
                             data[17].trim(),
-                            data[18].trim()
+                            data[18].trim(),
+                            data[19].trim()
                     );
 
                     // Add the detail to the list
@@ -204,6 +205,7 @@ public class TestResultDetailListFileDataSource implements DataSource<TestResult
                 testResultDetail.getDateTRD() + "," +
                 testResultDetail.getTesterTRD() + "," +
                 testResultDetail.getImageTRD() + "," +
+                testResultDetail.getRemarkTRD() + "," +
                 testResultDetail.getApproveTRD() + "," +
                 testResultDetail.getRemarkTRD() + "," +
                 testResultDetail.getIdTR();

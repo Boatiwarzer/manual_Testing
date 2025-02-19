@@ -60,6 +60,9 @@ public class TestResultDetail {
     @Column(name = "imageTRD")  // Add Column annotation for imageTRD
     private String imageTRD;
 
+    @Column(name = "retestTRD")
+    private String retestTRD;
+
     @Column(name = "approveTRD")  // Add Column annotation for approveTRD
     private String approveTRD;
 
@@ -73,7 +76,7 @@ public class TestResultDetail {
     @Column(name = "idTR")  // Add Column annotation for idTR
     private String idTR;
 
-    public TestResultDetail(String idTRD, String testNo, String tsIdTRD, String tcIdTRD, String actorTRD, String descriptTRD, String inputdataTRD, String stepsTRD, String expectedTRD, String actualTRD, String statusTRD, String priorityTRD, String dateTRD, String testerTRD, String imageTRD, String approveTRD, String remarkTRD, String idTR) {
+    public TestResultDetail(String idTRD, String testNo, String tsIdTRD, String tcIdTRD, String actorTRD, String descriptTRD, String inputdataTRD, String stepsTRD, String expectedTRD, String actualTRD, String statusTRD, String priorityTRD, String dateTRD, String testerTRD, String imageTRD, String retestTRD, String approveTRD, String remarkTRD, String idTR) {
         this.idTRD = idTRD;
         this.testNo = testNo;
         this.tsIdTRD = tsIdTRD;
@@ -89,6 +92,7 @@ public class TestResultDetail {
         this.dateTRD = dateTRD;
         this.testerTRD = testerTRD;
         this.imageTRD = imageTRD;
+        this.retestTRD = retestTRD;
         this.approveTRD = approveTRD;
         this.remarkTRD = remarkTRD;
         this.idTR = idTR;

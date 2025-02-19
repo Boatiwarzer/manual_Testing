@@ -36,7 +36,7 @@ public class PopupAddTestresultController {
     private Button onCancelButton, onConfirmButton, onUploadButton;
 
     @FXML
-    private Label onDate, onDescription, testResultIDLabel, testResultNameLabel, onExpected, onTester, onImage, onActor;
+    private Label onDate, onDescription, testResultIDLabel, testResultNameLabel, onExpected, onTester, onImage, onActor, onRetest;
 
     @FXML
     private ComboBox<String> onTestscriptIDComboBox;
@@ -91,6 +91,7 @@ public class PopupAddTestresultController {
     void initialize() {
         setStatus();
         setPriority();
+        setLabel();
         clearInfo();
         if (FXRouter.getData() != null) {
             objects = (ArrayList) FXRouter.getData();
@@ -186,6 +187,7 @@ public class PopupAddTestresultController {
         onDate.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
         onTester.setText(testResultDetail.getTesterTRD());
         onImage.setText(testResultDetail.getImageTRD());
+        onRetest.setText(testResultDetail.getRetestTRD());
     }
 
     private void setDateTRD() {
@@ -226,6 +228,17 @@ public class PopupAddTestresultController {
         onImage.setText("...");
         testResultIDLabel.setText("");
         testResultNameLabel.setText("");
+        onRetest.setText("-");
+    }
+
+    private void setLabel() {
+        onDate.getStyleClass().add("custom-label");
+        onDescription.getStyleClass().add("custom-label");
+        onExpected.getStyleClass().add("custom-label");
+        onTester.getStyleClass().add("custom-label");
+        onImage.getStyleClass().add("custom-label");
+        onActor.getStyleClass().add("custom-label");
+        onRetest.getStyleClass().add("custom-label");
     }
 
     public void randomId() {
@@ -449,7 +462,7 @@ public class PopupAddTestresultController {
         String tester = onTester.getText();
         String image = onImage.getText();
 
-        testResultDetail = new TestResultDetail(id, TrNo, IdTS, IdTC, actor, descript, inputdata, teststeps, expected, actual, status, priority, date, tester, image, "Waiting", "", idTR);
+        testResultDetail = new TestResultDetail(id, TrNo, IdTS, IdTC, actor, descript, inputdata, teststeps, expected, actual, status, priority, date, tester, image, "1", "Waiting", "", idTR);
         testResultDetailList.addOrUpdateTestResultDetail(testResultDetail);
 
         try {
