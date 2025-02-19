@@ -486,7 +486,7 @@ public class PopupAddTestresultController {
             retest++;
             testtime = String.valueOf(retest);
             approve = "Retest";
-        } else {
+        } else if (re != null){
             testtime = re;
         }
 

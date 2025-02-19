@@ -181,6 +181,7 @@ public class PopupIRmanager {
         onCondition.setText(iRreportDetail.getConditionIRD());
         onImage.setText(iRreportDetail.getImageIRD());
         onManager.setText(iRreportDetail.getManagerIRD());
+        onRetest.setText(iRreportDetail.getRetestIRD());
         onStatusComboBox.getSelectionModel().select(iRreportDetail.getStatusIRD());
         onPriorityComboBox.getSelectionModel().select(iRreportDetail.getPriorityIRD());
         onRemark.setText(iRreportDetail.getRemarkIRD());

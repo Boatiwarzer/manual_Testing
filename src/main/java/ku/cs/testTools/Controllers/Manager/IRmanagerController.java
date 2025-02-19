@@ -360,7 +360,7 @@ public class IRmanagerController {
         for (StringConfiguration conf : configs) {
             TableColumn<IRreportDetail, String> col = new TableColumn<>(conf.get("title"));
             col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
-            if (index != 7 && index <= 12) {  // ถ้าเป็นคอลัมน์แรก
+            if (index != 8 && index <= 13) {  // ถ้าเป็นคอลัมน์แรก
                 col.setPrefWidth(120);
                 col.setMaxWidth(120);
                 col.setMinWidth(120); // ตั้งค่าขนาดคอลัมน์แรก

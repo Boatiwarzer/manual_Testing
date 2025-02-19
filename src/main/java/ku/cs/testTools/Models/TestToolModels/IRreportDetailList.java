@@ -82,7 +82,14 @@ public class IRreportDetailList {
         return false;
     }
 
-
+    public boolean isIdIRDExist(String idIRD) {
+        for (IRreportDetail iRreportDetail : iRreportDetailList) {
+            if (iRreportDetail.getIdTRD().equals(idIRD)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public IRreportDetail findIRDByTRD(String id) {
         for (IRreportDetail iRreportDetail : iRreportDetailList) {

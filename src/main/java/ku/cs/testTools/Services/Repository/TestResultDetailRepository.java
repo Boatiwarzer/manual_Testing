@@ -65,8 +65,6 @@ public class TestResultDetailRepository {
                 transaction.rollback();
             }
             throw e;
-        } finally {
-            close();
         }
     }
 
@@ -85,8 +83,6 @@ public class TestResultDetailRepository {
                 transaction.rollback();
             }
             throw e;
-        } finally {
-            close();
         }
     }
 

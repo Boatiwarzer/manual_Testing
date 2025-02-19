@@ -702,7 +702,7 @@ public class TestResultController {
                 List<TestResultDetail> failedResult = trdList.stream()
                         .filter(faildetail -> faildetail.getIdTR().equals(idTR) && faildetail.getStatusTRD().equals("Fail"))
                         .collect(Collectors.toList());
-                int counter = 1;
+                int counter;
                 for (TestResultDetail detail : failedResult) {
                     String irdID;
                     String idTrd = detail.getIdTRD();
@@ -715,12 +715,15 @@ public class TestResultController {
                             System.out.println("ird " + ird);
                         }
                         for (IRreportDetail irddetail : irdList) {
-                            if(!testtime.equals(irddetail.getRetestIRD())){
+                            irdID = irddetail.getIdIRD();
+                            if (!testtime.equals(irddetail.getRetestIRD())) {
+                                System.out.println("testtime ไม่เท่ากัน  และ coun size");
                                 randomIdIRD();
                                 irdID = irdId;
-                                String testNo = String.format("%d", counter);
+                                counter = irdList.size();
                                 counter++;
-                                String testerIRD = "Tester";
+                                String testNo = String.format("%d", counter);
+                                String testerIRD = detail.getTesterTRD();
                                 String tsIdIRD = detail.getTsIdTRD();
                                 String tcIdIRD = detail.getTcIdTRD();
                                 System.out.println("tsId " + tsIdIRD);
@@ -743,7 +746,8 @@ public class TestResultController {
 
                                 IRreportDetail newIRDetail = new IRreportDetail(irdID, testNo, testerIRD, tsIdIRD, tcIdIRD, descriptIRD, conditionIRD, imageIRD, retestIRD, priorityIRD, rcaIRD, managerIRD, statusIRD, remarkIRD, idIR, idTrd);
                                 iRreportDetailList.addIRreportDetail(newIRDetail);
-                            } else if (testtime.equals(irddetail.getRetestIRD())){
+                            } else {
+                                System.out.println("testtime เท่ากัน");
                                 IRreportDetail id = iRreportDetailList.findIRDByTRD(idTrd);
                                 String testNo = id.getTestNoIRD();
                                 String idIRD = id.getIdIRD();
@@ -764,6 +768,7 @@ public class TestResultController {
                                 IRreportDetail newIRDetail = new IRreportDetail(idIRD, testNo, testerIRD, tsIdIRD, tcIdIRD, descriptIRD, conditionIRD, imageIRD, retestIRD, priorityIRD, rcaIRD, managerIRD, statusIRD, remarkIRD, idIR, idTrd);
                                 iRreportDetailList.addIRreportDetail(newIRDetail);
                             }
+
                         }
 
 //                        List<TestResultDetail> retestsResult = failedResult.stream()
@@ -789,11 +794,13 @@ public class TestResultController {
 //                        IRreportDetail newIRDetail = new IRreportDetail(idIRD, testNo, testerIRD, tsIdIRD, tcIdIRD, descriptIRD, conditionIRD, imageIRD, retestIRD, priorityIRD, rcaIRD, managerIRD, statusIRD, remarkIRD, idIR, idTrd);
 //                        iRreportDetailList.addIRreportDetail(newIRDetail);
                     } else {
+                        System.out.println("ไม่เคยมี ird นี้ และ coun size");
+                        List<IRreportDetail> irdList = iRreportDetailList.findAllTRDinIRById(idTrd.trim());
                         randomIdIRD();
                         irdID = irdId;
+                        counter = irdList.size() + 1;
                         String testNo = String.format("%d", counter);
-                        counter++;
-                        String testerIRD = "Tester";
+                        String testerIRD = detail.getTesterTRD();
                         String tsIdIRD = detail.getTsIdTRD();
                         String tcIdIRD = detail.getTcIdTRD();
                         System.out.println("tsId " + tsIdIRD);
@@ -867,7 +874,7 @@ public class TestResultController {
                     String irID = irdId;
                     String testNo = String.format("%d", counter);
                     counter++; // เพิ่มค่าตัวนับ
-                    String testerIRD = "Tester";
+                    String testerIRD = detail.getTesterTRD();
                     String tsIdIRD = detail.getTsIdTRD();
                     String tcIdIRD = detail.getTcIdTRD();
                     System.out.println("tsId " + tsIdIRD);
