@@ -11,9 +11,9 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Data
+@NamedQuery(name = "find Note by id", query = "Select t from Note t where t.noteID = :id")
 public class Note {
     @Id
-
     @Access(AccessType.FIELD)
     private String noteID;
     private String note;

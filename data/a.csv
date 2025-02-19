@@ -32,3 +32,4 @@ testScriptDetail,TSD-446,f,f,None,f,TS-688,12-02-2025
 testScriptDetail,TSD-748,s,s,None,s,TS-589,12-02-2025
 testCase,TC-821,AAA,-,-,-,-,2,-,-
 testCase,TC-729,AAA,-,-,-,-,8,-,-
+useCase,UC-954,A,A,A,A,A,A,2025-02-19 21:08:49

@@ -85,9 +85,5 @@ public class ConnectionRepository {
     }
 
     // Close EntityManager
-    public void close() {
-        if (entityManager.isOpen()) {
-            entityManager.close();
-        }
-    }
+
 }

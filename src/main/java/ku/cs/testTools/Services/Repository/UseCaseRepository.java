@@ -26,8 +26,6 @@ public class UseCaseRepository {
                 transaction.rollback();
             }
             throw e;
-        } finally {
-            close();
         }
     }
 
@@ -37,8 +35,6 @@ public class UseCaseRepository {
             return entityManager.find(UseCase.class, id);
         } catch (NoResultException e) {
             return null; // Return null if no result found
-        } finally {
-            close();
         }
     }
 
@@ -47,8 +43,6 @@ public class UseCaseRepository {
         String query = "SELECT t FROM UseCase t";
         try {
             return entityManager.createQuery(query, UseCase.class).getResultList();
-        } finally {
-            close();
         }
     }
 
@@ -64,8 +58,6 @@ public class UseCaseRepository {
                 transaction.rollback();
             }
             throw e;
-        } finally {
-            close();
         }
     }
 
@@ -84,8 +76,6 @@ public class UseCaseRepository {
                 transaction.rollback();
             }
             throw e;
-        } finally {
-            close();
         }
     }
 
