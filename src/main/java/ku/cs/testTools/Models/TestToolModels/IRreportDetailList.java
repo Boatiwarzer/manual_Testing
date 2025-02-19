@@ -120,6 +120,16 @@ public class IRreportDetailList {
         return result;
     }
 
+    public List<IRreportDetail> findAllTRDinIRById(String idTRD) {
+        List<IRreportDetail> result = new ArrayList<>();
+        for (IRreportDetail trd : iRreportDetailList) {
+            if (trd.getIdTRD().equals(idTRD)) {
+                result.add(trd);
+            }
+        }
+        return result;
+    }
+
     public void clearItems() {
         iRreportDetailList.clear();
     }

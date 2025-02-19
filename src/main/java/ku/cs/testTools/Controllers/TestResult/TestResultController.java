@@ -704,27 +704,88 @@ public class TestResultController {
                 for (TestResultDetail detail : failedResult) {
                     String irdID;
                     String idTrd = detail.getIdTRD();
+                    String approve = detail.getStatusTRD();
+                    String testtime = detail.getRetestTRD();
                     System.out.println("idtrd " + idTrd);
                     if (iRreportDetailList.isIdTRDExist(idTrd)) {
-                        String testNo = String.format("%d", counter);
-                        counter++;
-                        IRreportDetail id = iRreportDetailList.findIRDByTRD(idTrd);
-                        String idIRD = id.getIdIRD();
-                        String testerIRD = id.getTesterIRD();
-                        String tsIdIRD = id.getTsIdIRD();
-                        String tcIdIRD = id.getTcIdIRD();
-                        String descriptIRD = id.getDescriptIRD();
-                        String conditionIRD = id.getConditionIRD();
-                        String imageIRD = id.getImageIRD();
-                        String priorityIRD = id.getPriorityIRD();
-                        String rcaIRD = id.getRcaIRD();
-                        String managerIRD = id.getManagerIRD();
-                        String statusIRD = id.getStatusIRD();
-                        String remarkIRD = id.getRemarkIRD();
+                        List<IRreportDetail> irdList = iRreportDetailList.findAllTRDinIRById(idTrd.trim());
+                        for (IRreportDetail ird : irdList) {
+                            System.out.println("ird " + ird);
+                        }
+                        for (IRreportDetail irddetail : irdList) {
+                            if(!testtime.equals(irddetail.getRetestIRD())){
+                                randomIdIRD();
+                                irdID = irdId;
+                                String testNo = String.format("%d", counter);
+                                counter++;
+                                String testerIRD = "Tester";
+                                String tsIdIRD = detail.getTsIdTRD();
+                                String tcIdIRD = detail.getTcIdTRD();
+                                System.out.println("tsId " + tsIdIRD);
+                                String descriptIRD = detail.getDescriptTRD();
 
-                        iRreportDetailList.clearIRDetail(idIRD);
-                        IRreportDetail newIRDetail = new IRreportDetail(idIRD, testNo, testerIRD, tsIdIRD, tcIdIRD, descriptIRD, conditionIRD, imageIRD, priorityIRD, rcaIRD, managerIRD, statusIRD, remarkIRD, idIR, idTrd);
-                        iRreportDetailList.addIRreportDetail(newIRDetail);
+                                String selectedId = tsIdIRD; // ดึง ID จาก ComboBox
+                                String[] parts = selectedId.split(" : "); // แยกข้อความตาม " : "
+                                String tsId = parts[0]; // ดึงส่วนแรกออกมา
+                                TestScript selectedCon = testScriptList.findByTestScriptId(tsId.trim());
+                                System.out.println("con " + selectedCon);
+
+                                String conditionIRD = selectedCon.getPreCon();
+                                String imageIRD = detail.getImageTRD();
+                                String retestIRD = detail.getRetestTRD();
+                                String priorityIRD = detail.getPriorityTRD();
+                                String rcaIRD = "";
+                                String managerIRD = "";
+                                String statusIRD = "In Manager";
+                                String remarkIRD = "";
+
+                                IRreportDetail newIRDetail = new IRreportDetail(irdID, testNo, testerIRD, tsIdIRD, tcIdIRD, descriptIRD, conditionIRD, imageIRD, retestIRD, priorityIRD, rcaIRD, managerIRD, statusIRD, remarkIRD, idIR, idTrd);
+                                iRreportDetailList.addIRreportDetail(newIRDetail);
+                            } else if (testtime.equals(irddetail.getRetestIRD())){
+                                IRreportDetail id = iRreportDetailList.findIRDByTRD(idTrd);
+                                String testNo = id.getTestNoIRD();
+                                String idIRD = id.getIdIRD();
+                                String testerIRD = id.getTesterIRD();
+                                String tsIdIRD = id.getTsIdIRD();
+                                String tcIdIRD = id.getTcIdIRD();
+                                String descriptIRD = id.getDescriptIRD();
+                                String conditionIRD = id.getConditionIRD();
+                                String imageIRD = id.getImageIRD();
+                                String retestIRD = id.getRetestIRD();
+                                String priorityIRD = id.getPriorityIRD();
+                                String rcaIRD = id.getRcaIRD();
+                                String managerIRD = id.getManagerIRD();
+                                String statusIRD = id.getStatusIRD();
+                                String remarkIRD = id.getRemarkIRD();
+
+                                iRreportDetailList.clearIRDetail(idIRD);
+                                IRreportDetail newIRDetail = new IRreportDetail(idIRD, testNo, testerIRD, tsIdIRD, tcIdIRD, descriptIRD, conditionIRD, imageIRD, retestIRD, priorityIRD, rcaIRD, managerIRD, statusIRD, remarkIRD, idIR, idTrd);
+                                iRreportDetailList.addIRreportDetail(newIRDetail);
+                            }
+                        }
+
+//                        List<TestResultDetail> retestsResult = failedResult.stream()
+//                                .filter(retestResult -> retestResult.getIdTR().equals(idTR) && retestResult.getStatusTRD().equals("Fail"))
+//                                .collect(Collectors.toList());
+//                        IRreportDetail id = iRreportDetailList.findIRDByTRD(idTrd);
+//                        String testNo = id.getTestNoIRD();
+//                        String idIRD = id.getIdIRD();
+//                        String testerIRD = id.getTesterIRD();
+//                        String tsIdIRD = id.getTsIdIRD();
+//                        String tcIdIRD = id.getTcIdIRD();
+//                        String descriptIRD = id.getDescriptIRD();
+//                        String conditionIRD = id.getConditionIRD();
+//                        String imageIRD = id.getImageIRD();
+//                        String retestIRD = id.getRetestIRD();
+//                        String priorityIRD = id.getPriorityIRD();
+//                        String rcaIRD = id.getRcaIRD();
+//                        String managerIRD = id.getManagerIRD();
+//                        String statusIRD = id.getStatusIRD();
+//                        String remarkIRD = id.getRemarkIRD();
+//
+//                        iRreportDetailList.clearIRDetail(idIRD);
+//                        IRreportDetail newIRDetail = new IRreportDetail(idIRD, testNo, testerIRD, tsIdIRD, tcIdIRD, descriptIRD, conditionIRD, imageIRD, retestIRD, priorityIRD, rcaIRD, managerIRD, statusIRD, remarkIRD, idIR, idTrd);
+//                        iRreportDetailList.addIRreportDetail(newIRDetail);
                     } else {
                         randomIdIRD();
                         irdID = irdId;
@@ -744,13 +805,14 @@ public class TestResultController {
 
                         String conditionIRD = selectedCon.getPreCon();
                         String imageIRD = detail.getImageTRD();
+                        String retestIRD = detail.getRetestTRD();
                         String priorityIRD = detail.getPriorityTRD();
                         String rcaIRD = "";
                         String managerIRD = "";
                         String statusIRD = "In Manager";
                         String remarkIRD = "";
 
-                        IRreportDetail newIRDetail = new IRreportDetail(irdID, testNo, testerIRD, tsIdIRD, tcIdIRD, descriptIRD, conditionIRD, imageIRD, priorityIRD, rcaIRD, managerIRD, statusIRD, remarkIRD, idIR, idTrd);
+                        IRreportDetail newIRDetail = new IRreportDetail(irdID, testNo, testerIRD, tsIdIRD, tcIdIRD, descriptIRD, conditionIRD, imageIRD, retestIRD, priorityIRD, rcaIRD, managerIRD, statusIRD, remarkIRD, idIR, idTrd);
                         iRreportDetailList.addIRreportDetail(newIRDetail);
                     }
                 }
@@ -820,10 +882,11 @@ public class TestResultController {
                     String priorityIRD = detail.getPriorityTRD();
                     String rcaIRD = "";
                     String managerIRD = "";
+                    String retestIRD = detail.getRetestTRD();
                     String statusIRD = "In Manager";
                     String remarkIRD = "";
 
-                    iRreportDetail = new IRreportDetail(irID, testNo, testerIRD, tsIdIRD, tcIdIRD, descriptIRD, conditionIRD, imageIRD, priorityIRD, rcaIRD, managerIRD, statusIRD, remarkIRD, irId, idTrd);
+                    iRreportDetail = new IRreportDetail(irID, testNo, testerIRD, tsIdIRD, tcIdIRD, descriptIRD, conditionIRD, imageIRD, retestIRD, priorityIRD, rcaIRD, managerIRD, statusIRD, remarkIRD, irId, idTrd);
                     iRreportDetailList.addOrUpdateIRreportDetail(iRreportDetail);
                 }
                 saveProject();

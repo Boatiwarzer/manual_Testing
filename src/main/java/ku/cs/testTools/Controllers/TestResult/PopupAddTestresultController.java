@@ -461,8 +461,36 @@ public class PopupAddTestresultController {
         String priority = onPriorityComboBox.getValue();
         String tester = onTester.getText();
         String image = onImage.getText();
+        String re = testResultDetail.getRetestTRD();
+        String app = testResultDetail.getApproveTRD();
+        String approve;
+        String cm = testResultDetail.getRemarkTRD();
+        String remark;
+        int retest;
+        String testtime = "";
+        if(cm == null){
+            remark = "";
+        } else {
+            remark = cm;
+        }
+        if(app == null){
+            approve = "Waiting";
+        } else {
+            approve = app;
+        }
+        if(re == null){
+            retest = 1;
+            testtime = String.valueOf(retest);
+        } else if (re != null && app.equals("Not Approved")){
+            retest = Integer.parseInt(re);
+            retest++;
+            testtime = String.valueOf(retest);
+            approve = "Retest";
+        } else {
+            testtime = re;
+        }
 
-        testResultDetail = new TestResultDetail(id, TrNo, IdTS, IdTC, actor, descript, inputdata, teststeps, expected, actual, status, priority, date, tester, image, "1", "Waiting", "", idTR);
+        testResultDetail = new TestResultDetail(id, TrNo, IdTS, IdTC, actor, descript, inputdata, teststeps, expected, actual, status, priority, date, tester, image, testtime, approve, remark, idTR);
         testResultDetailList.addOrUpdateTestResultDetail(testResultDetail);
 
         try {

@@ -117,7 +117,7 @@ public class TestResultEditController {
                     testResult = (TestResult) objects.get(4);
                     testResultDetailList = (TestResultDetailList) objects.get(5);
                     type = (String) objects.get(6);
-                    testResultDetailListDelete = (TestResultDetailList) objects.get(7);
+//                    testResultDetailListDelete = (TestResultDetailList) objects.get(7);
 
                     System.out.println(type);
 
