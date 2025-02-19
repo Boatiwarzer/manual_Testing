@@ -85,6 +85,7 @@ public class TestCaseController {
     private ConnectionList connectionList = new ConnectionList();
     private UseCaseList useCaseList = new UseCaseList();
     private String name;
+    private TestCaseDetailList testCaseDetailListDelete = new TestCaseDetailList();
 
     @FXML
     void initialize() {
@@ -509,6 +510,7 @@ public class TestCaseController {
             objects.add(selectedTestCase);
             objects.add(testCaseDetailList);
             objects.add("new");
+            objects.add(testCaseDetailListDelete);
             FXRouter.goTo("test_case_edit",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);

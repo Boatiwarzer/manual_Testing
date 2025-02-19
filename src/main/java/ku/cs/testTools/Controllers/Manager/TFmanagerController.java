@@ -1,20 +1,16 @@
 package ku.cs.testTools.Controllers.Manager;
 
-import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Bounds;
-import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
-import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -32,7 +28,6 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class TFmanagerController {
 
@@ -47,7 +42,8 @@ public class TFmanagerController {
 
     @FXML
     private TextArea onNoteTextArea;
-
+    @FXML
+    private VBox projectList;
     @FXML
     private MenuItem openMenuItem;
     @FXML
@@ -70,8 +66,8 @@ public class TFmanagerController {
     private Button onSearchButton;
     @FXML
     private TextField onSearchField;
-    @FXML
-    private ListView<String> onSearchList;
+//    @FXML
+//    private ListView<String> onSearchList;
     private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
     private double startX, startY;
     private TestScriptList testScriptList = new TestScriptList();
@@ -103,7 +99,7 @@ public class TFmanagerController {
 //            String type =  (String) objects.get(2);
         }
         loadProject();
-        loadListView();
+        loadList();
         selected();
         onNoteTextArea.setOnKeyTyped(keyEvent -> {
             if (noteList.findBynoteID("1") == null) {
@@ -124,46 +120,85 @@ public class TFmanagerController {
     }
 
     private void selected() {
-        onSearchList.getSelectionModel().getSelectedItems();
-        onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue == null) {
-                clearInfo();
+        for (Node node : projectList.getChildren()) {
+            if (node instanceof TitledPane titledPane) {
+                Node content = titledPane.getContent();
 
-            } else{
-                showInfo(newValue);
-                //selectedTestScript = newValue;
+                if (content instanceof ListView<?> listView) {
+                    listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                        if (newValue != null) {
+                            showInfo((String) newValue); // แสดงข้อมูลของ Tester ที่เลือก
+                        } else {
+                            clearInfo();
+                        }
+                    });
+                }
             }
-        });
+        }
     }
 
-    private void showInfo(String newValue) {
-        String[] data = newValue.split("[:,]");
-        projectName = data[0].trim();
-        nameTester = data[1].trim();
-        System.out.println(projectName);
-        System.out.println(nameTester);
 
+
+    private void showInfo(String testerName) {
+        nameTester = testerName; // ดึงชื่อ Tester ตรงๆ
+
+        System.out.println("Tester: " + nameTester);
+
+        // หาว่า Tester นี้อยู่ใน Project ไหน
+        for (Node node : projectList.getChildren()) {
+            if (node instanceof TitledPane titledPane) {
+                ListView<String> listView = (ListView<String>) titledPane.getContent();
+                if (listView.getItems().contains(testerName)) {
+                    projectName = titledPane.getText(); // ดึงชื่อ Project จากหัวข้อของ TitledPane
+                    System.out.println("Project: " + projectName);
+                    break;
+                }
+            }
+        }
+
+        // โหลดข้อมูล
         loadProject();
-        loadData(projectName,nameTester);
-
+        loadData(projectName, nameTester);
     }
+
 
     private void clearInfo() {
         nameTester = "";
 
     }
 
-    private void loadListView() {
-        Set<String> uniqueEntries = new HashSet<>();
+    private void loadList() {
+        Map<String, Set<String>> projectTestersMap = new HashMap<>();
 
         testFlowPositionList.getPositionList().forEach(testFlowPosition -> {
-            String entry = testFlowPosition.getProjectName().toLowerCase() + " : " + testFlowPosition.getTester().toLowerCase();
-            uniqueEntries.add(entry);
-            System.out.println(entry);
-// ใช้ Set ป้องกันค่าซ้ำ
+            String projectName = testFlowPosition.getProjectName();
+            String tester = testFlowPosition.getTester();
+
+            // จัดกลุ่ม Tester ตาม Project Name
+            projectTestersMap.computeIfAbsent(projectName, k -> new HashSet<>()).add(tester);
         });
-        onSearchList.getItems().addAll(uniqueEntries); // เพิ่มรายการทั้งหมดที่ไม่ซ้ำลงใน ListView
+
+        projectList.getChildren().clear(); // ล้างข้อมูลเก่าออกก่อน
+        for (Map.Entry<String, Set<String>> entry : projectTestersMap.entrySet()) {
+            String projectName = entry.getKey();
+            Set<String> testers = entry.getValue();
+
+            // สร้าง ListView เพื่อเก็บ Tester
+            ListView<String> testerListView = new ListView<>();
+            testerListView.getItems().addAll(testers);
+            testerListView.setPrefHeight(100); // กำหนดขนาดความสูง (ปรับได้ตามต้องการ)
+
+            // สร้าง TitledPane และตั้งค่าให้ปิดเป็นค่าเริ่มต้น
+            TitledPane titledPane = new TitledPane(projectName, testerListView);
+            titledPane.setAnimated(true); // เปิดใช้งาน Animation
+            titledPane.setCollapsible(true); // ทำให้สามารถยุบ-ขยายได้
+            titledPane.setExpanded(false); // ตั้งค่าให้หุบไว้เริ่มต้น
+
+            projectList.getChildren().add(titledPane); // เพิ่ม TitledPane ลงใน VBox
+        }
     }
+
+
 
 
     public void handleExportMenuItem(ActionEvent actionEvent) {
@@ -253,7 +288,7 @@ public class TFmanagerController {
     }
     @FXML
     void onSearchButton(ActionEvent event) {
-        onSearchList.getItems().clear();
+//        onSearchList.getItems().clear();
         //onSearchList.getItems().addAll(searchList(onSearchField.getText(),testFlowPositionList.getPositionList()));
     }
 //    private List<TestFlowPosition> searchList(String searchWords, ArrayList<TestFlowPosition> flowPositionArrayList) {

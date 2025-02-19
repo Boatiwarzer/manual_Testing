@@ -99,6 +99,7 @@ public class TestResultController {
     private TestResultDetailList testResultDetailListTemp;
     private ArrayList<Object> objects;
     private String nameTester;
+    private TestResultDetailList testResultDetailListDelete = new TestResultDetailList();
 
 
     @FXML
@@ -652,6 +653,7 @@ public class TestResultController {
             objects.add(selectedTestResult);
             objects.add(testResultDetailList);
             objects.add("new");
+            objects.add(testResultDetailListDelete);
             FXRouter.goTo("test_result_edit", objects);
         } catch (IOException e) {
             throw new RuntimeException(e);

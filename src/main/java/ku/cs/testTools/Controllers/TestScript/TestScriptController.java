@@ -114,6 +114,7 @@ public class TestScriptController {
     private UseCaseList useCaseList = new UseCaseList();
     private ArrayList<Object> objects;
     private String name;
+    private TestScriptDetailList testScriptDetailListDelete = new TestScriptDetailList();
 
     @FXML
     void initialize() {
@@ -505,6 +506,7 @@ public class TestScriptController {
             objects.add(testScriptDetailList);
             objects.add(testCaseDetailList);
             objects.add("new");
+            objects.add(testScriptDetailListDelete);
             FXRouter.goTo("test_script_edit",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
