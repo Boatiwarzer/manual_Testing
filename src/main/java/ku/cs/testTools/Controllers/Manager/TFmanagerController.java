@@ -84,6 +84,7 @@ public class TFmanagerController {
     private String projectName, directory;
     private String nameManager;
     private String nameTester, projectNameTester;
+    private TitledPane selectedTitledPane; // ตัวแปรเก็บค่าที่ถูกคลิก
 
     @FXML
     void initialize() {
@@ -96,7 +97,6 @@ public class TFmanagerController {
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
             nameManager = (String) objects.get(2);
-//            String type =  (String) objects.get(2);
         }
         loadProject();
         loadList();
@@ -118,16 +118,32 @@ public class TFmanagerController {
             saveProject();
         });
     }
-
     private void selected() {
         for (Node node : projectList.getChildren()) {
             if (node instanceof TitledPane titledPane) {
                 Node content = titledPane.getContent();
 
+                // เก็บค่าของ TitledPane ที่ถูกคลิก
+                titledPane.setOnMouseClicked(event -> {
+                    selectedTitledPane = titledPane;
+                });
+
                 if (content instanceof ListView<?> listView) {
                     listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                        if (newValue != null) {
-                            showInfo((String) newValue); // แสดงข้อมูลของ Tester ที่เลือก
+                        if (newValue instanceof String) { // ตรวจสอบว่าเป็น String
+                            String[] data = ((String) newValue).split("[:,()]");
+                            if (data.length > 0) { // ตรวจสอบว่ามีค่ามากพอ
+                                String value = data[0].trim();
+
+                                // แสดงค่าของ TitledPane และค่าที่เลือกใน ListView
+                                if (selectedTitledPane != null) {
+                                    System.out.println("TitledPane: " + selectedTitledPane.getText());
+                                    System.out.println("Selected Value: " + value);
+                                    showInfo(selectedTitledPane.getText() , value);
+                                } else {
+                                    showInfo(value);
+                                }
+                            }
                         } else {
                             clearInfo();
                         }
@@ -136,6 +152,8 @@ public class TFmanagerController {
             }
         }
     }
+
+
 
 
 
@@ -160,7 +178,27 @@ public class TFmanagerController {
         loadProject();
         loadData(projectName, nameTester);
     }
+    private void showInfo(String projectName,String testerName) {
+        nameTester = testerName; // ดึงชื่อ Tester ตรงๆ
 
+        System.out.println("Tester: " + nameTester);
+
+        // หาว่า Tester นี้อยู่ใน Project ไหน
+        for (Node node : projectList.getChildren()) {
+            if (node instanceof TitledPane titledPane) {
+                ListView<String> listView = (ListView<String>) titledPane.getContent();
+                if (listView.getItems().contains(testerName)) {
+                    projectName = titledPane.getText(); // ดึงชื่อ Project จากหัวข้อของ TitledPane
+                    System.out.println("Project: " + projectName);
+                    break;
+                }
+            }
+        }
+
+        // โหลดข้อมูล
+        loadProject();
+        loadData(projectName, nameTester);
+    }
 
     private void clearInfo() {
         nameTester = "";
@@ -172,7 +210,7 @@ public class TFmanagerController {
 
         testFlowPositionList.getPositionList().forEach(testFlowPosition -> {
             String projectName = testFlowPosition.getProjectName();
-            String tester = testFlowPosition.getTester() + " (Tester)"; // ต่อท้าย "(Tester)"
+            String tester = testFlowPosition.getTester() + "(Tester)"; // ต่อท้าย "(Tester)"
 
             // จัดกลุ่ม Tester ตาม Project Name
             projectTestersMap.computeIfAbsent(projectName, k -> new HashSet<>()).add(tester);

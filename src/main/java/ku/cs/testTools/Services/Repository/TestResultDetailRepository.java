@@ -43,6 +43,8 @@ public class TestResultDetailRepository {
         String query = "SELECT t FROM TestResultDetail t";
         try {
             return entityManager.createQuery(query, TestResultDetail.class).getResultList();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
