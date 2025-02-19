@@ -43,6 +43,8 @@ public class UseCaseRepository {
         String query = "SELECT t FROM UseCase t";
         try {
             return entityManager.createQuery(query, UseCase.class).getResultList();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
