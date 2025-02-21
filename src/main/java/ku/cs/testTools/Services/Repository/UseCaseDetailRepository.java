@@ -65,8 +65,6 @@ public class UseCaseDetailRepository {
                 transaction.rollback();
             }
             throw e;
-        } finally {
-            close();
         }
     }
 

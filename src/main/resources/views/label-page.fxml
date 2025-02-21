@@ -14,7 +14,7 @@
 
 <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="260.0" prefWidth="500.0" style="-fx-border-color: white;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.testTools.Controllers.Home.LabelPageController">
    <children>
-      <VBox layoutX="72.0" layoutY="50.0" prefHeight="148.0" prefWidth="360.0" spacing="4.0" AnchorPane.bottomAnchor="65.20000000000005" AnchorPane.leftAnchor="72.0" AnchorPane.rightAnchor="71.20000000000005" AnchorPane.topAnchor="50.0">
+      <VBox layoutX="73.0" layoutY="23.0" prefHeight="148.0" prefWidth="360.0" spacing="4.0" AnchorPane.bottomAnchor="96.20000000000002" AnchorPane.leftAnchor="73.0" AnchorPane.rightAnchor="73.40000000000003" AnchorPane.topAnchor="23.0">
          <children>
             <Label fx:id="labelText" prefHeight="25.0" prefWidth="130.0" text="Name">
                <font>
@@ -38,7 +38,7 @@
                   <Insets top="10.0" />
                </VBox.margin>
                <children>
-                  <Button fx:id="confirmButton" mnemonicParsing="false" onAction="#handleConfirmButton" prefHeight="30.0" prefWidth="80.0" text="Confirm">
+                  <Button fx:id="confirmButton" mnemonicParsing="false" onAction="#handleConfirmButton" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #6fadac;" text="Confirm">
                      <font>
                         <Font size="14.0" />
                      </font>

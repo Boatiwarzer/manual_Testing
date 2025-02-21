@@ -138,16 +138,16 @@
                         </Button>
                      </children>
                   </HBox>
-                  <TitledPane animated="false" collapsible="false" prefHeight="14.0" prefWidth="266.0" text="ProjectList" wrapText="true">
+                  <TitledPane animated="false" collapsible="false" prefHeight="14.0" prefWidth="266.0" text="Project List" wrapText="true">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </TitledPane>
                   <ScrollPane>
                      <content>
-                        <VBox fx:id="projectList" prefHeight="239.0" prefWidth="266.0">
+                        <VBox fx:id="projectList" prefHeight="256.0" prefWidth="266.0">
                            <children>
-                              <TitledPane expanded="false" text="untitled" underline="true" wrapText="true">
+                              <TitledPane expanded="false" prefWidth="266.0" text="untitled" underline="true" wrapText="true">
                                  <content>
                                     <ListView prefHeight="103.0" prefWidth="265.0" />
                                  </content>

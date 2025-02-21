@@ -22,7 +22,7 @@ public class Main extends Application {
             configRoute();
 //            connection = DatabaseConnector.connect();
 //          FXRouter.setTheme(1);
-//          FXRouter.popup("landing_page_tester",true);
+//          FXRouter.popup("LabelPage",true);
           FXRouter.goTo("role");
 //            FXRouter.goTo("use_case");
             Application.setUserAgentStylesheet(getClass().getResource("/style/Themes/nord-light.css").toExternalForm());

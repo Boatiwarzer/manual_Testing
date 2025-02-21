@@ -148,6 +148,7 @@ public class IRTestresultController {
         configs.add(new StringConfiguration("title:IRD-ID."));
         configs.add(new StringConfiguration("title:Test No."));
         configs.add(new StringConfiguration("title:Tester"));
+        configs.add(new StringConfiguration("title:Test times"));
         configs.add(new StringConfiguration("title:TS-ID."));
         configs.add(new StringConfiguration("title:TC-ID."));
         configs.add(new StringConfiguration("title:Description"));
@@ -184,6 +185,7 @@ public class IRTestresultController {
         configs.add(new StringConfiguration("title:IRD-ID.", "field:idIRD"));
         configs.add(new StringConfiguration("title:Test No.", "field:testNoIRD"));
         configs.add(new StringConfiguration("title:Tester", "field:testerIRD"));
+        configs.add(new StringConfiguration("title:Test times", "field:retestIRD"));
         configs.add(new StringConfiguration("title:TS-ID.", "field:tsIdIRD"));
         configs.add(new StringConfiguration("title:TC-ID.", "field:tcIdIRD"));
         configs.add(new StringConfiguration("title:Description", "field:descriptIRD"));
@@ -200,7 +202,7 @@ public class IRTestresultController {
         for (StringConfiguration conf : configs) {
             TableColumn<IRreportDetail, String> col = new TableColumn<>(conf.get("title"));
             col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
-            if (index != 7 && index <= 12) {  // ถ้าเป็นคอลัมน์แรก
+            if (index != 8 && index <= 13) {  // ถ้าเป็นคอลัมน์แรก
                 col.setPrefWidth(120);
                 col.setMaxWidth(120);
                 col.setMinWidth(120); // ตั้งค่าขนาดคอลัมน์แรก
@@ -256,7 +258,23 @@ public class IRTestresultController {
                     }
                 });
             }
-
+            if (conf.get("field").equals("rcaIRD")) {
+                col.setCellFactory(column -> new TableCell<>() {
+                    private final Text text = new Text();
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            setGraphic(null);
+                        } else {
+//                            setText(item.replace("|", ", "));
+                            text.setText(item.replace("|", ", "));
+                            text.wrappingWidthProperty().bind(column.widthProperty().subtract(10)); // ตั้งค่าการห่อข้อความตามขนาดคอลัมน์
+                            setGraphic(text); // แสดงผล Text Node
+                        }
+                    }
+                });
+            }
             if (conf.get("field").equals("imageIRD")) {
                 col.setCellFactory(column -> new TableCell<>() {
                     private final ImageView imageView = new ImageView();
@@ -347,6 +365,15 @@ public class IRTestresultController {
         // ส่วน Meta Data
         int currentRow = 0; // ตัวแปรติดตาม row ปัจจุบันใน Excel
 
+        // เพิ่มชื่อไฟล์ CSV
+        Row csvFileNameRow = sheet.createRow(currentRow++);
+        Cell csvFileNameCell = csvFileNameRow.createCell(0);
+        csvFileNameCell.setCellValue("Project Name: " + projectName);
+
+        Row testerNameRow = sheet.createRow(currentRow++);
+        Cell testerNameCell = testerNameRow.createCell(0);
+        testerNameCell.setCellValue("Tester Name: " + name);
+
         // เพิ่มวันเวลา Export
         Row exportTimeRow = sheet.createRow(currentRow++);
         Cell exportTimeCell = exportTimeRow.createCell(0);
@@ -354,18 +381,13 @@ public class IRTestresultController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         exportTimeCell.setCellValue("Export Date and Time: " + now.format(formatter));
 
-        // เพิ่มชื่อไฟล์ CSV
-        Row csvFileNameRow = sheet.createRow(currentRow++);
-        Cell csvFileNameCell = csvFileNameRow.createCell(0);
-        csvFileNameCell.setCellValue("Project Name: " + csvFileName);
-
         // เว้นแถวก่อนเริ่มหัวข้อข้อมูลตาราง
         currentRow++;
 
         // สร้างหัวข้อคอลัมน์ (Header Row)
         Row headerRow = sheet.createRow(currentRow++);
         String[] columns = {
-                "IR ID", "Test No.", "Tester", "TS ID", "TC ID", "Description", "Condition",
+                "IR ID", "Test No.", "Tester", "Test times", "TS ID", "TC ID", "Description", "Condition",
                 "Image", "Priority", "RCA", "Review By", "Status", "Remark"
         };
 
@@ -380,16 +402,17 @@ public class IRTestresultController {
             row.createCell(0).setCellValue(detail.getIdIR());
             row.createCell(1).setCellValue(detail.getTestNoIRD());
             row.createCell(2).setCellValue(detail.getTesterIRD());
-            row.createCell(3).setCellValue(detail.getTsIdIRD());
-            row.createCell(4).setCellValue(detail.getTcIdIRD());
-            row.createCell(5).setCellValue(detail.getDescriptIRD());
-            row.createCell(6).setCellValue(detail.getConditionIRD());
-            row.createCell(7).setCellValue(detail.getImageIRD());
-            row.createCell(8).setCellValue(detail.getPriorityIRD());
-            row.createCell(9).setCellValue(detail.getRcaIRD());
-            row.createCell(10).setCellValue(detail.getManagerIRD());
-            row.createCell(11).setCellValue(detail.getStatusIRD());
-            row.createCell(12).setCellValue(detail.getRemarkIRD());
+            row.createCell(3).setCellValue(detail.getRetestIRD());
+            row.createCell(4).setCellValue(detail.getTsIdIRD());
+            row.createCell(5).setCellValue(detail.getTcIdIRD());
+            row.createCell(6).setCellValue(detail.getDescriptIRD());
+            row.createCell(7).setCellValue(detail.getConditionIRD());
+            row.createCell(8).setCellValue(detail.getImageIRD());
+            row.createCell(9).setCellValue(detail.getPriorityIRD());
+            row.createCell(10).setCellValue(detail.getRcaIRD());
+            row.createCell(11).setCellValue(detail.getManagerIRD());
+            row.createCell(12).setCellValue(detail.getStatusIRD());
+            row.createCell(13).setCellValue(detail.getRemarkIRD());
         }
 
         // เขียนไฟล์ Excel ไปยังตำแหน่งที่ผู้ใช้เลือก

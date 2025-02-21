@@ -137,6 +137,15 @@ public class IRreportDetailList {
         return result;
     }
 
+    public IRreportDetail findTRDByIrd(String id) {
+        for (IRreportDetail iRreportDetail : iRreportDetailList) {
+            if (iRreportDetail.isId(id) ) {
+                return iRreportDetail;
+            }
+        }
+        return null;
+    }
+
     public void clearItems() {
         iRreportDetailList.clear();
     }

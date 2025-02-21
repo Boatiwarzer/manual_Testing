@@ -96,7 +96,6 @@ public class PopupIRmanager {
             iRreportDetailList = (IRreportDetailList) objects.get(4);
             idIR = iRreport.getIdIR();
             IRreportDetail trd = iRreportDetailList.findIRDByirId(idIR);
-            idTrd = trd.getIdTRD();
             System.out.println(idIR + " " + idTrd);
             type = (String) objects.get(5);
             loadProject();
@@ -316,6 +315,8 @@ public class PopupIRmanager {
         String status = onStatusComboBox.getValue();
         String priority = onPriorityComboBox.getValue();
         String remark = onRemark.getText();
+        IRreportDetail idTRD = iRreportDetailList.findTRDByIrd(id);
+        String trd = idTRD.getIdTRD();
 
         StringJoiner joiner = new StringJoiner("|");
         if (!onRCA.getText().isEmpty()){
@@ -332,7 +333,7 @@ public class PopupIRmanager {
         String rca = joiner.toString();
         System.out.println(rca);
 
-        iRreportDetail = new IRreportDetail(id, TrNo, tester, IdTS, IdTC, descript, condition, image, retest, priority, rca, manager, status, remark, idIR, idTrd);
+        iRreportDetail = new IRreportDetail(id, TrNo, tester, IdTS, IdTC, descript, condition, image, retest, priority, rca, manager, status, remark, idIR, trd);
         iRreportDetailList.addOrUpdateIRreportDetail(iRreportDetail);
 
         try {

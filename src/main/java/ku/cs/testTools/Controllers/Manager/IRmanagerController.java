@@ -17,9 +17,16 @@ import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
 import ku.cs.testTools.Services.DataSourceCSV.*;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,7 +40,7 @@ public class IRmanagerController {
     private Hyperlink onClickTestflow, onClickTestresult, onClickUsecase, onClickIR;
 
     @FXML
-    private Button onEditButton, onSearchButton;
+    private Button onEditButton, onSearchButton, onExportButton;
 
     @FXML
     private TextField onSearchField, testNameLabel, infoNoteLabel;
@@ -260,6 +267,7 @@ public class IRmanagerController {
                     clearInfo();
                     System.out.println("Selected IRreport ID: " + (newValue != null ? newValue.getIdIR() : "null"));
                     onEditButton.setVisible(newValue.getIdIR() != null);
+                    onExportButton.setVisible(newValue.getIdIR() != null);
                     selectedIRreport = newValue;
                     showInfo(newValue);
                 }
@@ -293,6 +301,7 @@ public class IRmanagerController {
 
     private void loadListView(IRreportList iRreportList) {
         onEditButton.setVisible(false);
+        onExportButton.setVisible(false);
         onSearchList.refresh();
         if (iRreportList != null){
             iRreportList.sort(new IRreportComparable());
@@ -589,10 +598,106 @@ public class IRmanagerController {
 
     }
 
-//    private void resetHyperlinkStyles() {
-//        onClickIR.getStyleClass().remove("selected");
-//        onClickTestflow.getStyleClass().remove("selected");
-//        onClickTestresult.getStyleClass().remove("selected");
-//        onClickUsecase.getStyleClass().remove("selected");
-//    }
+    public void saveToExcel(Stage stage, List<IRreportDetail> irReportDetails, String csvFileName) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Excel File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files (*.xlsx)", "*.xlsx"));
+
+        // เปิดหน้าต่างให้ผู้ใช้เลือกตำแหน่งไฟล์
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Excel files (*.xlsx)", "*.xlsx");
+        fileChooser.getExtensionFilters().add(extFilter);
+        java.io.File file = fileChooser.showSaveDialog(stage);
+
+        if (file != null) {
+            try {
+                exportToExcel(file.getAbsolutePath(), irReportDetails, csvFileName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void saveAsExcel(ActionEvent event) {
+        Stage stage = (Stage) onTableIR.getScene().getWindow();
+        List<IRreportDetail> irReportDetails = onTableIR.getItems();
+        String csvFileName = projectName; // แทนด้วยชื่อไฟล์ CSV ที่คุณต้องการ
+        saveToExcel(stage, irReportDetails, csvFileName);
+    }
+
+    //     ฟังก์ชันสำหรับบันทึกข้อมูลลงไฟล์ Excel
+    public void exportToExcel(String filePath, List<IRreportDetail> irReportDetails, String csvFileName) throws IOException {
+        // สร้าง Workbook และ Sheet
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("IR Report Details");
+
+        // ส่วน Meta Data
+        int currentRow = 0; // ตัวแปรติดตาม row ปัจจุบันใน Excel
+
+        // เพิ่มชื่อไฟล์ CSV
+        Row csvFileNameRow = sheet.createRow(currentRow++);
+        org.apache.poi.ss.usermodel.Cell csvFileNameCell = csvFileNameRow.createCell(0);
+        csvFileNameCell.setCellValue("Project Name: " + projectName);
+
+        // เพิ่มวันเวลา Export
+        Row exportTimeRow = sheet.createRow(currentRow++);
+        org.apache.poi.ss.usermodel.Cell exportTimeCell = exportTimeRow.createCell(0);
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        exportTimeCell.setCellValue("Export Date and Time: " + now.format(formatter));
+
+        // เว้นแถวก่อนเริ่มหัวข้อข้อมูลตาราง
+        currentRow++;
+
+        // สร้างหัวข้อคอลัมน์ (Header Row)
+        Row headerRow = sheet.createRow(currentRow++);
+        String[] columns = {
+                "IR ID", "Test No.", "Tester", "Test times", "TS ID", "TC ID", "Description", "Condition",
+                "Image", "Priority", "RCA", "Review By", "Status", "Remark"
+        };
+
+        // กำหนดหัวข้อคอลัมน์
+        for (int i = 0; i < columns.length; i++) {
+            headerRow.createCell(i).setCellValue(columns[i]);
+        }
+
+        // เพิ่มข้อมูลจาก irReportDetails ในแต่ละแถว
+        for (IRreportDetail detail : irReportDetails) {
+            Row row = sheet.createRow(currentRow++);
+            row.createCell(0).setCellValue(detail.getIdIR());
+            row.createCell(1).setCellValue(detail.getTestNoIRD());
+            row.createCell(2).setCellValue(detail.getTesterIRD());
+            row.createCell(3).setCellValue(detail.getRetestIRD());
+            row.createCell(4).setCellValue(detail.getTsIdIRD());
+            row.createCell(5).setCellValue(detail.getTcIdIRD());
+            row.createCell(6).setCellValue(detail.getDescriptIRD());
+            row.createCell(7).setCellValue(detail.getConditionIRD());
+            row.createCell(8).setCellValue(detail.getImageIRD());
+            row.createCell(9).setCellValue(detail.getPriorityIRD());
+            row.createCell(10).setCellValue(detail.getRcaIRD());
+            row.createCell(11).setCellValue(detail.getManagerIRD());
+            row.createCell(12).setCellValue(detail.getStatusIRD());
+            row.createCell(13).setCellValue(detail.getRemarkIRD());
+        }
+
+        // เขียนไฟล์ Excel ไปยังตำแหน่งที่ผู้ใช้เลือก
+        try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
+            workbook.write(fileOut);
+        }
+
+        // ปิด Workbook หลังจากการบันทึกเสร็จ
+        workbook.close();
+    }
+
+    @FXML
+    void onExportButton(ActionEvent event) {
+        // Stage ที่เปิด FileChooser
+        Stage stage = (Stage) onTableIR.getScene().getWindow();
+
+        // ดึงข้อมูลจาก TableView โดยใช้ getItems()
+        List<IRreportDetail> irReportDetails = onTableIR.getItems();
+        String csvFileName = projectName;
+
+        // เรียกฟังก์ชัน saveAsExcel
+        saveToExcel(stage, irReportDetails, csvFileName);
+    }
 }

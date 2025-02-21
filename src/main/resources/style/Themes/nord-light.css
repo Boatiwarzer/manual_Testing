@@ -127,6 +127,8 @@
   -fx-stroke: transparent;
 }
 
+
+
 .hyperlink {
   -fx-text-fill: #98aeca; /* สีข้อความปกติ */
   -fx-underline: false;    /* ขีดเส้นใต้ */
@@ -4445,9 +4447,9 @@ Add support for NO_HEADER tweak in tables .table-view.no-header > .column-header
   -fx-background-color: -color-border-default, -color-bg-default;
   -fx-padding: 10px 20px 10px 20px;
 }
-.titled-pane > .title > .text {
-  -fx-font-size: 1.25em;
-}
+/*.titled-pane > .title > .text {*/
+/*  -fx-font-size: 1.25em;*/
+/*}*/
 .titled-pane > .title > .arrow-button {
   -fx-background-color: none;
   -fx-background-insets: 0;
@@ -4458,7 +4460,7 @@ Add support for NO_HEADER tweak in tables .table-view.no-header > .column-header
   -fx-shape: "M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z";
   -fx-scale-shape: false;
   -fx-background-color: -color-fg-default;
-  -fx-padding: 4px 5px 4px 5px;
+  -fx-padding: 3px 4px 3px 4px;
 }
 .titled-pane > .content {
   -fx-border-color: -color-border-default;
@@ -4466,7 +4468,7 @@ Add support for NO_HEADER tweak in tables .table-view.no-header > .column-header
   -fx-border-radius: 0 0 1 1;
   -fx-background-radius: 0 0 1 1;
   -fx-background-color: -color-bg-default;
-  -fx-padding: 20px 20px 10px 20px;
+  -fx-padding: 0px 10px 10px 10px;
   -fx-alignment: TOP_LEFT;
 }
 .titled-pane:disabled > .title > *,
