@@ -510,6 +510,9 @@ public class PopupAddTestresultController {
         if (onTestNo.getText() == null || onTestNo.getText().trim().isEmpty()) {
             showAlert("กรุณากรอกข้อมูล Test No.");
             return false;
+        } else if (!onTestNo.getText().matches("\\d+")) {
+            showAlert("กรุณากรอกตัวเลขเท่านั้น");
+            return false;
         }
 
         if (onTestscriptIDComboBox.getValue() == null || onTestscriptIDComboBox.getValue().trim().isEmpty() || onTestscriptIDComboBox.getValue().equals("None")) {
@@ -533,7 +536,7 @@ public class PopupAddTestresultController {
         }
 
         if (onActual.getText() == null || onActual.getText().trim().isEmpty()) {
-            showAlert("กรุณากรอก Actual.");
+            showAlert("กรุณากรอก Actual Result.");
             return false;
         }
 
@@ -547,10 +550,6 @@ public class PopupAddTestresultController {
             return false;
         }
 
-        if (onTester.getText() == null || onTester.getText().trim().isEmpty()) {
-            showAlert("กรุณากรอก Tester.");
-            return false;
-        }
         return true;
     }
 

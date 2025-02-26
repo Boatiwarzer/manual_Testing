@@ -26,20 +26,20 @@
                         <MenuItem fx:id="newMenuItem" mnemonicParsing="false" onAction="#handleNewMenuItem" text="New" />
                         <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" onAction="#handleSaveMenuItem" text="Save" />
                         <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#handleOpenMenuItem" text="Open…" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <Menu fx:id="exportMenu" mnemonicParsing="false" text="Export">
-                           <items>
-                              <MenuItem fx:id="exportMenuItem" mnemonicParsing="false" onAction="#handleExportMenuItem" text="Export..." />
-                              <MenuItem fx:id="exportPDF" mnemonicParsing="false" onAction="#handleExportPDF" text="Export All..." />
-                           </items>
-                        </Menu>
+<!--                        <SeparatorMenuItem mnemonicParsing="false" />-->
+<!--                        <Menu fx:id="exportMenu" mnemonicParsing="false" text="Export">-->
+<!--                           <items>-->
+<!--                              <MenuItem fx:id="exportMenuItem" mnemonicParsing="false" onAction="#handleExportMenuItem" text="Export..." />-->
+<!--                              <MenuItem fx:id="exportPDF" mnemonicParsing="false" onAction="#handleExportPDF" text="Export All..." />-->
+<!--                           </items>-->
+<!--                        </Menu>-->
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem fx:id="exitQuit" mnemonicParsing="false" onAction="#handleExit" text="Quit" />
                      </items>
                   </Menu>
                   <Menu mnemonicParsing="false" text="Help">
                      <items>
-                        <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
+                        <MenuItem mnemonicParsing="false" text="About Manual Test Tools" />
                      </items>
                   </Menu>
                </menus>
