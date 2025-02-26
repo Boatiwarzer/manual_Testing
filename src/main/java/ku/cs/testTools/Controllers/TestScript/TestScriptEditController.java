@@ -786,9 +786,50 @@ public class TestScriptEditController {
         objects.add(null);
     }
     @FXML
-    void handleSaveMenuItem(ActionEvent event) {
-        //saveProject();
+    void handleSaveMenuItem(ActionEvent event) throws IOException{
+        saveProject();
     }
+
+    @FXML
+    void handleSubmitMenuItem(ActionEvent event) throws IOException {
+
+    }
+
+    @FXML
+    void handleOpenMenuItem(ActionEvent actionEvent) throws IOException {
+        // Open file chooser
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Project");
+
+        // Set extension filter
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        // Show open file dialog
+        File file = fileChooser.showOpenDialog(null);
+        if (file != null) {
+            System.out.println("Opening file: " + file.getName());
+
+            // Get the project name from the file name
+            projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
+
+            // Get the directory from the file path
+            directory = file.getParent();
+
+            ArrayList<Object> objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add(null);
+            // แก้พาท
+            String packageStr1 = "views/";
+            FXRouter.when("home_tester", packageStr1 + "home_tester.fxml", "TestTools | " + projectName);
+            FXRouter.goTo("home_tester", objects);
+            FXRouter.popup("landing_openproject", objects);
+        } else {
+            System.out.println("No file selected.");
+        }
+    }
+
     @FXML
     void handleExit(ActionEvent event) {
         Node source = (Node) event.getSource();
@@ -799,35 +840,6 @@ public class TestScriptEditController {
     @FXML
     void handleExportPDF(ActionEvent event) {
 
-    }
-
-    @FXML
-    void handleNewMenuItem(ActionEvent event) throws IOException {
-        FXRouter.popup("landing_newproject");
-    }
-
-    @FXML
-    void handleOpenMenuItem(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-
-        // Configure the file chooser
-        fileChooser.setTitle("Open Project");
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
-        fileChooser.getExtensionFilters().add(extFilter);
-
-        // Show the file chooser
-        File file = fileChooser.showOpenDialog(null);
-        if (file != null) {
-            System.out.println("Opening: " + file.getName());
-            // Get the project name from the file name
-            projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
-
-            // Get the directory from the file path
-            directory = file.getParent();
-            //loadProject();
-        } else {
-            System.out.println("Open command cancelled");
-        }
     }
     public void handleExportMenuItem(ActionEvent actionEvent) {
         boolean noteAdded = false;

@@ -26,8 +26,6 @@ public class Main extends Application {
           FXRouter.goTo("role");
 //            FXRouter.goTo("use_case");
             Application.setUserAgentStylesheet(getClass().getResource("/style/Themes/nord-light.css").toExternalForm());
-//            Application.setUserAgentStylesheet(getClass().getResource("/style/Themes/cupertino-light.css").toExternalForm());
-//            Application.setUserAgentStylesheet(getClass().getResource("/style/Themes/nord-dark.css").toExternalForm());
 //            Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
             // Display an error message to the user or handle the exception as needed
         } catch (IOException e) {

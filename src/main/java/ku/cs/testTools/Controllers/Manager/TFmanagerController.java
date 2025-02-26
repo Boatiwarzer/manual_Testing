@@ -275,7 +275,7 @@ public class TFmanagerController {
     }
     @FXML
     void handleSaveMenuItem(ActionEvent event) {
-
+        saveProject();
     }
     @FXML
     void handleExit(ActionEvent event) {
