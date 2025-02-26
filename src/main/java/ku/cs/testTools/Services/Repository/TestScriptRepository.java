@@ -2,6 +2,7 @@ package ku.cs.testTools.Services.Repository;
 
 import jakarta.persistence.*;
 import ku.cs.testTools.Models.TestToolModels.TestScript;
+import ku.cs.testTools.Models.TestToolModels.TestScriptList;
 import ku.cs.testTools.Services.JpaUtil;
 
 import java.util.List;

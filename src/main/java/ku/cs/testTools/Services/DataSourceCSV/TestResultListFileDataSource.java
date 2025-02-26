@@ -1,5 +1,7 @@
 package ku.cs.testTools.Services.DataSourceCSV;
 
+import ku.cs.testTools.Models.Manager.Manager;
+import ku.cs.testTools.Models.Manager.ManagerList;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.DataSource;
 import ku.cs.testTools.Services.ManageDataSource;
@@ -101,15 +103,20 @@ public class TestResultListFileDataSource implements DataSource<TestResultList>,
         ConnectionList connectionList = connectionListFileDataSource.readData();
         NoteListFileDataSource noteListFileDataSource = new NoteListFileDataSource(directory,fileName);
         NoteList noteList = noteListFileDataSource.readData();
+        ManagerListFileDataSource managerListFileDataSource = new ManagerListFileDataSource(directory,fileName);
+        ManagerList managerList = managerListFileDataSource.readData();
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
-//        TestResultList existingTestResultList = readData();
         FileWriter writer = null;
         BufferedWriter buffer = null;
         try {
-
             writer = new FileWriter(file, StandardCharsets.UTF_8);
             buffer = new BufferedWriter(writer);
+            for (Manager manager : managerList.getManagerList()) {
+                String line = managerListFileDataSource.createLine(manager);
+                buffer.append(line);
+                buffer.newLine();
+            }
             for (TestFlowPosition position : testFlowPositionList.getPositionList()) {
                 String line = testFlowPositionListFileDataSource.createLine(position);
                 buffer.append(line);

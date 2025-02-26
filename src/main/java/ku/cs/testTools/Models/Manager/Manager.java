@@ -14,6 +14,8 @@ import lombok.Setter;
 @Getter
 @Data
 @Entity
+@Table(name = "Manager")
+@NamedQuery(name = "find Manager by id", query = "Select t from Manager t where t.IDManager = :id")
 public class Manager implements Comparable{
     @Id
     @Access(AccessType.FIELD)
@@ -21,14 +23,34 @@ public class Manager implements Comparable{
     private String projectName;
     private String nameManager;
     private String date;
-    @OneToMany
-    private List<Tester> nameTester;
+    private boolean status;
+
+    public Manager(String IDManager, String projectName, String nameManager, String date, boolean status) {
+        this.IDManager = IDManager;
+        this.projectName = projectName;
+        this.nameManager = nameManager;
+        this.date = date;
+        this.status = status;
+    }
+
+    public Manager(String IDManager, String projectName, String nameManager, String date) {
+        this.IDManager = IDManager;
+        this.projectName = projectName;
+        this.nameManager = nameManager;
+        this.date = date;
+    }
 
 
+    public Manager() {
 
+    }
 
     @Override
     public int compareTo(Object o) {
         return 0;
+    }
+
+    public boolean isId(String id) {
+        return this.IDManager.equals(id);
     }
 }

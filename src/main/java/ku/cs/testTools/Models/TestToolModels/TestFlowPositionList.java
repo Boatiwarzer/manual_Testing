@@ -6,6 +6,7 @@ import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 
 @Data
@@ -50,6 +51,39 @@ public class TestFlowPositionList {
         }
         return null;
     }
+    public TestFlowPosition findByPositionId(int positionId, String projectName, String tester) {
+        for (TestFlowPosition position : positionList) {
+            System.out.println("Checking Position: " + position.getPositionID() +
+                    " Project: " + position.getProjectName() +
+                    " Tester: " + position.getTester());
+
+            if (position.getPositionID() == positionId &&
+                    position.getProjectName().trim().equalsIgnoreCase(projectName.trim()) &&
+                    position.getTester().trim().equalsIgnoreCase(tester.trim())) {
+
+                System.out.println("MATCHED: " + position);
+                return position;
+            }
+        }
+        System.out.println("NOT FOUND for positionId: " + positionId);
+        return null;
+    }
+    public List<TestFlowPosition> findAllByPositionId(int positionId, String projectName, String tester) {
+        List<TestFlowPosition> matchedPositions = new ArrayList<>();
+
+        for (TestFlowPosition position : positionList) {
+            if (position.getPositionID() == positionId &&
+                    position.getProjectName().trim().equalsIgnoreCase(projectName.trim()) &&
+                    position.getTester().trim().equalsIgnoreCase(tester.trim())) {
+
+                matchedPositions.add(position);
+            }
+        }
+
+        return matchedPositions;
+    }
+
+
     public TestFlowPosition findByPositionIdNamePT(int positionId,String project,String name) {
         for (TestFlowPosition position : positionList) {
             if (position.getPositionID() == positionId && Objects.equals(position.getTester().trim(), name.trim())) {

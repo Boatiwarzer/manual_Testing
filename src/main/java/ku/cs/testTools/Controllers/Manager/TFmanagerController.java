@@ -23,6 +23,7 @@ import ku.cs.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.DataSource;
 import ku.cs.testTools.Services.DataSourceCSV.*;
+import ku.cs.testTools.Services.Repository.*;
 
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -137,11 +138,9 @@ public class TFmanagerController {
 
                                 // แสดงค่าของ TitledPane และค่าที่เลือกใน ListView
                                 if (selectedTitledPane != null) {
-                                    System.out.println("TitledPane: " + selectedTitledPane.getText());
+                                    System.out.println("TitledPane: " + selectedTitledPane.getText().trim());
                                     System.out.println("Selected Value: " + value);
-                                    showInfo(selectedTitledPane.getText() , value);
-                                } else {
-                                    showInfo(value);
+                                    showInfo(selectedTitledPane.getText().trim() , value);
                                 }
                             }
                         } else {
@@ -178,8 +177,9 @@ public class TFmanagerController {
         loadProject();
         loadData(projectName, nameTester);
     }
-    private void showInfo(String projectName,String testerName) {
+    private void showInfo(String projectNames,String testerName) {
         nameTester = testerName; // ดึงชื่อ Tester ตรงๆ
+        this.projectName = projectNames;
 
         System.out.println("Tester: " + nameTester);
 
@@ -350,25 +350,86 @@ private void loadProject() {
     System.out.println(testScriptList);
     onDesignArea.getChildren().clear();
     onNoteTextArea.clear();
-    DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-    DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-    DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
-    DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory,projectName + ".csv");
-    DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory,projectName + ".csv");
-    DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
-    //DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
-    DataSource<NoteList> noteListDataSource = new NoteListFileDataSource(directory,projectName + ".csv");
-    //testScriptDetailList.clearItems();
-    //onNoteTextArea.clear();
 
-    testScriptList = testScriptListDataSource.readData();
-    testScriptDetailList = testScriptDetailListDataSource.readData();
-    testCaseList = testCaseListDataSource.readData();
-    testCaseDetailList = testCaseDetailListDataSource.readData();
-    testFlowPositionList = testFlowPositionListDataSource.readData();
-    connectionList = connectionListDataSource.readData();
-    noteList = noteListDataSource.readData();
-    //useCaseList = useCaseListDataSource.readData();
+    // สร้างออบเจ็กต์ของแต่ละ Repository
+    TestScriptRepository testScriptRepository = new TestScriptRepository();
+    TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
+    TestFlowPositionRepository testFlowPositionRepository = new TestFlowPositionRepository();
+    TestCaseRepository testCaseRepository = new TestCaseRepository();
+    TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
+    ConnectionRepository connectionRepository = new ConnectionRepository();
+    NoteRepository noteRepository = new NoteRepository();
+
+    // โหลด TestScriptList
+    testScriptList = new TestScriptList();
+    for (TestScript script : testScriptRepository.getAllTestScripts()) {
+        testScriptList.addTestScript(script);
+    }
+
+    // โหลด TestScriptDetailList
+    testScriptDetailList = new TestScriptDetailList();
+    for (TestScriptDetail detail : testScriptDetailRepository.getAllTestScriptDetail()) {
+        testScriptDetailList.addTestScriptDetail(detail);
+    }
+
+    // โหลด TestFlowPositionList
+    testFlowPositionList = new TestFlowPositionList();
+    for (TestFlowPosition position : testFlowPositionRepository.getAllTestFlowPositions()) {
+        testFlowPositionList.addPosition(position);
+    }
+
+    // โหลด TestCaseList
+    testCaseList = new TestCaseList();
+    for (TestCase testCase : testCaseRepository.getAllTestCases()) {
+        testCaseList.addTestCase(testCase);
+    }
+
+    // โหลด TestCaseDetailList
+    testCaseDetailList = new TestCaseDetailList();
+    for (TestCaseDetail detail : testCaseDetailRepository.getAllTestCaseDetails()) {
+        testCaseDetailList.addTestCaseDetail(detail);
+    }
+
+    // โหลด ConnectionList
+    connectionList = new ConnectionList();
+    for (Connection connection : connectionRepository.getAllConnections()) {
+        connectionList.addConnection(connection);
+    }
+
+    // โหลด NoteList
+    noteList = new NoteList();
+    for (Note note : noteRepository.getAllNote()) {
+        noteList.addNote(note);
+    }
+
+
+    System.out.println(testScriptList);
+//    testScriptDetailList = (TestScriptDetailList) testScriptDetailRepository.getAllTestScriptDetail();
+//    testCaseList = (TestCaseList) testCaseRepository.getAllTestCases();
+//    testCaseDetailList = (TestCaseDetailList) testCaseDetailRepository.getAllTestCaseDetails();
+//    testFlowPositionList = (TestFlowPositionList) testFlowPositionRepository.getAllTestFlowPositions();
+//    connectionList = (ConnectionList) connectionRepository.getAllConnections();
+//    noteList = (NoteList) noteRepository.getAllNote();
+
+//    DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+//    DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+//    DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+//    DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory,projectName + ".csv");
+//    DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory,projectName + ".csv");
+//    DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+//    //DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
+//    DataSource<NoteList> noteListDataSource = new NoteListFileDataSource(directory,projectName + ".csv");
+//    //testScriptDetailList.clearItems();
+//    //onNoteTextArea.clear();
+//
+//    testScriptList = testScriptListDataSource.readData();
+//    testScriptDetailList = testScriptDetailListDataSource.readData();
+//    testCaseList = testCaseListDataSource.readData();
+//    testCaseDetailList = testCaseDetailListDataSource.readData();
+//    testFlowPositionList = testFlowPositionListDataSource.readData();
+//    connectionList = connectionListDataSource.readData();
+//    noteList = noteListDataSource.readData();
+//    //useCaseList = useCaseListDataSource.readData();
 
 }
 
@@ -383,82 +444,104 @@ private void loadProject() {
         String projectNameLower = projectName.toLowerCase();
         String nameTesterLower = nameTester.toLowerCase();
 
-        testScriptList.getTestScriptList().forEach(testScript -> {
-            TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(testScript.getPosition());
-            if (testFlowPosition != null
-                    && projectNameLower.equals(testFlowPosition.getProjectName().toLowerCase())
-                    && nameTesterLower.equals(testFlowPosition.getTester().toLowerCase())) {
+        // 🔹 ใช้ Set เก็บ Position ID ที่เคยวาดไปแล้ว
+        Set<Integer> drawnPositionIds = new HashSet<>();
 
-                drawTestScript(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
-                        testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
-                        testScript.getIdTS() + " : " + testScript.getNameTS(),
-                        testFlowPosition.getPositionID());
+        testScriptList.getTestScriptList().forEach(testScript -> {
+            List<TestFlowPosition> testFlowPositions = testFlowPositionList.findAllByPositionId(
+                    testScript.getPosition(), projectNameLower, nameTesterLower
+            );
+
+            // 🔍 Debug: เช็คค่าที่ได้จาก findAllByPositionId()
+            System.out.println("🔎 Position ID: " + testScript.getPosition());
+            System.out.println("📌 Found TestFlowPositions: " + testFlowPositions.size());
+            for (TestFlowPosition position : testFlowPositions) {
+                System.out.println("✅ Found -> ID: " + position.getPositionID() +
+                        ", Project: " + position.getProjectName() +
+                        ", Tester: " + position.getTester());
             }
+
+            testFlowPositions.forEach(testFlowPosition -> {
+                if (!drawnPositionIds.contains(testFlowPosition.getPositionID())) { // ✅ ตรวจสอบว่าถูกวาดไปแล้วหรือยัง
+                    drawTestScript(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
+                            testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
+                            testScript.getIdTS() + " : " + testScript.getNameTS(),
+                            testFlowPosition.getPositionID());
+
+                    drawnPositionIds.add(testFlowPosition.getPositionID()); // ✅ บันทึกว่าเคยวาดแล้ว
+                }
+            });
         });
 
         testCaseList.getTestCaseList().forEach(testCase -> {
-            TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(testCase.getPosition());
-            if (testFlowPosition != null
-                    && projectNameLower.equals(testFlowPosition.getProjectName().toLowerCase())
-                    && nameTesterLower.equals(testFlowPosition.getTester().toLowerCase())) {
+            List<TestFlowPosition> testFlowPositions = testFlowPositionList.findAllByPositionId(
+                    testCase.getPosition(), projectNameLower, nameTesterLower
+            );
 
-                drawTestCase(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
-                        testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
-                        testCase.getIdTC() + " : " + testCase.getNameTC(),
-                        testFlowPosition.getPositionID());
-            }
+            testFlowPositions.forEach(testFlowPosition -> {
+                if (!drawnPositionIds.contains(testFlowPosition.getPositionID())) { // ✅ กันการวาดซ้ำ
+                    drawTestCase(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
+                            testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
+                            testCase.getIdTC() + " : " + testCase.getNameTC(),
+                            testFlowPosition.getPositionID());
+
+                    drawnPositionIds.add(testFlowPosition.getPositionID()); // ✅ บันทึกว่าเคยวาดแล้ว
+                }
+            });
         });
 
         connectionList.getConnectionList().forEach(connection -> {
-            TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(connection.getConnectionID());
-            if (testFlowPosition != null
-                    && projectNameLower.equals(testFlowPosition.getProjectName().toLowerCase())
-                    && nameTesterLower.equals(testFlowPosition.getTester().toLowerCase())) {
+            List<TestFlowPosition> testFlowPositions = testFlowPositionList.findAllByPositionId(
+                    connection.getConnectionID(), projectNameLower, nameTesterLower
+            );
 
-                switch (testFlowPosition.getType()) {
-                    case "start":
-                        drawStart(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
-                                testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
-                                "start", testFlowPosition.getPositionID());
-                        break;
-                    case "end":
-                        drawEnd(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
-                                testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
-                                "end", testFlowPosition.getPositionID());
-                        break;
-                    case "decision":
-                        drawDecision(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
-                                testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
-                                connection.getLabel(), testFlowPosition.getPositionID());
-                        break;
-//                    default:
-//                        String type = connection.getType();
-//                        if (type.equals("line")) {
-//                            drawLine(connection.getConnectionID(), connection.getStartX(), connection.getStartY(), connection.getEndX(), connection.getEndY(), connection.getLabel(), connection.getArrowHead(), connection.getLineType(), connection.getArrowTail());
-//                        } else if (type.equals("arrow")) {
-//                            drawLine(connection.getConnectionID(), connection.getStartX(), connection.getStartY(), connection.getEndX(), connection.getEndY(), connection.getLabel(), connection.getArrowHead(), connection.getLineType(), connection.getArrowTail());
-//                        }
+            testFlowPositions.forEach(testFlowPosition -> {
+                if (!drawnPositionIds.contains(testFlowPosition.getPositionID())) { // ✅ กันซ้ำ
+                    switch (testFlowPosition.getType()) {
+                        case "start":
+                            drawStart(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
+                                    testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
+                                    "start", testFlowPosition.getPositionID());
+                            break;
+                        case "end":
+                            drawEnd(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
+                                    testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
+                                    "end", testFlowPosition.getPositionID());
+                            break;
+                        case "decision":
+                            drawDecision(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
+                                    testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
+                                    connection.getLabel(), testFlowPosition.getPositionID());
+                            break;
+                    }
+
+                    drawnPositionIds.add(testFlowPosition.getPositionID()); // ✅ บันทึกว่าเคยวาดแล้ว
                 }
-            }
+            });
         });
+
         connectionList.getConnectionList().forEach(connection -> {
             String type = connection.getType();
-            if(projectNameLower.equals(connection.getProjectName().toLowerCase())
-                    && nameTesterLower.equals(connection.getTester().toLowerCase())){
+            if (projectNameLower.equals(connection.getProjectName().toLowerCase())
+                    && nameTesterLower.equals(connection.getTester().toLowerCase())) {
                 if (type.equals("line")) {
-                    drawLine(connection.getConnectionID(), connection.getStartX(), connection.getStartY(), connection.getEndX(), connection.getEndY(), connection.getLabel(), connection.getArrowHead(), connection.getLineType(), connection.getArrowTail());
+                    drawLine(connection.getConnectionID(), connection.getStartX(), connection.getStartY(),
+                            connection.getEndX(), connection.getEndY(), connection.getLabel(),
+                            connection.getArrowHead(), connection.getLineType(), connection.getArrowTail());
                 } else if (type.equals("arrow")) {
-                    drawLine(connection.getConnectionID(), connection.getStartX(), connection.getStartY(), connection.getEndX(), connection.getEndY(), connection.getLabel(), connection.getArrowHead(), connection.getLineType(), connection.getArrowTail());
-
+                    drawLine(connection.getConnectionID(), connection.getStartX(), connection.getStartY(),
+                            connection.getEndX(), connection.getEndY(), connection.getLabel(),
+                            connection.getArrowHead(), connection.getLineType(), connection.getArrowTail());
                 }
             }
-
         });
+
         Note note = noteList.findBynoteID("1");
         if (note != null && !Objects.equals(note.getNote(), "!@#$%^&*()_+")) {
             onNoteTextArea.setText(note.getNote());
         }
     }
+
     private void saveProject() {
         DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
         DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");

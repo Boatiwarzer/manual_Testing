@@ -1,20 +1,16 @@
 package ku.cs.testTools.Models.TestToolModels;
 
-import jakarta.persistence.Entity;
-import javafx.scene.layout.StackPane;
-import ku.cs.testTools.Services.TestScriptComparable;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 
 import java.util.*;
 
 @Data
-public class TestScriptList {
+public class TestScriptList{
     private ArrayList<TestScript> testScriptList;
 
+
     public TestScriptList() {
-        testScriptList = new ArrayList<TestScript>();
+        testScriptList = new ArrayList<>();
     }
 
     public void addTestScript(TestScript testScript) {
@@ -86,7 +82,7 @@ public class TestScriptList {
         }
     }
 
-    public void sort(Comparator<TestScript> cmp) {
+    public void sort(Comparator<? super TestScript> cmp) {
         Collections.sort(testScriptList, cmp);
     }
 

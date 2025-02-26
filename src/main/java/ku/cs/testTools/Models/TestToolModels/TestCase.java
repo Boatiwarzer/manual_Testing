@@ -34,8 +34,8 @@ public class TestCase {
     @Column(name = "note")
     private String note;
 
-    @OneToMany(mappedBy = "testCase", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TestCaseDetail> testCaseList;
+//    @OneToMany(mappedBy = "testCase", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<TestCaseDetail> testCaseList;
 
     @Column(name = "position", nullable = false)
     private int position;

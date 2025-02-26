@@ -9,16 +9,15 @@ import ku.cs.testTools.Services.ManageDataSource;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
-public class UseCaseDetailListFileDataSource implements DataSource<UseCaseDetailList>, ManageDataSource<UseCaseDetail> {
+public class ManagerListFileDataSource implements DataSource<ManagerList>, ManageDataSource<Manager> {
     private String directory;
     private String fileName;
 
-    public UseCaseDetailListFileDataSource(String directory, String fileName) {
+    public ManagerListFileDataSource(String directory, String fileName) {
         this.directory = directory;
         this.fileName = fileName;
         checkFileIsExisted();
     }
-
     private void checkFileIsExisted() {
         File file = new File(directory);
         if (!file.exists()) {
@@ -35,30 +34,30 @@ public class UseCaseDetailListFileDataSource implements DataSource<UseCaseDetail
             }
         }
     }
-
     @Override
-    public UseCaseDetailList readData() {
-        UseCaseDetailList useCaseDetailList = new UseCaseDetailList();
+    public ManagerList readData() {
+        ManagerList managerList = new ManagerList();
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
         FileReader reader = null;
         BufferedReader buffer = null;
 
         try {
-            reader = new FileReader(file);
+            reader = new FileReader(file, StandardCharsets.UTF_8);
             buffer = new BufferedReader(reader);
 
             String line = "";
             while ((line = buffer.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data[0].trim().equals("useCaseDetail")) {
-                    UseCaseDetail useCaseDetail = new UseCaseDetail(
-                            data[1], // useCaseID
-                            data[2], // action
-                            Integer.parseInt(data[3]), // number
-                            data[4] // detail
+                if (data[0].trim().equals("Manager")) {
+                    Manager manager = new Manager(
+                            data[1].trim(), // data[1]
+                            data[2].trim(), // data[2]
+                            data[3].trim(), // data[3]
+                            data[4].trim(),
+                            Boolean.parseBoolean(data[5].trim())// data[4])
                     );
-                    useCaseDetailList.addUseCaseDetail(useCaseDetail);
+                    managerList.addOrUpdateManager(manager);
                 }
             }
         } catch (Exception e) {
@@ -76,11 +75,11 @@ public class UseCaseDetailListFileDataSource implements DataSource<UseCaseDetail
             }
         }
 
-        return useCaseDetailList;
+        return managerList;
     }
 
     @Override
-    public void writeData(UseCaseDetailList useCaseDetailList) {
+    public void writeData(ManagerList managerList) {
         TestFlowPositionListFileDataSource testFlowPositionListFileDataSource = new TestFlowPositionListFileDataSource(directory,fileName);
         TestFlowPositionList testFlowPositionList = testFlowPositionListFileDataSource.readData();
         TestScriptFileDataSource testScriptListDataSource = new TestScriptFileDataSource(directory, fileName);
@@ -93,6 +92,8 @@ public class UseCaseDetailListFileDataSource implements DataSource<UseCaseDetail
         TestCaseDetailList testCaseDetailList = testCaseDetailListDataSource.readData();
         UseCaseListFileDataSource useCaseListFileDataSource = new UseCaseListFileDataSource(directory,fileName);
         UseCaseList useCaseList = useCaseListFileDataSource.readData();
+        UseCaseDetailListFileDataSource useCaseDetailListFileDataSource = new UseCaseDetailListFileDataSource(directory,fileName);
+        UseCaseDetailList useCaseDetailList = useCaseDetailListFileDataSource.readData();
         TestResultListFileDataSource testResultListFileDataSource = new TestResultListFileDataSource(directory,fileName);
         TestResultList testResultList = testResultListFileDataSource.readData();
         TestResultDetailListFileDataSource testResultDetailListFileDataSource = new TestResultDetailListFileDataSource(directory,fileName);
@@ -105,8 +106,6 @@ public class UseCaseDetailListFileDataSource implements DataSource<UseCaseDetail
         ConnectionList connectionList = connectionListFileDataSource.readData();
         NoteListFileDataSource noteListFileDataSource = new NoteListFileDataSource(directory,fileName);
         NoteList noteList = noteListFileDataSource.readData();
-        ManagerListFileDataSource managerListFileDataSource = new ManagerListFileDataSource(directory,fileName);
-        ManagerList managerList = managerListFileDataSource.readData();
         String filePath = directory + File.separator + fileName;
         File file = new File(filePath);
         FileWriter writer = null;
@@ -115,11 +114,10 @@ public class UseCaseDetailListFileDataSource implements DataSource<UseCaseDetail
             writer = new FileWriter(file, StandardCharsets.UTF_8);
             buffer = new BufferedWriter(writer);
             for (Manager manager : managerList.getManagerList()) {
-                String line = managerListFileDataSource.createLine(manager);
+                String line = createLine(manager);
                 buffer.append(line);
                 buffer.newLine();
             }
-
             for (TestFlowPosition position : testFlowPositionList.getPositionList()) {
                 String line = testFlowPositionListFileDataSource.createLine(position);
                 buffer.append(line);
@@ -156,7 +154,7 @@ public class UseCaseDetailListFileDataSource implements DataSource<UseCaseDetail
                 buffer.newLine();
             }
             for (UseCaseDetail useCaseDetail : useCaseDetailList.getUseCaseDetailList()){
-                String line = createLine(useCaseDetail);
+                String line = useCaseDetailListFileDataSource.createLine(useCaseDetail);
                 buffer.append(line);
                 buffer.newLine();
             }
@@ -175,7 +173,7 @@ public class UseCaseDetailListFileDataSource implements DataSource<UseCaseDetail
                 buffer.append(line);
                 buffer.newLine();
             }
-            for (IRreportDetail iRreportDetail : iRreportDetailList.getIRreportDetailList()) {
+            for (IRreportDetail iRreportDetail : iRreportDetailList.getIRreportDetailList()){
                 String line = iRreportDetailListFileDataSource.createLine(iRreportDetail);
                 buffer.append(line);
                 buffer.newLine();
@@ -190,14 +188,11 @@ public class UseCaseDetailListFileDataSource implements DataSource<UseCaseDetail
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
     }
 
     @Override
-    public String createLine(UseCaseDetail useCaseDetail) {
-        return "useCaseDetail" + ","
-                + useCaseDetail.getUseCaseID() + ","
-                + useCaseDetail.getAction() + ","
-                + useCaseDetail.getNumber() + ","
-                + useCaseDetail.getDetail();
+    public String createLine(Manager manager) {
+        return null;
     }
 }

@@ -6,18 +6,25 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.UuidGenerator;
+
+import java.util.UUID;
 
 @Getter
 @Setter
 @RequiredArgsConstructor
 @Entity
 @Table(name = "test_flow_position")
-@NamedQuery(name = "find testflowposition by id", query = "Select t from TestFlowPosition t where t.positionID = :id")
+@NamedQuery(name = "find testflowposition by id", query = "Select t from TestFlowPosition t where t.ID = :id")
 public class TestFlowPosition {
-
     @Id
+    @UuidGenerator
+    @GeneratedValue
     @Access(AccessType.FIELD)
-    @Column(name = "position_id", nullable = false, unique = true)
+    @Column(name = "id", nullable = false, unique = true)
+    private UUID ID;
+
+    @Column(name = "position_id", nullable = false)
     private int positionID;
 
     @Column(name = "fit_width", nullable = false, precision = 10)

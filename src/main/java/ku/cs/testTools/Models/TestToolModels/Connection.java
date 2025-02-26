@@ -3,15 +3,22 @@ package ku.cs.testTools.Models.TestToolModels;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.UuidGenerator;
+
+import java.util.UUID;
 
 @Entity
 @Data
 @RequiredArgsConstructor
 @Table(name = "Connection")
-@NamedQuery(name = "find Connection by id", query = "Select t from Connection t where t.connectionID = :id")
+@NamedQuery(name = "find Connection by id", query = "Select t from Connection t where t.ID = :id")
 public class Connection {
     @Id
+    @UuidGenerator
     @Access(AccessType.FIELD)
+    @Column(name = "id", nullable = false, unique = true)
+    private UUID ID;
+
     @Column(name = "connection_id", nullable = false, unique = true) // กำหนดชื่อคอลัมน์ในฐานข้อมูล
     private int connectionID;
 

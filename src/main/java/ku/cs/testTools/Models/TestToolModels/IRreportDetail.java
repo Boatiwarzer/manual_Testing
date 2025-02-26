@@ -55,10 +55,6 @@ public class IRreportDetail {
     @Column(name = "remark_ird")
     private String remarkIRD;
 
-
-    @ManyToOne
-    //@JoinColumn(name = "id_ir", referencedColumnName = "idIR", nullable = false)
-    private IRreport iRreport;
     private String idIR;
     private String idTRD;
 

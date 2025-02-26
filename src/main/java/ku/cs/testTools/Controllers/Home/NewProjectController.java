@@ -13,9 +13,21 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
+import ku.cs.testTools.Models.Manager.Manager;
+import ku.cs.testTools.Models.Manager.ManagerList;
+import ku.cs.testTools.Models.Manager.Tester;
+import ku.cs.testTools.Models.Manager.TesterList;
+import ku.cs.testTools.Models.TestToolModels.UseCaseDetail;
+import ku.cs.testTools.Services.DataSource;
+import ku.cs.testTools.Services.DataSourceCSV.ManagerListFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.TestCaseFileDataSource;
+import ku.cs.testTools.Services.Repository.ManagerRepository;
+import ku.cs.testTools.Services.Repository.TesterRepository;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 public class NewProjectController {
     @FXML
@@ -38,6 +50,10 @@ public class NewProjectController {
 
     @FXML
     private VBox testerVBox;
+    private String MId;
+    private TesterList testerList = new TesterList();
+    private String TId;
+    private ManagerList managerList;
 
     @FXML
     void onProjectNameField(ActionEvent event) {
@@ -78,9 +94,29 @@ public class NewProjectController {
         // Set value for projectName
         String projectName = onProjectNameField.getText();
         String managerName = onManagerField.getText();
-
+        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         setWindowTitle(projectName);
+        randomIdM();
+        Manager manager = new Manager(MId,projectName,managerName,date,false);
 
+        for (Node node : testerVBox.getChildren()) {
+            HBox hBox = (HBox) node;
+            TextArea textArea = (TextArea) hBox.getChildren().get(0);
+            if (!textArea.getText().isEmpty()) {
+                randomIdT();
+                Tester tester = new Tester(MId,  textArea.getText(), projectName,managerName);
+                testerList.addOrUpdateTester(tester);
+            }
+        }
+        managerList.addOrUpdateManager(manager);
+        DataSource<ManagerList> managerListDataSource = new ManagerListFileDataSource(directory, projectName + ".csv");
+        managerListDataSource.writeData(managerList);
+        ManagerRepository managerRepository = new ManagerRepository();
+        managerRepository.addManager(manager);
+        TesterRepository testerRepository = new TesterRepository();
+        for (Tester tester : testerList.getTesterList()){
+            testerRepository.addTester(tester);
+        }
         //send the project name and directory to HomePage
         ArrayList<Object> objects = new ArrayList<>();
         objects.add(projectName);
@@ -97,6 +133,18 @@ public class NewProjectController {
         stage.close();
 
         }
+    private void randomIdM() {
+        int min = 1;
+        int upperbound = 999;
+        String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
+        this.MId = String.format("M-%s", random1);
+    }
+    private void randomIdT() {
+        int min = 1;
+        int upperbound = 999;
+        String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
+        this.TId = String.format("T-%s", random1);
+    }
 
     @FXML
     void onSelectButton(ActionEvent event) {
