@@ -28,8 +28,10 @@ public class IRreport {
     @Column(name = "date_ir")
     private String dateIR;
 
-    @Column(name = "tr_ir")
+    @Column(name = "note_ir")
     private String NoteIR;
+
+    @Column(name = "tr_ir")
     private String trIR;
 
     @Override
