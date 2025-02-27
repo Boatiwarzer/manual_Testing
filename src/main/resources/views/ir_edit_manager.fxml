@@ -26,7 +26,6 @@
             <MenuBar fx:id="homePageMenuBar" style="-fx-background-color: #98aeca;">
                <menus>
                   <Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
-                  <Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
                      <items>
                         <MenuItem fx:id="newMenuItem" mnemonicParsing="false" onAction="#handleNewMenuItem" text="New" />
                         <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" onAction="#handleSaveMenuItem" text="Save" />
