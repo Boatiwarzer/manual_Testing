@@ -15,14 +15,10 @@ public class Tester {
     private String projectName;
     private String manager;
 
-    public Tester(String idTester, String nameTester, String projectName) {
-        this.IdTester = idTester;
-        this.nameTester = nameTester;
-        this.projectName = projectName;
-    }
+
 
     public Tester(String idTester, String nameTester, String projectName, String manager) {
-        IdTester = idTester;
+        this.IdTester = idTester;
         this.nameTester = nameTester;
         this.projectName = projectName;
         this.manager = manager;

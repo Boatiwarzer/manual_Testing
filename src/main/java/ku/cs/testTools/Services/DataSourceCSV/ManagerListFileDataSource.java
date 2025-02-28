@@ -55,7 +55,7 @@ public class ManagerListFileDataSource implements DataSource<ManagerList>, Manag
                             data[2].trim(), // data[2]
                             data[3].trim(), // data[3]
                             data[4].trim(),
-                            Boolean.parseBoolean(data[5].trim())// data[4])
+                            data[5].trim()// data[4])
                     );
                     managerList.addOrUpdateManager(manager);
                 }
@@ -193,6 +193,12 @@ public class ManagerListFileDataSource implements DataSource<ManagerList>, Manag
 
     @Override
     public String createLine(Manager manager) {
-        return null;
+
+        return "manager,"
+                + manager.getIDManager() + ","
+                + manager.getProjectName() + ","
+                + manager.getNameManager() + ","
+                + manager.getDate() + ","
+                + manager.getStatus();
     }
 }

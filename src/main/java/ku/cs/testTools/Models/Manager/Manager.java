@@ -23,9 +23,9 @@ public class Manager implements Comparable{
     private String projectName;
     private String nameManager;
     private String date;
-    private boolean status;
+    private String status;
 
-    public Manager(String IDManager, String projectName, String nameManager, String date, boolean status) {
+    public Manager(String IDManager, String projectName, String nameManager, String date, String status) {
         this.IDManager = IDManager;
         this.projectName = projectName;
         this.nameManager = nameManager;
@@ -44,6 +44,8 @@ public class Manager implements Comparable{
     public Manager() {
 
     }
+
+
 
     @Override
     public int compareTo(Object o) {

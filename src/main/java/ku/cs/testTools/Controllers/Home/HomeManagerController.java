@@ -10,6 +10,10 @@ import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
+import ku.cs.testTools.Models.Manager.Manager;
+import ku.cs.testTools.Models.Manager.ManagerList;
+import ku.cs.testTools.Models.Manager.Tester;
+import ku.cs.testTools.Models.Manager.TesterList;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.DataSource;
 import ku.cs.testTools.Services.DataSourceCSV.*;
@@ -66,7 +70,10 @@ public class HomeManagerController {
     private IRreportDetailList iRreportDetailList = new IRreportDetailList();
     private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
     private NoteList noteList;
-
+    private TesterList testerList;
+    private ManagerList managerList;
+    private IRreportList irReportList;
+    private IRreportDetailList irDetailList;
     @FXML
     void initialize() {
         if (FXRouter.getData() != null) {
@@ -75,9 +82,104 @@ public class HomeManagerController {
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
             name = (String) objects.get(2);
+            loadRepo();
             System.out.println(name);
             System.out.println("Project Name: " + projectName);
             System.out.println("Directory: " + directory);
+        }
+    }
+    private void loadRepo(){
+        // สร้างออบเจ็กต์ของแต่ละ Repository
+        TestScriptRepository testScriptRepository = new TestScriptRepository();
+        TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
+        TestFlowPositionRepository testFlowPositionRepository = new TestFlowPositionRepository();
+        TestCaseRepository testCaseRepository = new TestCaseRepository();
+        TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
+        TestResultRepository testResultRepository = new TestResultRepository();
+        TestResultDetailRepository testResultDetailRepository = new TestResultDetailRepository();
+        IRReportRepository irReportRepository = new IRReportRepository();
+        IRDetailRepository irDetailRepository = new IRDetailRepository();
+        ConnectionRepository connectionRepository = new ConnectionRepository();
+        NoteRepository noteRepository = new NoteRepository();
+        TesterRepository testerRepository = new TesterRepository(); // เพิ่ม TesterRepository
+        ManagerRepository managerRepository = new ManagerRepository(); // เพิ่ม ManagerRepository
+
+        // โหลด TestScriptList
+        testScriptList = new TestScriptList();
+        for (TestScript script : testScriptRepository.getAllTestScripts()) {
+            testScriptList.addTestScript(script);
+        }
+
+        // โหลด TestScriptDetailList
+        testScriptDetailList = new TestScriptDetailList();
+        for (TestScriptDetail detail : testScriptDetailRepository.getAllTestScriptDetail()) {
+            testScriptDetailList.addTestScriptDetail(detail);
+        }
+
+        // โหลด TestFlowPositionList
+        testFlowPositionList = new TestFlowPositionList();
+        for (TestFlowPosition position : testFlowPositionRepository.getAllTestFlowPositions()) {
+            testFlowPositionList.addPosition(position);
+        }
+
+        // โหลด TestCaseList
+        testCaseList = new TestCaseList();
+        for (TestCase testCase : testCaseRepository.getAllTestCases()) {
+            testCaseList.addTestCase(testCase);
+        }
+
+        // โหลด TestCaseDetailList
+        testCaseDetailList = new TestCaseDetailList();
+        for (TestCaseDetail detail : testCaseDetailRepository.getAllTestCaseDetails()) {
+            testCaseDetailList.addTestCaseDetail(detail);
+        }
+
+        // โหลด TestResultList
+        testResultList = new TestResultList();
+        for (TestResult result : testResultRepository.getAllTestResults()) {
+            testResultList.addTestResult(result);
+        }
+
+        // โหลด TestResultDetailList
+        testResultDetailList = new TestResultDetailList();
+        for (TestResultDetail detail : testResultDetailRepository.getAllTestResultDetails()) {
+            testResultDetailList.addTestResultDetail(detail);
+        }
+
+        // โหลด IRReportList
+        irReportList = new IRreportList();
+        for (IRreport report : irReportRepository.getAllIRReports()) {
+            irReportList.addOrUpdateIRreport(report);
+        }
+
+        // โหลด IRDetailList
+        irDetailList = new IRreportDetailList();
+        for (IRreportDetail detail : irDetailRepository.getAllIRReportDetIL()) {
+            irDetailList.addOrUpdateIRreportDetail(detail);
+        }
+
+        // โหลด ConnectionList
+        connectionList = new ConnectionList();
+        for (Connection connection : connectionRepository.getAllConnections()) {
+            connectionList.addConnection(connection);
+        }
+
+        // โหลด NoteList
+        noteList = new NoteList();
+        for (Note note : noteRepository.getAllNote()) {
+            noteList.addNote(note);
+        }
+
+        // โหลด TesterList
+        testerList = new TesterList();
+        for (Tester tester : testerRepository.getAllTesters()) {
+            testerList.addTester(tester);
+        }
+
+        // โหลด ManagerList
+        managerList = new ManagerList();
+        for (Manager manager : managerRepository.getAllManagers()) {
+            managerList.addManager(manager);
         }
     }
 
