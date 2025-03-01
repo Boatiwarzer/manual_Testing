@@ -1,4 +1,4 @@
-package ku.cs.fxrouter;
+package ku.cs.testTools.Services.fxrouter;
 
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXMLLoader;
@@ -14,7 +14,7 @@ import lombok.Setter;
 import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.HashMap;
-import java.util.Map;
+
 @Data
 public class FXRouter {
     public static final String WINDOW_TITLE = "";

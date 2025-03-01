@@ -11,7 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import ku.cs.fxrouter.FXRouter;
+import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.DataSource;
 import ku.cs.testTools.Services.DataSourceCSV.ConnectionListFileDataSource;
@@ -29,8 +29,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import ku.cs.testTools.Services.*;
-import ku.cs.testTools.Services.Repository.TestScriptDetailRepository;
-import ku.cs.testTools.Services.Repository.TestScriptRepository;
 import ku.cs.testTools.Services.Repository.UseCaseDetailRepository;
 import ku.cs.testTools.Services.Repository.UseCaseRepository;
 import org.controlsfx.control.textfield.TextFields;
