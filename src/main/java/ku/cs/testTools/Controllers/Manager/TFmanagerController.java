@@ -427,7 +427,31 @@ public class TFmanagerController {
     void handleExportPDF(ActionEvent event) {
 
     }
+    @FXML
+    void handleSubmitMenuItem(ActionEvent event) throws IOException {
+        loadManagerStatus();
+        objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(nameManager);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText("Submit successfully and go to home page.");
+        alert.showAndWait();
+        FXRouter.goTo("home_manager",objects);
 
+    }
+
+    private void loadManagerStatus() {
+        ManagerRepository managerRepository = new ManagerRepository();
+        Manager manager = managerRepository.getManagerByProjectName(projectName);
+
+        if (manager != null) {  // ตรวจสอบว่าพบ Manager หรือไม่
+            manager.setStatusTrue();
+            managerRepository.updateManager(manager);
+        }
+    }
     @FXML
     void handleNewMenuItem(ActionEvent event) throws IOException {
         FXRouter.popup("landing_newproject");

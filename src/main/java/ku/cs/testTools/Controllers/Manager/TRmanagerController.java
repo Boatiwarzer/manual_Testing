@@ -485,24 +485,39 @@ public class TRmanagerController {
         System.out.println("select " + testResultList.findTRById(testIDLabel.getText()));
 
     }
-
     private void loadListView(TestResultList testResultList) {
         onEditButton.setVisible(false);
-        onSearchList.refresh();
-        if (testResultList != null){
-            testResultList.sort(new TestResultComparable());
-            for (TestResult testResult : testResultList.getTestResultList()) {
-                if (!testResult.getDateTR().equals("null")){
-                    onSearchList.getItems().add(testResult);
+        onSearchList.refresh(); // รีเฟรช ListView
 
+        ManagerRepository managerRepository = new ManagerRepository();
+        managerList = new ManagerList();
+
+        List<Manager> managers = managerRepository.getAllManagers();
+        if (managers.isEmpty()) { // ถ้าไม่มี Manager เลย
+            setTable();
+            clearInfo();
+            return;
+        }
+
+        for (Manager manager : managers) {
+            managerList.addManager(manager);
+
+            if (testResultList != null) {
+                testResultList.sort(new TestResultComparable()); // จัดเรียง TestResult ก่อน
+
+                for (TestResult testResult : testResultList.getTestResultList()) {
+                    if (!"null".equals(testResult.getDateTR()) && !"true".equals(manager.getStatus())) {
+                        onSearchList.getItems().add(testResult);
+                    }
                 }
             }
-        }else {
+        }
+
+        if (testResultList == null) {
             setTable();
             clearInfo();
         }
     }
-
     private void clearInfo() {
         // Clear all the fields by setting them to an empty string
         testIDLabel.setText("-");

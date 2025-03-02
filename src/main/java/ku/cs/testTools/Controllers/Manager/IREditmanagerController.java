@@ -95,6 +95,8 @@ public class IREditmanagerController {
     private NoteList noteList;
     private TesterList testerList;
     private ManagerList managerList;
+    private String nameManager;
+
     @FXML
     void initialize() {
         onClickIR.getStyleClass().add("selected");
@@ -105,17 +107,18 @@ public class IREditmanagerController {
                 objects = (ArrayList) FXRouter.getData();
                 projectName = (String) objects.get(0);
                 directory = (String) objects.get(1);
-                typeIR = (String) objects.get(2);
+                nameManager = (String) objects.get(2);
+                typeIR = (String) objects.get(3);
                 System.out.println(typeIR);
-                System.out.println(objects.get(3));
+                System.out.println(objects.get(4));
                 onTableIR.isFocused();
                 selectedIRD();
                 selectedListView();
                 loadProject();
-                if (objects.get(3) != null){
-                    iRreport = (IRreport) objects.get(3);
-                    iRreportDetailList = (IRreportDetailList) objects.get(4);
-                    type = (String) objects.get(5);
+                if (objects.get(4) != null){
+                    iRreport = (IRreport) objects.get(4);
+                    iRreportDetailList = (IRreportDetailList) objects.get(5);
+                    type = (String) objects.get(6);
                     System.out.println(type);
                 }
                 setDataIR();
@@ -415,14 +418,32 @@ public class IREditmanagerController {
     }
     private void loadListView(IRreportList iRreportList) {
         onSearchList.refresh();
-        if (iRreportList != null){
-            iRreportList.sort(new IRreportComparable());
-            for (IRreport iRreport : iRreportList.getIRreportList()) {
-                if (!iRreport.getDateIR().equals("null")){
-                    onSearchList.getItems().add(iRreport);
+
+        ManagerRepository managerRepository = new ManagerRepository();
+        managerList = new ManagerList();
+
+        List<Manager> managers = managerRepository.getAllManagers();
+        if (managers.isEmpty()) { // ถ้าไม่มี Manager เลย
+            setTable();
+            clearInfo();
+            return;
+        }
+
+        for (Manager manager : managers) {
+            managerList.addManager(manager);
+
+            if (iRreportList != null) {
+                iRreportList.sort(new IRreportComparable());
+
+                for (IRreport iRreport : iRreportList.getIRreportList()) {
+                    if (!"null".equals(iRreport.getDateIR()) && !"true".equals(manager.getStatus())) {
+                        onSearchList.getItems().add(iRreport);
+                    }
                 }
             }
-        }else {
+        }
+
+        if (iRreportList == null) {
             setTable();
             clearInfo();
         }
@@ -701,6 +722,7 @@ public class IREditmanagerController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(nameManager);
         objects.add(typeIR);
         objects.add(iRreport);
         objects.add(iRreportDetailList);
@@ -772,6 +794,7 @@ public class IREditmanagerController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(nameManager);
             objects.add(iRreport);
             showAlert("Success", "IR report saved successfully!");
             FXRouter.goTo("ir_manager",objects,true);
@@ -804,6 +827,7 @@ public class IREditmanagerController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(nameManager);
             objects.add(null);
             FXRouter.goTo("ir_manager",objects);
         } catch (IOException e) {
@@ -827,7 +851,31 @@ public class IREditmanagerController {
     void handleSaveMenuItem(ActionEvent event) throws IOException{
         saveProject();
     }
+    @FXML
+    void handleSubmitMenuItem(ActionEvent event) throws IOException {
+        loadManagerStatus();
+        objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(nameManager);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText("Submit successfully and go to home page.");
+        alert.showAndWait();
+        FXRouter.goTo("home_manager",objects);
 
+    }
+
+    private void loadManagerStatus() {
+        ManagerRepository managerRepository = new ManagerRepository();
+        Manager manager = managerRepository.getManagerByProjectName(projectName);
+
+        if (manager != null) {  // ตรวจสอบว่าพบ Manager หรือไม่
+            manager.setStatusTrue();
+            managerRepository.updateManager(manager);
+        }
+    }
     @FXML
     void handleNewMenuItem(ActionEvent event) throws IOException {
         FXRouter.popup("landing_newproject");
