@@ -484,6 +484,28 @@ public class IRmanagerController {
         });
     }
 
+//    private void searchSet() {
+//        IRReportRepository irRepository = new IRReportRepository();
+//        List<IRreport> irReports = irRepository.getAllIRReports(); // ดึงข้อมูลจาก database
+//
+//        ArrayList<String> word = new ArrayList<>();
+//        for (IRreport iRreport : irReports) {
+//            word.add(iRreport.getNameIR());
+//        }
+//        System.out.println(word);
+//
+//        onSearchField.setOnKeyReleased(event -> {
+//            String typedText = onSearchField.getText().toLowerCase();
+//            onSearchList.getItems().clear();
+//
+//            if (!typedText.isEmpty()) {
+//                onSearchList.getItems().addAll(searchList(typedText, (ArrayList<IRreport>) irReports));
+//            } else {
+//                onSearchList.getItems().addAll(irReports);
+//            }
+//        });
+//    }
+
     private void selected() {
         if (iRreport != null){
             onSearchList.getSelectionModel().getSelectedItems();

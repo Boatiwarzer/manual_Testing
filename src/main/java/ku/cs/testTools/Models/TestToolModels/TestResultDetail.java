@@ -76,10 +76,6 @@ public class TestResultDetail {
     @Column(name = "remark_trd")  // Add Column annotation for remarkTRD
     private String remarkTRD;
 
-    @ManyToOne
-    @JoinColumn(name = "id_tr")  // Optional: Add a @JoinColumn annotation for clarity
-    private TestResult testResult;
-
     @Column(name = "idTR")  // Add Column annotation for idTR
     private String idTR;
 

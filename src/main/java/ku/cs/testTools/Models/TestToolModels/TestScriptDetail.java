@@ -44,15 +44,6 @@ public class TestScriptDetail {
     @Column(name = "date_tsd")  // Add Column annotation for dateTSD
     private String dateTSD;
 
-    @ManyToOne
-    @JoinColumn(name = "id_ts")  // Optional: Add a @JoinColumn annotation for clarity
-    private TestScript testScript;
-
-    // Uncomment and complete if you need this relationship
-    // @ManyToOne
-    // @JoinColumn(name = "test_script_id")  // Optional: Add JoinColumn annotation
-    // private TestScript testScript;
-
     public TestScriptDetail(String idTSD, String testNo, String steps, String inputData, String expected, String idTS, String dateTSD) {
         this.idTSD = idTSD;
         this.testNo = testNo;

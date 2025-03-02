@@ -53,6 +53,17 @@ public class ManagerRepository {
         return entityManager.createQuery(query, Manager.class).getResultList();
     }
 
+    public String findManagerByProjectName(String projectName) {
+        try {
+            String query = "SELECT m.nameManager FROM Manager m WHERE m.projectName = :projectName";
+            return entityManager.createQuery(query, String.class)
+                    .setParameter("projectName", projectName)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null; // ถ้าไม่พบข้อมูลจะคืนค่า null
+        }
+    }
+
     // Update an existing Manager
     public void updateManager(Manager manager) {
         EntityTransaction transaction = entityManager.getTransaction();

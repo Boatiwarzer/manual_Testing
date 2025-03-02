@@ -440,6 +440,7 @@ public class PopupIRmanager {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(nameManager);
         objects.add(typeIR);
         objects.add(iRreport);
         objects.add(iRreportDetailList);

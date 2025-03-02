@@ -66,10 +66,6 @@ public class IRreportDetail {
     private String idIR;
     private String idTRD;
 
-    @ManyToOne
-    @JoinColumn(name = "id_ir", nullable = false) // Foreign key column
-    private IRreport iRreport;
-
     public IRreportDetail(String idIRD, String testNoIRD, String testerIRD, String tsIdIRD, String tcIdIRD, String descriptIRD, String conditionIRD, String imageIRD, String retestIRD, String priorityIRD, String rcaIRD, String managerIRD, String statusIRD, String remarkIRD, String idIR, String idTRD) {
         this.idIRD = idIRD;
         this.testNoIRD = testNoIRD;

@@ -55,7 +55,8 @@ public class TestResultListFileDataSource implements DataSource<TestResultList>,
                             data[1].trim(), // data[1]
                             data[2].trim(), // data[2]
                             data[3].trim(), // data[3]
-                            data[4].trim() // data[5]
+                            data[4].trim()
+//                            data[5].trim()
                     );
                     testResultList.addOrUpdateTestResult(testResult);
                 }

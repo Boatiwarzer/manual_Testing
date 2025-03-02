@@ -41,18 +41,6 @@ public class TestCaseDetail {
     @Column(name = "idTC")
     private String idTC;
 
-    @ManyToOne
-    @JoinColumn(name = "id_tc", nullable = false) // Foreign key column
-    private TestCase testCase;
-
-    public TestCaseDetail(String idTCD, String testNo, String nameTCD, String variableTCD, String dateTCD, TestCase testCase) {
-        this.idTCD = idTCD;
-        this.testNo = testNo;
-        this.nameTCD = nameTCD;
-        this.variableTCD = variableTCD;
-        this.dateTCD = dateTCD;
-        this.testCase = testCase;
-    }
     public TestCaseDetail(String idTCD, String testNo, String nameTCD, String variableTCD, String dateTCD, String testCase) {
         this.idTCD = idTCD;
         this.testNo = testNo;

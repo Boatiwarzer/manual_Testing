@@ -32,10 +32,6 @@ public class UseCaseDetail {
     @Column(name = "detail_ucd", columnDefinition = "TEXT")
     private String detail;
 
-    @ManyToOne
-    @JoinColumn(name = "id_uc")  // Optional: Add a @JoinColumn annotation for clarity
-    private UseCase useCase;
-
     public UseCaseDetail(String useCaseID, String action, int number, String detail) {
         this.useCaseID = useCaseID;
         this.action = action;

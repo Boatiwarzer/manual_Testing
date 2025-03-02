@@ -117,8 +117,8 @@ public class NewProjectController {
         objects.add(managerName);
         //แก้พาท
         String packageStr1 = "views/";
-        FXRouter.when("home", packageStr1 + "home_manager.fxml","TestTools | " + projectName);
-        FXRouter.goTo("home", objects);
+        FXRouter.when("home_manager", packageStr1 + "home_manager.fxml","TestTools | " + projectName);
+        FXRouter.goTo("home_manager", objects);
 
         // Close the current window
         Node source = (Node) actionEvent.getSource();

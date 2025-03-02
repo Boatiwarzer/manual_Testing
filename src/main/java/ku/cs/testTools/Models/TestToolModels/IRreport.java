@@ -42,6 +42,9 @@ public class IRreport {
     @Column(name = "tr_ir")
     private String trIR;
 
+//    @Column(name = "projectName")
+//    private String projectName;
+
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;
