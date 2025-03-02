@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 
 public class TestCaseController {
 
+    public MenuItem submitMenuItem;
+    public MenuItem openMenuItem;
     @FXML
     private Label infoUsecaseLabel;
     @FXML

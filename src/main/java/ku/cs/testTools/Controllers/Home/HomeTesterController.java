@@ -79,9 +79,15 @@ public class HomeTesterController {
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
             name = (String) objects.get(2);
-            loadRepo();
-            loadProject();
-            saveProject();
+            ManagerRepository managerRepository = new ManagerRepository();
+            Manager manager = managerRepository.getManagerByProjectName(projectName);
+            boolean check = Boolean.parseBoolean(manager.getStatus());
+            if (check){
+                loadRepo();
+                loadProject();
+                saveProject();
+            }
+
 
             System.out.println(name);
             System.out.println("Project Name: " + projectName);
