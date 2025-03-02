@@ -6,6 +6,8 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import ku.cs.testTools.Services.DataSource;
+import ku.cs.testTools.Services.DataSourceCSV.*;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Models.Manager.ManagerList;
@@ -65,6 +67,8 @@ public class HomeTesterController {
     private TestResultList testResultList;
     private TestResultDetailList testResultDetailList;
     private ConnectionList connectionList;
+    private IRreportList iRreportList;
+    private IRreportDetailList iRreportDetailList;
 
 
     @FXML
@@ -76,6 +80,7 @@ public class HomeTesterController {
             directory = (String) objects.get(1);
             name = (String) objects.get(2);
             loadRepo();
+            loadProject();
             saveProject();
 
             System.out.println(name);
@@ -84,7 +89,31 @@ public class HomeTesterController {
         }
     }
 
+    private void loadProject() {
+        DataSource<TestResultList> testResultListDataSource = new TestResultListFileDataSource(directory, projectName + ".csv");
+        DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
+        DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
+        DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
+        DataSource<NoteList> noteListDataSource = new NoteListFileDataSource(directory,projectName + ".csv");
+
+        testResultList = testResultListDataSource.readData();
+        testResultDetailList = testResultDetailListDataSource.readData();
+        iRreportList = iRreportListDataSource.readData();
+        iRreportDetailList = iRreportDetailListDataSource.readData();
+        noteList = noteListDataSource.readData();
+    }
+
     private void saveProject() {
+        DataSource<TestResultList> testResultListDataSource = new TestResultListFileDataSource(directory, projectName + ".csv");
+        DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
+        DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
+        DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
+        DataSource<NoteList> noteListDataSource = new NoteListFileDataSource(directory,projectName + ".csv");
+        testResultListDataSource.writeData(testResultList);
+        testResultDetailListDataSource.writeData(testResultDetailList);
+        iRreportListDataSource.writeData(iRreportList);
+        iRreportDetailListDataSource.writeData(iRreportDetailList);
+        noteListDataSource.writeData(noteList);
     }
 
     private void loadRepo(){
