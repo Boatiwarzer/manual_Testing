@@ -2,6 +2,7 @@ package ku.cs.testTools.Services.Repository;
 
 import jakarta.persistence.*;
 import ku.cs.testTools.Models.Manager.Manager;
+import ku.cs.testTools.Models.Manager.Tester;
 import ku.cs.testTools.Services.JpaUtil;
 
 import java.util.List;
@@ -44,6 +45,11 @@ public class ManagerRepository {
     // Retrieve all Managers
     public List<Manager> getAllManagers() {
         String query = "SELECT m FROM Manager m";
+        return entityManager.createQuery(query, Manager.class).getResultList();
+    }
+
+    public List<Manager> getAllProjectNames() {
+        String query = "SELECT m.projectName FROM Manager m";
         return entityManager.createQuery(query, Manager.class).getResultList();
     }
 

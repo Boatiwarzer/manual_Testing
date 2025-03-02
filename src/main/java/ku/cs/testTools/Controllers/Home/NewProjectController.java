@@ -24,6 +24,9 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
 public class NewProjectController {
     @FXML
     private Button onCancelButton;
@@ -74,21 +77,6 @@ public class NewProjectController {
             return;
         }
 
-        // Check if the system name and directory are empty
-//        if (onProjectNameField.getText().isEmpty()) {
-//            systemNameErrorText.setText("Please enter a name.");
-//            return;
-//        } else {
-//            systemNameErrorText.setText("");
-//        }
-//
-//        if (directory == null) {
-//            directoryErrorText.setText("Please select a directory.");
-//            return;
-//        } else {
-//            directoryErrorText.setText("");
-//        }
-
         // Set value for projectName
         String projectName = onProjectNameField.getText();
         String managerName = onManagerField.getText();
@@ -112,7 +100,6 @@ public class NewProjectController {
                 }
             }
         }
-
 
         managerList.addOrUpdateManager(manager);
         DataSource<ManagerList> managerListDataSource = new ManagerListFileDataSource(directory, projectName + ".csv");
@@ -138,6 +125,13 @@ public class NewProjectController {
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
 
+    }
+
+    private boolean isDuplicateProjectName(String projectName) {
+        ManagerRepository managerRepository = new ManagerRepository();
+        Set<Manager> projectSet = new HashSet<>(managerRepository.getAllProjectNames());
+
+        return projectSet.contains(projectName);
     }
 
     private void randomIdM() {
@@ -252,6 +246,10 @@ public class NewProjectController {
             if (lastTextArea.getText().isEmpty()) {
                 showAlert("กรุณากรอกข้อมูล Tester ");
             }
+            return false;
+        }
+        if (isDuplicateProjectName(onProjectNameField.getText())) {
+            showAlert(onProjectNameField.getText() + "ชื่อนี้ถูกใช้งานแล้ว");
             return false;
         }
 
