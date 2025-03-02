@@ -479,7 +479,7 @@ public class PopupIRmanager {
         String condition = onCondition.getText();
         String image = onImage.getText();
         String retest = onRetest.getText();
-        String manager = onManager.getText();
+        String manager = nameManager;
         String status = onStatusComboBox.getValue();
         String priority = onPriorityComboBox.getValue();
         String remark = onRemark.getText();
