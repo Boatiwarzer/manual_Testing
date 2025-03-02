@@ -245,11 +245,12 @@ public class NewProjectController {
             TextArea lastTextArea = (TextArea) lastHBox.getChildren().get(0);
             if (lastTextArea.getText().isEmpty()) {
                 showAlert("กรุณากรอกข้อมูล Tester ");
+                return false;
             }
-            return false;
         }
+
         if (isDuplicateProjectName(onProjectNameField.getText())) {
-            showAlert(onProjectNameField.getText() + "ชื่อนี้ถูกใช้งานแล้ว");
+            showAlert(onProjectNameField.getText() + " ชื่อนี้ถูกใช้งานแล้ว");
             return false;
         }
 

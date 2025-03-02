@@ -65,7 +65,6 @@ public class OpenProjectController {
         }
 
         testerValidate(testerName);
-//        setWindowTitle(projectName);
 
         //send the project name and directory to HomePage
         ArrayList<Object> objects = new ArrayList<>();
@@ -94,8 +93,10 @@ public class OpenProjectController {
         boolean exists = testerList.stream().anyMatch(tester -> tester.getNameTester().equals(testerName));
 
         if (!exists) {
-            throw new IllegalArgumentException("Error: Tester '" + testerName + "' is not in the tester list.");
+            showAlert(onTesterField.getText() + " ชื่อนี้ไม่อนุญาตให้เข้าถึง " + projectName);
+            throw new IllegalArgumentException("Tester name not allowed.");
         }
+
     }
 
 
@@ -118,7 +119,6 @@ public class OpenProjectController {
             showAlert("กรุณากรอกข้อมูล Tester");
             return false;
         }
-
         return true;
     }
 
