@@ -462,12 +462,6 @@ public class TestCaseEditController {
         String note = onTestNoteField.getText();
         String preCon = infoPreconField.getText();
         String post = infoPostconField.getText();
-        if (name.isEmpty() || idTC == null || idTC.isEmpty() || date.isEmpty() || useCase == null || useCase.isEmpty()
-                || description.isEmpty() || note.isEmpty() || preCon.isEmpty() || post.isEmpty()) {
-            // Show an alert if any field is missing or invalid
-            showAlert("Input Error", "Please fill in all required fields.");
-            return; // Prevent further execution if the fields are incomplete
-        }
         testCase = new TestCase(idTC, name, date, useCase, description,note,0,preCon,post);
 
     }
@@ -575,6 +569,9 @@ public class TestCaseEditController {
 
     @FXML
     void onSubmitButton(ActionEvent event) {
+        if (!handleSaveAction()) {
+            return; // ถ้าข้อมูลไม่ครบ หยุดการทำงานทันที
+        }
         try {
             currentNewDataForSubmit();
             objects = new ArrayList<>();
@@ -593,8 +590,11 @@ public class TestCaseEditController {
             testCaseRepository.updateTestCase(testCase);
             // Write data to respective files
             saveProject();
-            showAlert("Success", "Test case saved successfully!");
-
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Success");
+            alert.setHeaderText(null);
+            alert.setContentText("Test case saved successfully!");
+            alert.showAndWait();
             FXRouter.goTo("test_case",objects);
 
         } catch (IOException e) {
@@ -602,12 +602,42 @@ public class TestCaseEditController {
         }
 
     }
-    private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
+
+    boolean handleSaveAction() {
+        if (onTestNameField.getText() == null || onTestNameField.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอกข้อมูล Name");
+            return false;
+        }
+
+        if (onUsecaseCombobox.getValue() == null || onUsecaseCombobox.getValue().trim().isEmpty()) {
+            showAlert("กรุณาเลือก Use Case");
+            return false;
+        }
+
+        if (infoDescriptField.getText() == null || infoDescriptField.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอก Description");
+            return false;
+        }
+
+        if (infoPreconField.getText() == null || infoPreconField.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอก Pre-Condition");
+            return false;
+        }
+
+        if (infoPostconField.getText() == null || infoPostconField.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอก Post-Condition");
+            return false;
+        }
+        return true;
+    }
+
+    // ฟังก์ชันแสดง Popup Alert
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Warning");
         alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
+        alert.setContentText(message);
+        alert.showAndWait(); // รอให้ผู้ใช้กด OK ก่อนดำเนินการต่อ
     }
 
 
@@ -746,9 +776,12 @@ public class TestCaseEditController {
 
     @FXML
     void handleExit(ActionEvent event) {
-        Node source = (Node) event.getSource();
-        Stage stage = (Stage) source.getScene().getWindow();
-        stage.close();
+        try {
+            objects();
+            FXRouter.goTo("role");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML

@@ -7,23 +7,27 @@ import lombok.Setter;
 
 @Data
 @Entity
-@Table(name = "use_case_detail")
+@Table(name = "UseCase_Detail")
 @NamedQuery(name = "find usecasedetail by id", query = "Select t from UseCaseDetail t where t.useCaseID = :id")
 public class UseCaseDetail {
 
     @Id
     @Access(AccessType.FIELD)
-    @Column(name = "use_case_id", nullable = false)
+    @Column(name = "idUC", nullable = false)
     private String useCaseID;
 
-    @Column(name = "action", length = 255)
+    @Column(name = "action_ucd", length = 255)
     private String action;
 
-    @Column(name = "number")
+    @Column(name = "number_ucd")
     private int number;
 
-    @Column(name = "detail", columnDefinition = "TEXT")
+    @Column(name = "detail_ucd", columnDefinition = "TEXT")
     private String detail;
+
+    @ManyToOne
+    @JoinColumn(name = "id_uc")  // Optional: Add a @JoinColumn annotation for clarity
+    private UseCase useCase;
 
     public UseCaseDetail(String useCaseID, String action, int number, String detail) {
         this.useCaseID = useCaseID;

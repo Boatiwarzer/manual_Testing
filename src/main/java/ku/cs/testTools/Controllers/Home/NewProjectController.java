@@ -58,9 +58,9 @@ public class NewProjectController {
     private String directory;
 
     @FXML
-    void onCancelButton(ActionEvent actionEvent) throws IOException{
+    void onCancelButton(ActionEvent actionEvent) throws IOException {
         //แก้พาท
-        FXRouter.popup("landing_page_manager",true);
+        FXRouter.popup("landing_page_manager", true);
         Node source = (Node) actionEvent.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
@@ -68,8 +68,11 @@ public class NewProjectController {
     }
 
     @FXML
-    void onConfirmButton(ActionEvent actionEvent) throws IOException{
+    void onConfirmButton(ActionEvent actionEvent) throws IOException {
         System.out.println("Confirm button clicked.");
+        if (!handleSaveAction()) {
+            return;
+        }
 
         // Check if the system name and directory are empty
 //        if (onProjectNameField.getText().isEmpty()) {
@@ -92,7 +95,7 @@ public class NewProjectController {
         String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         setWindowTitle(projectName);
         randomIdM();
-        Manager manager = new Manager(MId,projectName,managerName,date,"false");
+        Manager manager = new Manager(MId, projectName, managerName, date, "false");
 
         for (Node node : testerVBox.getChildren()) {
             if (node instanceof HBox) {
@@ -111,14 +114,13 @@ public class NewProjectController {
         }
 
 
-
         managerList.addOrUpdateManager(manager);
         DataSource<ManagerList> managerListDataSource = new ManagerListFileDataSource(directory, projectName + ".csv");
         managerListDataSource.writeData(managerList);
         ManagerRepository managerRepository = new ManagerRepository();
         managerRepository.addManager(manager);
         TesterRepository testerRepository = new TesterRepository();
-        for (Tester tester : testerList.getTesterList()){
+        for (Tester tester : testerList.getTesterList()) {
             testerRepository.addTester(tester);
         }
         //send the project name and directory to HomePage
@@ -128,7 +130,7 @@ public class NewProjectController {
         objects.add(managerName);
         //แก้พาท
         String packageStr1 = "views/";
-        FXRouter.when("home", packageStr1 + "home_manager.fxml","TestTools | " + projectName);
+        FXRouter.when("home", packageStr1 + "home_manager.fxml", "TestTools | " + projectName);
         FXRouter.goTo("home", objects);
 
         // Close the current window
@@ -136,17 +138,19 @@ public class NewProjectController {
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
 
-        }
+    }
+
     private void randomIdM() {
         int min = 1;
         int upperbound = 999;
-        String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
+        String random1 = String.valueOf((int) Math.floor(Math.random() * (upperbound - min + 1) + min));
         this.MId = String.format("M-%s", random1);
     }
+
     private String randomIdT() {
         int min = 1;
         int upperbound = 999;
-        String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
+        String random1 = String.valueOf((int) Math.floor(Math.random() * (upperbound - min + 1) + min));
         this.TId = String.format("T-%s", random1);
         return TId;
     }
@@ -164,10 +168,11 @@ public class NewProjectController {
             System.out.println("Selected directory: " + file.getAbsolutePath());
             directory = file.getAbsolutePath();
             onSelectButton.setText(directory);
-            } else {
+        } else {
             System.out.println("No directory selected.");
-            }
+        }
     }
+
     private void setWindowTitle(String projectName) {
         Stage stage = (Stage) onProjectNameField.getScene().getWindow();
         stage.setTitle(projectName);
@@ -183,6 +188,14 @@ public class NewProjectController {
         if (!testerVBox.getChildren().isEmpty()) {
             HBox lastHBox = (HBox) testerVBox.getChildren().get(testerVBox.getChildren().size() - 1);
             TextArea lastTextArea = (TextArea) lastHBox.getChildren().get(0);
+            if (lastTextArea.getText().isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("กรุณากรอกช่องข้อความก่อนหน้าก่อนเพิ่มช่องใหม่");
+                alert.showAndWait();
+                return;
+            }
         }
         HBox hBox = new HBox();
         // add the textArea to the testerVBox
@@ -202,5 +215,46 @@ public class NewProjectController {
         hBox.getChildren().add(textArea);
         hBox.getChildren().add(deleteButton);
         testerVBox.getChildren().add(hBox);
+    }
+
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Warning");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait(); // รอให้ผู้ใช้กด OK ก่อนดำเนินการต่อ
+    }
+
+    boolean handleSaveAction() {
+        if (onManagerField.getText() == null || onManagerField.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอกข้อมูล Manager");
+            return false;
+        }
+
+        if (onProjectNameField.getText() == null || onProjectNameField.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอกข้อมูล Project Name");
+            return false;
+        }
+
+        if (directory == null) {
+            showAlert("กรุณาเลือก Location Path");
+            return false;
+        }
+
+        if(testerVBox.getChildren().isEmpty()){
+            showAlert("กรุณากรอกข้อมูล Tester อย่างน้อย 1 คน");
+            return false;
+        }
+
+        if(!testerVBox.getChildren().isEmpty()){
+            HBox lastHBox = (HBox) testerVBox.getChildren().get(testerVBox.getChildren().size() - 1);
+            TextArea lastTextArea = (TextArea) lastHBox.getChildren().get(0);
+            if (lastTextArea.getText().isEmpty()) {
+                showAlert("กรุณากรอกข้อมูล Tester ");
+            }
+            return false;
+        }
+
+        return true;
     }
 }

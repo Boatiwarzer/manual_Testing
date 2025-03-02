@@ -364,7 +364,11 @@ public class UseCaseEditController {
             HBox lastHBox = (HBox) actorActionVBox.getChildren().get(actorActionVBox.getChildren().size() - 1);
             TextArea lastTextArea = (TextArea) lastHBox.getChildren().get(0);
             if (lastTextArea.getText().isEmpty()) {
-                errorLabel.setText("Please fill in the last text area before adding a new one.");
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("กรุณากรอกช่องข้อความก่อนหน้าก่อนเพิ่มช่องใหม่");
+                alert.showAndWait();
                 return;
             }
         }
@@ -398,7 +402,11 @@ public class UseCaseEditController {
             HBox lastHBox = (HBox) systemActionVBox.getChildren().get(systemActionVBox.getChildren().size() - 1);
             TextArea lastTextArea = (TextArea) lastHBox.getChildren().get(0);
             if (lastTextArea.getText().isEmpty()) {
-                errorLabel.setText("Please fill in the last text area before adding a new one.");
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("กรุณากรอกช่องข้อความก่อนหน้าก่อนเพิ่มช่องใหม่");
+                alert.showAndWait();
                 return;
             }
         }
@@ -425,6 +433,9 @@ public class UseCaseEditController {
     }
     @FXML
     void onSubmitButton(ActionEvent event) {
+        if (!handleSaveAction()) {
+            return;
+        }
         try {
             String ucId = testIDLabel.getText();
             String ucName = onTestNameField.getText();
@@ -437,42 +448,20 @@ public class UseCaseEditController {
             System.out.println("submit "+ucId);
             System.out.println("find "+useCaseList.findByUseCaseId(ucId));
 
-//        if (useCaseList.findByUseCaseId(ucId) != null) {
-//            useCaseList.findByUseCaseId(ucId).setUseCaseName(ucName);
-//            useCaseList.findByUseCaseId(ucId).setActor(ucActor);
-//            useCaseList.findByUseCaseId(ucId).setDescription(ucDescript);
-//            useCaseList.findByUseCaseId(ucId).setPreCondition(ucPreCon);
-//            useCaseList.findByUseCaseId(ucId).setPostCondition(ucPostCon);
-//            useCaseList.findByUseCaseId(ucId).setNote(ucNote);
-//            useCaseList.findByUseCaseId(ucId).setDate(ucDate);
-//            if (useCaseList.isUseCaseIDExist(ucId)) {
-//                errorLabel.setText("Use case ID already exists.");
-//                return;
-//            }
             useCaseList.clearUseCase(ucId);
+            UseCase newUseCase = new UseCase(
+                    ucId,
+                    ucName,
+                    ucActor,
+                    ucDescript,
+                    ucPreCon,
+                    ucPostCon,
+                    ucNote.isEmpty() ? "-" : ucNote,
+                    ucDate
+            );
 
-            if (!ucName.isEmpty() && !ucActor.isEmpty() && !ucDescript.isEmpty() && !ucPreCon.isEmpty() && !ucPostCon.isEmpty()) {
-                if (!useCaseList.isUseCaseNameExist(ucName)) {
-                    UseCase newUseCase = new UseCase(
-                            ucId,
-                            ucName,
-                            ucActor,
-                            ucDescript,
-                            ucPreCon,
-                            ucPostCon,
-                            ucNote.isEmpty() ? "None" : ucNote,
-                            ucDate
-                    );
-
-                    useCaseList.addUseCase(newUseCase);
-                    saveProject();
-                } else {
-                    errorLabel.setText("Use case name already exists.");
-                }
-            } else {
-                errorLabel.setText("Please fill in all required fields.");
-            }
-
+            useCaseList.addUseCase(newUseCase);
+            saveProject();
 
             useCaseDetailList.clearUseCaseDetail(ucId);
             // Get the text from the textAreas in the actorActionVBox and write them to the useCaseDetailList
@@ -508,7 +497,11 @@ public class UseCaseEditController {
             }
             useCaseRepository.updateUseCase(useCase);
             saveProject();
-            showAlert("Success", "Use Case saved successfully!");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Success");
+            alert.setHeaderText(null);
+            alert.setContentText("Use Case saved successfully!");
+            alert.showAndWait();
 
             FXRouter.goTo("use_case");
 
@@ -517,12 +510,38 @@ public class UseCaseEditController {
         }
     }
 
-    private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Warning");
         alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
+        alert.setContentText(message);
+        alert.showAndWait(); // รอให้ผู้ใช้กด OK ก่อนดำเนินการต่อ
+    }
+
+    boolean handleSaveAction() {
+        if (onTestNameField.getText() == null || onTestNameField.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอกข้อมูล Name");
+            return false;
+        }
+        if (onTestActorField.getText() == null || onTestActorField.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอกข้อมูล Actor");
+            return false;
+        }
+        if (onPreConArea.getText() == null || onPreConArea.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอกข้อมูล Pre-Condition");
+            return false;
+        }
+        if (onPostConArea.getText() == null || onPostConArea.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอกข้อมูล Post-Condition");
+            return false;
+        }
+        if (onDescriptArea.getText() == null || onDescriptArea.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอกข้อมูล Description");
+            return false;
+        }
+
+
+        return true;
     }
 
     @FXML
@@ -589,28 +608,6 @@ public class UseCaseEditController {
                 // แสดง Popup และรอการตอบกลับจากผู้ใช้
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.isPresent() && result.get() == ButtonType.OK) {
-//                    for (UseCaseDetail useCaseDetail : useCaseDetailList.getUseCaseDetailList()) {
-//                        if (useCase.getUseCaseID().trim().equals(useCaseDetail.getUseCaseID().trim())) {
-//                            useCaseDetailList.deleteUseCaseDetail(useCaseDetail);
-//                        }
-//                    }
-//                    for (UseCase useCase : useCaseList.getUseCaseList()) {
-//                        if (ucId.equals(useCase.getUseCaseID().trim())) {
-//                            useCaseList.deleteUseCase(useCase);
-//                        }
-//                    }
-
-//                    UseCase uc = useCaseList.findByUseCaseId(ucId.trim());
-//                    useCaseList.deleteUseCase(uc);
-//                    for (UseCaseDetail useCaseDetail : useCaseDetailList.getUseCaseDetailList()) {
-//                        if (uc.equals(useCaseDetail.getUseCaseID().trim())) {
-//                            useCaseDetailList.deleteUseCaseDetail(useCaseDetail);
-//                        }
-//                    }
-
-//                    UseCaseDetail ucd = useCaseDetailList.findByUseCaseId(ucId.trim());
-//                    useCaseDetailList.deleteUseCaseDetail(ucd);
-//                    useCaseList.deleteUseCase(useCase);
 
                     useCaseList.clearUseCase(ucId);
                     useCaseDetailList.clearUseCaseDetail(ucId);
@@ -618,10 +615,10 @@ public class UseCaseEditController {
                     FXRouter.goTo("use_case");
                 } else {
                     // หากผู้ใช้กดยกเลิก
-                    errorLabel.setText("Delete action was canceled.");
+                    showAlert("Delete action was canceled.");
                 }
             } else {
-                errorLabel.setText("Cannot delete this use case.");
+                showAlert("Cannot delete this use case.");
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -720,9 +717,12 @@ public class UseCaseEditController {
 
     @FXML
     void handleExit(ActionEvent event) {
-        Node source = (Node) event.getSource();
-        Stage stage = (Stage) source.getScene().getWindow();
-        stage.close();
+        try {
+            objects();
+            FXRouter.goTo("role");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML

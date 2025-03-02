@@ -132,6 +132,9 @@ public class PopupAddTestscriptController {
 
     @FXML
     void onConfirmButton(ActionEvent event) {
+        if (!handleSaveAction()) {
+            return; // ถ้าข้อมูลไม่ครบ หยุดการทำงานทันที
+        }
         try {
             currentNewData();
             objects();
@@ -140,10 +143,6 @@ public class PopupAddTestscriptController {
             System.err.println("ไปที่หน้า home ไม่ได้");
             System.err.println("ให้ตรวจสอบการกำหนด route");
         }
-//        }else{
-//            errorLabel.setText("Username is Available");
-//
-//        }
 
     }
     private void currentNewData() {
@@ -173,6 +172,39 @@ public class PopupAddTestscriptController {
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+    boolean handleSaveAction() {
+        if (onTestNo.getText() == null || onTestNo.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอกข้อมูล Test No.");
+            return false;
+        } else if (!onTestNo.getText().matches("^(?!0$)\\\\d+$")) {
+            showAlert("กรุณากรอกตัวเลขเท่านั้น");
+            return false;
+        }
+
+        if (onInputDataCombobox.getValue() == null || onInputDataCombobox.getValue().trim().isEmpty() || onInputDataCombobox.getValue().equals("None")) {
+            showAlert("กรุณาเลือก Input Data");
+            return false;
+        }
+
+        if (onTeststepsArea.getText() == null || onTeststepsArea.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอกข้อมูล Test Steps");
+            return false;
+        }
+        if (onExpectedArea.getText() == null || onExpectedArea.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอกข้อมูล Expected Result");
+            return false;
+        }
+        return true;
+    }
+
+    // ฟังก์ชันแสดง Popup Alert
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Warning");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait(); // รอให้ผู้ใช้กด OK ก่อนดำเนินการต่อ
     }
 
     private void route(ActionEvent event, ArrayList<Object> objects) throws IOException {

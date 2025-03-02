@@ -194,9 +194,12 @@ public class TestResultAddController {
 
     @FXML
     void handleExit(ActionEvent event) {
-        Node source = (Node) event.getSource();
-        Stage stage = (Stage) source.getScene().getWindow();
-        stage.close();
+        try {
+            objects();
+            FXRouter.goTo("role");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML
@@ -759,32 +762,9 @@ public class TestResultAddController {
 
     @FXML
     void onSubmitButton(ActionEvent event) {
-//        String idTR = trId;
-//        String nameTR = onTestNameField.getText();
-//        String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-//        String noteTR = onTestNoteField.getText();
-//
-//        // Check if mandatory fields are empty
-//        if (nameTR == null || nameTR.isEmpty()) {
-//            showAlert("Input Error", "Please fill in all required fields.");
-//            return;
-//        }
-//
-//        testResult = new TestResult(idTR, nameTR, dateTR, noteTR, "In Tester");
-//        // Add or update test script
-//        testResultList.addOrUpdateTestResult(testResult);
-//        // Write data to respective files
-//        testResultListDataSource.writeData(testResultList);
-//        testResultDetailListDataSource.writeData(testResultDetailList);
-//
-//        // Show success message
-//        showAlert("Success", "Test script saved successfully!");
-//        try {
-//            FXRouter.goTo("test_result");
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-
+        if (!handleSaveAction()) {
+            return;
+        }
         try {
             String idTR = trId;
             String nameTR = onTestNameField.getText();
@@ -792,10 +772,6 @@ public class TestResultAddController {
             String noteTR = onTestNoteField.getText();
             testResult = new TestResult(idTR, nameTR, dateTR, noteTR);
 
-            if (nameTR == null || nameTR.isEmpty()) {
-                showAlert("Input Error", "Please fill in all required fields.");
-                return;
-            }
             TestResultRepository testResultRepository = new TestResultRepository();
             TestResultDetailRepository testResultDetailRepository = new TestResultDetailRepository();
             for (TestResultDetail testResultDetail : testResultDetailList.getTestResultDetailList()){
@@ -817,7 +793,11 @@ public class TestResultAddController {
             objects.add(name);
             objects.add(testResult);
 
-            showAlert("Success", "Test Result saved successfully!");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Success");
+            alert.setHeaderText(null);
+            alert.setContentText("Test Result saved successfully!");
+            alert.showAndWait();
 
             FXRouter.goTo("test_result",objects,true);
 
@@ -825,12 +805,21 @@ public class TestResultAddController {
             throw new RuntimeException(e);
         }
     }
-    private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Warning");
         alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
+        alert.setContentText(message);
+        alert.showAndWait(); // รอให้ผู้ใช้กด OK ก่อนดำเนินการต่อ
+    }
+
+    boolean handleSaveAction() {
+        if (onTestNameField.getText() == null || onTestNameField.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอกข้อมูล Name");
+            return false;
+        }
+
+        return true;
     }
 
 

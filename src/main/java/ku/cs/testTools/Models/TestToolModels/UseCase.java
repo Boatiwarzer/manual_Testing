@@ -7,34 +7,34 @@ import java.time.format.DateTimeFormatter;
 
 @Data
 @Entity
-@Table(name = "use_case")
+@Table(name = "UseCase")
 @NamedQuery(name = "find usecase by id", query = "Select t from UseCase t where t.useCaseID = :id")
 public class UseCase {
 
     @Id
     @Access(AccessType.FIELD)
-    @Column(name = "use_case_id", nullable = false)
+    @Column(name = "id_uc", nullable = false)
     private String useCaseID;
 
-    @Column(name = "use_case_name", length = 255, nullable = false)
+    @Column(name = "name_uc", length = 255, nullable = false)
     private String useCaseName;
 
-    @Column(name = "actor", length = 255)
+    @Column(name = "actor_uc", length = 255)
     private String actor;
 
-    @Column(name = "description", columnDefinition = "TEXT")
+    @Column(name = "description_uc", columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "pre_condition", columnDefinition = "TEXT")
+    @Column(name = "pre_con_uc", columnDefinition = "TEXT")
     private String preCondition;
 
-    @Column(name = "post_condition", columnDefinition = "TEXT")
+    @Column(name = "post_con_uc", columnDefinition = "TEXT")
     private String postCondition;
 
-    @Column(name = "note", length = 255)
+    @Column(name = "note_uc", length = 255)
     private String note;
 
-    @Column(name = "date", columnDefinition = "DATETIME")
+    @Column(name = "date_uc", columnDefinition = "DATETIME")
     private String date;
 
     // Default Constructor

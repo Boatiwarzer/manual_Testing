@@ -3,8 +3,11 @@ package ku.cs.testTools.Controllers.Home;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
 
@@ -53,8 +56,10 @@ public class OpenProjectController {
 
     @FXML
     void onConfirmButton(ActionEvent actionEvent) throws IOException {
-
         String testerName = onTesterField.getText();
+        if (!handleSaveAction()) {
+            return;
+        }
 
 //        setWindowTitle(projectName);
 
@@ -72,20 +77,28 @@ public class OpenProjectController {
         Node source = (Node) actionEvent.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
-
-//        try {
-//            FXRouter.goTo("home_manager");
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//        Node source = (Node) actionEvent.getSource();
-//        Stage stage = (Stage) source.getScene().getWindow();
-//        stage.close();
     }
 
     @FXML
     void onTesterField(ActionEvent event) {
 
+    }
+
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Warning");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait(); // รอให้ผู้ใช้กด OK ก่อนดำเนินการต่อ
+    }
+
+    boolean handleSaveAction() {
+        if (onTesterField.getText() == null || onTesterField.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอกข้อมูล Tester");
+            return false;
+        }
+
+        return true;
     }
 
 }

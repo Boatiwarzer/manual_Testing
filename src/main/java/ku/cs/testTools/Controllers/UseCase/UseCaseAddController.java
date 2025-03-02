@@ -281,7 +281,11 @@ public class UseCaseAddController {
             HBox lastHBox = (HBox) actorActionVBox.getChildren().get(actorActionVBox.getChildren().size() - 1);
             TextArea lastTextArea = (TextArea) lastHBox.getChildren().get(0);
             if (lastTextArea.getText().isEmpty()) {
-                errorLabel.setText("Please fill in the last text area before adding a new one.");
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("กรุณากรอกช่องข้อความก่อนหน้าก่อนเพิ่มช่องใหม่");
+                alert.showAndWait();
                 return;
             }
         }
@@ -315,7 +319,11 @@ public class UseCaseAddController {
             HBox lastHBox = (HBox) systemActionVBox.getChildren().get(systemActionVBox.getChildren().size() - 1);
             TextArea lastTextArea = (TextArea) lastHBox.getChildren().get(0);
             if (lastTextArea.getText().isEmpty()) {
-                errorLabel.setText("Please fill in the last text area before adding a new one.");
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setHeaderText(null);
+                alert.setContentText("กรุณากรอกช่องข้อความก่อนหน้าก่อนเพิ่มช่องใหม่");
+                alert.showAndWait();
                 return;
             }
         }
@@ -443,7 +451,9 @@ public class UseCaseAddController {
 
     @FXML
     void onSubmitButton(ActionEvent event) {
-//        FXRouter.goTo("use_case", objects);
+        if (!handleSaveAction()) {
+            return;
+        }
         try {
             String ucId = testIDLabel.getText();
             String ucName = onTestNameField.getText();
@@ -455,31 +465,23 @@ public class UseCaseAddController {
             String ucDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
             if (useCaseList.isUseCaseIDExist(ucId)) {
-                errorLabel.setText("Use case ID already exists.");
+                showAlert("Use case ID already exists.");
                 return;
             }
+            UseCase newUseCase = new UseCase(
+                    ucId,
+                    ucName,
+                    ucActor,
+                    ucDescript,
+                    ucPreCon,
+                    ucPostCon,
+                    ucNote.isEmpty() ? "-" : ucNote,
+                    ucDate
+            );
 
-            if (!ucName.isEmpty() && !ucActor.isEmpty() && !ucDescript.isEmpty() && !ucPreCon.isEmpty() && !ucPostCon.isEmpty()) {
-                if (!useCaseList.isUseCaseNameExist(ucName)) {
-                    UseCase newUseCase = new UseCase(
-                            ucId,
-                            ucName,
-                            ucActor,
-                            ucDescript,
-                            ucPreCon,
-                            ucPostCon,
-                            ucNote.isEmpty() ? "None" : ucNote,
-                            ucDate
-                    );
+            useCaseList.addUseCase(newUseCase);
+            saveProject();
 
-                    useCaseList.addUseCase(newUseCase);
-                    saveProject();
-                } else {
-                    errorLabel.setText("Use case name already exists.");
-                }
-            } else {
-                errorLabel.setText("Please fill in all required fields.");
-            }
 
 //        useCaseDetailList.clearUseCaseDetail(ucId);
             // Get the text from the textAreas in the actorActionVBox and write them to the useCaseDetailList
@@ -513,7 +515,11 @@ public class UseCaseAddController {
             useCaseRepository.addUseCase(useCase);
             saveProject();
             isGenerated = false;
-            showAlert("Success", "Use Case saved successfully!");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Success");
+            alert.setHeaderText(null);
+            alert.setContentText("Use Case saved successfully!");
+            alert.showAndWait();
 
             FXRouter.goTo("use_case");
 
@@ -522,18 +528,39 @@ public class UseCaseAddController {
         }
     }
 
-    private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Warning");
         alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
+        alert.setContentText(message);
+        alert.showAndWait(); // รอให้ผู้ใช้กด OK ก่อนดำเนินการต่อ
     }
 
-//    private void updateID() {
-//        String newTestIDLabel = String.format("UC-%03d", currentID);
-//        testIDLabel.setText(newTestIDLabel);
-//    }
+    boolean handleSaveAction() {
+        if (onTestNameField.getText() == null || onTestNameField.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอกข้อมูล Name");
+            return false;
+        }
+        if (onTestActorField.getText() == null || onTestActorField.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอกข้อมูล Actor");
+            return false;
+        }
+        if (onPreConArea.getText() == null || onPreConArea.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอกข้อมูล Pre-Condition");
+            return false;
+        }
+        if (onPostConArea.getText() == null || onPostConArea.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอกข้อมูล Post-Condition");
+            return false;
+        }
+        if (onDescriptArea.getText() == null || onDescriptArea.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอกข้อมูล Description");
+            return false;
+        }
+
+
+        return true;
+    }
 
     @FXML
     void onTestActorField(ActionEvent event) {
@@ -653,9 +680,12 @@ public class UseCaseAddController {
 
     @FXML
     void handleExit(ActionEvent event) {
-        Node source = (Node) event.getSource();
-        Stage stage = (Stage) source.getScene().getWindow();
-        stage.close();
+        try {
+            objects();
+            FXRouter.goTo("role");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML

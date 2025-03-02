@@ -127,16 +127,15 @@ public class PopupTestFlowAddTestcaseController {
 
     @FXML
     void onConfirmButton(ActionEvent event) {
+        if (!handleSaveAction()) {
+            return; // ถ้าข้อมูลไม่ครบ หยุดการทำงานทันที
+        }
         try {
             String TsNo = onTestNo.getText();
             String Name = onNameVariablesField.getText();
             String Type = onTypeVariableField.getText();
             setDateTCD();
-            if (TsNo.isEmpty() || Name.isEmpty() || Type.isEmpty() || idTC == null || idTC.isEmpty()) {
-                // Show an alert if any field is missing
-                showAlert("Input Error", "Please fill in all required fields.");
-                return; // Stop execution if validation fails
-            }
+
             testCaseDetail = new TestCaseDetail(id, TsNo, Name, Type, dateTCD, idTC);
             testCaseDetailList.addOrUpdateTestCase(testCaseDetail);
             objects = new ArrayList<>();
@@ -159,12 +158,33 @@ public class PopupTestFlowAddTestcaseController {
             throw new RuntimeException(e);
         }
     }
-    private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
+    boolean handleSaveAction() {
+        if (onTestNo.getText() == null || onTestNo.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอกข้อมูล Test No.");
+            return false;
+        } else if (!onTestNo.getText().matches("^(?!0$)\\\\d+$")) {
+            showAlert("กรุณากรอกตัวเลขเท่านั้น");
+            return false;
+        }
+
+        if (onNameVariablesField.getText() == null || onNameVariablesField.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอกข้อมูล Name Variables");
+            return false;
+        }
+        if (onTypeVariableField.getText() == null || onTypeVariableField.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอกข้อมูล Type Variables");
+            return false;
+        }
+        return true;
+    }
+
+    // ฟังก์ชันแสดง Popup Alert
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Warning");
         alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
+        alert.setContentText(message);
+        alert.showAndWait(); // รอให้ผู้ใช้กด OK ก่อนดำเนินการต่อ
     }
         private void setDateTCD() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");

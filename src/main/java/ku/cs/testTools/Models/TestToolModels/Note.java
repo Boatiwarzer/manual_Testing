@@ -11,6 +11,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Data
+@Table(name = "Note")
 @NamedQuery(name = "find Note by id", query = "Select t from Note t where t.noteID = :id")
 public class Note {
     @Id

@@ -397,20 +397,6 @@ public class PopupIRmanager {
 
     }
 
-//    private void setDateTRD() {
-//        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-//        LocalDateTime now = LocalDateTime.now();
-//        this.date = now.format(dtf);
-//        onDate.setText(date);
-//    }
-
-//    @FXML
-//    void GenerateDate(KeyEvent event) {
-//        if (!isGenerated) {  // ถ้ายังไม่ได้ทำงานมาก่อน
-//            setDateTRD();
-//            isGenerated = true;  // ตั้งค่าว่าทำงานแล้ว
-//        }
-//    }
 
     private void setStatus() {
         onStatusComboBox.setItems(FXCollections.observableArrayList( "In Manager", "In Tester", "In Developer", "Done", "Withdraw"));
@@ -535,12 +521,12 @@ public class PopupIRmanager {
     boolean handleSaveAction() {
 
         if (onStatusComboBox.getValue() == null || onStatusComboBox.getValue().trim().isEmpty()) {
-            showAlert("กรุณาเลือก Status.");
+            showAlert("กรุณาเลือก Status");
             return false;
         }
 
         if (onPriorityComboBox.getValue() == null || onPriorityComboBox.getValue().trim().isEmpty()) {
-            showAlert("กรุณาเลือก Priority.");
+            showAlert("กรุณาเลือก Priority");
             return false;
         }
 
@@ -555,7 +541,7 @@ public class PopupIRmanager {
     // ฟังก์ชันแสดง Popup Alert
     private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("แจ้งเตือน");
+        alert.setTitle("Warning");
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait(); // รอให้ผู้ใช้กด OK ก่อนดำเนินการต่อ

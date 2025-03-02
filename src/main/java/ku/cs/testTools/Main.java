@@ -1,13 +1,10 @@
-package ku.cs;
+package ku.cs.testTools;
 
-import atlantafx.base.theme.PrimerDark;
-import atlantafx.base.theme.PrimerLight;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
 import ku.cs.fxrouter.FXRouter;
-import ku.cs.testTools.Services.DatabaseConnector;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -21,7 +18,6 @@ public class Main extends Application {
             FXRouter.bind(this, stage, "Manual Test Tools", 1360,780);
             configRoute();
 //            connection = DatabaseConnector.connect();
-//          FXRouter.setTheme(1);
 //          FXRouter.popup("LabelPage",true);
           FXRouter.goTo("role");
 //            FXRouter.goTo("use_case");

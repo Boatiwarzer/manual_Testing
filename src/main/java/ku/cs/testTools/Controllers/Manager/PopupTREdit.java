@@ -512,12 +512,12 @@ public class PopupTREdit {
     boolean handleSaveAction() {
 
         if (onStatusComboBox.getValue() == null || onStatusComboBox.getValue().trim().isEmpty()) {
-            showAlert("กรุณาเลือก Status.");
+            showAlert("กรุณาเลือก Status");
             return false;
         }
 
         if (onPriorityComboBox.getValue() == null || onPriorityComboBox.getValue().trim().isEmpty()) {
-            showAlert("กรุณาเลือก Priority.");
+            showAlert("กรุณาเลือก Priority");
             return false;
         }
 
@@ -532,7 +532,7 @@ public class PopupTREdit {
     // ฟังก์ชันแสดง Popup Alert
     private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("แจ้งเตือน");
+        alert.setTitle("Warning");
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait(); // รอให้ผู้ใช้กด OK ก่อนดำเนินการต่อ

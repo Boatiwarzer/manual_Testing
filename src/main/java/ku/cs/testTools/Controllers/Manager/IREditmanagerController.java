@@ -696,9 +696,6 @@ public class IREditmanagerController {
         String noteIR = onTestNoteField.getText();
         String idTr = iRreport.getTrIR();
         iRreport = new IRreport(idIR, nameIR, dateIR, noteIR, idTr);
-        if (nameIR == null || nameIR.isEmpty()) {
-            showAlert("Input Error", "Please fill in all required fields.");
-        }
     }
     private void objects() {
         objects = new ArrayList<>();
@@ -766,6 +763,9 @@ public class IREditmanagerController {
 
     @FXML
     void onSubmitButton(ActionEvent event) {
+        if (!handleSaveAction()) {
+            return;
+        }
         try {
             currentNewData();
             iRreportList.addOrUpdateIRreport(iRreport);
@@ -776,19 +776,32 @@ public class IREditmanagerController {
             objects.add(projectName);
             objects.add(directory);
             objects.add(iRreport);
-            showAlert("Success", "IR report saved successfully!");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Success");
+            alert.setHeaderText(null);
+            alert.setContentText("IR report saved successfully!");
+            alert.showAndWait();
             FXRouter.goTo("ir_manager",objects,true);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-    private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Warning");
         alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
+        alert.setContentText(message);
+        alert.showAndWait(); // รอให้ผู้ใช้กด OK ก่อนดำเนินการต่อ
+    }
+
+    boolean handleSaveAction() {
+        if (onTestNameField.getText() == null || onTestNameField.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอกข้อมูล Name");
+            return false;
+        }
+
+        return true;
     }
 
     @FXML
@@ -816,9 +829,12 @@ public class IREditmanagerController {
 
     @FXML
     void handleExit(ActionEvent event) {
-        Node source = (Node) event.getSource();
-        Stage stage = (Stage) source.getScene().getWindow();
-        stage.close();
+        try {
+            objects();
+            FXRouter.goTo("role");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML

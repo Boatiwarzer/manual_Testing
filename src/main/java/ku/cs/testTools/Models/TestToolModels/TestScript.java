@@ -13,7 +13,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Entity
 @Data
-@Table(name = "test_scripts")
+@Table(name = "TestScript")
 @NamedQuery(name = "find testscript by id", query = "Select t from TestScript t where t.idTS = :id")
 public class TestScript {
     @Id
@@ -27,25 +27,25 @@ public class TestScript {
     @Column(name = "date_ts") // Maps to `datets` in the database
     private String dateTS;
 
-    @Column(name = "use_case") // Maps to `usecase` in the database
+    @Column(name = "use_case_ts") // Maps to `usecase` in the database
     private String useCase;
 
     @Column(name = "description_ts") // Maps to `descriptionts` in the database
     private String descriptionTS;
 
-    @Column(name = "test_case") // Maps to `testcase` in the database
+    @Column(name = "test_case_ts") // Maps to `testcase` in the database
     private String testCase;
 
-    @Column(name = "pre_con") // Maps to `precon` in the database
+    @Column(name = "pre_con_ts") // Maps to `precon` in the database
     private String preCon;
 
-    @Column(name = "post_con") // Maps to `postcon` in the database
+    @Column(name = "post_con_ts") // Maps to `postcon` in the database
     private String postCon;
 
-    @Column(name = "free_text") // Maps to `freetext` in the database
+    @Column(name = "note_ts") // Maps to `freetext` in the database
     private String freeText;
 
-    @Column(name = "position") // Maps to `position` in the database
+    @Column(name = "position_ts") // Maps to `position` in the database
     private int position;
 
 //    @Column(name = "idtsdlist") // Maps to `idtsdlist` in the database

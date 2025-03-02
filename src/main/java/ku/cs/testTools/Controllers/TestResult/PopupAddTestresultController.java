@@ -505,48 +505,47 @@ public class PopupAddTestresultController {
         isGenerated = false;
     }
 
-    @FXML
     boolean handleSaveAction() {
         if (onTestNo.getText() == null || onTestNo.getText().trim().isEmpty()) {
-            showAlert("กรุณากรอกข้อมูล Test No.");
+            showAlert("กรุณากรอกข้อมูล Test No");
             return false;
-        } else if (!onTestNo.getText().matches("\\d+")) {
+        } else if (!onTestNo.getText().matches("^(?!0$)\\\\d+$")) {
             showAlert("กรุณากรอกตัวเลขเท่านั้น");
             return false;
         }
 
         if (onTestscriptIDComboBox.getValue() == null || onTestscriptIDComboBox.getValue().trim().isEmpty() || onTestscriptIDComboBox.getValue().equals("None")) {
-            showAlert("กรุณาเลือก Test Script ID.");
+            showAlert("กรุณาเลือก Test Script ID");
             return false;
         }
 
         if (onDescription.getText() == null || onDescription.getText().trim().isEmpty()) {
-            showAlert("กรุณากรอก Description.");
+            showAlert("กรุณากรอก Description");
             return false;
         }
 
         if (onInputdata.getText() == null || onInputdata.getText().trim().isEmpty()) {
-            showAlert("กรุณากรอก Input Data.");
+            showAlert("กรุณากรอก Input Data");
             return false;
         }
 
         if (onTeststeps.getText() == null || onTeststeps.getText().trim().isEmpty()) {
-            showAlert("กรุณากรอก Test Steps.");
+            showAlert("กรุณากรอก Test Steps");
             return false;
         }
 
         if (onActual.getText() == null || onActual.getText().trim().isEmpty()) {
-            showAlert("กรุณากรอก Actual Result.");
+            showAlert("กรุณากรอก Actual Result");
             return false;
         }
 
         if (onStatusComboBox.getValue() == null || onStatusComboBox.getValue().trim().isEmpty()) {
-            showAlert("กรุณาเลือก Status.");
+            showAlert("กรุณาเลือก Status");
             return false;
         }
 
         if (onPriorityComboBox.getValue() == null || onPriorityComboBox.getValue().trim().isEmpty()) {
-            showAlert("กรุณาเลือก Priority.");
+            showAlert("กรุณาเลือก Priority");
             return false;
         }
 
@@ -556,7 +555,7 @@ public class PopupAddTestresultController {
     // ฟังก์ชันแสดง Popup Alert
     private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("แจ้งเตือน");
+        alert.setTitle("Warning");
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait(); // รอให้ผู้ใช้กด OK ก่อนดำเนินการต่อ

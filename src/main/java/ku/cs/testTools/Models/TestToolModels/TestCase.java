@@ -11,7 +11,7 @@ import java.util.Objects;
 @Setter
 @RequiredArgsConstructor
 @Entity
-@Table(name = "test_cases")
+@Table(name = "TestCase")
 @NamedQuery(name = "find testcase by id", query = "Select t from TestCase t where t.idTC = :id")
 public class TestCase {
     @Id
@@ -25,13 +25,13 @@ public class TestCase {
     @Column(name = "date_tc")
     private String dateTC;
 
-    @Column(name = "use_case")
+    @Column(name = "use_case_tc")
     private String useCase;
 
     @Column(name = "description_tc")
     private String descriptionTC;
 
-    @Column(name = "note")
+    @Column(name = "note_tc")
     private String note;
 
 //    @OneToMany(mappedBy = "testCase", cascade = CascadeType.ALL, orphanRemoval = true)

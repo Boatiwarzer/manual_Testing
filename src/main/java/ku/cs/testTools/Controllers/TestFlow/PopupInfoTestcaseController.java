@@ -538,6 +538,9 @@ public class PopupInfoTestcaseController {
 
     @FXML
     void onSubmitButton(ActionEvent event) {
+        if (!handleSaveAction()) {
+            return; // ถ้าข้อมูลไม่ครบ หยุดการทำงานทันที
+        }
         try {
             // Validate fields
             String name = onTestNameCombobox.getValue();
@@ -548,12 +551,7 @@ public class PopupInfoTestcaseController {
             String preCon = infoPreconLabel.getText();
             String note = onTestNoteField.getText();
             String post = infoPostconLabel.getText();
-            if (name.isEmpty() || idTC == null || idTC.isEmpty() || date.isEmpty() || useCase == null || useCase.isEmpty()
-                    || description.isEmpty() || note.isEmpty() || preCon.isEmpty() || post.isEmpty()) {
-                // Show an alert if any field is missing or invalid
-                showAlert("Input Error", "Please fill in all required fields.");
-                return; // Prevent further execution if the fields are incomplete
-            }
+
             testCase = testCaseList.findTCById(idTC);
             // Create a new TestScript object
 
@@ -583,7 +581,11 @@ public class PopupInfoTestcaseController {
             objects.add(directory);
             objects.add(name);
             // Show success message
-            showAlert("Success", "Test case saved successfully!");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Success");
+            alert.setHeaderText(null);
+            alert.setContentText("Test case saved successfully!");
+            alert.showAndWait();
             FXRouter.goTo("test_flow",objects);
             Node source = (Node) event.getSource();
             Stage stage = (Stage) source.getScene().getWindow();
@@ -594,12 +596,36 @@ public class PopupInfoTestcaseController {
 
 
     }
-    private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
+    boolean handleSaveAction() {
+        if (onUsecaseCombobox.getValue() == null || onUsecaseCombobox.getValue().trim().isEmpty() || onUsecaseCombobox.getValue().equals("None")) {
+            showAlert("กรุณาเลือก Use Case");
+            return false;
+        }
+
+        if (infoDescriptLabel.getText() == null || infoDescriptLabel.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอก Description");
+            return false;
+        }
+
+        if (infoPreconLabel.getText() == null || infoPreconLabel.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอก Pre-Condition");
+            return false;
+        }
+
+        if (infoPostconLabel.getText() == null || infoPostconLabel.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอก Post-Condition");
+            return false;
+        }
+        return true;
+    }
+
+    // ฟังก์ชันแสดง Popup Alert
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Warning");
         alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
+        alert.setContentText(message);
+        alert.showAndWait(); // รอให้ผู้ใช้กด OK ก่อนดำเนินการต่อ
     }
 }
 

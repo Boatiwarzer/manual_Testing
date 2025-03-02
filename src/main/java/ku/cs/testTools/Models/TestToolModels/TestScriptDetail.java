@@ -10,32 +10,36 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @Entity
-@Table(name = "test_scripts_detail")
+@Table(name = "TestScript_Detail")
 @NamedQuery(name = "find testscriptdetail by id", query = "Select t from TestScriptDetail t where t.idTSD = :id")
 public class TestScriptDetail {
 
     @Id
     @Access(AccessType.FIELD)
-    @Column(name = "idTSD")  // Optional: You can add Column annotation for clarity
+    @Column(name = "id_tsd")  // Optional: You can add Column annotation for clarity
     private String idTSD;
 
-    @Column(name = "testNo")  // Add Column annotation for testNo
+    @Column(name = "test_no_tsd")  // Add Column annotation for testNo
     private String testNo;
 
-    @Column(name = "steps")  // Add Column annotation for steps
+    @Column(name = "steps_tsd")  // Add Column annotation for steps
     private String steps;
 
-    @Column(name = "inputData")  // Add Column annotation for inputData
+    @Column(name = "inputdata_tsd")  // Add Column annotation for inputData
     private String inputData;
 
-    @Column(name = "expected")  // Add Column annotation for expected
+    @Column(name = "expected_tsd")  // Add Column annotation for expected
     private String expected;
 
     @Column(name = "idTS")  // Add Column annotation for idTS
     private String idTS;
 
-    @Column(name = "dateTSD")  // Add Column annotation for dateTSD
+    @Column(name = "date_tsd")  // Add Column annotation for dateTSD
     private String dateTSD;
+
+    @ManyToOne
+    @JoinColumn(name = "id_ts")  // Optional: Add a @JoinColumn annotation for clarity
+    private TestScript testScript;
 
     // Uncomment and complete if you need this relationship
     // @ManyToOne

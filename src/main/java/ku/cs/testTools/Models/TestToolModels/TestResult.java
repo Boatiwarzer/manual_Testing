@@ -12,21 +12,21 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @Entity
-@Table(name = "test_results")
+@Table(name = "TestResult")
 @NamedQuery(name = "find testresults by id", query = "Select t from TestResult t where t.idTR = :id")
 public class TestResult {
     @Id
     @Access(AccessType.FIELD)
-    @Column(name = "idTR")  // Add the Column annotation
+    @Column(name = "id_tr")  // Add the Column annotation
     private String idTR;
 
-    @Column(name = "nameTR")  // Add the Column annotation
+    @Column(name = "name_tr")  // Add the Column annotation
     private String nameTR;
 
-    @Column(name = "dateTR")  // Add the Column annotation
+    @Column(name = "date_tr")  // Add the Column annotation
     private String dateTR;
 
-    @Column(name = "noteTR")  // Add the Column annotation
+    @Column(name = "note_tr")  // Add the Column annotation
     private String noteTR;
 
     @Column(name = "markedForDeletion")  // Add the Column annotation

@@ -33,7 +33,7 @@
                         <!--                    </items>-->
                         <!--                 </Menu>-->
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem fx:id="exitQuit" mnemonicParsing="false" onAction="#handleExit" text="Quit" />
+                        <MenuItem fx:id="exitQuit" mnemonicParsing="false" onAction="#handleExit" text="Change Role" />
                      </items>
                   </Menu>
                   <Menu mnemonicParsing="false" text="Help">

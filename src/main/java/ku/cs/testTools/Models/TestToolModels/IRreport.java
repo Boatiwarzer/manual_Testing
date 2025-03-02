@@ -15,6 +15,7 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @Entity
+@Table(name = "IRreport")
 @NamedQuery(name = "find IRreport by id", query = "Select t from IRreport t where t.idIR = :id")
 public class IRreport {
     @Id

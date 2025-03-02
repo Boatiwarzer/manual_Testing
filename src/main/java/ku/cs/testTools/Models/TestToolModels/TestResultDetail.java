@@ -10,67 +10,67 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @Entity
-@Table(name = "test_result_detail")
+@Table(name = "TestResult_Detail")
 @NamedQuery(name = "find testresultdetail by id", query = "Select t from TestResultDetail t where t.idTRD = :id")
 public class TestResultDetail {
     @Id
     @Access(AccessType.FIELD)
-    @Column(name = "idTRD")  // Add Column annotation for idTRD
+    @Column(name = "id_trd")  // Add Column annotation for idTRD
     private String idTRD;
 
-    @Column(name = "testNo")  // Add Column annotation for testNo
+    @Column(name = "test_no_trd")  // Add Column annotation for testNo
     private String testNo;
 
-    @Column(name = "tsIdTRD")  // Add Column annotation for tsIdTRD
+    @Column(name = "ts_id_trd")  // Add Column annotation for tsIdTRD
     private String tsIdTRD;
 
-    @Column(name = "tcIdTRD")  // Add Column annotation for tcIdTRD
+    @Column(name = "tc_id_trd")  // Add Column annotation for tcIdTRD
     private String tcIdTRD;
 
-    @Column(name = "actorTRD")  // Add Column annotation for actorTRD
+    @Column(name = "actor_trd")  // Add Column annotation for actorTRD
     private String actorTRD;
 
-    @Column(name = "descriptTRD")  // Add Column annotation for descriptTRD
+    @Column(name = "description_trd")  // Add Column annotation for descriptTRD
     private String descriptTRD;
 
-    @Column(name = "inputdataTRD")  // Add Column annotation for inputdataTRD
+    @Column(name = "inputdata_trd")  // Add Column annotation for inputdataTRD
     private String inputdataTRD;
 
-    @Column(name = "stepsTRD")  // Add Column annotation for stepsTRD
+    @Column(name = "steps_trd")  // Add Column annotation for stepsTRD
     private String stepsTRD;
 
-    @Column(name = "expectedTRD")  // Add Column annotation for expectedTRD
+    @Column(name = "expected_trd")  // Add Column annotation for expectedTRD
     private String expectedTRD;
 
-    @Column(name = "actualTRD")  // Add Column annotation for actualTRD
+    @Column(name = "actual_trd")  // Add Column annotation for actualTRD
     private String actualTRD;
 
-    @Column(name = "statusTRD")  // Add Column annotation for statusTRD
+    @Column(name = "status_trd")  // Add Column annotation for statusTRD
     private String statusTRD;
 
-    @Column(name = "priorityTRD")  // Add Column annotation for priorityTRD
+    @Column(name = "priority_trd")  // Add Column annotation for priorityTRD
     private String priorityTRD;
 
-    @Column(name = "dateTRD")  // Add Column annotation for dateTRD
+    @Column(name = "date_trd")  // Add Column annotation for dateTRD
     private String dateTRD;
 
-    @Column(name = "testerTRD")  // Add Column annotation for testerTRD
+    @Column(name = "tester_trd")  // Add Column annotation for testerTRD
     private String testerTRD;
 
-    @Column(name = "imageTRD")  // Add Column annotation for imageTRD
+    @Column(name = "image_trd")  // Add Column annotation for imageTRD
     private String imageTRD;
 
-    @Column(name = "retestTRD")
+    @Column(name = "retest_trd")
     private String retestTRD;
 
-    @Column(name = "approveTRD")  // Add Column annotation for approveTRD
+    @Column(name = "approve_trd")  // Add Column annotation for approveTRD
     private String approveTRD;
 
-    @Column(name = "remarkTRD")  // Add Column annotation for remarkTRD
+    @Column(name = "remark_trd")  // Add Column annotation for remarkTRD
     private String remarkTRD;
 
     @ManyToOne
-    @JoinColumn(name = "testResult_id")  // Optional: Add a @JoinColumn annotation for clarity
+    @JoinColumn(name = "id_tr")  // Optional: Add a @JoinColumn annotation for clarity
     private TestResult testResult;
 
     @Column(name = "idTR")  // Add Column annotation for idTR

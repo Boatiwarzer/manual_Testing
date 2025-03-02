@@ -3,10 +3,7 @@ package ku.cs.testTools.Controllers.Home;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -105,11 +102,12 @@ public class LabelPageController {
     }
     public void handleConfirmButton(ActionEvent actionEvent) throws IOException {
         String note = noteTextArea.getText();
+
         if (noteTextArea.getText().isEmpty()) {
             note = "!@#$%^&*()_+";
         }
-        if (labelTextField.getText().isEmpty()) {
-            errorText.setText("Please enter a label.");
+        if (!handleSaveAction()) {
+            return;
         } else {
             errorText.setText("");
 
@@ -184,6 +182,21 @@ public class LabelPageController {
         String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
         this.objectID = String.format("TC-%s", random1);
 
+    }
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Warning");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait(); // รอให้ผู้ใช้กด OK ก่อนดำเนินการต่อ
+    }
+
+    boolean handleSaveAction() {
+        if (labelTextField.getText() == null || labelTextField.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอกข้อมูลชื่อ");
+            return false;
+        }
+        return true;
     }
 }
 

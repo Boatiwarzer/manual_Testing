@@ -14,7 +14,7 @@ import java.util.UUID;
 @Setter
 @RequiredArgsConstructor
 @Entity
-@Table(name = "test_flow_position")
+@Table(name = "TestFlow_Position")
 @NamedQuery(name = "find testflowposition by id", query = "Select t from TestFlowPosition t where t.ID = :id")
 public class TestFlowPosition {
     @Id

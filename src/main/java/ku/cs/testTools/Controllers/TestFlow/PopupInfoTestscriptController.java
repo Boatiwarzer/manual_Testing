@@ -605,6 +605,9 @@ public class PopupInfoTestscriptController {
 
     @FXML
     void onSubmitButton(ActionEvent event) {
+        if (!handleSaveAction()) {
+            return; // ถ้าข้อมูลไม่ครบ หยุดการทำงานทันที
+        }
         // Validate fields
         String name = onTestNameCombobox.getValue();
         String idTS = tsId;
@@ -615,13 +618,6 @@ public class PopupInfoTestscriptController {
         String preCon = infoPreconLabel.getText();
         String note = onTestNoteField.getText();
         String post = infoPostconLabel.getText();
-        if (name.isEmpty() || idTS == null || idTS.isEmpty() || date.isEmpty() || useCase == null || useCase.isEmpty() || description.isEmpty()
-                || tc == null || tc.isEmpty() || preCon.isEmpty() || note.isEmpty() || post.isEmpty()) {
-
-            // Show an alert if any field is missing
-            showAlert("Input Error", "Please fill in all required fields.");
-            return; // Prevent further execution if the fields are incomplete
-        }
         // Create a new TestScript object
         testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post, note,position);
 
@@ -643,7 +639,11 @@ public class PopupInfoTestscriptController {
         // Write data to respective files
 
         // Show success message
-        showAlert("Success", "Test script saved successfully!");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText("Test script saved successfully!");
+        alert.showAndWait();
         saveProject();
         loadProject();
         ArrayList<Object>objects = new ArrayList<>();
@@ -661,12 +661,41 @@ public class PopupInfoTestscriptController {
 
 
     }
-    private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
+    boolean handleSaveAction() {
+        if (onUsecaseCombobox.getValue() == null || onUsecaseCombobox.getValue().trim().isEmpty() || onUsecaseCombobox.getValue().equals("None")) {
+            showAlert("กรุณาเลือก Use Case");
+            return false;
+        }
+
+        if (onTestcaseCombobox.getValue() == null || onTestcaseCombobox.getValue().trim().isEmpty() || onTestcaseCombobox.getValue().equals("None")) {
+            showAlert("กรุณาเลือก Test Case");
+            return false;
+        }
+
+        if (infoDescriptLabel.getText() == null || infoDescriptLabel.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอก Description");
+            return false;
+        }
+
+        if (infoPreconLabel.getText() == null || infoPreconLabel.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอก Pre-Condition");
+            return false;
+        }
+
+        if (infoPostconLabel.getText() == null || infoPostconLabel.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอก Post-Condition");
+            return false;
+        }
+        return true;
+    }
+
+    // ฟังก์ชันแสดง Popup Alert
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Warning");
         alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
+        alert.setContentText(message);
+        alert.showAndWait(); // รอให้ผู้ใช้กด OK ก่อนดำเนินการต่อ
     }
 
 }

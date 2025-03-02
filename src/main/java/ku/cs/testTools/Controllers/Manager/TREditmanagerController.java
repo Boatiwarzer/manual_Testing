@@ -726,9 +726,6 @@ public class TREditmanagerController {
         String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         String noteTR = onTestNoteField.getText();
         testResult = new TestResult(idTR, nameTR, dateTR, noteTR);
-        if (nameTR == null || nameTR.isEmpty()) {
-            showAlert("Input Error", "Please fill in all required fields.");
-        }
     }
     private void objects() {
         objects = new ArrayList<>();
@@ -796,6 +793,9 @@ public class TREditmanagerController {
 
     @FXML
     void onSubmitButton(ActionEvent event) {
+        if (!handleSaveAction()) {
+            return;
+        }
         try {
             currentNewData();
 //            objects.add("edit");
@@ -808,19 +808,32 @@ public class TREditmanagerController {
             objects.add(projectName);
             objects.add(directory);
             objects.add(testResult);
-            showAlert("Success", "Test Result saved successfully!");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Success");
+            alert.setHeaderText(null);
+            alert.setContentText("Test Result saved successfully!");
+            alert.showAndWait();
             FXRouter.goTo("test_result_manager",objects,true);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-    private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Warning");
         alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
+        alert.setContentText(message);
+        alert.showAndWait(); // รอให้ผู้ใช้กด OK ก่อนดำเนินการต่อ
+    }
+
+    boolean handleSaveAction() {
+        if (onTestNameField.getText() == null || onTestNameField.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอกข้อมูล Name");
+            return false;
+        }
+
+        return true;
     }
 
     @FXML
@@ -848,9 +861,12 @@ public class TREditmanagerController {
 
     @FXML
     void handleExit(ActionEvent event) {
-        Node source = (Node) event.getSource();
-        Stage stage = (Stage) source.getScene().getWindow();
-        stage.close();
+        try {
+            objects();
+            FXRouter.goTo("role");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML

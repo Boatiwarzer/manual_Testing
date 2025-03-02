@@ -11,7 +11,7 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @Entity
-@Table(name = "test_cases_detail")
+@Table(name = "TestCase_Detail")
 @NamedQuery(name = "find testcasesdetail by id", query = "Select t from TestCaseDetail t where t.idTCD = :id")
 public class TestCaseDetail {
     @Id
@@ -19,7 +19,7 @@ public class TestCaseDetail {
     @Column(name = "id_tcd", nullable = false, unique = true)
     private String idTCD;
 
-    @Column(name = "test_no", nullable = false)
+    @Column(name = "test_no_tcd", nullable = false)
     private String testNo;
 
     @Column(name = "name_tcd", nullable = false)
@@ -30,6 +30,8 @@ public class TestCaseDetail {
 
     @Column(name = "date_tcd")
     private String dateTCD;
+
+    @Column(name = "idTC")
     private String idTC;
 
     @ManyToOne

@@ -43,7 +43,7 @@ module ku.cs {
     exports ku.cs.testTools.Controllers.TestFlow;
     exports ku.cs.testTools.Controllers.TestResult;
     exports ku.cs.testTools.Controllers.Manager;
-    exports ku.cs;
+    exports ku.cs.testTools;
     exports ku.cs.testTools.Models.TestToolModels;
     exports ku.cs.testTools.Models.Manager;
 }
