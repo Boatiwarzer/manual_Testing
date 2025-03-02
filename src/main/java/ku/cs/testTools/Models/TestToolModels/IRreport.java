@@ -5,21 +5,28 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
+import java.util.UUID;
 
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
 @Entity
-@NamedQuery(name = "find IRreport by id", query = "Select t from IRreport t where t.idIR = :id")
+@NamedQuery(name = "find IRreport by id", query = "Select t from IRreport t where t.ID = :id")
 public class IRreport {
     @Id
+    @UuidGenerator
+    @GeneratedValue
     @Access(AccessType.FIELD)
-    @Column(name = "id_ir", nullable = false, unique = true)
+    @Column(name = "id", nullable = false, unique = true)
+    private UUID ID;
+
+    @Column(name = "id_ir", nullable = false)
     private String idIR;
 
     @Column(name = "name_ir", nullable = false)

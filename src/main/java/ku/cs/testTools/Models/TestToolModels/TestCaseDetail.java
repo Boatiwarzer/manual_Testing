@@ -2,9 +2,11 @@ package ku.cs.testTools.Models.TestToolModels;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -12,11 +14,16 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Entity
 @Table(name = "test_cases_detail")
-@NamedQuery(name = "find testcasesdetail by id", query = "Select t from TestCaseDetail t where t.idTCD = :id")
+@NamedQuery(name = "find testcasesdetail by id", query = "Select t from TestCaseDetail t where t.ID = :id")
 public class TestCaseDetail {
     @Id
+    @UuidGenerator
+    @GeneratedValue
     @Access(AccessType.FIELD)
-    @Column(name = "id_tcd", nullable = false, unique = true)
+    @Column(name = "id", nullable = false, unique = true)
+    private UUID ID;
+
+    @Column(name = "id_tcd", nullable = false)
     private String idTCD;
 
     @Column(name = "test_no", nullable = false)

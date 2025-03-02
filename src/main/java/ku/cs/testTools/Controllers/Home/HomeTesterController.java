@@ -3,10 +3,7 @@ package ku.cs.testTools.Controllers.Home;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
@@ -80,8 +77,7 @@ public class HomeTesterController {
             name = (String) objects.get(2);
             loadRepo();
             saveProject();
-            TestScriptRepository testScriptRepository = new TestScriptRepository();
-            testScriptRepository.getAllTestScripts();
+
             System.out.println(name);
             System.out.println("Project Name: " + projectName);
             System.out.println("Directory: " + directory);
@@ -189,6 +185,29 @@ public class HomeTesterController {
     @FXML
     void handleSaveMenuItem(ActionEvent event) {
         //saveProject();
+    }
+    @FXML
+    void handleSubmitMenuItem(ActionEvent event) throws IOException {
+        loadManagerStatus();
+        objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(name);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText("Submit successfully and go to home page.");
+        alert.showAndWait();
+        FXRouter.goTo("home_tester",objects);
+
+    }
+
+    private void loadManagerStatus() {
+        ManagerRepository managerRepository = new ManagerRepository();
+        for (Manager manager : managerRepository.getAllManagers()){
+            manager.setStatusTrue();
+            managerRepository.updateManager(manager);
+        }
     }
     @FXML
     void handleExit(ActionEvent event) {

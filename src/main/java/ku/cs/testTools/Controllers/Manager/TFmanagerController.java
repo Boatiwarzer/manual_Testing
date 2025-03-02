@@ -316,32 +316,6 @@ public class TFmanagerController {
             }
         }
     }
-
-
-
-
-
-    private void showInfo(String testerName) {
-        nameTester = testerName; // ดึงชื่อ Tester ตรงๆ
-
-        System.out.println("Tester: " + nameTester);
-
-        // หาว่า Tester นี้อยู่ใน Project ไหน
-        for (Node node : projectList.getChildren()) {
-            if (node instanceof TitledPane titledPane) {
-                ListView<String> listView = (ListView<String>) titledPane.getContent();
-                if (listView.getItems().contains(testerName)) {
-                    projectName = titledPane.getText(); // ดึงชื่อ Project จากหัวข้อของ TitledPane
-                    System.out.println("Project: " + projectName);
-                    break;
-                }
-            }
-        }
-
-        // โหลดข้อมูล
-        loadProject();
-        loadData(projectName, nameTester);
-    }
     private void showInfo(String projectNames,String testerName) {
         nameTester = testerName; // ดึงชื่อ Tester ตรงๆ
         this.projectName = projectNames;

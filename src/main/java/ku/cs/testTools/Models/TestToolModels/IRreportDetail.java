@@ -3,17 +3,24 @@ package ku.cs.testTools.Models.TestToolModels;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.util.Objects;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @Entity
-@NamedQuery(name = "find IRreportDetail by id", query = "Select t from IRreportDetail t where t.idIRD = :id")
+@NamedQuery(name = "find IRreportDetail by id", query = "Select t from IRreportDetail t where t.ID = :id")
 public class IRreportDetail {
     @Id
+    @UuidGenerator
+    @GeneratedValue
     @Access(AccessType.FIELD)
-    @Column(name = "id_ird", nullable = false, unique = true)
+    @Column(name = "id", nullable = false, unique = true)
+    private UUID ID;
+
+    @Column(name = "id_ird", nullable = false)
     private String idIRD;
 
     @Column(name = "test_no_ird", nullable = false)

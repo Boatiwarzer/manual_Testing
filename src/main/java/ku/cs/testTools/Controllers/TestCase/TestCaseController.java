@@ -8,6 +8,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import ku.cs.testTools.Models.Manager.Manager;
+import ku.cs.testTools.Services.Repository.ManagerRepository;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
@@ -97,6 +99,7 @@ public class TestCaseController {
             if (objects.get(3) != null){
                 testCase = (TestCase) objects.get(3);
             }
+            loadStatusButton();
             loadProject();
             loadListView(testCaseList);
             selected();
@@ -107,6 +110,19 @@ public class TestCaseController {
 
         }
 
+    }private void loadStatusButton() {
+        ManagerRepository managerRepository = new ManagerRepository();
+        Manager manager = managerRepository.getManagerByProjectName(projectName);
+
+        if (manager != null) {  // ตรวจสอบว่าพบ Manager หรือไม่
+            String status = manager.getStatus();
+            boolean check = Boolean.parseBoolean(status);
+            onCreateButton.setVisible(check);
+            onEditButton.setVisible(check);
+            System.out.println("Manager Status: " + status);
+        } else {
+            System.out.println("No Manager found for project: " + projectName);
+        }
     }
     public void handleExportMenuItem(ActionEvent actionEvent) {
         boolean noteAdded = false;
@@ -132,7 +148,28 @@ public class TestCaseController {
 
     @FXML
     void handleSubmitMenuItem(ActionEvent event) throws IOException {
+        loadManagerStatus();
+        objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(name);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText("Submit successfully and go to home page.");
+        alert.showAndWait();
+        FXRouter.goTo("home_tester",objects);
 
+    }
+
+    private void loadManagerStatus() {
+        ManagerRepository managerRepository = new ManagerRepository();
+        Manager manager = managerRepository.getManagerByProjectName(projectName);
+
+        if (manager != null) {  // ตรวจสอบว่าพบ Manager หรือไม่
+            manager.setStatusFalse();
+            managerRepository.updateManager(manager);
+        }
     }
 
     @FXML

@@ -92,7 +92,7 @@ public class NewProjectController {
         String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         setWindowTitle(projectName);
         randomIdM();
-        Manager manager = new Manager(MId,projectName,managerName,date,"false");
+        Manager manager = new Manager(MId,projectName,managerName,date,"true");
 
         for (Node node : testerVBox.getChildren()) {
             if (node instanceof HBox) {

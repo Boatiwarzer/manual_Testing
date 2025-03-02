@@ -24,6 +24,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.DataSource;
@@ -132,6 +133,7 @@ public class TestFlowController {
     private NoteList noteList;
     private Note note;
     private String name;
+    private boolean check = true;
     @FXML
     void initialize() {
         onClickTestflow.getStyleClass().add("selected");
@@ -142,26 +144,31 @@ public class TestFlowController {
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
             name = (String) objects.get(2);
+
             System.out.println(name);
             System.out.println(projectName);
         }
+        loadStatusButton();
         loadProject();
-        onNoteTextArea.setOnKeyTyped(keyEvent -> {
-            if (noteList.findBynoteID("1") == null) {
-                if (!onNoteTextArea.getText().isEmpty()) {
-                    noteList.addNote(new Note("1", onNoteTextArea.getText(),projectName,name));
+        if (check){
+            onNoteTextArea.setOnKeyTyped(keyEvent -> {
+                if (noteList.findBynoteID("1") == null) {
+                    if (!onNoteTextArea.getText().isEmpty()) {
+                        noteList.addNote(new Note("1", onNoteTextArea.getText(),projectName,name));
+                    } else {
+                        noteList.addNote(new Note("1", "!@#$%^&*()_+",projectName,name));
+                    }
                 } else {
-                    noteList.addNote(new Note("1", "!@#$%^&*()_+",projectName,name));
+                    if (!onNoteTextArea.getText().isEmpty()) {
+                        noteList.updateNoteBynoteID("1", onNoteTextArea.getText());
+                    } else {
+                        noteList.updateNoteBynoteID("1", "!@#$%^&*()_+");
+                    }
                 }
-            } else {
-                if (!onNoteTextArea.getText().isEmpty()) {
-                    noteList.updateNoteBynoteID("1", onNoteTextArea.getText());
-                } else {
-                    noteList.updateNoteBynoteID("1", "!@#$%^&*()_+");
-                }
-            }
-            saveProject();
-        });
+                saveProject();
+            });
+        }
+
 //        onNoteTextArea.setOnKeyPressed(keyEvent -> {
 //            if (onNoteTextArea.getText() != null) {
 //                Note note = new Note("1",onNoteTextArea.getText());
@@ -172,7 +179,18 @@ public class TestFlowController {
 
         saveProject();
     }
+    private void loadStatusButton() {
+        ManagerRepository managerRepository = new ManagerRepository();
+        Manager manager = managerRepository.getManagerByProjectName(projectName);
 
+        if (manager != null) {  // ตรวจสอบว่าพบ Manager หรือไม่
+            String status = manager.getStatus();
+            check = Boolean.parseBoolean(status);
+            System.out.println("Manager Status: " + status);
+        } else {
+            System.out.println("No Manager found for project: " + projectName);
+        }
+    }
 
     public void handleExportMenuItem(ActionEvent actionEvent) {
         boolean noteAdded = false;
@@ -216,7 +234,28 @@ public class TestFlowController {
 
     @FXML
     void handleSubmitMenuItem(ActionEvent event) throws IOException {
+        loadManagerStatus();
+        objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(name);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText("Submit successfully and go to home page.");
+        alert.showAndWait();
+        FXRouter.goTo("home_tester",objects);
 
+    }
+
+    private void loadManagerStatus() {
+        ManagerRepository managerRepository = new ManagerRepository();
+        Manager manager = managerRepository.getManagerByProjectName(projectName);
+
+        if (manager != null) {  // ตรวจสอบว่าพบ Manager หรือไม่
+            manager.setStatusFalse();
+            managerRepository.updateManager(manager);
+        }
     }
 
     @FXML
@@ -498,123 +537,132 @@ public class TestFlowController {
         return anchors;
     }
     private void BoundShape(Rectangle[] anchors, Rectangle rectangle,Rectangle border ,StackPane stackPane, String type ,int positionID) {
-        stackPane.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) {
-                hideBorderAndAnchors(border,anchors);
-                switch (type){
-                    case "testscript":
-                        openTestScriptPopup(positionID);
-                        break;
+        if (check){
+            stackPane.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2) {
+                    hideBorderAndAnchors(border,anchors);
+                    switch (type){
+                        case "testscript":
+                            openTestScriptPopup(positionID);
+                            break;
 
-                    case "testcase":
-                        openTestCasePopup(positionID);
-                        break;
+                        case "testcase":
+                            openTestCasePopup(positionID);
+                            break;
+                    }
+                    event.consume();
+                } else {
+                    toggleBorderAndAnchors(border, anchors);
+                    updateAnchorPositions(anchors, stackPane, rectangle);
                 }
-                event.consume();
-            } else {
-                toggleBorderAndAnchors(border, anchors);
+            });
+
+            stackPane.setOnMouseDragged(event -> {
+                double offsetX = event.getSceneX() - stackPane.getWidth();
+                double offsetY = event.getSceneY() - stackPane.getHeight();
+
+                stackPane.setLayoutX(stackPane.getLayoutX() + offsetX);
+                stackPane.setLayoutY(stackPane.getLayoutY() + offsetY);
+
+                // อัปเดตตำแหน่ง Anchor ใหม่
                 updateAnchorPositions(anchors, stackPane, rectangle);
-            }
-        });
-
-        stackPane.setOnMouseDragged(event -> {
-            double offsetX = event.getSceneX() - stackPane.getWidth();
-            double offsetY = event.getSceneY() - stackPane.getHeight();
-
-            stackPane.setLayoutX(stackPane.getLayoutX() + offsetX);
-            stackPane.setLayoutY(stackPane.getLayoutY() + offsetY);
-
-            // อัปเดตตำแหน่ง Anchor ใหม่
-            updateAnchorPositions(anchors, stackPane, rectangle);
-            hideBorderAndAnchors(border, anchors);
-        });
-        stackPane.setOnMouseReleased(mouseEvent -> {
-            hideBorderAndAnchors(border,anchors);
-        });
-        stackPane.setOnMouseDragOver(mouseDragEvent -> {
-            hideBorderAndAnchors(border,anchors);
-        });
-        stackPane.setOnMousePressed(mouseDragEvent ->{
-            hideBorderAndAnchors(border,anchors);
-        });
-        onDesignArea.setOnMouseClicked(mouseEvent -> {
-            hideBorderAndAnchors(border, anchors);
-        });
-    }
-    private void BoundShape(Rectangle[] anchors, Polygon polygon,Rectangle border ,StackPane stackPane,int positionID) {
-        stackPane.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 1){
-                toggleBorderAndAnchors(border, anchors);
-                updateAnchorPositions(anchors, stackPane, polygon);
-                event.consume();
-            }
-            else {
+                hideBorderAndAnchors(border, anchors);
+            });
+            stackPane.setOnMouseReleased(mouseEvent -> {
                 hideBorderAndAnchors(border,anchors);
+            });
+            stackPane.setOnMouseDragOver(mouseDragEvent -> {
+                hideBorderAndAnchors(border,anchors);
+            });
+            stackPane.setOnMousePressed(mouseDragEvent ->{
+                hideBorderAndAnchors(border,anchors);
+            });
+            onDesignArea.setOnMouseClicked(mouseEvent -> {
+                hideBorderAndAnchors(border, anchors);
+            });
+        }
+    }
 
-            }
-        });
+    private void BoundShape(Rectangle[] anchors, Polygon polygon,Rectangle border ,StackPane stackPane,int positionID) {
+        if (check){
+            stackPane.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 1){
+                    toggleBorderAndAnchors(border, anchors);
+                    updateAnchorPositions(anchors, stackPane, polygon);
+                    event.consume();
+                }
+                else {
+                    hideBorderAndAnchors(border,anchors);
 
-        stackPane.setOnMouseDragged(event -> {
-            double offsetX = event.getSceneX() - stackPane.getWidth();
-            double offsetY = event.getSceneY() - stackPane.getHeight();
+                }
+            });
 
-            stackPane.setLayoutX(stackPane.getLayoutX() + offsetX);
-            stackPane.setLayoutY(stackPane.getLayoutY() + offsetY);
+            stackPane.setOnMouseDragged(event -> {
+                double offsetX = event.getSceneX() - stackPane.getWidth();
+                double offsetY = event.getSceneY() - stackPane.getHeight();
 
-            // อัปเดตตำแหน่ง Anchor ใหม่
-            updateAnchorPositions(anchors, stackPane, polygon);
-            hideBorderAndAnchors(border, anchors);
-        });
-        stackPane.setOnMouseReleased(mouseEvent -> {
-            hideBorderAndAnchors(border,anchors);
-        });
-        stackPane.setOnMouseDragOver(mouseDragEvent -> {
-            hideBorderAndAnchors(border,anchors);
-        });
-        stackPane.setOnMousePressed(mouseDragEvent ->{
-            hideBorderAndAnchors(border,anchors);
-        });
-        onDesignArea.setOnMouseClicked(mouseEvent -> {
-            hideBorderAndAnchors(border, anchors);
-        });
+                stackPane.setLayoutX(stackPane.getLayoutX() + offsetX);
+                stackPane.setLayoutY(stackPane.getLayoutY() + offsetY);
+
+                // อัปเดตตำแหน่ง Anchor ใหม่
+                updateAnchorPositions(anchors, stackPane, polygon);
+                hideBorderAndAnchors(border, anchors);
+            });
+            stackPane.setOnMouseReleased(mouseEvent -> {
+                hideBorderAndAnchors(border,anchors);
+            });
+            stackPane.setOnMouseDragOver(mouseDragEvent -> {
+                hideBorderAndAnchors(border,anchors);
+            });
+            stackPane.setOnMousePressed(mouseDragEvent ->{
+                hideBorderAndAnchors(border,anchors);
+            });
+            onDesignArea.setOnMouseClicked(mouseEvent -> {
+                hideBorderAndAnchors(border, anchors);
+            });
+        }
+
     }
     private void BoundShape(Rectangle[] anchors, Circle circle, Rectangle border, StackPane stackPane, int positionID) {
-        stackPane.setOnMouseClicked(event -> {
-            event.consume();
-            if (event.getClickCount() == 1){
-                toggleBorderAndAnchors(border, anchors);
-                updateAnchorPositions(anchors, stackPane, circle);
+        if (check){
+            stackPane.setOnMouseClicked(event -> {
                 event.consume();
-            }
-            else {
+                if (event.getClickCount() == 1){
+                    toggleBorderAndAnchors(border, anchors);
+                    updateAnchorPositions(anchors, stackPane, circle);
+                    event.consume();
+                }
+                else {
+                    hideBorderAndAnchors(border,anchors);
+
+                }
+            });
+
+            stackPane.setOnMouseDragged(event -> {
+                double offsetX = event.getSceneX() - stackPane.getWidth();
+                double offsetY = event.getSceneY() - stackPane.getHeight();
+
+                stackPane.setLayoutX(stackPane.getLayoutX() + offsetX);
+                stackPane.setLayoutY(stackPane.getLayoutY() + offsetY);
+
+                // อัปเดตตำแหน่ง Anchor ใหม่
+                updateAnchorPositions(anchors, stackPane, circle);
+                hideBorderAndAnchors(border, anchors);
+            });
+            stackPane.setOnMouseReleased(mouseEvent -> {
                 hideBorderAndAnchors(border,anchors);
+            });
+            stackPane.setOnMouseDragOver(mouseDragEvent -> {
+                hideBorderAndAnchors(border,anchors);
+            });
+            stackPane.setOnMousePressed(mouseDragEvent ->{
+                hideBorderAndAnchors(border,anchors);
+            });
+            onDesignArea.setOnMouseClicked(mouseEvent -> {
+                hideBorderAndAnchors(border, anchors);
+            });
+        }
 
-            }
-        });
-
-        stackPane.setOnMouseDragged(event -> {
-            double offsetX = event.getSceneX() - stackPane.getWidth();
-            double offsetY = event.getSceneY() - stackPane.getHeight();
-
-            stackPane.setLayoutX(stackPane.getLayoutX() + offsetX);
-            stackPane.setLayoutY(stackPane.getLayoutY() + offsetY);
-
-            // อัปเดตตำแหน่ง Anchor ใหม่
-            updateAnchorPositions(anchors, stackPane, circle);
-            hideBorderAndAnchors(border, anchors);
-        });
-        stackPane.setOnMouseReleased(mouseEvent -> {
-            hideBorderAndAnchors(border,anchors);
-        });
-        stackPane.setOnMouseDragOver(mouseDragEvent -> {
-            hideBorderAndAnchors(border,anchors);
-        });
-        stackPane.setOnMousePressed(mouseDragEvent ->{
-            hideBorderAndAnchors(border,anchors);
-        });
-        onDesignArea.setOnMouseClicked(mouseEvent -> {
-            hideBorderAndAnchors(border, anchors);
-        });
     }
 
     private void openTestCasePopup(int positionID) {
@@ -635,231 +683,241 @@ public class TestFlowController {
 
 
     private void updateAnchorPositions(Rectangle[] anchors, StackPane stackPane, Rectangle rectangle) {
-        double stackPaneX = stackPane.getLayoutX();
-        double stackPaneY = stackPane.getLayoutY();
-        double width = rectangle.getWidth();
-        double height = rectangle.getHeight();
+        if (check){
+            double stackPaneX = stackPane.getLayoutX();
+            double stackPaneY = stackPane.getLayoutY();
+            double width = rectangle.getWidth();
+            double height = rectangle.getHeight();
 
-        // อัปเดตตำแหน่งของ Anchor Points รอบๆ Rectangle
-        anchors[0].setLayoutX(stackPaneX - 5);                        // Top-left
-        anchors[0].setLayoutY(stackPaneY - 5);
+            // อัปเดตตำแหน่งของ Anchor Points รอบๆ Rectangle
+            anchors[0].setLayoutX(stackPaneX - 5);                        // Top-left
+            anchors[0].setLayoutY(stackPaneY - 5);
 
-        anchors[1].setLayoutX(stackPaneX + width / 2 - 5);            // Top-center
-        anchors[1].setLayoutY(stackPaneY - 5);
+            anchors[1].setLayoutX(stackPaneX + width / 2 - 5);            // Top-center
+            anchors[1].setLayoutY(stackPaneY - 5);
 
-        anchors[2].setLayoutX(stackPaneX + width - 5);                // Top-right
-        anchors[2].setLayoutY(stackPaneY - 5);
+            anchors[2].setLayoutX(stackPaneX + width - 5);                // Top-right
+            anchors[2].setLayoutY(stackPaneY - 5);
 
-        anchors[3].setLayoutX(stackPaneX - 5);                        // Left-center
-        anchors[3].setLayoutY(stackPaneY + height / 2 - 5);
+            anchors[3].setLayoutX(stackPaneX - 5);                        // Left-center
+            anchors[3].setLayoutY(stackPaneY + height / 2 - 5);
 
-        anchors[4].setLayoutX(stackPaneX + width - 5);                // Right-center
-        anchors[4].setLayoutY(stackPaneY + height / 2 - 5);
+            anchors[4].setLayoutX(stackPaneX + width - 5);                // Right-center
+            anchors[4].setLayoutY(stackPaneY + height / 2 - 5);
 
-        anchors[5].setLayoutX(stackPaneX - 5);                        // Bottom-left
-        anchors[5].setLayoutY(stackPaneY + height - 5);
+            anchors[5].setLayoutX(stackPaneX - 5);                        // Bottom-left
+            anchors[5].setLayoutY(stackPaneY + height - 5);
 
-        anchors[6].setLayoutX(stackPaneX + width / 2 - 5);            // Bottom-center
-        anchors[6].setLayoutY(stackPaneY + height - 5);
+            anchors[6].setLayoutX(stackPaneX + width / 2 - 5);            // Bottom-center
+            anchors[6].setLayoutY(stackPaneY + height - 5);
 
-        anchors[7].setLayoutX(stackPaneX + width - 5);                // Bottom-right
-        anchors[7].setLayoutY(stackPaneY + height - 5);
+            anchors[7].setLayoutX(stackPaneX + width - 5);                // Bottom-right
+            anchors[7].setLayoutY(stackPaneY + height - 5);
+        }
+
     }
     private void updateAnchorPositions(Rectangle[] anchors, StackPane stackPane, Circle circle) {
-        double stackPaneX = stackPane.getLayoutX();
-        double stackPaneY = stackPane.getLayoutY();
-        double radius = circle.getRadius();
-        double diameter = radius * 2;
+        if (check){
+            double stackPaneX = stackPane.getLayoutX();
+            double stackPaneY = stackPane.getLayoutY();
+            double radius = circle.getRadius();
+            double diameter = radius * 2;
 
-        // อัปเดตตำแหน่งของ Anchor Points รอบๆ Circle
-        anchors[0].setLayoutX(stackPaneX - 5);                        // Top-left
-        anchors[0].setLayoutY(stackPaneY - 5);
+            // อัปเดตตำแหน่งของ Anchor Points รอบๆ Circle
+            anchors[0].setLayoutX(stackPaneX - 5);                        // Top-left
+            anchors[0].setLayoutY(stackPaneY - 5);
 
-        anchors[1].setLayoutX(stackPaneX + radius - 5);               // Top-center
-        anchors[1].setLayoutY(stackPaneY - 5);
+            anchors[1].setLayoutX(stackPaneX + radius - 5);               // Top-center
+            anchors[1].setLayoutY(stackPaneY - 5);
 
-        anchors[2].setLayoutX(stackPaneX + diameter - 5);             // Top-right
-        anchors[2].setLayoutY(stackPaneY - 5);
+            anchors[2].setLayoutX(stackPaneX + diameter - 5);             // Top-right
+            anchors[2].setLayoutY(stackPaneY - 5);
 
-        anchors[3].setLayoutX(stackPaneX - 5);                        // Left-center
-        anchors[3].setLayoutY(stackPaneY + radius - 5);
+            anchors[3].setLayoutX(stackPaneX - 5);                        // Left-center
+            anchors[3].setLayoutY(stackPaneY + radius - 5);
 
-        anchors[4].setLayoutX(stackPaneX + diameter - 5);             // Right-center
-        anchors[4].setLayoutY(stackPaneY + radius - 5);
+            anchors[4].setLayoutX(stackPaneX + diameter - 5);             // Right-center
+            anchors[4].setLayoutY(stackPaneY + radius - 5);
 
-        anchors[5].setLayoutX(stackPaneX - 5);                        // Bottom-left
-        anchors[5].setLayoutY(stackPaneY + diameter - 5);
+            anchors[5].setLayoutX(stackPaneX - 5);                        // Bottom-left
+            anchors[5].setLayoutY(stackPaneY + diameter - 5);
 
-        anchors[6].setLayoutX(stackPaneX + radius - 5);               // Bottom-center
-        anchors[6].setLayoutY(stackPaneY + diameter - 5);
+            anchors[6].setLayoutX(stackPaneX + radius - 5);               // Bottom-center
+            anchors[6].setLayoutY(stackPaneY + diameter - 5);
 
-        anchors[7].setLayoutX(stackPaneX + diameter - 5);             // Bottom-right
-        anchors[7].setLayoutY(stackPaneY + diameter - 5);
+            anchors[7].setLayoutX(stackPaneX + diameter - 5);             // Bottom-right
+            anchors[7].setLayoutY(stackPaneY + diameter - 5);
+        }
+
     }
 
 
 
     // ฟังก์ชันปรับขนาดด้วย Anchor Points
     private void addAnchorDragHandlers(Rectangle[] anchors, Rectangle rectangle, StackPane stackPane,int ID) {
-        for (int i = 0; i < anchors.length; i++) {
-            int finalI = i;
-            anchors[i].setOnMouseDragged(event -> {
-                Point2D mousePositionInParent = stackPane.getParent().sceneToLocal(event.getSceneX(), event.getSceneY());
-                double mouseX = mousePositionInParent.getX();
-                double mouseY = mousePositionInParent.getY();
+        if (check){
+            for (int i = 0; i < anchors.length; i++) {
+                int finalI = i;
+                anchors[i].setOnMouseDragged(event -> {
+                    Point2D mousePositionInParent = stackPane.getParent().sceneToLocal(event.getSceneX(), event.getSceneY());
+                    double mouseX = mousePositionInParent.getX();
+                    double mouseY = mousePositionInParent.getY();
 
-                // ตำแหน่งเริ่มต้นของ StackPane
-                double stackPaneX = stackPane.getLayoutX();
-                double stackPaneY = stackPane.getLayoutY();
+                    // ตำแหน่งเริ่มต้นของ StackPane
+                    double stackPaneX = stackPane.getLayoutX();
+                    double stackPaneY = stackPane.getLayoutY();
 
-                // ขนาดเริ่มต้นของ Rectangle
-                double width = rectangle.getWidth();
-                double height = rectangle.getHeight();
+                    // ขนาดเริ่มต้นของ Rectangle
+                    double width = rectangle.getWidth();
+                    double height = rectangle.getHeight();
 
-                // ตัวแปรสำหรับขนาดใหม่
-                double newWidth = width;
-                double newHeight = height;
-                double newStackPaneX = stackPaneX;
-                double newStackPaneY = stackPaneY;
+                    // ตัวแปรสำหรับขนาดใหม่
+                    double newWidth = width;
+                    double newHeight = height;
+                    double newStackPaneX = stackPaneX;
+                    double newStackPaneY = stackPaneY;
 
-                switch (finalI) {
-                    case 0: // Top-left
-                        newWidth = width + stackPaneX - mouseX;
-                        newHeight = height + stackPaneY - mouseY;
+                    switch (finalI) {
+                        case 0: // Top-left
+                            newWidth = width + stackPaneX - mouseX;
+                            newHeight = height + stackPaneY - mouseY;
 
-                        if (newWidth > 10 && newHeight > 10) { // ตรวจสอบขนาดขั้นต่ำ
-                            newStackPaneX = mouseX;
-                            newStackPaneY = mouseY;
-                        }
+                            if (newWidth > 10 && newHeight > 10) { // ตรวจสอบขนาดขั้นต่ำ
+                                newStackPaneX = mouseX;
+                                newStackPaneY = mouseY;
+                            }
 
 
-                        break;
+                            break;
 
-                    case 2: // Top-right
-                        newHeight = height + stackPaneY - mouseY;
+                        case 2: // Top-right
+                            newHeight = height + stackPaneY - mouseY;
 
-                        if (mouseX > stackPaneX && newHeight > 10) {
-                            newWidth = mouseX - stackPaneX;
-                            newStackPaneY = mouseY;
-                        }
-                        break;
+                            if (mouseX > stackPaneX && newHeight > 10) {
+                                newWidth = mouseX - stackPaneX;
+                                newStackPaneY = mouseY;
+                            }
+                            break;
 
-                    case 5: // Bottom-left
-                        newWidth = width + stackPaneX - mouseX;
+                        case 5: // Bottom-left
+                            newWidth = width + stackPaneX - mouseX;
 
-                        if (mouseY > stackPaneY && newWidth > 10) {
-                            newStackPaneX = mouseX;
-                            newHeight = mouseY - stackPaneY;
-                        }
-                        break;
+                            if (mouseY > stackPaneY && newWidth > 10) {
+                                newStackPaneX = mouseX;
+                                newHeight = mouseY - stackPaneY;
+                            }
+                            break;
 
-                    case 7: // Bottom-right
-                        if (mouseX > stackPaneX && mouseY > stackPaneY) {
-                            newWidth = mouseX - stackPaneX;
-                            newHeight = mouseY - stackPaneY;
-                        }
-                        break;
+                        case 7: // Bottom-right
+                            if (mouseX > stackPaneX && mouseY > stackPaneY) {
+                                newWidth = mouseX - stackPaneX;
+                                newHeight = mouseY - stackPaneY;
+                            }
+                            break;
 
-                    case 1: // Top-center
-                        newHeight = height + stackPaneY - mouseY;
+                        case 1: // Top-center
+                            newHeight = height + stackPaneY - mouseY;
 
-                        if (newHeight > 10) {
-                            newStackPaneY = mouseY;
-                        }
-                        break;
+                            if (newHeight > 10) {
+                                newStackPaneY = mouseY;
+                            }
+                            break;
 
-                    case 3: // Left-center
-                        newWidth = width + stackPaneX - mouseX;
+                        case 3: // Left-center
+                            newWidth = width + stackPaneX - mouseX;
 
-                        if (newWidth > 10) {
-                            newStackPaneX = mouseX;
-                        }
-                        break;
+                            if (newWidth > 10) {
+                                newStackPaneX = mouseX;
+                            }
+                            break;
 
-                    case 4: // Right-center
-                        if (mouseX > stackPaneX) {
-                            newWidth = mouseX - stackPaneX;
-                        }
-                        break;
+                        case 4: // Right-center
+                            if (mouseX > stackPaneX) {
+                                newWidth = mouseX - stackPaneX;
+                            }
+                            break;
 
-                    case 6: // Bottom-center
-                        if (mouseY > stackPaneY) {
-                            newHeight = mouseY - stackPaneY;
-                        }
-                        break;
-                }
+                        case 6: // Bottom-center
+                            if (mouseY > stackPaneY) {
+                                newHeight = mouseY - stackPaneY;
+                            }
+                            break;
+                    }
 
-                // ตรวจสอบว่ามีการเปลี่ยนแปลงขนาด
-                if (newWidth != width || newHeight != height) {
-                    // อัปเดตตำแหน่งและขนาดของ Rectangle และ StackPane
-                    rectangle.setWidth(newWidth);
-                    rectangle.setHeight(newHeight);
-                    stackPane.setLayoutX(newStackPaneX);
-                    stackPane.setLayoutY(newStackPaneY);
+                    // ตรวจสอบว่ามีการเปลี่ยนแปลงขนาด
+                    if (newWidth != width || newHeight != height) {
+                        // อัปเดตตำแหน่งและขนาดของ Rectangle และ StackPane
+                        rectangle.setWidth(newWidth);
+                        rectangle.setHeight(newHeight);
+                        stackPane.setLayoutX(newStackPaneX);
+                        stackPane.setLayoutY(newStackPaneY);
 
-                    // อัปเดตตำแหน่งของ Anchor Points ใหม่
-                    updateAnchorPositions(anchors, stackPane, rectangle);
+                        // อัปเดตตำแหน่งของ Anchor Points ใหม่
+                        updateAnchorPositions(anchors, stackPane, rectangle);
 
-                    // อัปเดตข้อมูลใน testFlowPositionList
-                    testFlowPositionList.updatePosition(ID, stackPane.getLayoutX(), stackPane.getLayoutY());
-                    testFlowPositionList.updateSize(ID, newWidth, newHeight);
+                        // อัปเดตข้อมูลใน testFlowPositionList
+                        testFlowPositionList.updatePosition(ID, stackPane.getLayoutX(), stackPane.getLayoutY());
+                        testFlowPositionList.updateSize(ID, newWidth, newHeight);
 
-                    // บันทึกโปรเจค
-                    saveProject();
-                }
-            });
+                        // บันทึกโปรเจค
+                        saveProject();
+                    }
+                });
+            }
         }
+
     }
     private void addAnchorDragHandlers(Rectangle[] anchors, Circle circle,Rectangle border ,StackPane stackPane, int ID) {
-        for (int i = 0; i < anchors.length; i++) {
-            int finalI = i;
-            anchors[i].setOnMouseDragged(event -> {
-                // Convert mouse position to the parent's local coordinates
-                Point2D mousePositionInParent = stackPane.getParent().sceneToLocal(event.getSceneX(), event.getSceneY());
-                double mouseX = mousePositionInParent.getX();
-                double mouseY = mousePositionInParent.getY();
+        if (check){
+            for (int i = 0; i < anchors.length; i++) {
+                int finalI = i;
+                anchors[i].setOnMouseDragged(event -> {
+                    // Convert mouse position to the parent's local coordinates
+                    Point2D mousePositionInParent = stackPane.getParent().sceneToLocal(event.getSceneX(), event.getSceneY());
+                    double mouseX = mousePositionInParent.getX();
+                    double mouseY = mousePositionInParent.getY();
 
-                // Current layout and size details
-                double stackPaneX = stackPane.getLayoutX();
-                double stackPaneY = stackPane.getLayoutY();
-                double radius = circle.getRadius();
-                double centerX = stackPaneX + circle.getCenterX();
-                double centerY = stackPaneY + circle.getCenterY();
+                    // Current layout and size details
+                    double stackPaneX = stackPane.getLayoutX();
+                    double stackPaneY = stackPane.getLayoutY();
+                    double radius = circle.getRadius();
+                    double centerX = stackPaneX + circle.getCenterX();
+                    double centerY = stackPaneY + circle.getCenterY();
 
-                // Calculate new radius and position based on the selected anchor
-                double newRadius = radius;
-                double newCenterX = centerX;
-                double newCenterY = centerY;
-                border.setX(centerX - newRadius);
-                border.setY(centerY - newRadius);
-                border.setWidth(newRadius * 2);
-                border.setHeight(newRadius * 2);
-                switch (finalI) {
-                    case 0: // Top-left
-                        newRadius = Math.hypot(centerX - mouseX, centerY - mouseY) / Math.sqrt(2);
-                        newCenterX = mouseX + newRadius;
-                        newCenterY = mouseY + newRadius;
-                        break;
+                    // Calculate new radius and position based on the selected anchor
+                    double newRadius = radius;
+                    double newCenterX = centerX;
+                    double newCenterY = centerY;
+                    border.setX(centerX - newRadius);
+                    border.setY(centerY - newRadius);
+                    border.setWidth(newRadius * 2);
+                    border.setHeight(newRadius * 2);
+                    switch (finalI) {
+                        case 0: // Top-left
+                            newRadius = Math.hypot(centerX - mouseX, centerY - mouseY) / Math.sqrt(2);
+                            newCenterX = mouseX + newRadius;
+                            newCenterY = mouseY + newRadius;
+                            break;
 
-                    case 2: // Top-right
-                        newRadius = Math.hypot(mouseX - centerX, centerY - mouseY) / Math.sqrt(2);
-                        newCenterY = mouseY + newRadius;
-                        break;
+                        case 2: // Top-right
+                            newRadius = Math.hypot(mouseX - centerX, centerY - mouseY) / Math.sqrt(2);
+                            newCenterY = mouseY + newRadius;
+                            break;
 
-                    case 5: // Bottom-left
-                        newRadius = Math.hypot(centerX - mouseX, mouseY - centerY) / Math.sqrt(2);
-                        newCenterX = mouseX + newRadius;
-                        break;
+                        case 5: // Bottom-left
+                            newRadius = Math.hypot(centerX - mouseX, mouseY - centerY) / Math.sqrt(2);
+                            newCenterX = mouseX + newRadius;
+                            break;
 
-                    case 7: // Bottom-right
-                        newRadius = Math.hypot(mouseX - centerX, mouseY - centerY) / Math.sqrt(2);
-                        break;
+                        case 7: // Bottom-right
+                            newRadius = Math.hypot(mouseX - centerX, mouseY - centerY) / Math.sqrt(2);
+                            break;
 
-                    default:
-                        return; // Ignore unsupported anchors
-                }
+                        default:
+                            return; // Ignore unsupported anchors
+                    }
 
-                // Ensure the new radius respects the minimum size constraint
+                    // Ensure the new radius respects the minimum size constraint
                     // Update Circle and StackPane
                     circle.setRadius(newRadius);
 
@@ -876,251 +934,270 @@ public class TestFlowController {
                     // Save project state
                     saveProject();
 
-            });
+                });
+            }
         }
+
     }
 
 
 
     // เพิ่มฟังก์ชันในการลาก StackPane
     private void makeDraggable(StackPane stackPane, Rectangle[] anchors, Rectangle rectangle, Rectangle border ,String type ,int ID) {
-        stackPane.setOnMousePressed(event -> {
-            startX = event.getSceneX() - stackPane.getLayoutX();
-            startY = event.getSceneY() - stackPane.getLayoutY();
-        });
-        stackPane.setOnMouseDragged(event -> {
-            // คำนวณการเลื่อนตำแหน่ง
-            double newX = event.getSceneX() - startX;
-            double newY = event.getSceneY() - startY;
+        if (check){
+            stackPane.setOnMousePressed(event -> {
+                startX = event.getSceneX() - stackPane.getLayoutX();
+                startY = event.getSceneY() - stackPane.getLayoutY();
+            });
+            stackPane.setOnMouseDragged(event -> {
+                // คำนวณการเลื่อนตำแหน่ง
+                double newX = event.getSceneX() - startX;
+                double newY = event.getSceneY() - startY;
 
-            // อัปเดตตำแหน่งของ StackPane
-            stackPane.setLayoutX(newX);
-            stackPane.setLayoutY(newY);
+                // อัปเดตตำแหน่งของ StackPane
+                stackPane.setLayoutX(newX);
+                stackPane.setLayoutY(newY);
 
-            // อัปเดตตำแหน่งของ Border
-            border.setLayoutX(newX);
-            border.setLayoutY(newY);
+                // อัปเดตตำแหน่งของ Border
+                border.setLayoutX(newX);
+                border.setLayoutY(newY);
 
 
-            // อัปเดตตำแหน่งของ Anchor Points
-            updateAnchorPositions(anchors, stackPane, rectangle);
-            testFlowPositionList.updatePosition(ID, newX, newY);
-            saveProject();
-        });
+                // อัปเดตตำแหน่งของ Anchor Points
+                updateAnchorPositions(anchors, stackPane, rectangle);
+                testFlowPositionList.updatePosition(ID, newX, newY);
+                saveProject();
+            });
+        }
+
     }
     private void makeDraggable(StackPane stackPane, Rectangle[] anchors, Circle circle, Rectangle border ,String type ,int ID) {
-        stackPane.setOnMousePressed(event -> {
-            startX = event.getSceneX() - stackPane.getLayoutX();
-            startY = event.getSceneY() - stackPane.getLayoutY();
-        });
-        stackPane.setOnMouseDragged(event -> {
-            // คำนวณการเลื่อนตำแหน่ง
-            double newX = event.getSceneX() - startX;
-            double newY = event.getSceneY() - startY;
+        if (check){
+            stackPane.setOnMousePressed(event -> {
+                startX = event.getSceneX() - stackPane.getLayoutX();
+                startY = event.getSceneY() - stackPane.getLayoutY();
+            });
+            stackPane.setOnMouseDragged(event -> {
+                // คำนวณการเลื่อนตำแหน่ง
+                double newX = event.getSceneX() - startX;
+                double newY = event.getSceneY() - startY;
 
-            // อัปเดตตำแหน่งของ StackPane
-            stackPane.setLayoutX(newX);
-            stackPane.setLayoutY(newY);
+                // อัปเดตตำแหน่งของ StackPane
+                stackPane.setLayoutX(newX);
+                stackPane.setLayoutY(newY);
 
-            // อัปเดตตำแหน่งของ Border
-            border.setLayoutX(newX);
-            border.setLayoutY(newY);
+                // อัปเดตตำแหน่งของ Border
+                border.setLayoutX(newX);
+                border.setLayoutY(newY);
 
 
-            // อัปเดตตำแหน่งของ Anchor Points
-            updateAnchorPositions(anchors, stackPane, circle);
-            testFlowPositionList.updatePosition(ID, newX, newY);
-            saveProject();
-        });
+                // อัปเดตตำแหน่งของ Anchor Points
+                updateAnchorPositions(anchors, stackPane, circle);
+                testFlowPositionList.updatePosition(ID, newX, newY);
+                saveProject();
+            });
+        }
+
     }
     private void makeDraggable(StackPane stackPane, Rectangle[] anchors, Polygon polygon, Rectangle border, int positionID) {
-        stackPane.setOnMousePressed(event -> {
-            startX = event.getSceneX() - stackPane.getLayoutX();
-            startY = event.getSceneY() - stackPane.getLayoutY();
-        });
-        stackPane.setOnMouseDragged(event -> {
-            // คำนวณการเลื่อนตำแหน่ง
-            double newX = event.getSceneX() - startX;
-            double newY = event.getSceneY() - startY;
+        if (check){
+            stackPane.setOnMousePressed(event -> {
+                startX = event.getSceneX() - stackPane.getLayoutX();
+                startY = event.getSceneY() - stackPane.getLayoutY();
+            });
+            stackPane.setOnMouseDragged(event -> {
+                // คำนวณการเลื่อนตำแหน่ง
+                double newX = event.getSceneX() - startX;
+                double newY = event.getSceneY() - startY;
 
-            // อัปเดตตำแหน่งของ StackPane
-            stackPane.setLayoutX(newX);
-            stackPane.setLayoutY(newY);
+                // อัปเดตตำแหน่งของ StackPane
+                stackPane.setLayoutX(newX);
+                stackPane.setLayoutY(newY);
 
-            // อัปเดตตำแหน่งของ Border
-            border.setLayoutX(newX);
-            border.setLayoutY(newY);
+                // อัปเดตตำแหน่งของ Border
+                border.setLayoutX(newX);
+                border.setLayoutY(newY);
 
 
-            // อัปเดตตำแหน่งของ Anchor Points
-            updateAnchorPositions(anchors, stackPane, polygon);
-            testFlowPositionList.updatePosition(positionID, newX, newY);
-            saveProject();
-        });
-    }
-
-    private void addAnchorDragHandlers(Rectangle[] anchors, Polygon polygon, StackPane stackPane, int ID) {
-        for (int i = 0; i < anchors.length; i++) {
-            int finalI = i;
-            anchors[i].setOnMouseDragged(event -> {
-                Point2D mousePositionInParent = stackPane.getParent().sceneToLocal(event.getSceneX(), event.getSceneY());
-                double mouseX = mousePositionInParent.getX();
-                double mouseY = mousePositionInParent.getY();
-
-                // ตำแหน่งเริ่มต้นของ StackPane
-                double stackPaneX = stackPane.getLayoutX();
-                double stackPaneY = stackPane.getLayoutY();
-
-                // คำนวณขนาดเริ่มต้นของ Polygon
-                Bounds bounds = polygon.getBoundsInParent();
-                double width = bounds.getWidth();
-                double height = bounds.getHeight();
-
-                // ตัวแปรสำหรับขนาดใหม่
-                double newWidth = width;
-                double newHeight = height;
-                double newStackPaneX = stackPaneX;
-                double newStackPaneY = stackPaneY;
-
-                switch (finalI) {
-                    case 0: // Top-left
-                        newWidth = width + stackPaneX - mouseX;
-                        newHeight = height + stackPaneY - mouseY;
-
-                        if (newWidth > 10 && newHeight > 10) { // ตรวจสอบขนาดขั้นต่ำ
-                            newStackPaneX = mouseX;
-                            newStackPaneY = mouseY;
-                        }
-                        break;
-
-                    case 2: // Top-right
-                        newHeight = height + stackPaneY - mouseY;
-
-                        if (mouseX > stackPaneX && newHeight > 10) {
-                            newWidth = mouseX - stackPaneX;
-                            newStackPaneY = mouseY;
-                        }
-                        break;
-
-                    case 5: // Bottom-left
-                        newWidth = width + stackPaneX - mouseX;
-
-                        if (mouseY > stackPaneY && newWidth > 10) {
-                            newStackPaneX = mouseX;
-                            newHeight = mouseY - stackPaneY;
-                        }
-                        break;
-
-                    case 7: // Bottom-right
-                        if (mouseX > stackPaneX && mouseY > stackPaneY) {
-                            newWidth = mouseX - stackPaneX;
-                            newHeight = mouseY - stackPaneY;
-                        }
-                        break;
-
-                    case 1: // Top-center
-                        newHeight = height + stackPaneY - mouseY;
-
-                        if (newHeight > 10) {
-                            newStackPaneY = mouseY;
-                        }
-                        break;
-
-                    case 3: // Left-center
-                        newWidth = width + stackPaneX - mouseX;
-
-                        if (newWidth > 10) {
-                            newStackPaneX = mouseX;
-                        }
-                        break;
-
-                    case 4: // Right-center
-                        if (mouseX > stackPaneX) {
-                            newWidth = mouseX - stackPaneX;
-                        }
-                        break;
-
-                    case 6: // Bottom-center
-                        if (mouseY > stackPaneY) {
-                            newHeight = mouseY - stackPaneY;
-                        }
-                        break;
-                }
-
-                // ตรวจสอบว่ามีการเปลี่ยนแปลงขนาด
-                if (newWidth != width || newHeight != height) {
-                    // อัปเดตพิกัดจุดของ Polygon ให้สัมพันธ์กับขนาดใหม่
-                    double scaleX = newWidth / width;
-                    double scaleY = newHeight / height;
-
-                    ObservableList<Double> points = polygon.getPoints();
-                    for (int j = 0; j < points.size(); j += 2) {
-                        double x = points.get(j);
-                        double y = points.get(j + 1);
-
-                        // ปรับพิกัดตามสัดส่วนใหม่
-                        points.set(j, stackPaneX + (x - stackPaneX) * scaleX);
-                        points.set(j + 1, stackPaneY + (y - stackPaneY) * scaleY);
-                    }
-
-                    stackPane.setLayoutX(newStackPaneX);
-                    stackPane.setLayoutY(newStackPaneY);
-
-                    // อัปเดตตำแหน่งของ Anchor Points ใหม่
-                    updateAnchorPositions(anchors, stackPane, polygon);
-
-                    // อัปเดตข้อมูลใน testFlowPositionList
-                    testFlowPositionList.updatePosition(ID, stackPane.getLayoutX(), stackPane.getLayoutY());
-                    testFlowPositionList.updateSize(ID, newWidth, newHeight);
-
-                    // บันทึกโปรเจค
-                    saveProject();
-                }
+                // อัปเดตตำแหน่งของ Anchor Points
+                updateAnchorPositions(anchors, stackPane, polygon);
+                testFlowPositionList.updatePosition(positionID, newX, newY);
+                saveProject();
             });
         }
     }
 
+    private void addAnchorDragHandlers(Rectangle[] anchors, Polygon polygon, StackPane stackPane, int ID) {
+        if (check){
+            for (int i = 0; i < anchors.length; i++) {
+                int finalI = i;
+                anchors[i].setOnMouseDragged(event -> {
+                    Point2D mousePositionInParent = stackPane.getParent().sceneToLocal(event.getSceneX(), event.getSceneY());
+                    double mouseX = mousePositionInParent.getX();
+                    double mouseY = mousePositionInParent.getY();
+
+                    // ตำแหน่งเริ่มต้นของ StackPane
+                    double stackPaneX = stackPane.getLayoutX();
+                    double stackPaneY = stackPane.getLayoutY();
+
+                    // คำนวณขนาดเริ่มต้นของ Polygon
+                    Bounds bounds = polygon.getBoundsInParent();
+                    double width = bounds.getWidth();
+                    double height = bounds.getHeight();
+
+                    // ตัวแปรสำหรับขนาดใหม่
+                    double newWidth = width;
+                    double newHeight = height;
+                    double newStackPaneX = stackPaneX;
+                    double newStackPaneY = stackPaneY;
+
+                    switch (finalI) {
+                        case 0: // Top-left
+                            newWidth = width + stackPaneX - mouseX;
+                            newHeight = height + stackPaneY - mouseY;
+
+                            if (newWidth > 10 && newHeight > 10) { // ตรวจสอบขนาดขั้นต่ำ
+                                newStackPaneX = mouseX;
+                                newStackPaneY = mouseY;
+                            }
+                            break;
+
+                        case 2: // Top-right
+                            newHeight = height + stackPaneY - mouseY;
+
+                            if (mouseX > stackPaneX && newHeight > 10) {
+                                newWidth = mouseX - stackPaneX;
+                                newStackPaneY = mouseY;
+                            }
+                            break;
+
+                        case 5: // Bottom-left
+                            newWidth = width + stackPaneX - mouseX;
+
+                            if (mouseY > stackPaneY && newWidth > 10) {
+                                newStackPaneX = mouseX;
+                                newHeight = mouseY - stackPaneY;
+                            }
+                            break;
+
+                        case 7: // Bottom-right
+                            if (mouseX > stackPaneX && mouseY > stackPaneY) {
+                                newWidth = mouseX - stackPaneX;
+                                newHeight = mouseY - stackPaneY;
+                            }
+                            break;
+
+                        case 1: // Top-center
+                            newHeight = height + stackPaneY - mouseY;
+
+                            if (newHeight > 10) {
+                                newStackPaneY = mouseY;
+                            }
+                            break;
+
+                        case 3: // Left-center
+                            newWidth = width + stackPaneX - mouseX;
+
+                            if (newWidth > 10) {
+                                newStackPaneX = mouseX;
+                            }
+                            break;
+
+                        case 4: // Right-center
+                            if (mouseX > stackPaneX) {
+                                newWidth = mouseX - stackPaneX;
+                            }
+                            break;
+
+                        case 6: // Bottom-center
+                            if (mouseY > stackPaneY) {
+                                newHeight = mouseY - stackPaneY;
+                            }
+                            break;
+                    }
+
+                    // ตรวจสอบว่ามีการเปลี่ยนแปลงขนาด
+                    if (newWidth != width || newHeight != height) {
+                        // อัปเดตพิกัดจุดของ Polygon ให้สัมพันธ์กับขนาดใหม่
+                        double scaleX = newWidth / width;
+                        double scaleY = newHeight / height;
+
+                        ObservableList<Double> points = polygon.getPoints();
+                        for (int j = 0; j < points.size(); j += 2) {
+                            double x = points.get(j);
+                            double y = points.get(j + 1);
+
+                            // ปรับพิกัดตามสัดส่วนใหม่
+                            points.set(j, stackPaneX + (x - stackPaneX) * scaleX);
+                            points.set(j + 1, stackPaneY + (y - stackPaneY) * scaleY);
+                        }
+
+                        stackPane.setLayoutX(newStackPaneX);
+                        stackPane.setLayoutY(newStackPaneY);
+
+                        // อัปเดตตำแหน่งของ Anchor Points ใหม่
+                        updateAnchorPositions(anchors, stackPane, polygon);
+
+                        // อัปเดตข้อมูลใน testFlowPositionList
+                        testFlowPositionList.updatePosition(ID, stackPane.getLayoutX(), stackPane.getLayoutY());
+                        testFlowPositionList.updateSize(ID, newWidth, newHeight);
+
+                        // บันทึกโปรเจค
+                        saveProject();
+                    }
+                });
+            }
+        }
+
+    }
+
 
     private void updateAnchorPositions(Rectangle[] anchors, StackPane stackPane, Polygon polygon) {
+        if (check){
+            Bounds bounds = polygon.getBoundsInParent();
+            double stackPaneX = stackPane.getLayoutX();
+            double stackPaneY = stackPane.getLayoutY();
+            double width = bounds.getWidth();
+            double height = bounds.getHeight();
+
+            // อัปเดตตำแหน่งของ Anchor Points รอบๆ Polygon
+            anchors[0].setLayoutX(stackPaneX + bounds.getMinX() - 5);                        // Top-left
+            anchors[0].setLayoutY(stackPaneY + bounds.getMinY() - 5);
+
+            anchors[1].setLayoutX(stackPaneX + bounds.getMinX() + width / 2 - 5);            // Top-center
+            anchors[1].setLayoutY(stackPaneY + bounds.getMinY() - 5);
+
+            anchors[2].setLayoutX(stackPaneX + bounds.getMinX() + width - 5);                // Top-right
+            anchors[2].setLayoutY(stackPaneY + bounds.getMinY() - 5);
+
+            anchors[3].setLayoutX(stackPaneX + bounds.getMinX() - 5);                        // Left-center
+            anchors[3].setLayoutY(stackPaneY + bounds.getMinY() + height / 2 - 5);
+
+            anchors[4].setLayoutX(stackPaneX + bounds.getMinX() + width - 5);                // Right-center
+            anchors[4].setLayoutY(stackPaneY + bounds.getMinY() + height / 2 - 5);
+
+            anchors[5].setLayoutX(stackPaneX + bounds.getMinX() - 5);                        // Bottom-left
+            anchors[5].setLayoutY(stackPaneY + bounds.getMinY() + height - 5);
+
+            anchors[6].setLayoutX(stackPaneX + bounds.getMinX() + width / 2 - 5);            // Bottom-center
+            anchors[6].setLayoutY(stackPaneY + bounds.getMinY() + height - 5);
+
+            anchors[7].setLayoutX(stackPaneX + bounds.getMinX() + width - 5);                // Bottom-right
+            anchors[7].setLayoutY(stackPaneY + bounds.getMinY() + height - 5);
+        }
         // ดึงขอบเขตของ Polygon
-        Bounds bounds = polygon.getBoundsInParent();
-        double stackPaneX = stackPane.getLayoutX();
-        double stackPaneY = stackPane.getLayoutY();
-        double width = bounds.getWidth();
-        double height = bounds.getHeight();
 
-        // อัปเดตตำแหน่งของ Anchor Points รอบๆ Polygon
-        anchors[0].setLayoutX(stackPaneX + bounds.getMinX() - 5);                        // Top-left
-        anchors[0].setLayoutY(stackPaneY + bounds.getMinY() - 5);
-
-        anchors[1].setLayoutX(stackPaneX + bounds.getMinX() + width / 2 - 5);            // Top-center
-        anchors[1].setLayoutY(stackPaneY + bounds.getMinY() - 5);
-
-        anchors[2].setLayoutX(stackPaneX + bounds.getMinX() + width - 5);                // Top-right
-        anchors[2].setLayoutY(stackPaneY + bounds.getMinY() - 5);
-
-        anchors[3].setLayoutX(stackPaneX + bounds.getMinX() - 5);                        // Left-center
-        anchors[3].setLayoutY(stackPaneY + bounds.getMinY() + height / 2 - 5);
-
-        anchors[4].setLayoutX(stackPaneX + bounds.getMinX() + width - 5);                // Right-center
-        anchors[4].setLayoutY(stackPaneY + bounds.getMinY() + height / 2 - 5);
-
-        anchors[5].setLayoutX(stackPaneX + bounds.getMinX() - 5);                        // Bottom-left
-        anchors[5].setLayoutY(stackPaneY + bounds.getMinY() + height - 5);
-
-        anchors[6].setLayoutX(stackPaneX + bounds.getMinX() + width / 2 - 5);            // Bottom-center
-        anchors[6].setLayoutY(stackPaneY + bounds.getMinY() + height - 5);
-
-        anchors[7].setLayoutX(stackPaneX + bounds.getMinX() + width - 5);                // Bottom-right
-        anchors[7].setLayoutY(stackPaneY + bounds.getMinY() + height - 5);
     }
 
     private void toggleBorderAndAnchors(Rectangle border, Rectangle[] anchors) {
-        boolean visible = !border.isVisible();
-        border.setVisible(visible);
-        for (Rectangle anchor : anchors) {
-            anchor.setVisible(visible);
+        if (check){
+            boolean visible = !border.isVisible();
+            border.setVisible(visible);
+            for (Rectangle anchor : anchors) {
+                anchor.setVisible(visible);
+            }
         }
+
     }
 
     // ซ่อนกรอบและจุด
@@ -1457,58 +1534,60 @@ public class TestFlowController {
             line.setStyle("-fx-stroke-dash-array: 10 10;");
         }
 
-        // สร้าง Start และ End points ของเส้น
+            // สร้าง Start และ End points ของเส้น
         Circle startPoint = createDraggablePoint(startX, startY);
         Circle endPoint = createDraggablePoint(endX, endY);
 
-        // เพิ่ม arrow ที่ปลายเส้น
+            // เพิ่ม arrow ที่ปลายเส้น
         Label arrowHeadPolygon = createDraggableArrow(line, true, arrowHead);
         Label arrowTailPolygon = createDraggableArrow(line, false, arrowTail);
-
-        // เพิ่ม Event handlers สำหรับลาก startPoint
-        startPoint.setOnMouseDragged(e -> {
-            startPoint.setVisible(true);
-            startPoint.setFill(Color.DARKRED);
-            handlePointMouseDragged(e, line, true, label, arrowHead, arrowTail);
-        });
-
-        // เพิ่ม Event handlers สำหรับลาก endPoint
-        endPoint.setOnMouseDragged(e -> {
-            endPoint.setVisible(true);
-            endPoint.setFill(Color.DARKRED);
-            handlePointMouseDragged(e, line, false, label, arrowHead, arrowTail);
-        });
-
-        // Event handler สำหรับปล่อย startPoint
-        startPoint.setOnMouseReleased(e -> {
-            startPoint.setVisible(true);
-            startPoint.setFill(Color.hsb(0, 0.5, 1.0));
-            handlePointMouseReleased(e, line, connectionID, label, arrowHead, arrowTail);
-        });
-
-        // Event handler สำหรับปล่อย endPoint
-        endPoint.setOnMouseReleased(e -> {
-            endPoint.setVisible(true);
-            endPoint.setFill(Color.hsb(0, 0.5, 1.0));
-            handlePointMouseReleased(e, line, connectionID, label, arrowHead, arrowTail);
-        });
-
-        // เพิ่มองค์ประกอบทั้งหมดลงใน onDesignArea
-        onDesignArea.getChildren().addAll(line, startPoint, endPoint, arrowHeadPolygon, arrowTailPolygon);
-        stackPaneList.add(stackPane);
-
-        // ทำให้เส้นสามารถเลือกได้
-        makeSelectable(line, "line", connectionID);
-        saveProject();
-
-        // Event handler สำหรับคลิกที่เส้นเพื่อแสดงจุด
-        line.setOnMouseClicked(mouseEvent -> {
-            if (mouseEvent.getClickCount() == 1) {
+        if (check){
+            // เพิ่ม Event handlers สำหรับลาก startPoint
+            startPoint.setOnMouseDragged(e -> {
                 startPoint.setVisible(true);
+                startPoint.setFill(Color.DARKRED);
+                handlePointMouseDragged(e, line, true, label, arrowHead, arrowTail);
+            });
+
+            // เพิ่ม Event handlers สำหรับลาก endPoint
+            endPoint.setOnMouseDragged(e -> {
                 endPoint.setVisible(true);
-            }
-        });
-        // ตั้ง event handler สำหรับการคลิกที่พื้นที่อื่นๆ บน onDesignArea
+                endPoint.setFill(Color.DARKRED);
+                handlePointMouseDragged(e, line, false, label, arrowHead, arrowTail);
+            });
+
+            // Event handler สำหรับปล่อย startPoint
+            startPoint.setOnMouseReleased(e -> {
+                startPoint.setVisible(true);
+                startPoint.setFill(Color.hsb(0, 0.5, 1.0));
+                handlePointMouseReleased(e, line, connectionID, label, arrowHead, arrowTail);
+            });
+
+            // Event handler สำหรับปล่อย endPoint
+            endPoint.setOnMouseReleased(e -> {
+                endPoint.setVisible(true);
+                endPoint.setFill(Color.hsb(0, 0.5, 1.0));
+                handlePointMouseReleased(e, line, connectionID, label, arrowHead, arrowTail);
+            });
+
+            // เพิ่มองค์ประกอบทั้งหมดลงใน onDesignArea
+            onDesignArea.getChildren().addAll(line, startPoint, endPoint, arrowHeadPolygon, arrowTailPolygon);
+            stackPaneList.add(stackPane);
+
+            // ทำให้เส้นสามารถเลือกได้
+            makeSelectable(line, "line", connectionID);
+            saveProject();
+
+            // Event handler สำหรับคลิกที่เส้นเพื่อแสดงจุด
+            line.setOnMouseClicked(mouseEvent -> {
+                if (mouseEvent.getClickCount() == 1) {
+                    startPoint.setVisible(true);
+                    endPoint.setVisible(true);
+                }
+            });
+            // ตั้ง event handler สำหรับการคลิกที่พื้นที่อื่นๆ บน onDesignArea
+        }
+
 
 
     }
@@ -1710,7 +1789,7 @@ public class TestFlowController {
     }
 
     public void paneDragDropped(DragEvent event) throws IOException {
-        if (event.getDragboard().hasString()) {
+        if (event.getDragboard().hasString() && check) {
             if (event.getDragboard().getString().equals("Rectangle-curve")) {
                 ArrayList<Object> objects = new ArrayList<>();
                 objects.add(projectName);
@@ -1849,188 +1928,194 @@ public class TestFlowController {
     }
 
     private void startDrag(ImageView imageView, String shapeType) {
-        Dragboard dragboard = imageView.startDragAndDrop(TransferMode.ANY);
-        ClipboardContent content = new ClipboardContent();
-        content.putString(shapeType);
-        dragboard.setContent(content);
+        if (check){
+            Dragboard dragboard = imageView.startDragAndDrop(TransferMode.ANY);
+            ClipboardContent content = new ClipboardContent();
+            content.putString(shapeType);
+            dragboard.setContent(content);
+        }
     }
 
 
 
 
 
+
     private void makeSelectable(Node node, String type, int ID) {
-        // Create a context menu
-        ContextMenu contextMenu = new ContextMenu();
+        if (check){
+            ContextMenu contextMenu = new ContextMenu();
 
-        // Create menu items
-        MenuItem resizeItem = new MenuItem("Resize");
-        //MenuItem propertiesItem = new MenuItem("Properties");
-        MenuItem deleteItem = new MenuItem("Delete");
-        MenuItem generate = new MenuItem("Generate Line");
-        if (!Objects.equals(type,"line") && !Objects.equals(type, "arrow")) {
-            contextMenu.getItems().add(resizeItem);
-        }
-        if (Objects.equals(type,"testcase")) {
-            contextMenu.getItems().add(generate);
-        }
-        contextMenu.getItems().add(deleteItem);
-        //contextMenu.getItems().add(generate);
-        //set the action for resize menu item
-        resizeItem.setOnAction(e -> {
-            System.out.println("Edit Clicked");
-            //Make the node resizable
-            node.setOnMouseDragged(mouseEvent -> {
-                if (mouseEvent.isPrimaryButtonDown()) {
-                    double newWidth = mouseEvent.getX() + 10;
-                    double newHeight = mouseEvent.getY() + 10;
+            // Create menu items
+            MenuItem resizeItem = new MenuItem("Resize");
+            //MenuItem propertiesItem = new MenuItem("Properties");
+            MenuItem deleteItem = new MenuItem("Delete");
+            MenuItem generate = new MenuItem("Generate Line");
+            if (!Objects.equals(type,"line") && !Objects.equals(type, "arrow")) {
+                contextMenu.getItems().add(resizeItem);
+            }
+            if (Objects.equals(type,"testcase")) {
+                contextMenu.getItems().add(generate);
+            }
+            contextMenu.getItems().add(deleteItem);
+            //contextMenu.getItems().add(generate);
+            //set the action for resize menu item
+            resizeItem.setOnAction(e -> {
+                System.out.println("Edit Clicked");
+                //Make the node resizable
+                node.setOnMouseDragged(mouseEvent -> {
+                    if (mouseEvent.isPrimaryButtonDown()) {
+                        double newWidth = mouseEvent.getX() + 10;
+                        double newHeight = mouseEvent.getY() + 10;
 
-                    if (newWidth > 0 && newHeight > 0) {
-                        if (Objects.equals(type, "testscript")) {
-                            ((Rectangle) ((StackPane) node).getChildren().get(0)).setWidth(newWidth);
-                            ((Rectangle) ((StackPane) node).getChildren().get(0)).setHeight(newHeight);
-                            // Update the position
-                            testFlowPositionList.updatePosition(ID, node.getLayoutX(), node.getLayoutY());
-                            // Update the size
-                            testFlowPositionList.updateSize(ID, newWidth, newHeight);
-                            saveProject();
-                        }else if (Objects.equals(type, "testcase")){
-                            ((Rectangle) ((StackPane) node).getChildren().get(0)).setWidth(newWidth);
-                            ((Rectangle) ((StackPane) node).getChildren().get(0)).setHeight(newHeight);
-                            // Update the position
-                            testFlowPositionList.updatePosition(ID, node.getLayoutX(), node.getLayoutY());
-                            // Update the size
-                            testFlowPositionList.updateSize(ID, newWidth, newHeight);
-                            saveProject();
+                        if (newWidth > 0 && newHeight > 0) {
+                            if (Objects.equals(type, "testscript")) {
+                                ((Rectangle) ((StackPane) node).getChildren().get(0)).setWidth(newWidth);
+                                ((Rectangle) ((StackPane) node).getChildren().get(0)).setHeight(newHeight);
+                                // Update the position
+                                testFlowPositionList.updatePosition(ID, node.getLayoutX(), node.getLayoutY());
+                                // Update the size
+                                testFlowPositionList.updateSize(ID, newWidth, newHeight);
+                                saveProject();
+                            }else if (Objects.equals(type, "testcase")){
+                                ((Rectangle) ((StackPane) node).getChildren().get(0)).setWidth(newWidth);
+                                ((Rectangle) ((StackPane) node).getChildren().get(0)).setHeight(newHeight);
+                                // Update the position
+                                testFlowPositionList.updatePosition(ID, node.getLayoutX(), node.getLayoutY());
+                                // Update the size
+                                testFlowPositionList.updateSize(ID, newWidth, newHeight);
+                                saveProject();
 
 
+                            }
                         }
                     }
+                });
+                node.setOnMouseReleased(mouseEvent -> {
+                    node.setOnMouseDragged(null);
+                    saveProject();
+                    if (!Objects.equals(type, "line") || !Objects.equals(type, "arrow")) {
+                        makeDraggable(node, type, ID);
+                    }
+                });
+            });
+            // Show the context menu
+
+            deleteItem.setOnAction(e -> {
+                // Pop up to confirm deletion
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Delete Confirmation");
+                alert.setHeaderText("Are you sure you want to delete this item?");
+                alert.setContentText("Press OK to confirm, or Cancel to go back.");
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK) {
+                    // Remove the item from the list
+
+                    if(Objects.equals(type, "testscript")) {
+                        TestScript testScript = testScriptList.findTSByPosition(ID);
+                        System.out.println("testscript : " + testScript);
+                        testScriptList.deleteTestScriptByPositionID(ID);
+                        testScriptDetailList.deleteTestScriptDetailByTestScriptID(testScript.getIdTS());
+                        testFlowPositionList.removePositionByID(ID);
+                    }else if (Objects.equals(type, "testcase")){
+                        TestCase testCase = testCaseList.findTCByPosition(ID);
+                        System.out.println("testcase : " + testScript);
+                        testCaseList.deleteTestCaseByPositionID(ID);
+                        testCaseDetailList.deleteTestCaseDetailByTestScriptID(testCase.getIdTC());
+                        testFlowPositionList.removePositionByID(ID);
+                    }else if (Objects.equals(type, "decision")){
+                        connectionList.deleteDecisionByID(ID);
+                        testFlowPositionList.removePositionByID(ID);
+                    }else if (Objects.equals(type, "start")){
+                        connectionList.deleteDecisionByID(ID);
+                        testFlowPositionList.removePositionByID(ID);
+                    }else if (Objects.equals(type, "end")){
+                        connectionList.deleteDecisionByID(ID);
+                        testFlowPositionList.removePositionByID(ID);
+                    }else if (Objects.equals(type, "line")){
+                        connectionList.deleteDecisionByID(ID);
+                        testFlowPositionList.removePositionByID(ID);
+                    }else if (Objects.equals(type, "arrow")){
+                        connectionList.deleteDecisionByID(ID);
+                        testFlowPositionList.removePositionByID(ID);
+                    }
+                    onDesignArea.getChildren().remove(node);
+                    saveProject();
+                    loadProject();
+                    System.out.println("Item Removed");
                 }
             });
+            generate.setOnAction(e -> {
+                TestCase testCase = testCaseList.findTCByPosition(ID);
+                if (testCase != null) {
+                    String useCaseID = testCase.getUseCase();
+                    TestScript relatedScript = testScriptList.findByUseCaseID(useCaseID);
+                    TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(relatedScript.getPosition());
+                    // คำนวณตำแหน่ง TestScript (ใช้ขนาดและตำแหน่ง)
+                    double relatedWidth = testFlowPosition.getFitWidth();
+                    double relatedHeight = testFlowPosition.getFitHeight();
+                    Point2D relatedPosition = new Point2D(testFlowPosition.getXPosition(), testFlowPosition.getYPosition());
+
+                    // คำนวณตำแหน่งตรงกลางของ TestScript
+                    double centerX = relatedPosition.getX() + (relatedWidth / 2); // คำนวณตรงกลางแกน X
+                    double topY = relatedPosition.getY(); // ขอบบนสุดของ TestScript
+
+                    Point2D end = new Point2D(centerX, topY); // ปรับตำแหน่งเป็นด้านบนตรงกลาง
+
+
+                    // สร้างตำแหน่งเริ่มต้น
+                    Point2D start = getCenterBottom((StackPane) node);
+
+                    // วาดเส้น
+                    drawLine(
+                            connectionList.findLastConnectionID(),
+                            start.getX(),
+                            start.getY(),
+                            end.getX(),
+                            end.getY(),
+                            "Arrow",
+                            "none",
+                            "line",
+                            "open"
+                    );
+
+                    // บันทึกการเชื่อมต่อ
+                    addToConnectionList(
+                            start.getX(),
+                            start.getY(),
+                            end.getX(),
+                            end.getY(),
+                            "Arrow",
+                            "none",
+                            "line",
+                            "open",
+                            "line"
+                    );
+                    saveProject();
+                }
+            });
+
+
             node.setOnMouseReleased(mouseEvent -> {
                 node.setOnMouseDragged(null);
                 saveProject();
-                if (!Objects.equals(type, "line") || !Objects.equals(type, "arrow")) {
+                if (!Objects.equals(type,"line")|| !Objects.equals(type, "arrow")) {
                     makeDraggable(node, type, ID);
                 }
             });
-        });
-        // Show the context menu
+            node.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
+                if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
+                    System.out.println("Item Right Clicked");
+                    contextMenu.show(node, mouseEvent.getScreenX(), mouseEvent.getScreenY());
 
-        deleteItem.setOnAction(e -> {
-            // Pop up to confirm deletion
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Delete Confirmation");
-            alert.setHeaderText("Are you sure you want to delete this item?");
-            alert.setContentText("Press OK to confirm, or Cancel to go back.");
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() == ButtonType.OK) {
-                // Remove the item from the list
-
-                if(Objects.equals(type, "testscript")) {
-                    TestScript testScript = testScriptList.findTSByPosition(ID);
-                    System.out.println("testscript : " + testScript);
-                    testScriptList.deleteTestScriptByPositionID(ID);
-                    testScriptDetailList.deleteTestScriptDetailByTestScriptID(testScript.getIdTS());
-                    testFlowPositionList.removePositionByID(ID);
-                }else if (Objects.equals(type, "testcase")){
-                    TestCase testCase = testCaseList.findTCByPosition(ID);
-                    System.out.println("testcase : " + testScript);
-                    testCaseList.deleteTestCaseByPositionID(ID);
-                    testCaseDetailList.deleteTestCaseDetailByTestScriptID(testCase.getIdTC());
-                    testFlowPositionList.removePositionByID(ID);
-                }else if (Objects.equals(type, "decision")){
-                    connectionList.deleteDecisionByID(ID);
-                    testFlowPositionList.removePositionByID(ID);
-                }else if (Objects.equals(type, "start")){
-                    connectionList.deleteDecisionByID(ID);
-                    testFlowPositionList.removePositionByID(ID);
-                }else if (Objects.equals(type, "end")){
-                    connectionList.deleteDecisionByID(ID);
-                    testFlowPositionList.removePositionByID(ID);
-                }else if (Objects.equals(type, "line")){
-                    connectionList.deleteDecisionByID(ID);
-                    testFlowPositionList.removePositionByID(ID);
-                }else if (Objects.equals(type, "arrow")){
-                    connectionList.deleteDecisionByID(ID);
-                    testFlowPositionList.removePositionByID(ID);
+                    if (!Objects.equals(type,"line")|| !Objects.equals(type, "arrow"))
+                    {
+                        makeDraggable(node, type, ID);
+                    }
                 }
-                onDesignArea.getChildren().remove(node);
-                saveProject();
-                loadProject();
-                System.out.println("Item Removed");
-            }
-        });
-        generate.setOnAction(e -> {
-            TestCase testCase = testCaseList.findTCByPosition(ID);
-            if (testCase != null) {
-                String useCaseID = testCase.getUseCase();
-                TestScript relatedScript = testScriptList.findByUseCaseID(useCaseID);
-                TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(relatedScript.getPosition());
-                // คำนวณตำแหน่ง TestScript (ใช้ขนาดและตำแหน่ง)
-                double relatedWidth = testFlowPosition.getFitWidth();
-                double relatedHeight = testFlowPosition.getFitHeight();
-                Point2D relatedPosition = new Point2D(testFlowPosition.getXPosition(), testFlowPosition.getYPosition());
-
-                // คำนวณตำแหน่งตรงกลางของ TestScript
-                double centerX = relatedPosition.getX() + (relatedWidth / 2); // คำนวณตรงกลางแกน X
-                double topY = relatedPosition.getY(); // ขอบบนสุดของ TestScript
-
-                Point2D end = new Point2D(centerX, topY); // ปรับตำแหน่งเป็นด้านบนตรงกลาง
+            });
+        }
 
 
-                // สร้างตำแหน่งเริ่มต้น
-                Point2D start = getCenterBottom((StackPane) node);
-
-                // วาดเส้น
-                drawLine(
-                        connectionList.findLastConnectionID(),
-                        start.getX(),
-                        start.getY(),
-                        end.getX(),
-                        end.getY(),
-                        "Arrow",
-                        "none",
-                        "line",
-                        "open"
-                );
-
-                // บันทึกการเชื่อมต่อ
-                addToConnectionList(
-                        start.getX(),
-                        start.getY(),
-                        end.getX(),
-                        end.getY(),
-                        "Arrow",
-                        "none",
-                        "line",
-                        "open",
-                        "line"
-                );
-                saveProject();
-            }
-        });
-
-
-        node.setOnMouseReleased(mouseEvent -> {
-            node.setOnMouseDragged(null);
-            saveProject();
-            if (!Objects.equals(type,"line")|| !Objects.equals(type, "arrow")) {
-                makeDraggable(node, type, ID);
-            }
-        });
-        node.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
-            if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
-                System.out.println("Item Right Clicked");
-                contextMenu.show(node, mouseEvent.getScreenX(), mouseEvent.getScreenY());
-
-                if (!Objects.equals(type,"line")|| !Objects.equals(type, "arrow"))
-                {
-                    makeDraggable(node, type, ID);
-                }
-            }
-        });
     }
 
 

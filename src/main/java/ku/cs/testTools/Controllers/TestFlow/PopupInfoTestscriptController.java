@@ -9,6 +9,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import ku.cs.testTools.Models.Manager.Manager;
+import ku.cs.testTools.Services.Repository.ManagerRepository;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
@@ -102,6 +104,7 @@ public class PopupInfoTestscriptController {
                 position = (int) objects.get(3);
                 onTableTestscript.isFocused();
                 selectedTSD();
+                loadStatusButton();
                 loadProject();
                 setDate();
                 selectedComboBox();
@@ -138,7 +141,23 @@ public class PopupInfoTestscriptController {
         System.out.println(testScriptDetailList);
 
     }
+    private void loadStatusButton() {
+        ManagerRepository managerRepository = new ManagerRepository();
+        Manager manager = managerRepository.getManagerByProjectName(projectName);
 
+        if (manager != null) {  // ตรวจสอบว่าพบ Manager หรือไม่
+            String status = manager.getStatus();
+            boolean check = Boolean.parseBoolean(status);
+            onAddButton.setVisible(check);
+            onEditListButton.setVisible(check);
+            onDeleteListButton.setVisible(check);
+            onSubmitButton.setVisible(check);
+            onDeleteButton.setVisible(check);
+            System.out.println("Manager Status: " + status);
+        } else {
+            System.out.println("No Manager found for project: " + projectName);
+        }
+    }
     private void loadProject() {
         DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
         DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");

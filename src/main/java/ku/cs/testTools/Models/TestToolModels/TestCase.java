@@ -2,10 +2,12 @@ package ku.cs.testTools.Models.TestToolModels;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -15,8 +17,13 @@ import java.util.Objects;
 @NamedQuery(name = "find testcase by id", query = "Select t from TestCase t where t.idTC = :id")
 public class TestCase {
     @Id
+    @UuidGenerator
+    @GeneratedValue
     @Access(AccessType.FIELD)
-    @Column(name = "id_tc", nullable = false, unique = true)
+    @Column(name = "id", nullable = false, unique = true)
+    private UUID ID;
+
+    @Column(name = "id_tc", nullable = false)
     private String idTC;
 
     @Column(name = "name_tc", nullable = false)
