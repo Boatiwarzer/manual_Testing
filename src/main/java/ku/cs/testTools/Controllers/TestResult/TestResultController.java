@@ -4,26 +4,20 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import ku.cs.fxrouter.FXRouter;
+import ku.cs.testTools.Models.Manager.Manager;
+import ku.cs.testTools.Services.Repository.ManagerRepository;
+import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
 import ku.cs.testTools.Services.DataSourceCSV.*;
-import org.controlsfx.control.textfield.TextFields;
 
 import java.io.File;
 import java.io.IOException;
@@ -115,6 +109,7 @@ public class TestResultController {
             }
             System.out.println(nameTester+"1");
             clearInfo();
+            loadStatusButton();
             loadProject();
             randomIdIR();
             randomIdIRD();
@@ -130,6 +125,20 @@ public class TestResultController {
         //testResult = testResultList.findTRById(testIDLabel.getText());
         System.out.println(testResultList.findTRById(testIDLabel.getText()));
 
+    }
+    private void loadStatusButton() {
+        ManagerRepository managerRepository = new ManagerRepository();
+        Manager manager = managerRepository.getManagerByProjectName(projectName);
+
+        if (manager != null) {  // ตรวจสอบว่าพบ Manager หรือไม่
+            String status = manager.getStatus();
+            boolean check = Boolean.parseBoolean(status);
+            onCreateButton.setVisible(check);
+            onEditButton.setVisible(check);
+            System.out.println("Manager Status: " + status);
+        } else {
+            System.out.println("No Manager found for project: " + projectName);
+        }
     }
     public void handleExportMenuItem(ActionEvent actionEvent) {
         boolean noteAdded = false;
@@ -155,9 +164,29 @@ public class TestResultController {
 
     @FXML
     void handleSubmitMenuItem(ActionEvent event) throws IOException {
+        loadManagerStatus();
+        objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(nameTester);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText("Submit successfully and go to home page.");
+        alert.showAndWait();
+        FXRouter.goTo("home_tester",objects);
 
     }
 
+    private void loadManagerStatus() {
+        ManagerRepository managerRepository = new ManagerRepository();
+        Manager manager = managerRepository.getManagerByProjectName(projectName);
+
+        if (manager != null) {  // ตรวจสอบว่าพบ Manager หรือไม่
+            manager.setStatusFalse();
+            managerRepository.updateManager(manager);
+        }
+    }
     @FXML
     void handleOpenMenuItem(ActionEvent actionEvent) throws IOException {
         // Open file chooser

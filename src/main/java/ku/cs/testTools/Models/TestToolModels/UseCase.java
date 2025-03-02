@@ -2,17 +2,25 @@ package ku.cs.testTools.Models.TestToolModels;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.UuidGenerator;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 @Data
 @Entity
 @Table(name = "UseCase")
-@NamedQuery(name = "find usecase by id", query = "Select t from UseCase t where t.useCaseID = :id")
+@NamedQuery(name = "find usecase by id", query = "Select t from UseCase t where t.ID = :id")
 public class UseCase {
 
     @Id
+    @UuidGenerator
+    @GeneratedValue
     @Access(AccessType.FIELD)
+    @Column(name = "id", nullable = false, unique = true)
+    private UUID ID;
+
     @Column(name = "id_uc", nullable = false)
     private String useCaseID;
 

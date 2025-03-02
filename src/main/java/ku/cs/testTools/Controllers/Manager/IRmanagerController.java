@@ -13,7 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import ku.cs.fxrouter.FXRouter;
+import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Models.Manager.ManagerList;
 import ku.cs.testTools.Models.Manager.Tester;
@@ -103,6 +103,7 @@ public class IRmanagerController {
     private NoteList noteList;
     private TesterList testerList;
     private ManagerList managerList;
+    private String nameManager;
 
     @FXML
     void initialize() {
@@ -111,8 +112,9 @@ public class IRmanagerController {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            if (objects.get(2) != null){
-                iRreport = (IRreport) objects.get(2);
+            nameManager = (String) objects.get(2);
+            if (objects.get(3) != null){
+                iRreport = (IRreport) objects.get(3);
             }
             clearInfo();
             loadProject();
@@ -319,6 +321,31 @@ public class IRmanagerController {
 
     }
     @FXML
+    void handleSubmitMenuItem(ActionEvent event) throws IOException {
+        loadManagerStatus();
+        objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(nameManager);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText("Submit successfully and go to home page.");
+        alert.showAndWait();
+        FXRouter.goTo("home_manager",objects);
+
+    }
+
+    private void loadManagerStatus() {
+        ManagerRepository managerRepository = new ManagerRepository();
+        Manager manager = managerRepository.getManagerByProjectName(projectName);
+
+        if (manager != null) {  // ตรวจสอบว่าพบ Manager หรือไม่
+            manager.setStatusTrue();
+            managerRepository.updateManager(manager);
+        }
+    }
+    @FXML
     void handleExit(ActionEvent event) {
         try {
             objects();
@@ -382,6 +409,7 @@ public class IRmanagerController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(nameManager);
         objects.add(null);
     }
     private void loadProject() {
@@ -498,24 +526,41 @@ public class IRmanagerController {
         System.out.println("select " + iRreportList.findIRById(testIDLabel.getText()));
 
     }
-
     private void loadListView(IRreportList iRreportList) {
         onEditButton.setVisible(false);
         onExportButton.setVisible(false);
         onSearchList.refresh();
-        if (iRreportList != null){
-            iRreportList.sort(new IRreportComparable());
-            for (IRreport iRreport : iRreportList.getIRreportList()) {
-                if (!iRreport.getDateIR().equals("null")){
-                    onSearchList.getItems().add(iRreport);
 
+        ManagerRepository managerRepository = new ManagerRepository();
+        managerList = new ManagerList();
+
+        List<Manager> managers = managerRepository.getAllManagers();
+        if (managers.isEmpty()) { // ถ้าไม่มี Manager เลย
+            setTable();
+            clearInfo();
+            return;
+        }
+
+        for (Manager manager : managers) {
+            managerList.addManager(manager);
+
+            if (iRreportList != null) {
+                iRreportList.sort(new IRreportComparable());
+
+                for (IRreport iRreport : iRreportList.getIRreportList()) {
+                    if (!"null".equals(iRreport.getDateIR()) && !"true".equals(manager.getStatus())) {
+                        onSearchList.getItems().add(iRreport);
+                    }
                 }
             }
-        }else {
+        }
+
+        if (iRreportList == null) {
             setTable();
             clearInfo();
         }
     }
+
 
     private void clearInfo() {
         // Clear all the fields by setting them to an empty string
@@ -769,6 +814,7 @@ public class IRmanagerController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(nameManager);
             objects.add("editIR");
             objects.add(selectedIRreport);
             objects.add(iRreportDetailList);

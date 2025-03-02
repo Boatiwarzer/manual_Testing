@@ -4,24 +4,25 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import ku.cs.fxrouter.FXRouter;
+import ku.cs.testTools.Models.Manager.Manager;
+import ku.cs.testTools.Models.Manager.ManagerList;
+import ku.cs.testTools.Models.Manager.Tester;
+import ku.cs.testTools.Services.Repository.ManagerRepository;
+import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.DataSource;
 import ku.cs.testTools.Services.DataSourceCSV.*;
 import ku.cs.testTools.Services.UseCaseComparable;
-import org.controlsfx.control.textfield.TextFields;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class UseCaseController {
@@ -92,6 +93,7 @@ public class UseCaseController {
             if (objects.get(3) != null){
                 useCase = (UseCase) objects.get(3);
             }
+            loadStatusButton();
             loadProject();
             loadListView(useCaseList);
             selected();
@@ -113,6 +115,22 @@ public class UseCaseController {
         System.out.println(useCaseList.findByUseCaseId(testIDLabel.getText()));
 
     }
+
+    private void loadStatusButton() {
+        ManagerRepository managerRepository = new ManagerRepository();
+        Manager manager = managerRepository.getManagerByProjectName(projectName);
+
+        if (manager != null) {  // ตรวจสอบว่าพบ Manager หรือไม่
+            String status = manager.getStatus();
+            boolean check = Boolean.parseBoolean(status);
+            onCreateButton.setVisible(check);
+            onEditButton.setVisible(check);
+            System.out.println("Manager Status: " + status);
+        } else {
+            System.out.println("No Manager found for project: " + projectName);
+        }
+    }
+
 
     private void searchSet() {
         ArrayList<String> word = new ArrayList<>();
@@ -407,8 +425,31 @@ public class UseCaseController {
 
     @FXML
     void handleSubmitMenuItem(ActionEvent event) throws IOException {
+        loadManagerStatus();
+        objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(name);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText("Submit successfully and go to home page.");
+        alert.showAndWait();
+        FXRouter.goTo("home_tester",objects);
 
     }
+
+    private void loadManagerStatus() {
+        ManagerRepository managerRepository = new ManagerRepository();
+        Manager manager = managerRepository.getManagerByProjectName(projectName);
+
+        if (manager != null) {  // ตรวจสอบว่าพบ Manager หรือไม่
+            manager.setStatusFalse();
+            managerRepository.updateManager(manager);
+        }
+    }
+
+
 
     @FXML
     void handleOpenMenuItem(ActionEvent actionEvent) throws IOException {

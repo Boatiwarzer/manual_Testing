@@ -3,20 +3,17 @@ package ku.cs.testTools.Controllers.Home;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import ku.cs.fxrouter.FXRouter;
+import ku.cs.testTools.Services.DataSource;
+import ku.cs.testTools.Services.DataSourceCSV.*;
+import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Models.Manager.ManagerList;
 import ku.cs.testTools.Models.Manager.Tester;
 import ku.cs.testTools.Models.Manager.TesterList;
 import ku.cs.testTools.Models.TestToolModels.*;
-import ku.cs.testTools.Services.DataSource;
-import ku.cs.testTools.Services.DataSourceCSV.TestScriptFileDataSource;
 import ku.cs.testTools.Services.Repository.*;
 
 import java.io.File;
@@ -70,6 +67,8 @@ public class HomeTesterController {
     private TestResultList testResultList;
     private TestResultDetailList testResultDetailList;
     private ConnectionList connectionList;
+    private IRreportList iRreportList;
+    private IRreportDetailList iRreportDetailList;
 
 
     @FXML
@@ -80,17 +79,47 @@ public class HomeTesterController {
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
             name = (String) objects.get(2);
-            loadRepo();
-            saveProject();
-            TestScriptRepository testScriptRepository = new TestScriptRepository();
-            testScriptRepository.getAllTestScripts();
+            ManagerRepository managerRepository = new ManagerRepository();
+            Manager manager = managerRepository.getManagerByProjectName(projectName);
+            boolean check = Boolean.parseBoolean(manager.getStatus());
+            if (check){
+                loadRepo();
+                loadProject();
+                saveProject();
+            }
+
+
             System.out.println(name);
             System.out.println("Project Name: " + projectName);
             System.out.println("Directory: " + directory);
         }
     }
 
+    private void loadProject() {
+        DataSource<TestResultList> testResultListDataSource = new TestResultListFileDataSource(directory, projectName + ".csv");
+        DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
+        DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
+        DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
+        DataSource<NoteList> noteListDataSource = new NoteListFileDataSource(directory,projectName + ".csv");
+
+        testResultList = testResultListDataSource.readData();
+        testResultDetailList = testResultDetailListDataSource.readData();
+        iRreportList = iRreportListDataSource.readData();
+        iRreportDetailList = iRreportDetailListDataSource.readData();
+        noteList = noteListDataSource.readData();
+    }
+
     private void saveProject() {
+        DataSource<TestResultList> testResultListDataSource = new TestResultListFileDataSource(directory, projectName + ".csv");
+        DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
+        DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
+        DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
+        DataSource<NoteList> noteListDataSource = new NoteListFileDataSource(directory,projectName + ".csv");
+        testResultListDataSource.writeData(testResultList);
+        testResultDetailListDataSource.writeData(testResultDetailList);
+        iRreportListDataSource.writeData(iRreportList);
+        iRreportDetailListDataSource.writeData(iRreportDetailList);
+        noteListDataSource.writeData(noteList);
     }
 
     private void loadRepo(){
@@ -191,6 +220,29 @@ public class HomeTesterController {
     @FXML
     void handleSaveMenuItem(ActionEvent event) {
         //saveProject();
+    }
+    @FXML
+    void handleSubmitMenuItem(ActionEvent event) throws IOException {
+        loadManagerStatus();
+        objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(name);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText("Submit successfully and go to home page.");
+        alert.showAndWait();
+        FXRouter.goTo("home_tester",objects);
+
+    }
+
+    private void loadManagerStatus() {
+        ManagerRepository managerRepository = new ManagerRepository();
+        for (Manager manager : managerRepository.getAllManagers()){
+            manager.setStatusTrue();
+            managerRepository.updateManager(manager);
+        }
     }
     @FXML
     void handleExit(ActionEvent event) {

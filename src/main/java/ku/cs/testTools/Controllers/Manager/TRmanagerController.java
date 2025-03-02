@@ -12,7 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import ku.cs.fxrouter.FXRouter;
+import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Models.Manager.ManagerList;
 import ku.cs.testTools.Models.Manager.Tester;
@@ -24,8 +24,6 @@ import ku.cs.testTools.Services.Repository.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -490,24 +488,39 @@ public class TRmanagerController {
         System.out.println("select " + testResultList.findTRById(testIDLabel.getText()));
 
     }
-
     private void loadListView(TestResultList testResultList) {
         onEditButton.setVisible(false);
-        onSearchList.refresh();
-        if (testResultList != null){
-            testResultList.sort(new TestResultComparable());
-            for (TestResult testResult : testResultList.getTestResultList()) {
-                if (!testResult.getDateTR().equals("null")){
-                    onSearchList.getItems().add(testResult);
+        onSearchList.refresh(); // รีเฟรช ListView
 
+        ManagerRepository managerRepository = new ManagerRepository();
+        managerList = new ManagerList();
+
+        List<Manager> managers = managerRepository.getAllManagers();
+        if (managers.isEmpty()) { // ถ้าไม่มี Manager เลย
+            setTable();
+            clearInfo();
+            return;
+        }
+
+        for (Manager manager : managers) {
+            managerList.addManager(manager);
+
+            if (testResultList != null) {
+                testResultList.sort(new TestResultComparable()); // จัดเรียง TestResult ก่อน
+
+                for (TestResult testResult : testResultList.getTestResultList()) {
+                    if (!"null".equals(testResult.getDateTR()) && !"true".equals(manager.getStatus())) {
+                        onSearchList.getItems().add(testResult);
+                    }
                 }
             }
-        }else {
+        }
+
+        if (testResultList == null) {
             setTable();
             clearInfo();
         }
     }
-
     private void clearInfo() {
         // Clear all the fields by setting them to an empty string
         testIDLabel.setText("-");

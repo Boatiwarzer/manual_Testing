@@ -11,7 +11,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import ku.cs.fxrouter.FXRouter;
+import ku.cs.testTools.Models.Manager.Manager;
+import ku.cs.testTools.Services.Repository.ManagerRepository;
+import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.DataSource;
 import ku.cs.testTools.Services.DataSourceCSV.ConnectionListFileDataSource;
@@ -29,8 +31,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import ku.cs.testTools.Services.*;
-import ku.cs.testTools.Services.Repository.TestScriptDetailRepository;
-import ku.cs.testTools.Services.Repository.TestScriptRepository;
 import ku.cs.testTools.Services.Repository.UseCaseDetailRepository;
 import ku.cs.testTools.Services.Repository.UseCaseRepository;
 import org.controlsfx.control.textfield.TextFields;
@@ -640,7 +640,28 @@ public class UseCaseAddController {
 
     @FXML
     void handleSubmitMenuItem(ActionEvent event) throws IOException {
+        loadManagerStatus();
+        objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(name);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText("Submit successfully and go to home page.");
+        alert.showAndWait();
+        FXRouter.goTo("home_tester",objects);
 
+    }
+
+    private void loadManagerStatus() {
+        ManagerRepository managerRepository = new ManagerRepository();
+        Manager manager = managerRepository.getManagerByProjectName(projectName);
+
+        if (manager != null) {  // ตรวจสอบว่าพบ Manager หรือไม่
+            manager.setStatusFalse();
+            managerRepository.updateManager(manager);
+        }
     }
 
     @FXML

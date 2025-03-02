@@ -6,22 +6,21 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import ku.cs.fxrouter.FXRouter;
+import ku.cs.testTools.Models.Manager.Manager;
+import ku.cs.testTools.Services.Repository.ManagerRepository;
+import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
 import ku.cs.testTools.Services.DataSourceCSV.*;
-import org.controlsfx.control.textfield.TextFields;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class TestScriptController {
@@ -127,6 +126,7 @@ public class TestScriptController {
             if (objects.get(3) != null){
                 testScript = (TestScript) objects.get(3);
             }
+            loadStatusButton();
             loadProject();
             setEditable();
             setTable();
@@ -157,6 +157,20 @@ public class TestScriptController {
         objects.add(directory);
         objects.add(name);
         objects.add(null);
+    }
+    private void loadStatusButton() {
+        ManagerRepository managerRepository = new ManagerRepository();
+        Manager manager = managerRepository.getManagerByProjectName(projectName);
+
+        if (manager != null) {  // ตรวจสอบว่าพบ Manager หรือไม่
+            String status = manager.getStatus();
+            boolean check = Boolean.parseBoolean(status);
+            onCreateButton.setVisible(check);
+            onEditButton.setVisible(check);
+            System.out.println("Manager Status: " + status);
+        } else {
+            System.out.println("No Manager found for project: " + projectName);
+        }
     }
     private void loadProject() {
         DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
@@ -519,7 +533,28 @@ public class TestScriptController {
 
     @FXML
     void handleSubmitMenuItem(ActionEvent event) throws IOException {
+        loadManagerStatus();
+        objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(name);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText("Submit successfully and go to home page.");
+        alert.showAndWait();
+        FXRouter.goTo("home_tester",objects);
 
+    }
+
+    private void loadManagerStatus() {
+        ManagerRepository managerRepository = new ManagerRepository();
+        Manager manager = managerRepository.getManagerByProjectName(projectName);
+
+        if (manager != null) {  // ตรวจสอบว่าพบ Manager หรือไม่
+            manager.setStatusFalse();
+            managerRepository.updateManager(manager);
+        }
     }
 
     @FXML

@@ -13,7 +13,14 @@ public class ManagerRepository {
     public ManagerRepository() {
         this.entityManager = JpaUtil.getEntityManager();
     }
-
+    public Manager getManagerByProjectName(String projectName) {
+        for (Manager manager : getAllManagers()) {
+            if (manager.getProjectName().equals(projectName)) {
+                return manager;  // คืนค่า Manager ที่ตรงกับโปรเจกต์
+            }
+        }
+        return null; // ถ้าไม่พบ Manager
+    }
     // Create a new Manager
     public void addManager(Manager manager) {
         EntityTransaction transaction = entityManager.getTransaction();

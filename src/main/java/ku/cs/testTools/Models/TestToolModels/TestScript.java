@@ -2,10 +2,13 @@ package ku.cs.testTools.Models.TestToolModels;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.UuidGenerator;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -14,10 +17,15 @@ import java.util.Objects;
 @Entity
 @Data
 @Table(name = "TestScript")
-@NamedQuery(name = "find testscript by id", query = "Select t from TestScript t where t.idTS = :id")
+@NamedQuery(name = "find testscript by id", query = "Select t from TestScript t where t.ID = :id")
 public class TestScript {
     @Id
+    @UuidGenerator
+    @GeneratedValue
     @Access(AccessType.FIELD)
+    @Column(name = "id", nullable = false, unique = true)
+    private UUID ID;
+
     @Column(name = "id_ts") // Maps to `idts` in the database
     private String idTS;
 

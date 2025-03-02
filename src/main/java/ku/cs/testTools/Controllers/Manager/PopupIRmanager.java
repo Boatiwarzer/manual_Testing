@@ -1,15 +1,13 @@
 package ku.cs.testTools.Controllers.Manager;
 
-import jakarta.persistence.Id;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import ku.cs.fxrouter.FXRouter;
+import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Models.Manager.ManagerList;
 import ku.cs.testTools.Models.Manager.Tester;
@@ -21,10 +19,7 @@ import ku.cs.testTools.Services.Repository.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -90,6 +85,8 @@ public class PopupIRmanager {
     private NoteList noteList;
     private TesterList testerList;
     private ManagerList managerList;
+    private String nameManager;
+
     @FXML
     void initialize() {
         setStatus();
@@ -100,16 +97,17 @@ public class PopupIRmanager {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            typeIR = (String) objects.get(2);
-            iRreport = (IRreport) objects.get(3);
-            iRreportDetailList = (IRreportDetailList) objects.get(4);
+            nameManager = (String) objects.get(2);
+            typeIR = (String) objects.get(3);
+            iRreport = (IRreport) objects.get(4);
+            iRreportDetailList = (IRreportDetailList) objects.get(5);
             idIR = iRreport.getIdIR();
             IRreportDetail trd = iRreportDetailList.findIRDByirId(idIR);
             System.out.println(idIR + " " + idTrd);
-            type = (String) objects.get(5);
+            type = (String) objects.get(6);
             loadProject();
-            if (objects.get(6) != null && type.equals("edit")) {
-                iRreportDetail = (IRreportDetail) objects.get(6);
+            if (objects.get(7) != null && type.equals("edit")) {
+                iRreportDetail = (IRreportDetail) objects.get(7);
                 iRreportDetail = iRreportDetailList.findIRDById(iRreportDetail.getIdIRD());
                 id = iRreportDetail.getIdIRD();
                 setTextEdit();

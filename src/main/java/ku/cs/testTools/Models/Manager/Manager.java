@@ -45,7 +45,12 @@ public class Manager implements Comparable{
 
     }
 
-
+    public void setStatusTrue(){
+        this.setStatus("true");
+    }
+    public void setStatusFalse(){
+        this.setStatus("false");
+    }
 
     @Override
     public int compareTo(Object o) {

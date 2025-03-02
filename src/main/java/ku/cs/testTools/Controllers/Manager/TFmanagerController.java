@@ -19,7 +19,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import ku.cs.fxrouter.FXRouter;
+import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Models.Manager.ManagerList;
 import ku.cs.testTools.Models.Manager.Tester;
@@ -316,32 +316,6 @@ public class TFmanagerController {
             }
         }
     }
-
-
-
-
-
-    private void showInfo(String testerName) {
-        nameTester = testerName; // ดึงชื่อ Tester ตรงๆ
-
-        System.out.println("Tester: " + nameTester);
-
-        // หาว่า Tester นี้อยู่ใน Project ไหน
-        for (Node node : projectList.getChildren()) {
-            if (node instanceof TitledPane titledPane) {
-                ListView<String> listView = (ListView<String>) titledPane.getContent();
-                if (listView.getItems().contains(testerName)) {
-                    projectName = titledPane.getText(); // ดึงชื่อ Project จากหัวข้อของ TitledPane
-                    System.out.println("Project: " + projectName);
-                    break;
-                }
-            }
-        }
-
-        // โหลดข้อมูล
-        loadProject();
-        loadData(projectName, nameTester);
-    }
     private void showInfo(String projectNames,String testerName) {
         nameTester = testerName; // ดึงชื่อ Tester ตรงๆ
         this.projectName = projectNames;
@@ -457,7 +431,31 @@ public class TFmanagerController {
     void handleExportPDF(ActionEvent event) {
 
     }
+    @FXML
+    void handleSubmitMenuItem(ActionEvent event) throws IOException {
+        loadManagerStatus();
+        objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(nameManager);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText("Submit successfully and go to home page.");
+        alert.showAndWait();
+        FXRouter.goTo("home_manager",objects);
 
+    }
+
+    private void loadManagerStatus() {
+        ManagerRepository managerRepository = new ManagerRepository();
+        Manager manager = managerRepository.getManagerByProjectName(projectName);
+
+        if (manager != null) {  // ตรวจสอบว่าพบ Manager หรือไม่
+            manager.setStatusTrue();
+            managerRepository.updateManager(manager);
+        }
+    }
     @FXML
     void handleNewMenuItem(ActionEvent event) throws IOException {
         FXRouter.popup("landing_newproject");

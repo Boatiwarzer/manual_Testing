@@ -4,7 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
-import ku.cs.fxrouter.FXRouter;
+import ku.cs.testTools.Services.fxrouter.FXRouter;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -13,20 +13,24 @@ import java.sql.SQLException;
 public class Main extends Application {
     Connection connection = null;
     @Override
-    public void start(Stage stage) throws IOException, SQLException {
+    public void start(Stage stage) {
         try {
-            FXRouter.bind(this, stage, "Manual Test Tools", 1360,780);
+            // Binding the stage and setting window title and size
+            FXRouter.bind(this, stage, "Manual Test Tools", 1360, 780);
+
+            // Configure routes for the different pages
             configRoute();
-//            connection = DatabaseConnector.connect();
-//          FXRouter.popup("LabelPage",true);
-          FXRouter.goTo("role");
-//            FXRouter.goTo("use_case");
+
+            // Set the default theme for JavaFX
             Application.setUserAgentStylesheet(getClass().getResource("/style/Themes/nord-light.css").toExternalForm());
-//            Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
-            // Display an error message to the user or handle the exception as needed
+
+            // Go to the initial route
+            FXRouter.goTo("role"); // Replace this with the initial screen if needed
+
         } catch (IOException e) {
             e.printStackTrace();
             // Handle FXML loading errors
+            System.err.println("Error loading FXML files.");
         }
     }
 

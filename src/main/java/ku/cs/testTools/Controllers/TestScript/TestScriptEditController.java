@@ -3,17 +3,17 @@ package ku.cs.testTools.Controllers.TestScript;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import ku.cs.fxrouter.FXRouter;
+import ku.cs.testTools.Models.Manager.Manager;
+import ku.cs.testTools.Services.Repository.ManagerRepository;
+import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
 import ku.cs.testTools.Services.DataSourceCSV.*;
@@ -821,7 +821,28 @@ public class TestScriptEditController {
 
     @FXML
     void handleSubmitMenuItem(ActionEvent event) throws IOException {
+        loadManagerStatus();
+        objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(name);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText("Submit successfully and go to home page.");
+        alert.showAndWait();
+        FXRouter.goTo("home_tester",objects);
 
+    }
+
+    private void loadManagerStatus() {
+        ManagerRepository managerRepository = new ManagerRepository();
+        Manager manager = managerRepository.getManagerByProjectName(projectName);
+
+        if (manager != null) {  // ตรวจสอบว่าพบ Manager หรือไม่
+            manager.setStatusFalse();
+            managerRepository.updateManager(manager);
+        }
     }
 
     @FXML
@@ -869,25 +890,6 @@ public class TestScriptEditController {
         }
     }
 
-    @FXML
-    void handleExportPDF(ActionEvent event) {
 
-    }
-    public void handleExportMenuItem(ActionEvent actionEvent) {
-        boolean noteAdded = false;
-//        try {
-//            // Create a file chooser
-//            FileChooser fileChooser = new FileChooser();
-//            fileChooser.setTitle("Export Project");
-//            fileChooser.setInitialFileName(projectName);
-//            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png"));
-//            File file = fileChooser.showSaveDialog(null);
-//            if (file != null) {
-//                ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
-//            }
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
 
-    }
 }

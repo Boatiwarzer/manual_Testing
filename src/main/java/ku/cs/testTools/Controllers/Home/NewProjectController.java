@@ -9,7 +9,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import ku.cs.fxrouter.FXRouter;
+import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Models.Manager.ManagerList;
 import ku.cs.testTools.Models.Manager.Tester;
@@ -95,7 +95,7 @@ public class NewProjectController {
         String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         setWindowTitle(projectName);
         randomIdM();
-        Manager manager = new Manager(MId, projectName, managerName, date, "false");
+        Manager manager = new Manager(MId,projectName,managerName,date,"true");
 
         for (Node node : testerVBox.getChildren()) {
             if (node instanceof HBox) {
@@ -120,7 +120,7 @@ public class NewProjectController {
         ManagerRepository managerRepository = new ManagerRepository();
         managerRepository.addManager(manager);
         TesterRepository testerRepository = new TesterRepository();
-        for (Tester tester : testerList.getTesterList()) {
+        for (Tester tester : testerList.getTesterList()){
             testerRepository.addTester(tester);
         }
         //send the project name and directory to HomePage
@@ -130,7 +130,7 @@ public class NewProjectController {
         objects.add(managerName);
         //แก้พาท
         String packageStr1 = "views/";
-        FXRouter.when("home", packageStr1 + "home_manager.fxml", "TestTools | " + projectName);
+        FXRouter.when("home", packageStr1 + "home_manager.fxml","TestTools | " + projectName);
         FXRouter.goTo("home", objects);
 
         // Close the current window
@@ -143,14 +143,14 @@ public class NewProjectController {
     private void randomIdM() {
         int min = 1;
         int upperbound = 999;
-        String random1 = String.valueOf((int) Math.floor(Math.random() * (upperbound - min + 1) + min));
+        String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
         this.MId = String.format("M-%s", random1);
     }
 
     private String randomIdT() {
         int min = 1;
         int upperbound = 999;
-        String random1 = String.valueOf((int) Math.floor(Math.random() * (upperbound - min + 1) + min));
+        String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
         this.TId = String.format("T-%s", random1);
         return TId;
     }
@@ -168,9 +168,9 @@ public class NewProjectController {
             System.out.println("Selected directory: " + file.getAbsolutePath());
             directory = file.getAbsolutePath();
             onSelectButton.setText(directory);
-        } else {
+            } else {
             System.out.println("No directory selected.");
-        }
+            }
     }
 
     private void setWindowTitle(String projectName) {
