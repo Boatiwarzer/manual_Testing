@@ -11,18 +11,11 @@ import java.util.UUID;
 
 @Entity
 @RequiredArgsConstructor
-@AllArgsConstructor
 @Data
-@NamedQuery(name = "find Note by id", query = "Select t from Note t where t.ID = :id")
+@NamedQuery(name = "find Note by id", query = "Select t from Note t where t.noteID = :id")
 @Table(name = "Note")
 public class Note {
     @Id
-    @UuidGenerator
-    @GeneratedValue
-    @Access(AccessType.FIELD)
-    @Column(name = "id", nullable = false, unique = true)
-    private UUID ID;
-
     private String noteID;
     private String note;
     @Column(name = "projectName", nullable = false, precision = 10, scale = 2)

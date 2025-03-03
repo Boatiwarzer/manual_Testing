@@ -5,6 +5,7 @@ import ku.cs.testTools.Models.TestToolModels.Connection;
 import ku.cs.testTools.Services.JpaUtil;
 
 import java.util.List;
+import java.util.UUID;
 
 public class ConnectionRepository {
     private final EntityManager entityManager;
@@ -30,7 +31,7 @@ public class ConnectionRepository {
     }
 
     // Find a Connection by ID
-    public Connection findById(String id) {
+    public Connection findById(UUID id) {
         try {
             TypedQuery<Connection> query = entityManager.createNamedQuery("find Connection by id", Connection.class);
             query.setParameter("id", id);
@@ -47,7 +48,7 @@ public class ConnectionRepository {
     }
 
     // Retrieve a Connection by ID
-    public Connection getConnectionById(String id) {
+    public Connection getConnectionById(UUID id) {
         return entityManager.find(Connection.class, id);
     }
 

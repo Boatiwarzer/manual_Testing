@@ -11,17 +11,11 @@ import java.util.UUID;
 @Data
 @Entity
 @Table(name = "UseCase")
-@NamedQuery(name = "find usecase by id", query = "Select t from UseCase t where t.ID = :id")
+@NamedQuery(name = "find usecase by id", query = "Select t from UseCase t where t.useCaseID = :id")
 public class UseCase {
 
     @Id
-    @UuidGenerator
-    @GeneratedValue
-    @Access(AccessType.FIELD)
-    @Column(name = "id", nullable = false, unique = true)
-    private UUID ID;
-
-    @Column(name = "id_uc", nullable = false)
+    @Column(name = "id_uc", nullable = false,unique = true)
     private String useCaseID;
 
     @Column(name = "name_uc", length = 255, nullable = false)

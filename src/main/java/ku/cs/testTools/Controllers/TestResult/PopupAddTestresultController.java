@@ -509,7 +509,7 @@ public class PopupAddTestresultController {
         if (onTestNo.getText() == null || onTestNo.getText().trim().isEmpty()) {
             showAlert("กรุณากรอกข้อมูล Test No");
             return false;
-        } else if (!onTestNo.getText().matches("^(?!0$)\\\\d+$")) {
+        } else if (!onTestNo.getText().matches("\\d+")) {
             showAlert("กรุณากรอกตัวเลขเท่านั้น");
             return false;
         }

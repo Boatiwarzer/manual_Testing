@@ -8,17 +8,22 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.UUID;
 
 import lombok.Setter;
+import org.hibernate.annotations.UuidGenerator;
 
 @Getter
 @Data
 @Entity
 @Table(name = "Manager")
-@NamedQuery(name = "find Manager by id", query = "Select t from Manager t where t.IDManager = :id")
+@NamedQuery(name = "find Manager by id", query = "Select t from Manager t where t.ID = :id")
 public class Manager implements Comparable{
     @Id
-    @Access(AccessType.FIELD)
+    @GeneratedValue
+    @Column(name = "id", nullable = false, unique = true)
+    private UUID ID;
+
     private String IDManager;
     private String projectName;
     private String nameManager;

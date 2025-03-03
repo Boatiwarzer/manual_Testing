@@ -103,7 +103,6 @@ public class TestScriptController {
     private TestScript testScript = new TestScript();
     private TestScript selectedTestScript = new TestScript();
     private ArrayList <String> word = new ArrayList<>();
-    private int position = 0;
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
     private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
     private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();

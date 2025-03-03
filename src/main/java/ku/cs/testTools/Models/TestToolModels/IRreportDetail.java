@@ -15,9 +15,7 @@ import java.util.UUID;
 @NamedQuery(name = "find IRreportDetail by id", query = "Select t from IRreportDetail t where t.ID = :id")
 public class IRreportDetail {
     @Id
-    @UuidGenerator
     @GeneratedValue
-    @Access(AccessType.FIELD)
     @Column(name = "id", nullable = false, unique = true)
     private UUID ID;
 
@@ -66,9 +64,7 @@ public class IRreportDetail {
     private String idIR;
     private String idTRD;
 
-    @ManyToOne
-    @JoinColumn(name = "id_ir", nullable = false) // Foreign key column
-    private IRreport iRreport;
+
 
     public IRreportDetail(String idIRD, String testNoIRD, String testerIRD, String tsIdIRD, String tcIdIRD, String descriptIRD, String conditionIRD, String imageIRD, String retestIRD, String priorityIRD, String rcaIRD, String managerIRD, String statusIRD, String remarkIRD, String idIR, String idTRD) {
         this.idIRD = idIRD;

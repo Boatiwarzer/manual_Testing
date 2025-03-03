@@ -11,7 +11,61 @@
   <component name="ChangeListManager">
     <list default="true" id="339e8b6d-7c1d-4583-b039-ece96beb9415" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Home/HomeTesterController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Home/HomeTesterController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/a.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/a.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Home/LabelPageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Home/LabelPageController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Home/NewProjectController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Home/NewProjectController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Manager/TFmanagerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Manager/TFmanagerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestCase/PopupAddTestcaseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestCase/PopupAddTestcaseController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestCase/TestCaseAddController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestCase/TestCaseAddController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestCase/TestCaseEditController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestCase/TestCaseEditController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestFlow/PopupInfoTestcaseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestFlow/PopupInfoTestcaseController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestFlow/PopupInfoTestscriptController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestFlow/PopupInfoTestscriptController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestFlow/PopupTestFlowAddTestcaseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestFlow/PopupTestFlowAddTestcaseController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestFlow/PopupTestFlowAddTestscriptController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestFlow/PopupTestFlowAddTestscriptController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestFlow/TestFlowController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestFlow/TestFlowController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestResult/PopupAddTestresultController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestResult/PopupAddTestresultController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestResult/TestResultAddController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestResult/TestResultAddController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/PopupAddTestscriptController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/PopupAddTestscriptController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/TestScriptAddController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/TestScriptAddController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/TestScriptController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/TestScriptController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/TestScriptEditController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/TestScriptEditController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/UseCase/UseCaseAddController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/UseCase/UseCaseAddController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/UseCase/UseCaseEditController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/UseCase/UseCaseEditController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/Manager/Manager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/Manager/Manager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/Manager/Tester.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/Manager/Tester.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/Connection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/Connection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/ConnectionList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/ConnectionList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/IRreport.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/IRreport.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/IRreportDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/IRreportDetail.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/Note.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/Note.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestCase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestCaseDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestCaseDetail.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestCaseList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestCaseList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestFlowPosition.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestFlowPosition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestFlowPositionList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestFlowPositionList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestResult.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestResultDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestResultDetail.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestScript.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestScript.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestScriptDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestScriptDetail.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestScriptList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestScriptList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/UseCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/UseCase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/UseCaseDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/UseCaseDetail.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Services/DataSourceCSV/ConnectionListFileDataSource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Services/DataSourceCSV/ConnectionListFileDataSource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Services/DataSourceCSV/TestCaseFileDataSource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Services/DataSourceCSV/TestCaseFileDataSource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Services/DataSourceCSV/TestFlowPositionListFileDataSource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Services/DataSourceCSV/TestFlowPositionListFileDataSource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Services/DataSourceCSV/TestScriptFileDataSource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Services/DataSourceCSV/TestScriptFileDataSource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Services/DatabaseConnector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Services/DatabaseConnector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Services/Repository/ConnectionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Services/Repository/ConnectionRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Services/Repository/TestCaseDetailRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Services/Repository/TestCaseDetailRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Services/Repository/TestCaseRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Services/Repository/TestCaseRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Services/Repository/TestFlowPositionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Services/Repository/TestFlowPositionRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Services/Repository/TestScriptDetailRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Services/Repository/TestScriptDetailRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Services/Repository/TestScriptRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Services/Repository/TestScriptRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Services/Repository/UseCaseDetailRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Services/Repository/UseCaseDetailRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/test_db.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/persistence.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/persistence.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,6 +122,7 @@
     <configuration name="App" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="ku.cs.testTools.App" />
       <module name="manualTesting" />
+      <option name="VM_PARAMETERS" value="--add-exports=javafx.base/com.sun.javafx.event=org.controlsfx.controls" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="ku.cs.testTools.*" />
@@ -82,6 +137,10 @@
       <option name="JAR_PATH" value="$PROJECT_DIR$/out/artifacts/manualTesting_jar/manualTesting.jar" />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Application.App" />
+      <item itemvalue="JAR Application.manualTesting.jar" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.App" />
@@ -106,6 +165,7 @@
       <updated>1740840810363</updated>
       <workItem from="1740840832874" duration="4496000" />
       <workItem from="1740909410991" duration="11818000" />
+      <workItem from="1740965031326" duration="9705000" />
     </task>
     <servers />
   </component>

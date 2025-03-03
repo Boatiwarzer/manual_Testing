@@ -49,6 +49,11 @@ public class NewProjectController {
     private TesterList testerList = new TesterList();
     private String TId;
     private ManagerList managerList = new ManagerList();
+    @FXML
+    void initialize() {
+        ManagerRepository managerRepository = new ManagerRepository(); // เพิ่ม ManagerRepository
+        managerRepository.getAllManagers();
+    }
 
     @FXML
     void onProjectNameField(ActionEvent event) {
@@ -241,20 +246,21 @@ public class NewProjectController {
             return false;
         }
 
-        if(testerVBox.getChildren().isEmpty()){
+        if (testerVBox.getChildren().isEmpty()) {
             showAlert("กรุณากรอกข้อมูล Tester อย่างน้อย 1 คน");
             return false;
         }
 
-        if(!testerVBox.getChildren().isEmpty()){
+        if (!testerVBox.getChildren().isEmpty()) {
             HBox lastHBox = (HBox) testerVBox.getChildren().get(testerVBox.getChildren().size() - 1);
             TextArea lastTextArea = (TextArea) lastHBox.getChildren().get(0);
             if (lastTextArea.getText().isEmpty()) {
                 showAlert("กรุณากรอกข้อมูล Tester ");
+                return false;
             }
-            return false;
         }
 
         return true;
     }
+
 }

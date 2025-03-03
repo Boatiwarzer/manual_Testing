@@ -7,14 +7,17 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import ku.cs.testTools.Models.Manager.Manager;
+import ku.cs.testTools.Models.Manager.Tester;
+import ku.cs.testTools.Services.Repository.*;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.DataSource;
 import ku.cs.testTools.Services.DataSourceCSV.*;
-import ku.cs.testTools.Services.Repository.TestFlowPositionRepository;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class LabelPageController {
     public Label labelText;
@@ -40,7 +43,7 @@ public class LabelPageController {
     private ConnectionList connectionList;
     private NoteList noteList;
     private TestCase testCase = new TestCase();
-    private int id;
+    private UUID id;
     private String objectID;
     private String name;
 
@@ -125,34 +128,38 @@ public class LabelPageController {
         if (type.equals("Rectangle-curve")){
             randomIdTS();
             randomId();
-            testScript = new TestScript(objectID,label,"-","-","-","-","-","-","-",testFlowPositionList.findLastPositionId()+1);
-            testScriptList.addOrUpdateTestScript(testScript);
-            testFlowPosition = new TestFlowPosition(testFlowPositionList.findLastPositionId()+1,width,height,layoutX,layoutY,0,"testscript",projectName,name);
+            testFlowPosition = new TestFlowPosition(id,width,height,layoutX,layoutY,0,"testscript",projectName,name);
             testFlowPositionList.addPosition(testFlowPosition);
+            testScript = new TestScript(objectID,label,"-","-","-","-","-","-","-",testFlowPosition.getPositionID());
+            testScriptList.addOrUpdateTestScript(testScript);
             TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
             testFlowRepository.addTestFlowPosition(testFlowPosition);
             saveProject();
+            saveRepo();
             //objects.add(testScript);
         }else if (type.equals("Rectangle")){
             randomIdTC();
             randomId();
-            testCase = new TestCase(objectID,label,"-","-","-","-",testFlowPositionList.findLastPositionId()+1,"-","-");
-            testCaseList.addOrUpdateTestCase(testCase);
-            testFlowPosition = new TestFlowPosition(testFlowPositionList.findLastPositionId()+1,width,height,layoutX,layoutY,0,"testcase",projectName,name);
+            testFlowPosition = new TestFlowPosition(id,width,height,layoutX,layoutY,0,"testcase",projectName,name);
             testFlowPositionList.addPosition(testFlowPosition);
+            testCase = new TestCase(objectID,label,"-","-","-","-",testFlowPosition.getPositionID(),"-","-");
+            testCaseList.addOrUpdateTestCase(testCase);
             TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
             testFlowRepository.addTestFlowPosition(testFlowPosition);
             saveProject();
+            saveRepo();
             //objects.add(testCase);
 
         }else if (type.equals("Kite")){
-            Connection connection = new Connection(connectionList.findLastConnectionID() + 1,width,height,layoutX,layoutY, label, "none", "none", "none","!@#$%^&*()_+","decision",projectName,name);
+            randomId();
+            Connection connection = new Connection(id,width,height,layoutX,layoutY, label, "none", "none", "none","!@#$%^&*()_+","decision",projectName,name);
             connectionList.addOrUpdate(connection);
-            testFlowPosition = new TestFlowPosition(connectionList.findLastConnectionID(),width,height,layoutX,layoutY,0,"decision",projectName,name);
+            testFlowPosition = new TestFlowPosition(id,width,height,layoutX,layoutY,0,"decision",projectName,name);
             testFlowPositionList.addPosition(testFlowPosition);
             TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
             testFlowRepository.addTestFlowPosition(testFlowPosition);
             saveProject();
+            saveRepo();
 
         }
             FXRouter.goTo("test_flow", objects);
@@ -163,10 +170,59 @@ public class LabelPageController {
             stage.close();
         }
     }
+
+    private void saveRepo() {
+        TestScriptRepository testScriptRepository = new TestScriptRepository();
+        TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
+        TestFlowPositionRepository testFlowPositionRepository = new TestFlowPositionRepository();
+        TestCaseRepository testCaseRepository = new TestCaseRepository();
+        TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
+        ConnectionRepository connectionRepository = new ConnectionRepository();
+        NoteRepository noteRepository = new NoteRepository();
+
+        // บันทึกข้อมูล TestScriptList
+        for (TestScript script : testScriptList.getTestScriptList()) {
+            testScriptRepository.updateTestScript(script);
+        }
+
+        // บันทึกข้อมูล TestScriptDetailList
+        for (TestScriptDetail detail : testScriptDetailList.getTestScriptDetailList()) {
+            testScriptDetailRepository.updateTestScriptDetail(detail);
+        }
+
+        // บันทึกข้อมูล TestFlowPositionList
+        for (TestFlowPosition position : testFlowPositionList.getPositionList()) {
+            testFlowPositionRepository.updateTestFlowPosition(position);
+        }
+
+        // บันทึกข้อมูล TestCaseList
+        for (TestCase testCase : testCaseList.getTestCaseList()) {
+            testCaseRepository.updateTestCase(testCase);
+        }
+
+        // บันทึกข้อมูล TestCaseDetailList
+        for (TestCaseDetail detail : testCaseDetailList.getTestCaseDetailList()) {
+            testCaseDetailRepository.updateTestCaseDetail(detail);
+        }
+
+
+        // บันทึกข้อมูล ConnectionList
+        for (Connection connection : connectionList.getConnectionList()) {
+            connectionRepository.updateConnection(connection);
+        }
+
+        // บันทึกข้อมูล NoteList
+        for (Note note : noteList.getNoteList()) {
+            noteRepository.updateNote(note);
+        }
+
+        // บันทึกข้อมูล TesterList
+
+    }
+
     private void randomId() {
-        int min = 1;
-        int upperbound = 999;
-        this.id = ((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
+        UUID i = UUID.randomUUID();
+        this.id = i;
     }
     public void randomIdTS(){
         int min = 1;

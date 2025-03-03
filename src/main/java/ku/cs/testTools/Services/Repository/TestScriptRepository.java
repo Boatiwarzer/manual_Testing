@@ -66,7 +66,21 @@ public class TestScriptRepository {
             throw e;
         }
     }
+    public void saveOrUpdateTestScript(TestScript testScript) {
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
 
+            entityManager.merge(testScript); // ✅ update ถ้ามี, insert ถ้าไม่มี
+
+            transaction.commit();
+        } catch (RuntimeException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw e;
+        }
+    }
     // Delete a TestScript by ID
     public void deleteTestScript(String idTS) {
         EntityTransaction transaction = entityManager.getTransaction();

@@ -104,7 +104,7 @@ public class TestScriptAddController {
     private TestScriptDetailList testScriptDetailListDelete = new TestScriptDetailList();
     private TestCaseList testCaseList = new TestCaseList();
     private UseCaseList useCaseList = new UseCaseList();
-    private final int position = 0;
+    private UUID position = UUID.randomUUID();
     private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
     private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
     private ConnectionList connectionList;

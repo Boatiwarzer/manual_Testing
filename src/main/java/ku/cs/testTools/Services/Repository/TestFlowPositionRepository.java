@@ -5,6 +5,7 @@ import ku.cs.testTools.Models.TestToolModels.TestFlowPosition;
 import ku.cs.testTools.Services.JpaUtil;
 
 import java.util.List;
+import java.util.UUID;
 
 public class TestFlowPositionRepository {
     private final EntityManager entityManager;
@@ -19,7 +20,7 @@ public class TestFlowPositionRepository {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            entityManager.persist(testFlowPosition);
+            entityManager.merge(testFlowPosition);
             transaction.commit();
         } catch (RuntimeException e) {
             if (transaction.isActive()) {
@@ -28,9 +29,23 @@ public class TestFlowPositionRepository {
             throw e;
         }
     }
+    public void saveOrUpdateTestFlowPosition(TestFlowPosition testFlowPosition) {
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
 
+            entityManager.merge(testFlowPosition); // ✅ update ถ้ามี, insert ถ้าไม่มี
+
+            transaction.commit();
+        } catch (RuntimeException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw e;
+        }
+    }
     // Find a TestFlowPosition by ID
-    public TestFlowPosition findById(int id) {
+    public TestFlowPosition findById(UUID id) {
         try {
             TypedQuery<TestFlowPosition> query = entityManager.createNamedQuery("find testflowposition by id", TestFlowPosition.class);
             query.setParameter("id", id);
@@ -47,9 +62,7 @@ public class TestFlowPositionRepository {
     }
 
     // Retrieve a TestFlowPosition by ID
-    public TestFlowPosition getTestFlowPositionById(int idTS) {
-        return entityManager.find(TestFlowPosition.class, idTS);
-    }
+
 
     // Update an existing TestFlowPosition
     public void updateTestFlowPosition(TestFlowPosition testFlowPosition) {
@@ -67,7 +80,7 @@ public class TestFlowPositionRepository {
     }
 
     // Delete a TestFlowPosition by ID
-    public void deleteTestFlowPosition(int idTS) {
+    public void deleteTestFlowPosition(UUID idTS) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
@@ -85,9 +98,5 @@ public class TestFlowPositionRepository {
     }
 
     // Close EntityManager
-    public void close() {
-        if (entityManager.isOpen()) {
-            entityManager.close();
-        }
-    }
+
 }

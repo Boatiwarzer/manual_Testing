@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class TestFlowPositionListFileDataSource implements DataSource<TestFlowPositionList>, ManageDataSource<TestFlowPosition>{
     private String directory;
@@ -57,7 +58,7 @@ public class TestFlowPositionListFileDataSource implements DataSource<TestFlowPo
                 String[] data = line.split(",");
                 if (data[0].trim().equals("testFlowPosition")) {
                     TestFlowPosition testFlowPosition = new TestFlowPosition(
-                            Integer.parseInt(data[1].trim()), // positionID
+                            UUID.fromString(data[1].trim()), // positionID
                             Double.parseDouble(data[2].trim()), // xPosition
                             Double.parseDouble(data[3].trim()), // yPosition
                             Double.parseDouble(data[4].trim()), // fitWidth

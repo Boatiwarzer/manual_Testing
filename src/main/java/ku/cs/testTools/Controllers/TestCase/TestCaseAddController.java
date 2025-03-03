@@ -98,13 +98,12 @@ public class TestCaseAddController {
     private TestCase testCase;
     private TestCase selectedTestCase;
     private UseCaseList useCaseList;
-    private final int position = 0;
+    private UUID position = UUID.randomUUID();
     private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
     private ConnectionList connectionList;
     private String type = "new";
     private String typeTC = "new";
     private ArrayList<Object> objects;
-    private TestCaseDetailList testCaseDetailListTemp;
     private String name;
     private TestCaseDetailList testCaseDetailListDelete = new TestCaseDetailList();
 
@@ -546,7 +545,7 @@ public class TestCaseAddController {
 
 
         // Create a new TestCase object
-        testCase = new TestCase(idTC, name, date, useCase, description, note, 0, preCon, post);
+        testCase = new TestCase(idTC, name, date, useCase, description, note, position, preCon, post);
     }
     private void currentNewDataForSubmit() {
         // Retrieve the values from the fields
@@ -560,7 +559,7 @@ public class TestCaseAddController {
         String post = infoPostconField.getText();
 
         // Create a new TestCase object
-        testCase = new TestCase(idTC, name, date, useCase, description, note, 0, preCon, post);
+        testCase = new TestCase(idTC, name, date, useCase, description, note, position, preCon, post);
     }
 
     private void objects() {
@@ -652,35 +651,54 @@ public class TestCaseAddController {
             currentNewDataForSubmit();
             TestCaseRepository testCaseRepository = new TestCaseRepository();
             TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
-            for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()){
+
+            // 🔹 ตรวจสอบว่ามี testCase หรือไม่
+            if (testCase == null) {
+                throw new IllegalArgumentException("Error: testCase เป็น null");
+            }
+
+            // 🔹 บันทึก testCase ก่อน เพื่อให้มี ID
+            testCaseRepository.addTestCase(testCase);
+
+            // 🔹 กำหนด testCase ให้กับทุก testCaseDetail และบันทึก
+            for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()) {
                 testCaseDetailRepository.addTestCaseDetail(testCaseDetail);
             }
-            testCaseRepository.addTestCase(testCase);
-            DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
+
+            // 🔹 อ่านข้อมูลจากไฟล์ CSV และอัปเดต List
+            DataSource<TestCaseDetailList> testCaseDetailListDataSource =
+                    new TestCaseDetailFileDataSource(directory, projectName + ".csv");
             TestCaseDetailList testCaseDetailListTemp = testCaseDetailListDataSource.readData();
-            for (TestCaseDetail testCaseDetail : testCaseDetailListTemp.getTestCaseDetailList()){
+
+            for (TestCaseDetail testCaseDetail : testCaseDetailListTemp.getTestCaseDetailList()) {
                 testCaseDetailList.addTestCaseDetail(testCaseDetail);
             }
+
             testCaseList.addOrUpdateTestCase(testCase);
             saveProject();
+
+            // 🔹 เคลียร์ objects และเพิ่มค่าที่ต้องการ
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(name);
             objects.add(testCase);
-            // Write data to respective files
+
+            // 🔹 แจ้งเตือนว่าบันทึกข้อมูลสำเร็จ
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Success");
             alert.setHeaderText(null);
             alert.setContentText("Test case saved successfully!");
             alert.showAndWait();
 
-            FXRouter.goTo("test_case",objects,true);
+            // 🔹 ไปที่หน้าถัดไป
+            FXRouter.goTo("test_case", objects, true);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
+
     boolean handleSaveAction() {
         if (onTestNameField.getText() == null || onTestNameField.getText().trim().isEmpty()) {
             showAlert("กรุณากรอกข้อมูล Name");

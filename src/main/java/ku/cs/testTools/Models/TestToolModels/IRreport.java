@@ -18,15 +18,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Entity
 @Table(name = "IRreport")
-@NamedQuery(name = "find IRreport by id", query = "Select t from IRreport t where t.ID = :id")
+@NamedQuery(name = "find IRreport by id", query = "Select t from IRreport t where t.idIR = :id")
 public class IRreport {
     @Id
-    @UuidGenerator
-    @GeneratedValue
-    @Access(AccessType.FIELD)
-    @Column(name = "id", nullable = false, unique = true)
-    private UUID ID;
-
     @Column(name = "id_ir", nullable = false)
     private String idIR;
 

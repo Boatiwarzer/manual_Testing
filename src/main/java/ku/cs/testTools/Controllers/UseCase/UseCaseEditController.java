@@ -463,7 +463,6 @@ public class UseCaseEditController {
             );
 
             useCaseList.addUseCase(newUseCase);
-            saveProject();
 
             useCaseDetailList.clearUseCaseDetail(ucId);
             // Get the text from the textAreas in the actorActionVBox and write them to the useCaseDetailList
@@ -497,7 +496,7 @@ public class UseCaseEditController {
             for (UseCaseDetail useCaseDetail1 : useCaseDetailListDelete.getUseCaseDetailList()){
                 useCaseDetailRepository.deleteUseCaseDetail(useCaseDetail1.getUseCaseID());
             }
-            useCaseRepository.updateUseCase(useCase);
+            useCaseRepository.updateUseCase(newUseCase);
             saveProject();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Success");

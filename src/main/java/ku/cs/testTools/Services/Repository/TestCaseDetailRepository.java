@@ -65,7 +65,19 @@ public class TestCaseDetailRepository {
             throw e;
         }
     }
-
+    public void saveOrUpdateTestCaseDetail(TestCaseDetail testCaseDetail) {
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            entityManager.merge(testCaseDetail); // ✅ ใช้ merge() ป้องกัน identifier ซ้ำ
+            transaction.commit();
+        } catch (RuntimeException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw e;
+        }
+    }
     // Delete a TestCaseDetail by ID
     public void deleteTestCaseDetail(String idTS) {
         EntityTransaction transaction = entityManager.getTransaction();

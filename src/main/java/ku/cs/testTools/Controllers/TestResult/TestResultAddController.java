@@ -691,7 +691,6 @@ public class TestResultAddController {
             objects();
             objects.add("edit");
             objects.add(selectedItem);
-            objects.add(name);
             objects.add(testResultDetailListDelete);
             if (testResultDetailList != null){
                 FXRouter.popup("popup_add_testresult",objects,true);

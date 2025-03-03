@@ -28,7 +28,19 @@ public class TestCaseRepository {
             throw e;
         }
     }
-
+    public void saveOrUpdateTestCase(TestCase testCase) {
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            entityManager.merge(testCase); // ✅ ใช้ merge() แทน persist()
+            transaction.commit();
+        } catch (RuntimeException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw e;
+        }
+    }
     // Find a TestCase by ID
     public TestCase findById(String id) {
         try {
