@@ -480,7 +480,7 @@ public class UseCaseAddController {
             );
 
             useCaseList.addUseCase(newUseCase);
-            saveProject();
+
 
 
 //        useCaseDetailList.clearUseCaseDetail(ucId);
