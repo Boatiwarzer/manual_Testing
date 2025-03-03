@@ -65,4 +65,7 @@ public class Manager implements Comparable{
     public boolean isId(String id) {
         return this.IDManager.equals(id);
     }
+    public boolean isPN(String PN) {
+        return this.projectName.equals(PN);
+    }
 }

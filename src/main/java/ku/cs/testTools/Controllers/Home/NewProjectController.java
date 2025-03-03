@@ -24,6 +24,9 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
 public class NewProjectController {
     @FXML
     private Button onCancelButton;
@@ -49,11 +52,6 @@ public class NewProjectController {
     private TesterList testerList = new TesterList();
     private String TId;
     private ManagerList managerList = new ManagerList();
-    @FXML
-    void initialize() {
-        ManagerRepository managerRepository = new ManagerRepository(); // เพิ่ม ManagerRepository
-        managerRepository.getAllManagers();
-    }
 
     @FXML
     void onProjectNameField(ActionEvent event) {
@@ -79,21 +77,6 @@ public class NewProjectController {
             return;
         }
 
-        // Check if the system name and directory are empty
-//        if (onProjectNameField.getText().isEmpty()) {
-//            systemNameErrorText.setText("Please enter a name.");
-//            return;
-//        } else {
-//            systemNameErrorText.setText("");
-//        }
-//
-//        if (directory == null) {
-//            directoryErrorText.setText("Please select a directory.");
-//            return;
-//        } else {
-//            directoryErrorText.setText("");
-//        }
-
         // Set value for projectName
         String projectName = onProjectNameField.getText();
         String managerName = onManagerField.getText();
@@ -118,7 +101,6 @@ public class NewProjectController {
             }
         }
 
-
         managerList.addOrUpdateManager(manager);
         DataSource<ManagerList> managerListDataSource = new ManagerListFileDataSource(directory, projectName + ".csv");
         managerListDataSource.writeData(managerList);
@@ -135,14 +117,21 @@ public class NewProjectController {
         objects.add(managerName);
         //แก้พาท
         String packageStr1 = "views/";
-        FXRouter.when("home", packageStr1 + "home_manager.fxml","TestTools | " + projectName);
-        FXRouter.goTo("home", objects);
+        FXRouter.when("home_manager", packageStr1 + "home_manager.fxml","TestTools | " + projectName);
+        FXRouter.goTo("home_manager", objects);
 
         // Close the current window
         Node source = (Node) actionEvent.getSource();
         Stage stage = (Stage) source.getScene().getWindow();
         stage.close();
 
+    }
+
+    private boolean isDuplicateProjectName(String projectName) {
+        ManagerRepository managerRepository = new ManagerRepository();
+        Set<Manager> projectSet = new HashSet<>(managerRepository.getAllProjectNames());
+
+        return projectSet.contains(projectName);
     }
 
     private void randomIdM() {
@@ -258,6 +247,13 @@ public class NewProjectController {
                 showAlert("กรุณากรอกข้อมูล Tester ");
                 return false;
             }
+                return false;
+            }
+
+
+        if (isDuplicateProjectName(onProjectNameField.getText())) {
+            showAlert(onProjectNameField.getText() + " ชื่อนี้ถูกใช้งานแล้ว");
+            return false;
         }
 
         return true;

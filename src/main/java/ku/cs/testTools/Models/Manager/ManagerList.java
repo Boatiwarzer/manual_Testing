@@ -3,7 +3,6 @@ package ku.cs.testTools.Models.Manager;
 import lombok.Data;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 
 @Data
 public class ManagerList {
@@ -24,7 +23,7 @@ public class ManagerList {
     public void clear() {
         ManagerList.clear();
     }
-    public Manager findTCById(String id) {
+    public Manager findManagerById(String id) {
         for (Manager Manager : ManagerList) {
             if (Manager.isId(id) ) {
                 return Manager;

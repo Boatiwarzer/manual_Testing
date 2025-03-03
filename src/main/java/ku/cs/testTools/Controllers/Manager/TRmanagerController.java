@@ -48,7 +48,7 @@ public class TRmanagerController {
     @FXML
     private TableView<TestResultDetail> onTableTestresult;
 
-    private String projectName, directory, TestResultId; // directory, projectName
+    private String projectName, directory, TestResultId, name; // directory, projectName
     private TestResult testResult = new TestResult();
     private TestResult selectedTestResult = new TestResult();
     private TestResultList testResultList = new TestResultList();
@@ -103,8 +103,9 @@ public class TRmanagerController {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            if (objects.get(2) != null){
-                testResult = (TestResult) objects.get(2);
+            name = (String) objects.get(2);
+            if (objects.get(3) != null){
+                testResult = (TestResult) objects.get(3);
             }
             clearInfo();
             loadProject();
@@ -199,6 +200,7 @@ public class TRmanagerController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(name);
         objects.add(null);
     }
     private void loadProject() {

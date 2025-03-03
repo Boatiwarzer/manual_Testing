@@ -29,6 +29,9 @@ public class TestResult {
     @Column(name = "note_tr")  // Add the Column annotation
     private String noteTR;
 
+//    @Column(name = "projectName")
+//    private String projectName;
+
     @Column(name = "markedForDeletion")  // Add the Column annotation
     private boolean markedForDeletion = false;
 
@@ -38,6 +41,7 @@ public class TestResult {
         this.dateTR = dateTR;
 //        this.noteTR = noteTR;
         this.noteTR = "-";
+//        this.projectName = projectName;
     }
 
     public String setDateTR() {

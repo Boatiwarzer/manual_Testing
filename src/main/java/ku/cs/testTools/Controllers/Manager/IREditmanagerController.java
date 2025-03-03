@@ -713,6 +713,7 @@ public class IREditmanagerController {
         String dateIR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         String noteIR = onTestNoteField.getText();
         String idTr = iRreport.getTrIR();
+//        String pn = iRreport.getProjectName();
         iRreport = new IRreport(idIR, nameIR, dateIR, noteIR, idTr);
     }
     private void objects() {

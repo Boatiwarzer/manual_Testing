@@ -61,6 +61,7 @@ public class IRreportListFileDataSource implements DataSource<IRreportList>, Man
                             data[3].trim(),  // data[3]
                             data[4].trim(),
                             data[5].trim()
+//                            data[6].trim()
                     );
                     iRreportList.addOrUpdateIRreport(iRreport);
                 }

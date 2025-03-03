@@ -66,7 +66,7 @@ public class TREditmanagerController {
     private MenuItem saveMenuItem;
     private ArrayList<String> word = new ArrayList<>();
     private String trId;
-    private String projectName, directory;
+    private String projectName, directory, name;
     private TestResultList testResultList = new TestResultList();
     //private ArrayList<Object> objects = (ArrayList) FXRouter.getData();
     private TestResultDetailList testResultDetailList = new TestResultDetailList();
@@ -106,17 +106,18 @@ public class TREditmanagerController {
                 objects = (ArrayList) FXRouter.getData();
                 projectName = (String) objects.get(0);
                 directory = (String) objects.get(1);
-                typeTR = (String) objects.get(2);
+                name = (String) objects.get(2);
+                typeTR = (String) objects.get(3);
                 System.out.println(typeTR);
-                System.out.println(objects.get(3));
+                System.out.println(objects.get(4));
                 onTableTestresult.isFocused();
                 selectedTRD();
                 selectedListView();
                 loadProject();
-                if (objects.get(3) != null){
-                    testResult = (TestResult) objects.get(3);
-                    testResultDetailList = (TestResultDetailList) objects.get(4);
-                    type = (String) objects.get(5);
+                if (objects.get(4) != null){
+                    testResult = (TestResult) objects.get(4);
+                    testResultDetailList = (TestResultDetailList) objects.get(5);
+                    type = (String) objects.get(6);
                     System.out.println(type);
 
                 }
@@ -743,12 +744,14 @@ public class TREditmanagerController {
         String nameTR = onTestNameField.getText();
         String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         String noteTR = onTestNoteField.getText();
+//        String pn = testResult.getProjectName();
         testResult = new TestResult(idTR, nameTR, dateTR, noteTR);
     }
     private void objects() {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(name);
         objects.add(typeTR);
         objects.add(testResult);
         objects.add(testResultDetailList);
@@ -870,6 +873,7 @@ public class TREditmanagerController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(name);
             objects.add(null);
             FXRouter.goTo("test_result_manager",objects);
         } catch (IOException e) {

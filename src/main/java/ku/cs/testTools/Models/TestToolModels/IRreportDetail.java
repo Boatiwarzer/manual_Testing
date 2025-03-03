@@ -12,13 +12,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "IRreport_Detail")
-@NamedQuery(name = "find IRreportDetail by id", query = "Select t from IRreportDetail t where t.ID = :id")
+@NamedQuery(name = "find IRreportDetail by id", query = "Select t from IRreportDetail t where t.idIRD = :id")
 public class IRreportDetail {
     @Id
-    @GeneratedValue
-    @Column(name = "id", nullable = false, unique = true)
-    private UUID ID;
-
     @Column(name = "id_ird", nullable = false)
     private String idIRD;
 

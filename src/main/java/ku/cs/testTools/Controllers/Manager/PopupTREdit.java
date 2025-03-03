@@ -55,7 +55,7 @@ public class PopupTREdit {
     private boolean isGenerated = false;
     private File selectedFile;
     private String savedImagePath;
-    private String projectName , directory;
+    private String projectName , directory, name;
     private UseCaseList useCaseList = new UseCaseList();
     private UseCaseDetailList useCaseDetailList = new UseCaseDetailList();
     private TestScriptList testScriptList = new TestScriptList();
@@ -92,15 +92,16 @@ public class PopupTREdit {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            typeTR = (String) objects.get(2);
-            testResult = (TestResult) objects.get(3);
-            testResultDetailList = (TestResultDetailList) objects.get(4);
+            name = (String) objects.get(2);
+            typeTR = (String) objects.get(3);
+            testResult = (TestResult) objects.get(4);
+            testResultDetailList = (TestResultDetailList) objects.get(5);
             idTR = testResult.getIdTR();
-            type = (String) objects.get(5);
+            type = (String) objects.get(6);
             loadProject();
             setLabel();
-            if (objects.get(6) != null && type.equals("edit")) {
-                testResultDetail = (TestResultDetail) objects.get(6);
+            if (objects.get(7) != null && type.equals("edit")) {
+                testResultDetail = (TestResultDetail) objects.get(7);
                 testResultDetail = testResultDetailList.findTRDById(testResultDetail.getIdTRD());
                 id = testResultDetail.getIdTRD();
                 setTextEdit();
@@ -432,6 +433,7 @@ public class PopupTREdit {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(name);
         objects.add(typeTR);
         objects.add(testResult);
         objects.add(testResultDetailList);

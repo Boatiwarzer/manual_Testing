@@ -440,6 +440,7 @@ public class PopupIRmanager {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(nameManager);
         objects.add(typeIR);
         objects.add(iRreport);
         objects.add(iRreportDetailList);
@@ -479,7 +480,7 @@ public class PopupIRmanager {
         String condition = onCondition.getText();
         String image = onImage.getText();
         String retest = onRetest.getText();
-        String manager = onManager.getText();
+        String manager = nameManager;
         String status = onStatusComboBox.getValue();
         String priority = onPriorityComboBox.getValue();
         String remark = onRemark.getText();

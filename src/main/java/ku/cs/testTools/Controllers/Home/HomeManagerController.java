@@ -2,13 +2,11 @@ package ku.cs.testTools.Controllers.Home;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Models.Manager.ManagerList;
@@ -69,6 +67,7 @@ public class HomeManagerController {
     private IRreportList iRreportList = new IRreportList();
     private IRreportDetailList iRreportDetailList = new IRreportDetailList();
     private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
+    private ManagerList managerList1 = new ManagerList();
     private NoteList noteList;
     private TesterList testerList;
     private ManagerList managerList;
@@ -77,12 +76,15 @@ public class HomeManagerController {
     @FXML
     void initialize() {
         if (FXRouter.getData() != null) {
+            loadRepo();
             objects = (ArrayList) FXRouter.getData();
             // Load the project
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            name = (String) objects.get(2);
-            loadRepo();
+            ManagerRepository managerRepository = new ManagerRepository();
+            name = managerRepository.findManagerByProjectName(projectName);
+
+
             System.out.println(name);
             System.out.println("Project Name: " + projectName);
             System.out.println("Directory: " + directory);
@@ -287,6 +289,7 @@ public class HomeManagerController {
         DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
         DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
         DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
+        DataSource<ManagerList> managerListDataSource = new ManagerListFileDataSource(directory, projectName + ".csv");
         useCaseList = useCaseListDataSource.readData();
         useCaseDetailList = useCaseDetailListDataSource.readData();
         testResultList = testResultListDataSource.readData();
@@ -299,6 +302,7 @@ public class HomeManagerController {
         testCaseList = testCaseListDataSource.readData();
         testCaseDetailList = testCaseDetailListDataSource.readData();
         connectionList = connectionListDataSource.readData();
+        managerList1 = managerListDataSource.readData();
     }
 
     @FXML
@@ -366,6 +370,7 @@ public class HomeManagerController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(name);
         objects.add(null);
     }
     @FXML
