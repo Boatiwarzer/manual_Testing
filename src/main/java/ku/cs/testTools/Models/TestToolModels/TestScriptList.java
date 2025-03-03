@@ -40,9 +40,9 @@ public class TestScriptList{
         return null;
     }
 
-    public TestScript findTSByPosition(int id) {
+    public TestScript findTSByPosition(UUID id) {
         for (TestScript testScript : testScriptList) {
-            if (testScript.getPosition() == id ) {
+            if (testScript.getPosition().equals(id) ) {
                 return testScript;
             }
         }
@@ -86,22 +86,22 @@ public class TestScriptList{
         Collections.sort(testScriptList, cmp);
     }
 
-    public TestScript findByPositionId(int positionId) {
+    public TestScript findByPositionId(UUID positionId) {
         for (TestScript testScript : testScriptList) {
-            if (testScript.getPosition() == positionId) {
+            if (testScript.getPosition().equals(positionId)) {
                 return testScript;
             }
         }
         return null;
     }
 
-    public void deleteTestScriptByPositionID(int id) {
+    public void deleteTestScriptByPositionID(UUID id) {
         boolean found = false;
 
         // Iterate through the list to find and remove the item with the matching position ID
         for (int i = 0; i < testScriptList.size(); i++) {
             TestScript existing = testScriptList.get(i);
-            if (existing.getPosition() == id) {
+            if (existing.getPosition().equals(id)) {
                 testScriptList.remove(i);
                 found = true;
                 break;

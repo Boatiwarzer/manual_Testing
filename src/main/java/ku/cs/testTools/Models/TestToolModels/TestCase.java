@@ -17,12 +17,6 @@ import java.util.UUID;
 @NamedQuery(name = "find testcase by id", query = "Select t from TestCase t where t.idTC = :id")
 public class TestCase {
     @Id
-    @UuidGenerator
-    @GeneratedValue
-    @Access(AccessType.FIELD)
-    @Column(name = "id", nullable = false, unique = true)
-    private UUID ID;
-
     @Column(name = "id_tc", nullable = false)
     private String idTC;
 
@@ -45,7 +39,7 @@ public class TestCase {
 //    private List<TestCaseDetail> testCaseList;
 
     @Column(name = "position", nullable = false)
-    private int position;
+    private UUID position;
 
     @Column(name = "pre_con") // Maps to `precon` in the database
     private String preCon;
@@ -53,7 +47,7 @@ public class TestCase {
     @Column(name = "post_con") // Maps to `postcon` in the database
     private String postCon;
 
-    public TestCase(String idTC, String nameTC, String dateTC, String useCase, String descriptionTC, String note, int position, String preCon, String postCon) {
+    public TestCase(String idTC, String nameTC, String dateTC, String useCase, String descriptionTC, String note, UUID position, String preCon, String postCon) {
         this.idTC = idTC;
         this.nameTC = nameTC;
         this.dateTC = dateTC;

@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class TestScriptFileDataSource implements DataSource<TestScriptList>, ManageDataSource<TestScript> {
     private String directory;
@@ -65,7 +66,7 @@ public class TestScriptFileDataSource implements DataSource<TestScriptList>, Man
                             data[7].trim(), // data[7]
                             data[8].trim(),
                             data[9].trim(),// data[8]
-                            Integer.parseInt(data[10].trim())
+                            UUID.fromString(data[10].trim())
                     );
                     testScriptList.addOrUpdateTestScript(testScript);
                 }

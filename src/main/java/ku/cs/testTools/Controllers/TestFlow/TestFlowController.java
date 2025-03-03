@@ -23,7 +23,6 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
@@ -121,7 +120,7 @@ public class TestFlowController {
     private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
     private ConnectionList connectionList = new ConnectionList();
     private Connection connection = new Connection();
-    private int id;
+    private UUID ID;
     private ArrayList<Object> objects;
     private Rectangle border;
     private Rectangle[] anchors;
@@ -129,15 +128,16 @@ public class TestFlowController {
     private Circle circle;
     private List<StackPane> stackPaneList = new ArrayList<>();
     //private Map<Integer, StackPane> testScriptPaneMap; // Mapping positionID -> StackPane
-    private Map<Integer, Point2D> testScriptPositionMap = new HashMap<>();
+    private Map<UUID, Point2D> testScriptPositionMap = new HashMap<>();
     private NoteList noteList;
     private Note note;
     private String name;
     private boolean check = true;
+    private UUID id;
+
     @FXML
     void initialize() {
         onClickTestflow.getStyleClass().add("selected");
-        onDesignArea.getChildren().clear();
 
         if (FXRouter.getData() != null){
             objects = (ArrayList) FXRouter.getData();
@@ -165,20 +165,63 @@ public class TestFlowController {
                         noteList.updateNoteBynoteID("1", "!@#$%^&*()_+");
                     }
                 }
-                saveProject();
             });
         }
 
-//        onNoteTextArea.setOnKeyPressed(keyEvent -> {
-//            if (onNoteTextArea.getText() != null) {
-//                Note note = new Note("1",onNoteTextArea.getText());
-//                noteList.addNote(note);
-//                saveProject();
-//            }
-//        });
-
         saveProject();
+        saveRepo();
+        loadProject();
     }
+
+    private void saveRepo() {
+        TestScriptRepository testScriptRepository = new TestScriptRepository();
+        TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
+        TestFlowPositionRepository testFlowPositionRepository = new TestFlowPositionRepository();
+        TestCaseRepository testCaseRepository = new TestCaseRepository();
+        TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
+        ConnectionRepository connectionRepository = new ConnectionRepository();
+        NoteRepository noteRepository = new NoteRepository();
+
+        // บันทึกข้อมูล TestScriptList
+        for (TestScript script : testScriptList.getTestScriptList()) {
+            testScriptRepository.updateTestScript(script);
+        }
+
+        // บันทึกข้อมูล TestScriptDetailList
+        for (TestScriptDetail detail : testScriptDetailList.getTestScriptDetailList()) {
+            testScriptDetailRepository.updateTestScriptDetail(detail);
+        }
+
+        // บันทึกข้อมูล TestFlowPositionList
+        for (TestFlowPosition position : testFlowPositionList.getPositionList()) {
+            testFlowPositionRepository.updateTestFlowPosition(position);
+        }
+
+        // บันทึกข้อมูล TestCaseList
+        for (TestCase testCase : testCaseList.getTestCaseList()) {
+            testCaseRepository.updateTestCase(testCase);
+        }
+
+        // บันทึกข้อมูล TestCaseDetailList
+        for (TestCaseDetail detail : testCaseDetailList.getTestCaseDetailList()) {
+            testCaseDetailRepository.updateTestCaseDetail(detail);
+        }
+
+
+        // บันทึกข้อมูล ConnectionList
+        for (Connection connection : connectionList.getConnectionList()) {
+            connectionRepository.updateConnection(connection);
+        }
+
+        // บันทึกข้อมูล NoteList
+        for (Note note : noteList.getNoteList()) {
+            noteRepository.updateNote(note);
+        }
+
+        // บันทึกข้อมูล TesterList
+
+    }
+
     private void loadStatusButton() {
         ManagerRepository managerRepository = new ManagerRepository();
         Manager manager = managerRepository.getManagerByProjectName(projectName);
@@ -230,6 +273,7 @@ public class TestFlowController {
     @FXML
     void handleSaveMenuItem(ActionEvent event) throws IOException{
         saveProject();
+        saveRepo();
     }
 
     @FXML
@@ -346,6 +390,7 @@ public class TestFlowController {
         System.out.println(testFlowPositionList);
         System.out.println(testScriptList);
         onDesignArea.getChildren().clear();
+        onDesignArea.requestLayout();
         onNoteTextArea.clear();
         DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
         DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
@@ -381,86 +426,110 @@ public class TestFlowController {
         String projectNameLower = projectName.toLowerCase();
         String nameTesterLower = nameTester.toLowerCase();
 
-        testScriptList.getTestScriptList().forEach(testScript -> {
-            TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(testScript.getPosition());
-            if (testFlowPosition != null
-                    && projectNameLower.equals(testFlowPosition.getProjectName().toLowerCase())
-                    && nameTesterLower.equals(testFlowPosition.getTester().toLowerCase())) {
+        // 🔹 ใช้ Set เก็บ Position ID ที่เคยวาดไปแล้ว
+        Set<UUID> drawnPositionIds = new HashSet<>();
 
-                drawTestScript(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
-                        testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
-                        testScript.getIdTS() + " : " + testScript.getNameTS(),
-                        testFlowPosition.getPositionID());
+        testScriptList.getTestScriptList().forEach(testScript -> {
+            List<TestFlowPosition> testFlowPositions = testFlowPositionList.findAllByPositionId(
+                    testScript.getPosition(), projectNameLower, nameTesterLower
+            );
+
+            // 🔍 Debug: เช็คค่าที่ได้จาก findAllByPositionId()
+            System.out.println("🔎 Position ID: " + testScript.getPosition());
+            System.out.println("📌 Found TestFlowPositions: " + testFlowPositions.size());
+            for (TestFlowPosition position : testFlowPositions) {
+                System.out.println("✅ Found -> ID: " + position.getPositionID() +
+                        ", Project: " + position.getProjectName() +
+                        ", Tester: " + position.getTester());
             }
+
+            testFlowPositions.forEach(testFlowPosition -> {
+                if (!drawnPositionIds.contains(testFlowPosition.getPositionID())) { // ✅ ตรวจสอบว่าถูกวาดไปแล้วหรือยัง
+                    drawTestScript(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
+                            testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
+                            testScript.getIdTS() + " : " + testScript.getNameTS(),
+                            testFlowPosition.getPositionID());
+
+                    drawnPositionIds.add(testFlowPosition.getPositionID()); // ✅ บันทึกว่าเคยวาดแล้ว
+                }
+            });
         });
 
         testCaseList.getTestCaseList().forEach(testCase -> {
-            TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(testCase.getPosition());
-            if (testFlowPosition != null
-                    && projectNameLower.equals(testFlowPosition.getProjectName().toLowerCase())
-                    && nameTesterLower.equals(testFlowPosition.getTester().toLowerCase())) {
+            List<TestFlowPosition> testFlowPositions = testFlowPositionList.findAllByPositionId(
+                    testCase.getPosition(), projectNameLower, nameTesterLower
+            );
 
-                drawTestCase(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
-                        testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
-                        testCase.getIdTC() + " : " + testCase.getNameTC(),
-                        testFlowPosition.getPositionID());
-            }
+            testFlowPositions.forEach(testFlowPosition -> {
+                if (!drawnPositionIds.contains(testFlowPosition.getPositionID())) { // ✅ กันการวาดซ้ำ
+                    drawTestCase(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
+                            testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
+                            testCase.getIdTC() + " : " + testCase.getNameTC(),
+                            testFlowPosition.getPositionID());
+
+                    drawnPositionIds.add(testFlowPosition.getPositionID()); // ✅ บันทึกว่าเคยวาดแล้ว
+                }
+            });
         });
 
         connectionList.getConnectionList().forEach(connection -> {
-            TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(connection.getConnectionID());
-            if (testFlowPosition != null
-                    && projectNameLower.equals(testFlowPosition.getProjectName().toLowerCase())
-                    && nameTesterLower.equals(testFlowPosition.getTester().toLowerCase())) {
+            List<TestFlowPosition> testFlowPositions = testFlowPositionList.findAllByPositionId(
+                    connection.getConnectionID(), projectNameLower, nameTesterLower
+            );
 
-                switch (testFlowPosition.getType()) {
-                    case "start":
-                        drawStart(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
-                                testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
-                                "start", testFlowPosition.getPositionID());
-                        break;
-                    case "end":
-                        drawEnd(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
-                                testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
-                                "end", testFlowPosition.getPositionID());
-                        break;
-                    case "decision":
-                        drawDecision(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
-                                testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
-                                connection.getLabel(), testFlowPosition.getPositionID());
-                        break;
-//                    default:
-//                        String type = connection.getType();
-//                        if (type.equals("line")) {
-//                            drawLine(connection.getConnectionID(), connection.getStartX(), connection.getStartY(), connection.getEndX(), connection.getEndY(), connection.getLabel(), connection.getArrowHead(), connection.getLineType(), connection.getArrowTail());
-//                        } else if (type.equals("arrow")) {
-//                            drawLine(connection.getConnectionID(), connection.getStartX(), connection.getStartY(), connection.getEndX(), connection.getEndY(), connection.getLabel(), connection.getArrowHead(), connection.getLineType(), connection.getArrowTail());
-//                        }
+            testFlowPositions.forEach(testFlowPosition -> {
+                if (!drawnPositionIds.contains(testFlowPosition.getPositionID())) { // ✅ กันซ้ำ
+                    switch (testFlowPosition.getType()) {
+                        case "start":
+                            drawStart(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
+                                    testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
+                                    "start", testFlowPosition.getPositionID());
+                            break;
+                        case "end":
+                            drawEnd(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
+                                    testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
+                                    "end", testFlowPosition.getPositionID());
+                            break;
+                        case "decision":
+                            drawDecision(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
+                                    testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
+                                    connection.getLabel(), testFlowPosition.getPositionID());
+                            break;
+                    }
+
+                    drawnPositionIds.add(testFlowPosition.getPositionID()); // ✅ บันทึกว่าเคยวาดแล้ว
                 }
-            }
+            });
         });
+
         connectionList.getConnectionList().forEach(connection -> {
             String type = connection.getType();
-            if(projectNameLower.equals(connection.getProjectName().toLowerCase())
-                    && nameTesterLower.equals(connection.getTester().toLowerCase())){
+            if (projectNameLower.equals(connection.getProjectName().toLowerCase())
+                    && nameTesterLower.equals(connection.getTester().toLowerCase())) {
                 if (type.equals("line")) {
-                    drawLine(connection.getConnectionID(), connection.getStartX(), connection.getStartY(), connection.getEndX(), connection.getEndY(), connection.getLabel(), connection.getArrowHead(), connection.getLineType(), connection.getArrowTail());
+                    drawLine(connection.getConnectionID(), connection.getStartX(), connection.getStartY(),
+                            connection.getEndX(), connection.getEndY(), connection.getLabel(),
+                            connection.getArrowHead(), connection.getLineType(), connection.getArrowTail());
                 } else if (type.equals("arrow")) {
-                    drawLine(connection.getConnectionID(), connection.getStartX(), connection.getStartY(), connection.getEndX(), connection.getEndY(), connection.getLabel(), connection.getArrowHead(), connection.getLineType(), connection.getArrowTail());
-
+                    drawLine(connection.getConnectionID(), connection.getStartX(), connection.getStartY(),
+                            connection.getEndX(), connection.getEndY(), connection.getLabel(),
+                            connection.getArrowHead(), connection.getLineType(), connection.getArrowTail());
                 }
             }
-
         });
+
         Note note = noteList.findBynoteID("1");
         if (note != null && !Objects.equals(note.getNote(), "!@#$%^&*()_+")) {
             onNoteTextArea.setText(note.getNote());
         }
+
     }
 
 
 
     private void saveProject() {
+//        onDesignArea.getChildren().clear();
+//        onDesignArea.requestLayout();
         // สร้าง DataSource สำหรับแต่ละประเภทของข้อมูล
         DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
         DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
@@ -480,35 +549,35 @@ public class TestFlowController {
         noteListDataSource.writeData(noteList);
 
         // สร้างและอัพเดทแต่ละ Repository แยกกัน
-        TestScriptRepository testScriptRepository = new TestScriptRepository();
-        for (TestScript testScript : testScriptList.getTestScriptList()) {
-            testScriptRepository.updateTestScript(testScript);
-        }
-
-        TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
-        for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()) {
-            testScriptDetailRepository.updateTestScriptDetail(testScriptDetail);
-        }
-
-        TestCaseRepository testCaseRepository = new TestCaseRepository();
-        for (TestCase testCase : testCaseList.getTestCaseList()) {
-            testCaseRepository.updateTestCase(testCase);
-        }
-
-        TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
-        for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()) {
-            testCaseDetailRepository.updateTestCaseDetail(testCaseDetail);
-        }
-
-        ConnectionRepository connectionRepository = new ConnectionRepository();
-        for (Connection connection : connectionList.getConnectionList()) {
-            connectionRepository.updateConnection(connection);
-        }
-
-        NoteRepository noteRepository = new NoteRepository();
-        for (Note note : noteList.getNoteList()) {
-            noteRepository.updateNote(note);
-        }
+//        TestScriptRepository testScriptRepository = new TestScriptRepository();
+//        for (TestScript testScript : testScriptList.getTestScriptList()) {
+//            testScriptRepository.updateTestScript(testScript);
+//        }
+//
+//        TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
+//        for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()) {
+//            testScriptDetailRepository.updateTestScriptDetail(testScriptDetail);
+//        }
+//
+//        TestCaseRepository testCaseRepository = new TestCaseRepository();
+//        for (TestCase testCase : testCaseList.getTestCaseList()) {
+//            testCaseRepository.updateTestCase(testCase);
+//        }
+//
+//        TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
+//        for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()) {
+//            testCaseDetailRepository.updateTestCaseDetail(testCaseDetail);
+//        }
+//
+//        ConnectionRepository connectionRepository = new ConnectionRepository();
+//        for (Connection connection : connectionList.getConnectionList()) {
+//            connectionRepository.updateConnection(connection);
+//        }
+//
+//        NoteRepository noteRepository = new NoteRepository();
+//        for (Note note : noteList.getNoteList()) {
+//            noteRepository.updateNote(note);
+//        }
 
         System.out.println("Project Saved");
     }
@@ -539,7 +608,7 @@ public class TestFlowController {
         }
         return anchors;
     }
-    private void BoundShape(Rectangle[] anchors, Rectangle rectangle,Rectangle border ,StackPane stackPane, String type ,int positionID) {
+    private void BoundShape(Rectangle[] anchors, Rectangle rectangle,Rectangle border ,StackPane stackPane, String type ,UUID positionID) {
         if (check){
             stackPane.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2) {
@@ -586,7 +655,7 @@ public class TestFlowController {
         }
     }
 
-    private void BoundShape(Rectangle[] anchors, Polygon polygon,Rectangle border ,StackPane stackPane,int positionID) {
+    private void BoundShape(Rectangle[] anchors, Polygon polygon,Rectangle border ,StackPane stackPane,UUID positionID) {
         if (check){
             stackPane.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 1){
@@ -626,7 +695,7 @@ public class TestFlowController {
         }
 
     }
-    private void BoundShape(Rectangle[] anchors, Circle circle, Rectangle border, StackPane stackPane, int positionID) {
+    private void BoundShape(Rectangle[] anchors, Circle circle, Rectangle border, StackPane stackPane, UUID positionID) {
         if (check){
             stackPane.setOnMouseClicked(event -> {
                 event.consume();
@@ -668,7 +737,7 @@ public class TestFlowController {
 
     }
 
-    private void openTestCasePopup(int positionID) {
+    private void openTestCasePopup(UUID positionID) {
         ArrayList<Object> objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
@@ -677,6 +746,7 @@ public class TestFlowController {
         objects.add(null);
         try {
             saveProject();
+            saveRepo();
             FXRouter.newPopup("popup_info_testcase", objects, true);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -757,7 +827,7 @@ public class TestFlowController {
 
 
     // ฟังก์ชันปรับขนาดด้วย Anchor Points
-    private void addAnchorDragHandlers(Rectangle[] anchors, Rectangle rectangle, StackPane stackPane,int ID) {
+    private void addAnchorDragHandlers(Rectangle[] anchors, Rectangle rectangle, StackPane stackPane,UUID ID) {
         if (check){
             for (int i = 0; i < anchors.length; i++) {
                 int finalI = i;
@@ -864,13 +934,14 @@ public class TestFlowController {
 
                         // บันทึกโปรเจค
                         saveProject();
+                        saveRepo();
                     }
                 });
             }
         }
 
     }
-    private void addAnchorDragHandlers(Rectangle[] anchors, Circle circle,Rectangle border ,StackPane stackPane, int ID) {
+    private void addAnchorDragHandlers(Rectangle[] anchors, Circle circle,Rectangle border ,StackPane stackPane, UUID ID) {
         if (check){
             for (int i = 0; i < anchors.length; i++) {
                 int finalI = i;
@@ -936,6 +1007,7 @@ public class TestFlowController {
 
                     // Save project state
                     saveProject();
+                    saveRepo();
 
                 });
             }
@@ -946,7 +1018,7 @@ public class TestFlowController {
 
 
     // เพิ่มฟังก์ชันในการลาก StackPane
-    private void makeDraggable(StackPane stackPane, Rectangle[] anchors, Rectangle rectangle, Rectangle border ,String type ,int ID) {
+    private void makeDraggable(StackPane stackPane, Rectangle[] anchors, Rectangle rectangle, Rectangle border ,String type ,UUID ID) {
         if (check){
             stackPane.setOnMousePressed(event -> {
                 startX = event.getSceneX() - stackPane.getLayoutX();
@@ -970,11 +1042,12 @@ public class TestFlowController {
                 updateAnchorPositions(anchors, stackPane, rectangle);
                 testFlowPositionList.updatePosition(ID, newX, newY);
                 saveProject();
+                saveRepo();
             });
         }
 
     }
-    private void makeDraggable(StackPane stackPane, Rectangle[] anchors, Circle circle, Rectangle border ,String type ,int ID) {
+    private void makeDraggable(StackPane stackPane, Rectangle[] anchors, Circle circle, Rectangle border ,String type ,UUID ID) {
         if (check){
             stackPane.setOnMousePressed(event -> {
                 startX = event.getSceneX() - stackPane.getLayoutX();
@@ -998,11 +1071,12 @@ public class TestFlowController {
                 updateAnchorPositions(anchors, stackPane, circle);
                 testFlowPositionList.updatePosition(ID, newX, newY);
                 saveProject();
+                saveRepo();
             });
         }
 
     }
-    private void makeDraggable(StackPane stackPane, Rectangle[] anchors, Polygon polygon, Rectangle border, int positionID) {
+    private void makeDraggable(StackPane stackPane, Rectangle[] anchors, Polygon polygon, Rectangle border, UUID positionID) {
         if (check){
             stackPane.setOnMousePressed(event -> {
                 startX = event.getSceneX() - stackPane.getLayoutX();
@@ -1026,11 +1100,12 @@ public class TestFlowController {
                 updateAnchorPositions(anchors, stackPane, polygon);
                 testFlowPositionList.updatePosition(positionID, newX, newY);
                 saveProject();
+                saveRepo();
             });
         }
     }
 
-    private void addAnchorDragHandlers(Rectangle[] anchors, Polygon polygon, StackPane stackPane, int ID) {
+    private void addAnchorDragHandlers(Rectangle[] anchors, Polygon polygon, StackPane stackPane, UUID ID) {
         if (check){
             for (int i = 0; i < anchors.length; i++) {
                 int finalI = i;
@@ -1147,6 +1222,7 @@ public class TestFlowController {
 
                         // บันทึกโปรเจค
                         saveProject();
+                        saveRepo();
                     }
                 });
             }
@@ -1239,7 +1315,7 @@ public class TestFlowController {
     }
 
 
-    public void drawTestScript(double width, double height, double layoutX, double layoutY, String label, int positionID) {
+    public void drawTestScript(double width, double height, double layoutX, double layoutY, String label, UUID positionID) {
         // Create the main rectangle
         Rectangle rectangle = new Rectangle(width, height);
         rectangle.setArcWidth(30); // Rounded corners
@@ -1291,7 +1367,7 @@ public class TestFlowController {
     }
 
     // เปิดหน้าต่างป็อปอัป
-    private void openTestScriptPopup(int positionID) {
+    private void openTestScriptPopup(UUID positionID) {
         ArrayList<Object> objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
@@ -1300,6 +1376,7 @@ public class TestFlowController {
         objects.add(null);
         try {
             saveProject();
+            saveRepo();
             FXRouter.newPopup("popup_info_testscript", objects, true);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -1307,7 +1384,7 @@ public class TestFlowController {
     }
 
 
-    private void drawTestCase(double width, double height, double layoutX, double layoutY, String label, int positionID) {
+    private void drawTestCase(double width, double height, double layoutX, double layoutY, String label, UUID positionID) {
         // Create a rectangle with specified width and height
         Rectangle rectangle = new Rectangle(width, height);
         rectangle.setFill(Color.TRANSPARENT); // Transparent fill
@@ -1353,7 +1430,7 @@ public class TestFlowController {
 
     }
 
-    private void drawStart(double width, double height, double layoutX, double layoutY, String label, int positionID) {
+    private void drawStart(double width, double height, double layoutX, double layoutY, String label, UUID positionID) {
         Circle circle = new Circle(width, height,15);
 
         circle.setStyle("-fx-fill: transparent");
@@ -1399,11 +1476,12 @@ public class TestFlowController {
             hideBorderAndAnchors(border, anchors);
         });
         saveProject();
+        saveRepo();
     }
 
 
 
-    private void drawEnd(double width, double height, double layoutX, double layoutY, String label, int positionID) {
+    private void drawEnd(double width, double height, double layoutX, double layoutY, String label, UUID positionID) {
         Circle circle = new Circle(width, height,15);
 
         circle.setStyle("-fx-fill: transparent");
@@ -1448,8 +1526,9 @@ public class TestFlowController {
             hideBorderAndAnchors(border, anchors);
         });
         saveProject();
+        saveRepo();
     }
-    private void drawDecision(double width, double height, double layoutX, double layoutY, String label, int positionID) {
+    private void drawDecision(double width, double height, double layoutX, double layoutY, String label, UUID positionID) {
         // สร้างรูปทรง Polygon
         Polygon polygon = createKiteShape(width, height, 75);
         polygon.setStyle("-fx-fill: transparent");
@@ -1502,11 +1581,12 @@ public class TestFlowController {
         });
         // บันทึกโปรเจค
         saveProject();
+        saveRepo();
     }
 
 
 
-    public void drawLine(int connectionID, double startX, double startY, double endX, double endY, String label,
+    public void drawLine(UUID connectionID, double startX, double startY, double endX, double endY, String label,
                          String arrowHead, String lineType, String arrowTail) {
 
         // สร้างเส้น
@@ -1580,6 +1660,7 @@ public class TestFlowController {
             // ทำให้เส้นสามารถเลือกได้
             makeSelectable(line, "line", connectionID);
             saveProject();
+            saveRepo();
 
             // Event handler สำหรับคลิกที่เส้นเพื่อแสดงจุด
             line.setOnMouseClicked(mouseEvent -> {
@@ -1606,6 +1687,7 @@ public class TestFlowController {
 //                objects.add(connectionID);
 //                try {
 //                    saveProject();
+                        //saveRepo();
 //                    FXRouter.popup("ConnectionPage", objects);
 //                } catch (IOException e) {
 //                    throw new RuntimeException(e);
@@ -1654,7 +1736,7 @@ public class TestFlowController {
 
     }
 
-    public void handlePointMouseReleased(MouseEvent event, Line line, int connectionID, String label, String arrowHead, String arrowTail) {
+    public void handlePointMouseReleased(MouseEvent event, Line line, UUID connectionID, String label, String arrowHead, String arrowTail) {
         // Add the arrowHead and arrowTail
         Label arrowHeadPolygon = createDraggableArrow(line, true, arrowHead);
         Label arrowTailPolygon = createDraggableArrow(line, false, arrowTail);
@@ -1671,6 +1753,7 @@ public class TestFlowController {
         // Update the connection
         connectionList.updateConnection(connectionID, line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
         saveProject();
+        saveRepo();
     }
 
     public Circle createDraggablePoint(double x, double y) {
@@ -1755,7 +1838,7 @@ public class TestFlowController {
 
         }
     }
-    private void makeDraggable(Node node, String type, int ID) {
+    private void makeDraggable(Node node, String type, UUID ID) {
         node.setOnMousePressed(event -> {
             startX = event.getSceneX() - node.getLayoutX();
             startY = event.getSceneY() - node.getLayoutY();
@@ -1768,6 +1851,7 @@ public class TestFlowController {
             node.setLayoutY(newY);
             testFlowPositionList.updatePosition(ID, newX, newY);
             saveProject();
+            saveRepo();
 
         });
     }
@@ -1819,22 +1903,26 @@ public class TestFlowController {
                 FXRouter.popup("LabelPage", objects);
                 
             } else if (event.getDragboard().getString().equals("Circle")) {
+                randomId();
                 addToConnectionList(event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Start", "none", "none", "none","start");
-                TestFlowPosition testFlowPosition = new TestFlowPosition(connectionList.findLastConnectionID(),75,75,event.getX()-75,event.getY()-75,0,"start",projectName,name);
+                TestFlowPosition testFlowPosition = new TestFlowPosition(id,75,75,event.getX()-75,event.getY()-75,0,"start",projectName,name);
                 testFlowPositionList.addPosition(testFlowPosition);
                 drawStart(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(), connection.getLabel(), testFlowPosition.getPositionID());
                 TestFlowPositionRepository testFlowPositionRepository = new TestFlowPositionRepository();
                 testFlowPositionRepository.addTestFlowPosition(testFlowPosition);
                 saveProject();
+                saveRepo();
 
             }else if (event.getDragboard().getString().equals("BlackCircle")) {
+                randomId();
                 addToConnectionList(event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "End", "none", "none", "none","end");
-                TestFlowPosition testFlowPosition = new TestFlowPosition(connectionList.findLastConnectionID(),75,75,event.getX()-75,event.getY()-75,0,"end",projectName,name);
+                TestFlowPosition testFlowPosition = new TestFlowPosition(id,75,75,event.getX()-75,event.getY()-75,0,"end",projectName,name);
                 testFlowPositionList.addPosition(testFlowPosition);
                 drawEnd(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(), connection.getLabel(), testFlowPosition.getPositionID());
                 TestFlowPositionRepository testFlowPositionRepository = new TestFlowPositionRepository();
                 testFlowPositionRepository.addTestFlowPosition(testFlowPosition);
                 saveProject();
+                saveRepo();
             }else if (event.getDragboard().getString().equals("Kite")) {
                 ArrayList<Object> objects = new ArrayList<>();
                 objects.add(projectName);
@@ -1848,22 +1936,30 @@ public class TestFlowController {
                 FXRouter.popup("LabelPage", objects);
 
             }else if (event.getDragboard().getString().equals("Arrow")) {
+                randomId();
                 addToConnectionList(event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Arrow", "none", "line", "open","line");
-                drawLine(connectionList.findLastConnectionID(), event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Association", "none", "line", "open");
+                drawLine(id, event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Association", "none", "line", "open");
                 saveProject();
+                saveRepo();
             }else if (event.getDragboard().getString().equals("Line")) {
+                randomId();
                 addToConnectionList(event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Line", "none", "line", "none","line");
-                drawLine(connectionList.findLastConnectionID(), event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Association", "none", "line", "none");
+                drawLine(id, event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Association", "none", "line", "none");
                 saveProject();
+                saveRepo();
             }
             event.setDropCompleted(true);
         }
+    }
+    private void randomId() {
+        UUID i = UUID.randomUUID();
+        this.id = i;
     }
     public void addToConnectionList(double startX, double startY, double endX, double endY, String label,
                                     String arrowHead, String lineType, String arrowTail,String type) {
         // Save the connection
         Connection connection = new Connection(
-                connectionList.findLastConnectionID() + 1,  // connectionID
+                id,// connectionID
                 startX,  // startX
                 startY,  // startY
                 endX,  // endX
@@ -1881,12 +1977,7 @@ public class TestFlowController {
         ConnectionRepository connectionRepository = new ConnectionRepository();
         connectionRepository.addConnection(connection);
         saveProject();
-    }
-
-    private void randomId() {
-        int min = 1;
-        int upperbound = 999;
-        this.id = ((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
+        saveRepo();
     }
 
 
@@ -1944,7 +2035,7 @@ public class TestFlowController {
 
 
 
-    private void makeSelectable(Node node, String type, int ID) {
+    private void makeSelectable(Node node, String type, UUID ID) {
         if (check){
             ContextMenu contextMenu = new ContextMenu();
 
@@ -1979,6 +2070,7 @@ public class TestFlowController {
                                 // Update the size
                                 testFlowPositionList.updateSize(ID, newWidth, newHeight);
                                 saveProject();
+                                saveRepo();
                             }else if (Objects.equals(type, "testcase")){
                                 ((Rectangle) ((StackPane) node).getChildren().get(0)).setWidth(newWidth);
                                 ((Rectangle) ((StackPane) node).getChildren().get(0)).setHeight(newHeight);
@@ -1987,6 +2079,7 @@ public class TestFlowController {
                                 // Update the size
                                 testFlowPositionList.updateSize(ID, newWidth, newHeight);
                                 saveProject();
+                                saveRepo();
 
 
                             }
@@ -1996,6 +2089,7 @@ public class TestFlowController {
                 node.setOnMouseReleased(mouseEvent -> {
                     node.setOnMouseDragged(null);
                     saveProject();
+                    saveRepo();
                     if (!Objects.equals(type, "line") || !Objects.equals(type, "arrow")) {
                         makeDraggable(node, type, ID);
                     }
@@ -2043,6 +2137,7 @@ public class TestFlowController {
                     }
                     onDesignArea.getChildren().remove(node);
                     saveProject();
+                    saveRepo();
                     loadProject();
                     System.out.println("Item Removed");
                 }
@@ -2070,7 +2165,7 @@ public class TestFlowController {
 
                     // วาดเส้น
                     drawLine(
-                            connectionList.findLastConnectionID(),
+                            id,
                             start.getX(),
                             start.getY(),
                             end.getX(),
@@ -2094,6 +2189,7 @@ public class TestFlowController {
                             "line"
                     );
                     saveProject();
+                    saveRepo();
                 }
             });
 
@@ -2101,6 +2197,7 @@ public class TestFlowController {
             node.setOnMouseReleased(mouseEvent -> {
                 node.setOnMouseDragged(null);
                 saveProject();
+                saveRepo();
                 if (!Objects.equals(type,"line")|| !Objects.equals(type, "arrow")) {
                     makeDraggable(node, type, ID);
                 }

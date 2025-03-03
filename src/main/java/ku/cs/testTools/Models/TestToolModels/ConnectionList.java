@@ -1,123 +1,84 @@
 package ku.cs.testTools.Models.TestToolModels;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.UUID;
+
 @Data
 public class ConnectionList {
     private ArrayList<Connection> connectionList;
 
     public ConnectionList() {
-        connectionList = new ArrayList<Connection>();
+        connectionList = new ArrayList<>();
     }
 
     public void addOrUpdate(Connection connection) {
-        boolean exists = false;
-
-        // Iterate through the list to check for an existing item with the same ID
         for (int i = 0; i < connectionList.size(); i++) {
             Connection existing = connectionList.get(i);
-
-            if (existing.isId(connection.getConnectionID())) {
-                // Update existing item
+            if (existing.getConnectionID().equals(connection.getConnectionID())) { // ✅ ใช้ .equals()
                 connectionList.set(i, connection);
-                exists = true;
-                break;
+                return; // อัปเดตแล้วออกจากเมธอดทันที
             }
         }
+        connectionList.add(connection); // ถ้ายังไม่มี ให้เพิ่มใหม่
+    }
 
-        // If the item does not exist, add it to the list
-        if (!exists) {
-            connectionList.add(connection);
-        }
-    }
     public void deleteTestCase(Connection connection) {
-        // Iterate through the list to find the item to delete
-        for (int i = 0; i < connectionList.size(); i++) {
-            Connection existing = connectionList.get(i);
-            if (existing.isId(connection.getConnectionID())) {
-                // Remove the item from the list
-                connectionList.remove(i);
-                break; // Exit after removing the first match
-            }
-        }
+        connectionList.removeIf(existing -> existing.getConnectionID().equals(connection.getConnectionID())); // ✅ ใช้ .equals()
     }
+
     public void sort(Comparator<Connection> cmp) {
         connectionList.sort(cmp);
     }
 
-    public void deleteDecisionByID(int id) {
-        boolean found = false;
-
-        // Use an iterator to safely remove items while iterating
+    public void deleteDecisionByID(UUID id) {
         Iterator<Connection> iterator = connectionList.iterator();
         while (iterator.hasNext()) {
             Connection existing = iterator.next();
-            int i = existing.getConnectionID();
-            if (i == id) {
-                iterator.remove(); // Safely remove the item
-                found = true;
+            if (existing.getConnectionID().equals(id)) { // ✅ ใช้ .equals()
+                iterator.remove();
+                return; // ลบแล้วออกจากเมธอดทันที
             }
         }
+        System.out.println("No Connection found with ID: " + id);
+    }
 
-        // Log or handle the case where no matching item was found
-        if (!found) {
-            System.out.println("No TestCaseDetail found with ID: " + id);
+    public UUID findLastConnectionID() {
+        if (connectionList.isEmpty()) {
+            return null; // หรือ UUID.randomUUID() ถ้าอยากให้มีค่า default
         }
+        return connectionList.get(connectionList.size() - 1).getConnectionID();
     }
-    public void removeConnectionByID(int id) {
+
+    public void updateConnection(UUID connectionID, double startX, double startY, double endX, double endY) {
         for (Connection connection : connectionList) {
-            if (connection.getConnectionID() == id) {
-                connectionList.remove(connection);
-                break;
-            }
-        }
-    }
-    public int findLastConnectionID() {
-        int lastConnectionID = 0;
-        for (Connection connection : connectionList) {
-            if (connection.getConnectionID() > lastConnectionID) {
-                lastConnectionID = connection.getConnectionID();
-            }
-        }
-        return lastConnectionID;
-    }
-    public void updateConnection(int ConnectionID, double startX, double startY, double endX, double endY) {
-        for (Connection connection : connectionList) {
-            if (connection.getConnectionID() == ConnectionID) {
+            if (connection.getConnectionID().equals(connectionID)) { // ✅ ใช้ .equals()
                 connection.setStartX(startX);
                 connection.setStartY(startY);
                 connection.setEndX(endX);
                 connection.setEndY(endY);
+                return; // อัปเดตแล้วออกจากเมธอดทันที
             }
         }
     }
+
     public void updateConnection(Connection connection) {
         for (Connection c : connectionList) {
-            if (c.getConnectionID() == connection.getConnectionID()) {
+            if (c.getConnectionID().equals(connection.getConnectionID())) { // ✅ ใช้ .equals()
                 c.setStartX(connection.getStartX());
                 c.setStartY(connection.getStartY());
                 c.setEndX(connection.getEndX());
                 c.setEndY(connection.getEndY());
+                return; // อัปเดตแล้วออกจากเมธอดทันที
             }
         }
     }
 
     public void clear() {
         connectionList.clear();
-    }
-
-
-    public Connection findByConnectionID(int id) {
-        for (Connection connection : connectionList) {
-            if (connection.getConnectionID() == id) {
-                return connection;
-            }
-        }
-        return null;
     }
 
     public void addConnection(Connection connection) {

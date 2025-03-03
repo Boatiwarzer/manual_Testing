@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class PopupTestFlowAddTestcaseController {
 
@@ -48,7 +49,7 @@ public class PopupTestFlowAddTestcaseController {
     private String dateTCD;
     private String idTS;
     private String date;
-    private int position;
+    private UUID position;
     private String projectName, directory;
     private String type;
     private String name;
@@ -65,7 +66,7 @@ public class PopupTestFlowAddTestcaseController {
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
             name = (String) objects.get(2);
-            position = (int) objects.get(3);
+            position = (UUID) objects.get(3);
             testCase = (TestCase) objects.get(4);
             testCaseDetailList = (TestCaseDetailList) objects.get(5);
             type = (String) objects.get(6);
@@ -159,7 +160,7 @@ public class PopupTestFlowAddTestcaseController {
         if (onTestNo.getText() == null || onTestNo.getText().trim().isEmpty()) {
             showAlert("กรุณากรอกข้อมูล Test No.");
             return false;
-        } else if (!onTestNo.getText().matches("^(?!0$)\\\\d+$")) {
+        } else if (!onTestNo.getText().matches("\\d+")) {
             showAlert("กรุณากรอกตัวเลขเท่านั้น");
             return false;
         }

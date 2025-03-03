@@ -19,18 +19,23 @@ public class UseCaseDetailRepository {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            entityManager.persist(useCaseDetail);
+
+            UseCaseDetail existing = entityManager.find(UseCaseDetail.class, useCaseDetail.getUseCaseID());
+            if (existing == null) {
+                entityManager.persist(useCaseDetail); // Insert ถ้ายังไม่มี
+            } else {
+                entityManager.merge(useCaseDetail);   // Update ถ้ามีแล้ว
+            }
+
             transaction.commit();
         } catch (RuntimeException e) {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
             throw e;
-        } finally {
-            // Ensure that the EntityManager is closed after the transaction
-            close();
         }
     }
+
 
     // Find a UseCaseDetail by ID
     public UseCaseDetail findById(String id) {
@@ -38,8 +43,6 @@ public class UseCaseDetailRepository {
             return entityManager.find(UseCaseDetail.class, id);
         } catch (NoResultException e) {
             return null; // Return null if no result found
-        } finally {
-            close();
         }
     }
 
@@ -48,8 +51,8 @@ public class UseCaseDetailRepository {
         String query = "SELECT t FROM UseCaseDetail t";
         try {
             return entityManager.createQuery(query, UseCaseDetail.class).getResultList();
-        } finally {
-            close();
+        } catch (NoResultException e) {
+            return null; // Return null if no result found
         }
     }
 
@@ -83,15 +86,9 @@ public class UseCaseDetailRepository {
                 transaction.rollback();
             }
             throw e;
-        } finally {
-            close();
         }
     }
 
     // Close EntityManager after usage
-    private void close() {
-        if (entityManager.isOpen()) {
-            entityManager.close();
-        }
-    }
+
 }

@@ -13,16 +13,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Entity
 @Table(name = "TestScript_Detail")
-@NamedQuery(name = "find testscriptdetail by id", query = "Select t from TestScriptDetail t where t.ID = :id")
+@NamedQuery(name = "find testscriptdetail by id", query = "Select t from TestScriptDetail t where t.idTSD = :id")
 public class TestScriptDetail {
 
     @Id
-    @UuidGenerator
-    @GeneratedValue
-    @Access(AccessType.FIELD)
-    @Column(name = "id", nullable = false, unique = true)
-    private UUID ID;
-
     @Column(name = "id_tsd")  // Optional: You can add Column annotation for clarity
     private String idTSD;
 
@@ -43,6 +37,8 @@ public class TestScriptDetail {
 
     @Column(name = "date_tsd")  // Add Column annotation for dateTSD
     private String dateTSD;
+
+
 
     public TestScriptDetail(String idTSD, String testNo, String steps, String inputData, String expected, String idTS, String dateTSD) {
         this.idTSD = idTSD;

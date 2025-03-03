@@ -14,6 +14,7 @@ import ku.cs.testTools.Services.AutoCompleteComboBoxListener;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class PopupTestFlowAddTestscriptController {
 
@@ -49,10 +50,10 @@ public class PopupTestFlowAddTestscriptController {
     private String id;
     private String idTS;
     private String date;
-    private int position;
+    private UUID position;
     private String type;
     private ArrayList<Object> objects;
-    private String name;
+    private String nameTester;
     private TestScriptDetailList testScriptDetailListDelete;
 
     @FXML
@@ -64,8 +65,8 @@ public class PopupTestFlowAddTestscriptController {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            name = (String) objects.get(2);
-            position = (int) objects.get(3);
+            nameTester = (String) objects.get(2);
+            position = (UUID) objects.get(3);
             testScript = (TestScript) objects.get(4);
             System.out.println(testScript);
             testScriptDetailList = (TestScriptDetailList) objects.get(5);
@@ -103,7 +104,7 @@ public class PopupTestFlowAddTestscriptController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
-        objects.add(name);
+        objects.add(nameTester);
         objects.add(null);
         clearInfo();
         System.out.println(testScriptDetail);
@@ -126,7 +127,7 @@ public class PopupTestFlowAddTestscriptController {
         if (onTestNo.getText() == null || onTestNo.getText().trim().isEmpty()) {
             showAlert("กรุณากรอกข้อมูล Test No.");
             return false;
-        } else if (!onTestNo.getText().matches("^(?!0$)\\\\d+$")) {
+        } else if (!onTestNo.getText().matches("\\d+")) {
             showAlert("กรุณากรอกตัวเลขเท่านั้น");
             return false;
         }
@@ -159,7 +160,7 @@ public class PopupTestFlowAddTestscriptController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
-        objects.add(name);
+        objects.add(nameTester);
         objects.add(position);
         objects.add(testScript);
         objects.add(testScriptDetailList);

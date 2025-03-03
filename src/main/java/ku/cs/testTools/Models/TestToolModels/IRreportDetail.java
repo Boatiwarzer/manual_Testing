@@ -12,15 +12,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "IRreport_Detail")
-@NamedQuery(name = "find IRreportDetail by id", query = "Select t from IRreportDetail t where t.ID = :id")
+@NamedQuery(name = "find IRreportDetail by id", query = "Select t from IRreportDetail t where t.idIRD = :id")
 public class IRreportDetail {
     @Id
-    @UuidGenerator
-    @GeneratedValue
-    @Access(AccessType.FIELD)
-    @Column(name = "id", nullable = false, unique = true)
-    private UUID ID;
-
     @Column(name = "id_ird", nullable = false)
     private String idIRD;
 
@@ -65,6 +59,8 @@ public class IRreportDetail {
 
     private String idIR;
     private String idTRD;
+
+
 
     public IRreportDetail(String idIRD, String testNoIRD, String testerIRD, String tsIdIRD, String tcIdIRD, String descriptIRD, String conditionIRD, String imageIRD, String retestIRD, String priorityIRD, String rcaIRD, String managerIRD, String statusIRD, String remarkIRD, String idIR, String idTRD) {
         this.idIRD = idIRD;

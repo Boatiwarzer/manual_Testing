@@ -8,6 +8,7 @@ import ku.cs.testTools.Services.ManageDataSource;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 public class ConnectionListFileDataSource implements DataSource<ConnectionList>, ManageDataSource<Connection> {
     private String directory;
@@ -53,7 +54,7 @@ public class ConnectionListFileDataSource implements DataSource<ConnectionList>,
                 String[] data = line.split(",");
                 if (data[0].trim().equals("connection")) {
                     Connection connection = new Connection(
-                            Integer.parseInt(data[1].trim()), // connectionID
+                            UUID.fromString(data[1].trim()), // connectionID
                             Double.parseDouble(data[2].trim()), // startX
                             Double.parseDouble(data[3].trim()), // startY
                             Double.parseDouble(data[4].trim()), // endX

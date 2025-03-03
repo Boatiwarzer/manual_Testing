@@ -105,7 +105,7 @@ public class TestCaseEditController {
     private TestCaseDetailList testcaseDetailListTemp = new TestCaseDetailList();
     private String type;
     private String typeTC;
-    private int position = 0;
+    private UUID position = UUID.randomUUID();
     private String name;
     private TestCaseDetailList testCaseDetailListDelete = new TestCaseDetailList();
 
@@ -450,7 +450,7 @@ public class TestCaseEditController {
         String preCon = infoPreconField.getText();
         String post = infoPostconField.getText();
 
-        testCase = new TestCase(idTC, name, date, useCase, description,note,0,preCon,post);
+        testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post);
 
     }
     private void currentNewDataForSubmit(){
@@ -462,7 +462,7 @@ public class TestCaseEditController {
         String note = onTestNoteField.getText();
         String preCon = infoPreconField.getText();
         String post = infoPostconField.getText();
-        testCase = new TestCase(idTC, name, date, useCase, description,note,0,preCon,post);
+        testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post);
 
     }
     private void objects() {
@@ -574,28 +574,36 @@ public class TestCaseEditController {
         }
         try {
             currentNewDataForSubmit();
-            objects = new ArrayList<>();
-            objects.add(projectName);
-            objects.add(directory);
-            objects.add(testCase);
-            testCaseList.addOrUpdateTestCase(testCase);
             TestCaseRepository testCaseRepository = new TestCaseRepository();
             TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
-            for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()){
+            testCaseRepository.addTestCase(testCase);
+            for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()) {
                 testCaseDetailRepository.updateTestCaseDetail(testCaseDetail);
             }
             for (TestCaseDetail testCaseDetail : testCaseDetailListDelete.getTestCaseDetailList()){
                 testCaseDetailRepository.deleteTestCaseDetail(testCaseDetail.getIdTCD());
             }
-            testCaseRepository.updateTestCase(testCase);
-            // Write data to respective files
+
+
+            testCaseList.addOrUpdateTestCase(testCase);
             saveProject();
+
+            // 🔹 เคลียร์ objects และเพิ่มค่าที่ต้องการ
+            objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add(name);
+            objects.add(testCase);
+
+            // 🔹 แจ้งเตือนว่าบันทึกข้อมูลสำเร็จ
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Success");
             alert.setHeaderText(null);
             alert.setContentText("Test case saved successfully!");
             alert.showAndWait();
-            FXRouter.goTo("test_case",objects);
+
+            // 🔹 ไปที่หน้าถัดไป
+            FXRouter.goTo("test_case", objects, true);
 
         } catch (IOException e) {
             throw new RuntimeException(e);

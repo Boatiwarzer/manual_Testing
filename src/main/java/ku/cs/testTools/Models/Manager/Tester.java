@@ -2,14 +2,19 @@ package ku.cs.testTools.Models.Manager;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.UuidGenerator;
+
+import java.util.UUID;
 
 @Data
 @Entity
 @Table(name = "Tester")
-@NamedQuery(name = "find Tester by id", query = "Select t from Tester t where t.IdTester = :id")
+@NamedQuery(name = "find Tester by id", query = "Select t from Tester t where t.ID = :id")
 public class Tester {
     @Id
-    @Access(AccessType.FIELD)
+    @GeneratedValue
+    @Column(name = "id", nullable = false, unique = true)
+    private UUID ID;
     private String IdTester;
     private String nameTester;
     private String projectName;

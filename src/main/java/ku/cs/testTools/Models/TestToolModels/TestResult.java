@@ -11,19 +11,12 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
 @Entity
 @Table(name = "TestResult")
-@NamedQuery(name = "find testresults by id", query = "Select t from TestResult t where t.ID = :id")
+@NamedQuery(name = "find testresults by id", query = "Select t from TestResult t where t.idTR = :id")
 public class TestResult {
     @Id
-    @UuidGenerator
-    @GeneratedValue
-    @Access(AccessType.FIELD)
-    @Column(name = "id", nullable = false, unique = true)
-    private UUID ID;
-
     @Column(name = "id_tr")  // Add the Column annotation
     private String idTR;
 

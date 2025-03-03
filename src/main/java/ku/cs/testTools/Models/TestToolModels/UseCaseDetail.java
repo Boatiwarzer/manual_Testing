@@ -11,15 +11,9 @@ import java.util.UUID;
 @Data
 @Entity
 @Table(name = "UseCase_Detail")
-@NamedQuery(name = "find usecasedetail by id", query = "Select t from UseCaseDetail t where t.ID = :id")
+@NamedQuery(name = "find usecasedetail by id", query = "Select t from UseCaseDetail t where t.useCaseID = :id")
 public class UseCaseDetail {
     @Id
-    @UuidGenerator
-    @GeneratedValue
-    @Access(AccessType.FIELD)
-    @Column(name = "id", nullable = false, unique = true)
-    private UUID ID;
-
     @Column(name = "idUC", nullable = false)
     private String useCaseID;
 
@@ -31,6 +25,7 @@ public class UseCaseDetail {
 
     @Column(name = "detail_ucd", columnDefinition = "TEXT")
     private String detail;
+
 
     public UseCaseDetail(String useCaseID, String action, int number, String detail) {
         this.useCaseID = useCaseID;

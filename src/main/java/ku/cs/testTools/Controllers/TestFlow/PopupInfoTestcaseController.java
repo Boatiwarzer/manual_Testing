@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.UUID;
 
 public class PopupInfoTestcaseController {
     @FXML
@@ -80,13 +81,13 @@ public class PopupInfoTestcaseController {
     private ConnectionList connectionList;
 
     private TestCase testCase;
-    private int position;
+    private UUID position;
     private String date;
     private String tsId;
     private TestCaseList testCaseList = new TestCaseList();
     private UseCaseList useCaseList = new UseCaseList();
     private String type = "new";
-    private String name;
+    private String nameTester;
     private TestCaseDetailList testCaseDetailListDelete = new TestCaseDetailList();
 
 
@@ -97,8 +98,8 @@ public class PopupInfoTestcaseController {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            name = (String) objects.get(2);
-            position = (int) objects.get(3);
+            nameTester = (String) objects.get(2);
+            position = (UUID) objects.get(3);
             onTableTestCase.isFocused();
             selectedTCD();
             loadStatusButton();
@@ -423,7 +424,7 @@ public class PopupInfoTestcaseController {
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
-            objects.add(name);
+            objects.add(nameTester);
             objects.add(position);
             objects.add(testCase);
             objects.add(testCaseDetailList);
@@ -447,7 +448,7 @@ public class PopupInfoTestcaseController {
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
-            objects.add(name);
+            objects.add(nameTester);
             objects.add(null);
             FXRouter.goTo("test_flow", objects);
             Node source = (Node) event.getSource();
@@ -488,7 +489,7 @@ public class PopupInfoTestcaseController {
                 ArrayList<Object> objects = new ArrayList<>();
                 objects.add(projectName);
                 objects.add(directory);
-                objects.add(name);
+                objects.add(nameTester);
                 objects.add("none");
                 FXRouter.goTo("test_flow", objects);
                 Node source = (Node) event.getSource();
@@ -570,50 +571,62 @@ public class PopupInfoTestcaseController {
             String note = onTestNoteField.getText();
             String post = infoPostconLabel.getText();
 
-            testCase = testCaseList.findTCById(idTC);
-            // Create a new TestScript object
-
-            testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post);
+            // ✅ ค้นหา TestCase ถ้ายังไม่มี สร้างใหม่
+            testCase = new TestCase(idTC, name, date, useCase, description, note, position, preCon, post);
 
 
-            // Add or update test script
-            testCaseList.addTestCase(testCase);
+            // ✅ ใช้ saveOrUpdate() แทน addTestCase() เพื่อลดโอกาสเกิดปัญหา identifier ซ้ำ
+            testCaseList.addOrUpdateTestCase(testCase);
+
+            // ✅ ค้นหา TestFlowPosition ถ้ายังไม่มีให้สร้างใหม่
             TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(position);
             testFlowPositionList.addPosition(testFlowPosition);
+
+            // ✅ ใช้ saveOrUpdate() สำหรับ Repository
             TestCaseRepository testCaseRepository = new TestCaseRepository();
             TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
-            for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()){
-                testCaseDetailRepository.updateTestCaseDetail(testCaseDetail);
+
+            for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()) {
+                testCaseDetailRepository.saveOrUpdateTestCaseDetail(testCaseDetail);
             }
-            for (TestCaseDetail testCaseDetail : testCaseDetailListDelete.getTestCaseDetailList()){
-                testCaseDetailRepository.deleteTestCaseDetail(testCaseDetail.getIdTCD());
+
+            // ✅ เช็คก่อนลบ TestCaseDetail
+            if (testCaseDetailListDelete != null && !testCaseDetailListDelete.getTestCaseDetailList().isEmpty()) {
+                for (TestCaseDetail testCaseDetail : testCaseDetailListDelete.getTestCaseDetailList()) {
+                    testCaseDetailRepository.deleteTestCaseDetail(testCaseDetail.getIdTCD());
+                }
             }
-            testCaseRepository.updateTestCase(testCase);
+
+            testCaseRepository.saveOrUpdateTestCase(testCase);
+
             TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
-            testFlowRepository.updateTestFlowPosition(testFlowPosition);
-            // Write data to respective files
+            testFlowRepository.saveOrUpdateTestFlowPosition(testFlowPosition);
+
+            // ✅ Save & Reload Data
             saveProject();
             loadProject();
-            ArrayList<Object>objects = new ArrayList<>();
+
+            ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
             objects.add(name);
-            // Show success message
+
+            // ✅ Show success message
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Success");
             alert.setHeaderText(null);
             alert.setContentText("Test case saved successfully!");
             alert.showAndWait();
-            FXRouter.goTo("test_flow",objects);
+
+            FXRouter.goTo("test_flow", objects);
             Node source = (Node) event.getSource();
             Stage stage = (Stage) source.getScene().getWindow();
             stage.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
     }
+
     boolean handleSaveAction() {
         if (onUsecaseCombobox.getValue() == null || onUsecaseCombobox.getValue().trim().isEmpty() || onUsecaseCombobox.getValue().equals("None")) {
             showAlert("กรุณาเลือก Use Case");

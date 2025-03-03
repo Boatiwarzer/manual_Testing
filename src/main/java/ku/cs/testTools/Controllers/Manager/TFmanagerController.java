@@ -18,7 +18,6 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Models.Manager.ManagerList;
@@ -124,6 +123,7 @@ public class TFmanagerController {
                 }
             }
             saveProject();
+            saveRepo();
         });
     }
     private void loadRepo(){
@@ -212,20 +212,13 @@ public class TFmanagerController {
         }
     }
     private void saveRepo() {
-        // สร้างออบเจ็กต์ของแต่ละ Repository
         TestScriptRepository testScriptRepository = new TestScriptRepository();
         TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
         TestFlowPositionRepository testFlowPositionRepository = new TestFlowPositionRepository();
         TestCaseRepository testCaseRepository = new TestCaseRepository();
         TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
-        TestResultRepository testResultRepository = new TestResultRepository();
-        TestResultDetailRepository testResultDetailRepository = new TestResultDetailRepository();
-        IRReportRepository irReportRepository = new IRReportRepository();
-        IRDetailRepository irDetailRepository = new IRDetailRepository();
         ConnectionRepository connectionRepository = new ConnectionRepository();
         NoteRepository noteRepository = new NoteRepository();
-        TesterRepository testerRepository = new TesterRepository();
-        ManagerRepository managerRepository = new ManagerRepository();
 
         // บันทึกข้อมูล TestScriptList
         for (TestScript script : testScriptList.getTestScriptList()) {
@@ -252,17 +245,6 @@ public class TFmanagerController {
             testCaseDetailRepository.updateTestCaseDetail(detail);
         }
 
-        // บันทึกข้อมูล TestResultList
-
-        // บันทึกข้อมูล IRReportList
-        for (IRreport report : irReportList.getIRreportList()) {
-            irReportRepository.updateIRReport(report);
-        }
-
-        // บันทึกข้อมูล IRDetailList
-        for (IRreportDetail detail : irDetailList.getIRreportDetailList()) {
-            irDetailRepository.updateIRReportDetail(detail);
-        }
 
         // บันทึกข้อมูล ConnectionList
         for (Connection connection : connectionList.getConnectionList()) {
@@ -275,15 +257,81 @@ public class TFmanagerController {
         }
 
         // บันทึกข้อมูล TesterList
-        for (Tester tester : testerList.getTesterList()) {
-            testerRepository.updateTester(tester);
-        }
 
-        // บันทึกข้อมูล ManagerList
-        for (Manager manager : managerList.getManagerList()) {
-            managerRepository.updateManager(manager);
-        }
     }
+//    private void saveRepo() {
+//        // สร้างออบเจ็กต์ของแต่ละ Repository
+//        TestScriptRepository testScriptRepository = new TestScriptRepository();
+//        TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
+//        TestFlowPositionRepository testFlowPositionRepository = new TestFlowPositionRepository();
+//        TestCaseRepository testCaseRepository = new TestCaseRepository();
+//        TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
+//        TestResultRepository testResultRepository = new TestResultRepository();
+//        TestResultDetailRepository testResultDetailRepository = new TestResultDetailRepository();
+//        IRReportRepository irReportRepository = new IRReportRepository();
+//        IRDetailRepository irDetailRepository = new IRDetailRepository();
+//        ConnectionRepository connectionRepository = new ConnectionRepository();
+//        NoteRepository noteRepository = new NoteRepository();
+//        TesterRepository testerRepository = new TesterRepository();
+//        ManagerRepository managerRepository = new ManagerRepository();
+//
+//        // บันทึกข้อมูล TestScriptList
+//        for (TestScript script : testScriptList.getTestScriptList()) {
+//            testScriptRepository.updateTestScript(script);
+//        }
+//
+//        // บันทึกข้อมูล TestScriptDetailList
+//        for (TestScriptDetail detail : testScriptDetailList.getTestScriptDetailList()) {
+//            testScriptDetailRepository.updateTestScriptDetail(detail);
+//        }
+//
+//        // บันทึกข้อมูล TestFlowPositionList
+//        for (TestFlowPosition position : testFlowPositionList.getPositionList()) {
+//            testFlowPositionRepository.updateTestFlowPosition(position);
+//        }
+//
+//        // บันทึกข้อมูล TestCaseList
+//        for (TestCase testCase : testCaseList.getTestCaseList()) {
+//            testCaseRepository.updateTestCase(testCase);
+//        }
+//
+//        // บันทึกข้อมูล TestCaseDetailList
+//        for (TestCaseDetail detail : testCaseDetailList.getTestCaseDetailList()) {
+//            testCaseDetailRepository.updateTestCaseDetail(detail);
+//        }
+//
+//        // บันทึกข้อมูล TestResultList
+//
+//        // บันทึกข้อมูล IRReportList
+//        for (IRreport report : irReportList.getIRreportList()) {
+//            irReportRepository.updateIRReport(report);
+//        }
+//
+//        // บันทึกข้อมูล IRDetailList
+//        for (IRreportDetail detail : irDetailList.getIRreportDetailList()) {
+//            irDetailRepository.updateIRReportDetail(detail);
+//        }
+//
+//        // บันทึกข้อมูล ConnectionList
+//        for (Connection connection : connectionList.getConnectionList()) {
+//            connectionRepository.updateConnection(connection);
+//        }
+//
+//        // บันทึกข้อมูล NoteList
+//        for (Note note : noteList.getNoteList()) {
+//            noteRepository.updateNote(note);
+//        }
+//
+//        // บันทึกข้อมูล TesterList
+//        for (Tester tester : testerList.getTesterList()) {
+//            testerRepository.updateTester(tester);
+//        }
+//
+//        // บันทึกข้อมูล ManagerList
+//        for (Manager manager : managerList.getManagerList()) {
+//            managerRepository.updateManager(manager);
+//        }
+//    }
     private void selected() {
         for (Node node : projectList.getChildren()) {
             if (node instanceof TitledPane titledPane) {
@@ -613,7 +661,7 @@ private void loadProject() {
         String nameTesterLower = nameTester.toLowerCase();
 
         // 🔹 ใช้ Set เก็บ Position ID ที่เคยวาดไปแล้ว
-        Set<Integer> drawnPositionIds = new HashSet<>();
+        Set<UUID> drawnPositionIds = new HashSet<>();
 
         testScriptList.getTestScriptList().forEach(testScript -> {
             List<TestFlowPosition> testFlowPositions = testFlowPositionList.findAllByPositionId(
@@ -740,7 +788,7 @@ private void loadProject() {
     }
 
     // เพิ่มฟังก์ชันในการลาก StackPane
-    public void drawTestScript(double width, double height, double layoutX, double layoutY, String label, int positionID) {
+    public void drawTestScript(double width, double height, double layoutX, double layoutY, String label, UUID positionID) {
         // Create the main rectangle
         Rectangle rectangle = new Rectangle(width, height);
         rectangle.setArcWidth(30); // Rounded corners
@@ -765,7 +813,7 @@ private void loadProject() {
         // Make the stackPane draggable and selectable
     }
 
-    private void drawTestCase(double width, double height, double layoutX, double layoutY, String label, int positionID) {
+    private void drawTestCase(double width, double height, double layoutX, double layoutY, String label, UUID positionID) {
         // Create a rectangle with specified width and height
         Rectangle rectangle = new Rectangle(width, height);
         rectangle.setFill(Color.TRANSPARENT); // Transparent fill
@@ -788,7 +836,7 @@ private void loadProject() {
 
     }
 
-    private void drawStart(double width, double height, double layoutX, double layoutY, String label, int positionID) {
+    private void drawStart(double width, double height, double layoutX, double layoutY, String label, UUID positionID) {
         Circle circle = new Circle(width, height,15);
 
         circle.setStyle("-fx-fill: transparent");
@@ -809,7 +857,7 @@ private void loadProject() {
 
 
 
-    private void drawEnd(double width, double height, double layoutX, double layoutY, String label, int positionID) {
+    private void drawEnd(double width, double height, double layoutX, double layoutY, String label, UUID positionID) {
         Circle circle = new Circle(width, height,15);
 
         circle.setStyle("-fx-fill: transparent");
@@ -831,7 +879,7 @@ private void loadProject() {
         stackPaneList.add(stackPane);
 
     }
-    private void drawDecision(double width, double height, double layoutX, double layoutY, String label, int positionID) {
+    private void drawDecision(double width, double height, double layoutX, double layoutY, String label, UUID positionID) {
         // สร้างรูปทรง Polygon
         Polygon polygon = createKiteShape(width, height, 75);
         polygon.setStyle("-fx-fill: transparent");
@@ -856,7 +904,7 @@ private void loadProject() {
 
 
 
-    public void drawLine(int connectionID, double startX, double startY, double endX, double endY, String label,
+    public void drawLine(UUID connectionID, double startX, double startY, double endX, double endY, String label,
                          String arrowHead, String lineType, String arrowTail) {
 
         // สร้างเส้น

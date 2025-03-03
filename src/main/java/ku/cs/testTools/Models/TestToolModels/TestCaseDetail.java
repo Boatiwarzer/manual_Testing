@@ -14,15 +14,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Entity
 @Table(name = "TestCase_Detail")
-@NamedQuery(name = "find testcasesdetail by id", query = "Select t from TestCaseDetail t where t.ID = :id")
+@NamedQuery(name = "find testcasesdetail by id", query = "Select t from TestCaseDetail t where t.idTCD = :id")
 public class TestCaseDetail {
     @Id
-    @UuidGenerator
-    @GeneratedValue
-    @Access(AccessType.FIELD)
-    @Column(name = "id", nullable = false, unique = true)
-    private UUID ID;
-
     @Column(name = "id_tcd", nullable = false)
     private String idTCD;
 
@@ -40,6 +34,8 @@ public class TestCaseDetail {
 
     @Column(name = "idTC")
     private String idTC;
+
+
 
     public TestCaseDetail(String idTCD, String testNo, String nameTCD, String variableTCD, String dateTCD, String testCase) {
         this.idTCD = idTCD;

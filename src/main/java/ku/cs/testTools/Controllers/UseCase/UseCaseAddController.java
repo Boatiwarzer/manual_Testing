@@ -481,8 +481,6 @@ public class UseCaseAddController {
 
             useCaseList.addUseCase(newUseCase);
 
-
-
 //        useCaseDetailList.clearUseCaseDetail(ucId);
             // Get the text from the textAreas in the actorActionVBox and write them to the useCaseDetailList
             int actorNumber = 1;
@@ -510,9 +508,9 @@ public class UseCaseAddController {
             UseCaseRepository useCaseRepository = new UseCaseRepository();
             UseCaseDetailRepository useCaseDetailRepository = new UseCaseDetailRepository();
             for (UseCaseDetail useCaseDetail1 : useCaseDetailList.getUseCaseDetailList()){
-               useCaseDetailRepository.addUseCaseDetail(useCaseDetail1);
+               useCaseDetailRepository.updateUseCaseDetail(useCaseDetail1);
             }
-            useCaseRepository.addUseCase(useCase);
+            useCaseRepository.addUseCase(newUseCase);
             saveProject();
             isGenerated = false;
             Alert alert = new Alert(Alert.AlertType.INFORMATION);

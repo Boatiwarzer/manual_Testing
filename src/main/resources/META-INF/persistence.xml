@@ -13,6 +13,11 @@
         <class>ku.cs.testTools.Models.TestToolModels.UseCase</class>
         <class>ku.cs.testTools.Models.TestToolModels.UseCaseDetail</class>
         <class>ku.cs.testTools.Models.TestToolModels.Connection</class>
+        <class>ku.cs.testTools.Models.TestToolModels.IRreport</class>
+        <class>ku.cs.testTools.Models.TestToolModels.IRreportDetail</class>
+        <class>ku.cs.testTools.Models.TestToolModels.Note</class>
+        <class>ku.cs.testTools.Models.Manager.Manager</class>
+        <class>ku.cs.testTools.Models.Manager.Tester</class>
 
         <properties>
             <!-- Database Connection -->

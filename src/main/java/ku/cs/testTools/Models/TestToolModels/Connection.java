@@ -11,16 +11,12 @@ import java.util.UUID;
 @Data
 @RequiredArgsConstructor
 @Table(name = "Connection")
-@NamedQuery(name = "find Connection by id", query = "Select t from Connection t where t.ID = :id")
+@NamedQuery(name = "find Connection by id", query = "Select t from Connection t where t.connectionID = :id")
 public class Connection {
-    @Id
-    @UuidGenerator
-    @Access(AccessType.FIELD)
-    @Column(name = "id", nullable = false, unique = true)
-    private UUID ID;
 
+    @Id
     @Column(name = "connection_id", nullable = false, unique = true) // กำหนดชื่อคอลัมน์ในฐานข้อมูล
-    private int connectionID;
+    private UUID connectionID;
 
     @Column(name = "start_x", nullable = false)
     private double startX;
@@ -56,7 +52,9 @@ public class Connection {
     @Column(name = "tester", nullable = false, precision = 10, scale = 2)
     private String tester;
 
-    public Connection(int connectionID, double startX, double startY, double endX, double endY, String label, String arrowHead, String lineType, String arrowTail, String note, String type, String projectName, String tester) {
+
+
+    public Connection(UUID connectionID, double startX, double startY, double endX, double endY, String label, String arrowHead, String lineType, String arrowTail, String note, String type, String projectName, String tester) {
         this.connectionID = connectionID;
         this.startX = startX;
         this.startY = startY;
@@ -71,9 +69,10 @@ public class Connection {
         this.projectName = projectName;
         this.tester = tester;
     }
-
-
-    public boolean isId(int idDS) {
-        return this.connectionID == idDS;
+    public String generatePositionId() {
+        return UUID.randomUUID().toString();
+    }
+    public boolean isId(UUID idDS) {
+        return this.connectionID.equals(idDS);
     }
 }

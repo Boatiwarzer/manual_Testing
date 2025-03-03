@@ -13,15 +13,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Entity
 @Table(name = "TestResult_Detail")
-@NamedQuery(name = "find testresultdetail by id", query = "Select t from TestResultDetail t where t.ID = :id")
+@NamedQuery(name = "find testresultdetail by id", query = "Select t from TestResultDetail t where t.idTRD = :id")
 public class TestResultDetail {
     @Id
-    @UuidGenerator
-    @GeneratedValue
-    @Access(AccessType.FIELD)
-    @Column(name = "id", nullable = false, unique = true)
-    private UUID ID;
-
     @Column(name = "id_trd")  // Add Column annotation for idTRD
     private String idTRD;
 

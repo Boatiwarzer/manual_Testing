@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.UUID;
 
 @Data
 public class TestCaseList {
@@ -74,21 +75,21 @@ public class TestCaseList {
     }
 
 
-    public TestCase findByPositionId(int positionId) {
+    public TestCase findByPositionId(UUID positionId) {
         for (TestCase testCase : testCaseList) {
-            if (testCase.getPosition() == positionId) {
+            if (testCase.getPosition().equals(positionId)) {
                 return testCase;
             }
         }
         return null;
     }
-    public void deleteTestCaseByPositionID(int id) {
+    public void deleteTestCaseByPositionID(UUID id) {
         boolean found = false;
 
         // Iterate through the list to find and remove the item with the matching position ID
         for (int i = 0; i < testCaseList.size(); i++) {
             TestCase existing = testCaseList.get(i);
-            if (existing.getPosition() == id) {
+            if (existing.getPosition().equals(id)) {
                 testCaseList.remove(i);
                 found = true;
                 break;
@@ -101,9 +102,9 @@ public class TestCaseList {
         }
     }
 
-    public TestCase findTCByPosition(int id) {
+    public TestCase findTCByPosition(UUID id) {
         for (TestCase testCase : testCaseList) {
-            if (testCase.getPosition() == id ) {
+            if (testCase.getPosition().equals(id) ) {
                 return testCase;
             }
         }

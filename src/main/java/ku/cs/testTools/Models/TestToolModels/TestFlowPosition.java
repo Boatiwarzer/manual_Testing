@@ -15,17 +15,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Entity
 @Table(name = "TestFlow_Position")
-@NamedQuery(name = "find testflowposition by id", query = "Select t from TestFlowPosition t where t.ID = :id")
+@NamedQuery(name = "find testflowposition by id", query = "Select t from TestFlowPosition t where t.positionID = :id")
 public class TestFlowPosition {
     @Id
-    @UuidGenerator
-    @GeneratedValue
-    @Access(AccessType.FIELD)
-    @Column(name = "id", nullable = false, unique = true)
-    private UUID ID;
-
-    @Column(name = "position_id", nullable = false)
-    private int positionID;
+    @Column(name = "position_id", nullable = false,unique = true)
+    private UUID positionID;
 
     @Column(name = "fit_width", nullable = false, precision = 10)
     private double fitWidth;
@@ -45,22 +39,12 @@ public class TestFlowPosition {
     @NotNull
     @Column(name = "type", nullable = false, length = 50)
     private String type;
-
     @Column(name = "projectName", nullable = false, precision = 10)
     private String projectName;
     @Column(name = "tester", nullable = false, precision = 10)
     private String tester;
-    public TestFlowPosition(int positionID, double fitWidth, double fitHeight, double xPosition, double yPosition, double rotation, String type) {
-        this.positionID = positionID;
-        this.fitWidth = fitWidth;
-        this.fitHeight = fitHeight;
-        this.xPosition = xPosition;
-        this.yPosition = yPosition;
-        this.rotation = rotation;
-        this.type = type;
-    }
 
-    public TestFlowPosition(int positionID, double fitWidth, double fitHeight, double xPosition, double yPosition, double rotation, String type, String projectName, String tester) {
+    public TestFlowPosition(UUID positionID, double fitWidth, double fitHeight, double xPosition, double yPosition, double rotation, String type, String projectName, String tester) {
         this.positionID = positionID;
         this.fitWidth = fitWidth;
         this.fitHeight = fitHeight;
@@ -72,8 +56,11 @@ public class TestFlowPosition {
         this.tester = tester;
     }
 
-    public boolean isId(int id) {
-        return this.positionID == id;
+
+
+
+    public boolean isId(UUID id) {
+        return this.positionID.equals(id);
     }
 
     public boolean isType(String type) {

@@ -17,15 +17,9 @@ import java.util.UUID;
 @Entity
 @Data
 @Table(name = "TestScript")
-@NamedQuery(name = "find testscript by id", query = "Select t from TestScript t where t.ID = :id")
+@NamedQuery(name = "find testscript by id", query = "Select t from TestScript t where t.idTS = :id")
 public class TestScript {
     @Id
-    @UuidGenerator
-    @GeneratedValue
-    @Access(AccessType.FIELD)
-    @Column(name = "id", nullable = false, unique = true)
-    private UUID ID;
-
     @Column(name = "id_ts") // Maps to `idts` in the database
     private String idTS;
 
@@ -54,7 +48,7 @@ public class TestScript {
     private String freeText;
 
     @Column(name = "position_ts") // Maps to `position` in the database
-    private int position;
+    private UUID position;
 
 //    @Column(name = "idtsdlist") // Maps to `idtsdlist` in the database
 //    private String idTSDList;
@@ -62,7 +56,7 @@ public class TestScript {
 //    private List<TestScriptDetail> testScriptDetailList;
     private boolean markedForDeletion = false; // ฟิลด์สำหรับระบุสถานะว่าต้องการลบหรือไม่
 
-    public TestScript(String idTS, String nameTS, String dateTS, String useCase, String descriptionTS, String testCase, String preCon, String postCon, String freeText, int position) {
+    public TestScript(String idTS, String nameTS, String dateTS, String useCase, String descriptionTS, String testCase, String preCon, String postCon, String freeText, UUID position) {
         this.idTS = idTS;
         this.nameTS = nameTS;
         this.dateTS = dateTS;

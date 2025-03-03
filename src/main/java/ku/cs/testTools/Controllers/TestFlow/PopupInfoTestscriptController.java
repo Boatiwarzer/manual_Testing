@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.UUID;
 
 public class PopupInfoTestscriptController {
 
@@ -79,7 +80,7 @@ public class PopupInfoTestscriptController {
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
     private TestScript testScript;
     private TestScriptDetail testScriptDetail;
-    private int position;
+    private UUID position;
     private String tsId;
     private TestScriptDetail selectedItem;
     private TestCaseList testCaseList = new TestCaseList();
@@ -89,8 +90,8 @@ public class PopupInfoTestscriptController {
     private TestScriptDetailList testScriptDetailListTemp = new TestScriptDetailList();
     private ConnectionList connectionList;
     private String type = "new";
-    private String name;
-    private TestScriptDetailList testScriptDetailListDelete = new TestScriptDetailList();
+    private String nameTester;
+    private TestScriptDetailList testScriptDetailListDelete;
 
     @FXML
     void initialize() {
@@ -100,8 +101,8 @@ public class PopupInfoTestscriptController {
                 ArrayList<Object> objects = (ArrayList) FXRouter.getData();
                 projectName = (String) objects.get(0);
                 directory = (String) objects.get(1);
-                name = (String) objects.get(2);
-                position = (int) objects.get(3);
+                nameTester = (String) objects.get(2);
+                position = (UUID) objects.get(3);
                 onTableTestscript.isFocused();
                 selectedTSD();
                 loadStatusButton();
@@ -512,7 +513,7 @@ public class PopupInfoTestscriptController {
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
-            objects.add(name);
+            objects.add(nameTester);
             objects.add(null);
             FXRouter.goTo("test_flow", objects);
             Node source = (Node) event.getSource();
@@ -553,7 +554,7 @@ public class PopupInfoTestscriptController {
                 ArrayList<Object> objects = new ArrayList<>();
                 objects.add(projectName);
                 objects.add(directory);
-                objects.add(name);
+                objects.add(nameTester);
                 objects.add("none");
                 FXRouter.goTo("test_flow", objects);
                 Node source = (Node) event.getSource();
@@ -603,7 +604,7 @@ public class PopupInfoTestscriptController {
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
-            objects.add(name);
+            objects.add(nameTester);
             objects.add(position);
             objects.add(testScript);
             objects.add(testScriptDetailList);
@@ -625,6 +626,7 @@ public class PopupInfoTestscriptController {
         if (!handleSaveAction()) {
             return; // ถ้าข้อมูลไม่ครบ หยุดการทำงานทันที
         }
+
         // Validate fields
         String name = onTestNameCombobox.getValue();
         String idTS = tsId;
@@ -635,25 +637,39 @@ public class PopupInfoTestscriptController {
         String preCon = infoPreconLabel.getText();
         String note = onTestNoteField.getText();
         String post = infoPostconLabel.getText();
-        // Create a new TestScript object
-        testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post, note,position);
 
-        TestScriptRepository testScriptRepository = new TestScriptRepository();
-        TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
-        for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()){
-            testScriptDetailRepository.updateTestScriptDetail(testScriptDetail);
-        }
-        for (TestScriptDetail testScriptDetail : testScriptDetailListDelete.getTestScriptDetailList()){
-            testScriptDetailRepository.deleteTestScriptDetail(testScriptDetail.getIdTSD());
-        }
-        testScriptRepository.updateTestScript(testScript);
-        // Add or update test script
+        // Create a new TestScript object
+        testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, post, note, position);
         testScriptList.addOrUpdateTestScript(testScript);
         TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(position);
+        if (testFlowPosition == null) {
+            testFlowPosition = new TestFlowPosition(); // ถ้ายังไม่มี สร้างใหม่
+        }
         testFlowPositionList.addPosition(testFlowPosition);
+        TestScriptRepository testScriptRepository = new TestScriptRepository();
+        TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
+
+        // ✅ อัปเดตหรือเพิ่ม TestScriptDetail โดยใช้ merge() ป้องกันปัญหา identifier ซ้ำ
+        for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()) {
+            testScriptDetailRepository.saveOrUpdateTestScriptDetail(testScriptDetail);
+        }
+
+        // ✅ ตรวจสอบก่อนลบ TestScriptDetail
+        if (testScriptDetailListDelete != null && !testScriptDetailListDelete.getTestScriptDetailList().isEmpty()) {
+            for (TestScriptDetail testScriptDetail : testScriptDetailListDelete.getTestScriptDetailList()) {
+                testScriptDetailRepository.deleteTestScriptDetail(testScriptDetail.getIdTSD());
+            }
+        }
+
+        // ✅ ใช้ merge() ป้องกันการเพิ่มซ้ำ
+        testScriptRepository.saveOrUpdateTestScript(testScript);
+
+        // ✅ ตรวจสอบก่อนเพิ่มตำแหน่ง
+
+
+        // ✅ ใช้ merge() ในการอัปเดต
         TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
-        testFlowRepository.updateTestFlowPosition(testFlowPosition);
-        // Write data to respective files
+        testFlowRepository.saveOrUpdateTestFlowPosition(testFlowPosition);
 
         // Show success message
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -661,23 +677,27 @@ public class PopupInfoTestscriptController {
         alert.setHeaderText(null);
         alert.setContentText("Test script saved successfully!");
         alert.showAndWait();
+
+        // ✅ Save & Reload Data
         saveProject();
         loadProject();
-        ArrayList<Object>objects = new ArrayList<>();
+
+        // ✅ ส่งค่าไปยังหน้า "test_flow"
+        ArrayList<Object> objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
-        objects.add(name);
+        objects.add(nameTester);
+
         try {
-            FXRouter.goTo("test_flow",objects);
+            FXRouter.goTo("test_flow", objects);
             Node source = (Node) event.getSource();
             Stage stage = (Stage) source.getScene().getWindow();
             stage.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
     }
+
     boolean handleSaveAction() {
         if (onUsecaseCombobox.getValue() == null || onUsecaseCombobox.getValue().trim().isEmpty() || onUsecaseCombobox.getValue().equals("None")) {
             showAlert("กรุณาเลือก Use Case");

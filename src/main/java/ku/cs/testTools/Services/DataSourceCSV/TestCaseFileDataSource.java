@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class TestCaseFileDataSource implements DataSource<TestCaseList>, ManageDataSource<TestCase> {
     private String directory;
@@ -56,7 +57,7 @@ public class TestCaseFileDataSource implements DataSource<TestCaseList>, ManageD
                             data[4].trim(), // inputData
                             data[5].trim(),
                             data[6].trim(),// expected
-                            Integer.parseInt(data[7].trim()),
+                            UUID.fromString(data[7].trim()),
                             data[8].trim(),
                             data[9].trim()// expected
 
