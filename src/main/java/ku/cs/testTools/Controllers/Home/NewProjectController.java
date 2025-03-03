@@ -52,7 +52,11 @@ public class NewProjectController {
     private TesterList testerList = new TesterList();
     private String TId;
     private ManagerList managerList = new ManagerList();
-
+    @FXML
+    void initialize() {
+        ManagerRepository managerRepository = new ManagerRepository();
+        managerRepository.getAllManagers();
+    }
     @FXML
     void onProjectNameField(ActionEvent event) {
 
@@ -220,43 +224,47 @@ public class NewProjectController {
     }
 
     boolean handleSaveAction() {
+        // ตรวจสอบ Manager
         if (onManagerField.getText() == null || onManagerField.getText().trim().isEmpty()) {
             showAlert("กรุณากรอกข้อมูล Manager");
             return false;
         }
 
-        if (onProjectNameField.getText() == null || onProjectNameField.getText().trim().isEmpty()) {
+        // ตรวจสอบ Project Name
+        String projectName = onProjectNameField.getText();
+        if (projectName == null || projectName.trim().isEmpty()) {
             showAlert("กรุณากรอกข้อมูล Project Name");
             return false;
         }
 
+        // ตรวจสอบว่าชื่อโครงการซ้ำหรือไม่
+        if (isDuplicateProjectName(projectName)) {
+            showAlert(projectName + " ชื่อนี้ถูกใช้งานแล้ว");
+            return false;
+        }
+
+        // ตรวจสอบ Directory
         if (directory == null) {
             showAlert("กรุณาเลือก Location Path");
             return false;
         }
 
+        // ตรวจสอบ Tester
         if (testerVBox.getChildren().isEmpty()) {
             showAlert("กรุณากรอกข้อมูล Tester อย่างน้อย 1 คน");
             return false;
         }
 
-        if (!testerVBox.getChildren().isEmpty()) {
-            HBox lastHBox = (HBox) testerVBox.getChildren().get(testerVBox.getChildren().size() - 1);
-            TextArea lastTextArea = (TextArea) lastHBox.getChildren().get(0);
-            if (lastTextArea.getText().isEmpty()) {
-                showAlert("กรุณากรอกข้อมูล Tester ");
-                return false;
-            }
-                return false;
-            }
-
-
-        if (isDuplicateProjectName(onProjectNameField.getText())) {
-            showAlert(onProjectNameField.getText() + " ชื่อนี้ถูกใช้งานแล้ว");
+        // ตรวจสอบว่าช่อง Tester สุดท้ายกรอกหรือไม่
+        HBox lastHBox = (HBox) testerVBox.getChildren().get(testerVBox.getChildren().size() - 1);
+        TextArea lastTextArea = (TextArea) lastHBox.getChildren().get(0);
+        if (lastTextArea.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอกข้อมูล Tester");
             return false;
         }
 
         return true;
     }
+
 
 }
