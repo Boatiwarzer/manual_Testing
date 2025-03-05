@@ -849,8 +849,11 @@ public class TestResultController {
                 for (IRreportDetail idIRdetail : idIRDetail) {
                     String idTrd = idIRdetail.getIdTRD();
                     if (!testResultDetailList.isIdTRDExist(idTrd)) {
+                        IRDetailRepository irDetailRepository = new IRDetailRepository();
+                        irDetailRepository.saveOrUpdateIRDetail(idIRdetail);
                         String idIrd = idIRdetail.getIdIRD();
                         iRreportDetailList.clearIRDetail(idIrd);
+
                     }
                 }
                 saveRepo();

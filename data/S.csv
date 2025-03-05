@@ -1,0 +1,10 @@
+testScript,TS-709,S,06-03-2025,UC-767 : S,S,TC-867 : S,S,S,S,ebd4aaf9-af83-4a47-aeb0-70945ff41465
+testScriptDetail,TSD-133,01,s,S : S,S,TS-709,06-03-2025
+testCase,TC-867,S,06-03-2025,UC-767 : S,S,S,8f7e6e2f-9675-4059-9521-4785842d7a37,S,S
+testCaseDetail,TCD-717,001,S,S,06-03-2025,TC-867
+useCase,UC-767,S,S,S,S,S,S,2025-03-06 00:25:35
+useCaseDetail,e05be4b4-086a-4870-9544-72d7a3f497c8,UC-767,actor,1,S
+useCaseDetail,558cc8ec-e7b1-4a04-9b03-fec663e09072,UC-767,system,1,S
+testResult,TR-817,S,2025-03-06 00:42:21,-
+testResultDetail,TRD-465,01,TS-709 : S,TC-867 : S,S,S,S : S,1. s#$#,S,S,None,None,2025-03-06,S,...,1,Waiting,,TR-817
+iRreport,IR-679,S,2025-03-06 00:42:30,,TR-817
