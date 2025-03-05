@@ -153,6 +153,11 @@
                               <TableColumn prefWidth="75.0" text="C2" />
                            </columns>
                         </TableView>
+                        <Button fx:id="onExportButton" layoutX="950.0" layoutY="675.0" mnemonicParsing="false" onAction="#onExportButton" prefHeight="30.0" prefWidth="120.0" text="Export to Excel">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Button>
                      </children>
                   </AnchorPane>
                </children>

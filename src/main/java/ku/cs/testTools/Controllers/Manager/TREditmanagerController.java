@@ -804,10 +804,17 @@ public class TREditmanagerController {
 //            objects.add("edit");
 //            objects.add(selectedItem);
             loadProject();
-
             testResultList.addOrUpdateTestResult(testResult);
             TestResultRepository testResultRepository = new TestResultRepository();
-            testResultRepository.saveOrUpdateTestResult(testResult);
+            TestResultDetailRepository testResultDetailRepository = new TestResultDetailRepository();
+            for (TestResultDetail testResultDetail : testResultDetailList.getTestResultDetailList()){
+                testResultDetailRepository.updateTestResultDetail(testResultDetail);
+            }
+            testResultRepository.updateTestResult(testResult);
+
+//            testResultList.addOrUpdateTestResult(testResult);
+//            TestResultRepository testResultRepository = new TestResultRepository();
+//            testResultRepository.updateTestResult(testResult);
             // Write data to respective files
             saveProject();
 

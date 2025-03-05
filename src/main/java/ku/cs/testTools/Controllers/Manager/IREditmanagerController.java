@@ -787,6 +787,13 @@ public class IREditmanagerController {
         try {
             currentNewData();
             iRreportList.addOrUpdateIRreport(iRreport);
+            iRreportList.addOrUpdateIRreport(iRreport);
+            IRReportRepository iRReportRepository = new IRReportRepository();
+            IRDetailRepository iRDetailRepository = new IRDetailRepository();
+            for (IRreportDetail iRreportDetail : iRreportDetailList.getIRreportDetailList()){
+                iRDetailRepository.updateIRReportDetail(iRreportDetail);
+            }
+            iRReportRepository.updateIRReport(iRreport);
             // Write data to respective files
             saveProject();
 
