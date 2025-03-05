@@ -12,9 +12,7 @@
     <list default="true" id="339e8b6d-7c1d-4583-b039-ece96beb9415" name="Changes" comment="mergh">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestCase/TestCaseEditController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestCase/TestCaseEditController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestResult/TestResultController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestResult/TestResultController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/TestScriptEditController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/TestScriptEditController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/ir_manager.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/ir_manager.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/UseCase/UseCaseEditController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/UseCase/UseCaseEditController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,6 +40,9 @@
   &quot;associatedIndex&quot;: 0
 }</component>
   <component name="ProjectId" id="2tihSwy6GDIlmmQDrOO69pMlXej" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -133,7 +134,15 @@
       <option name="project" value="LOCAL" />
       <updated>1741155846536</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="mergh">
+      <option name="closed" value="true" />
+      <created>1741181511314</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1741181511314</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

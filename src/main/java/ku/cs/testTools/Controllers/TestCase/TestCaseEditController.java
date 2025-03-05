@@ -539,10 +539,9 @@ public class TestCaseEditController {
             alert.setContentText("Press OK to confirm, or Cancel to go back.");
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
-                testCase = testCaseList.findTCByPosition(position);
-                testCaseList.deleteTestCaseByPositionID(position);
+                testCaseList.deleteTestCase(testCase);
                 testCaseDetailList.deleteTestCaseDetailByTestScriptID(testCase.getIdTC());
-                testFlowPositionList.removePositionByID(position);
+                testFlowPositionList.removePositionByID(testCase.getPosition());
                 TestCaseRepository testCaseRepository = new TestCaseRepository();
                 testCaseRepository.deleteTestCase(testCase.getIdTC());
                 TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
@@ -556,6 +555,7 @@ public class TestCaseEditController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(nameTester);
             objects.add(testCase);
             FXRouter.goTo("test_case", objects);
             Node source = (Node) event.getSource();
