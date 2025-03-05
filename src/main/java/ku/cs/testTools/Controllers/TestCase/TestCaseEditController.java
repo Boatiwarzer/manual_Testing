@@ -549,14 +549,14 @@ public class TestCaseEditController {
                     testCaseDetailRepository.deleteTestCaseDetail(testCaseDetail.getIdTCD());
                 }
                 TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
-                testFlowRepository.deleteTestFlowPosition(position);
+                testFlowRepository.deleteTestFlowPosition(testCase.getPosition());
             }
             saveProject();
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
             objects.add(nameTester);
-            objects.add(testCase);
+            objects.add(null);
             FXRouter.goTo("test_case", objects);
             Node source = (Node) event.getSource();
             Stage stage = (Stage) source.getScene().getWindow();
@@ -581,9 +581,12 @@ public class TestCaseEditController {
             for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()) {
                 testCaseDetailRepository.updateTestCaseDetail(testCaseDetail);
             }
-            for (TestCaseDetail testCaseDetail : testCaseDetailListDelete.getTestCaseDetailList()){
-                testCaseDetailRepository.deleteTestCaseDetail(testCaseDetail.getIdTCD());
+            if (testCaseDetailListDelete != null){
+                for (TestCaseDetail testCaseDetail : testCaseDetailListDelete.getTestCaseDetailList()){
+                    testCaseDetailRepository.deleteTestCaseDetail(testCaseDetail.getIdTCD());
+                }
             }
+
             if (testFlowPosition != null){
                 TestFlowPositionRepository testFlowPositionRepository = new TestFlowPositionRepository();
                 testFlowPositionRepository.saveOrUpdateTestFlowPosition(testFlowPosition);

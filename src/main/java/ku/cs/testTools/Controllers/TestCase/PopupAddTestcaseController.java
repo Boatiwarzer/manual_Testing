@@ -70,6 +70,7 @@ public class PopupAddTestcaseController {
             if (objects.get(7) != null && type.equals("edit")){
                 testCaseDetail = (TestCaseDetail) objects.get(7);
                 testCaseDetailListDelete = (TestCaseDetailList)  objects.get(8);
+                System.out.println(testCaseDetailListDelete);
                 testCaseDetail = testCaseDetailList.findTCById(testCaseDetail.getIdTCD());
                 id = testCaseDetail.getIdTCD();
                 setTextEdit();

@@ -54,7 +54,7 @@ public class PopupAddTestscriptController {
     private String idTS;
     private String date;
     private TestCaseDetailList testCaseDetailList;
-    private TestScriptDetailList testScriptDetailListDelete;
+    private TestScriptDetailList testScriptDetailListDelete = new TestScriptDetailList();
     private String type;
     private String typeTS;
     private ArrayList<Object> objects;
@@ -80,6 +80,7 @@ public class PopupAddTestscriptController {
             if (objects.get(8) != null && type.equals("edit")){
                 testScriptDetail = (TestScriptDetail) objects.get(8);
                 testScriptDetailListDelete = (TestScriptDetailList)  objects.get(9);
+                System.out.println(testScriptDetailListDelete);
                 testScriptDetail = testScriptDetailList.findTSById(testScriptDetail.getIdTSD());
                 id = testScriptDetail.getIdTSD();
                 setTextEdit();

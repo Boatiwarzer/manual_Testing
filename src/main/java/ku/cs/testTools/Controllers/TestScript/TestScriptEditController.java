@@ -570,8 +570,8 @@ public class TestScriptEditController {
             objects.add(testScript);
             objects.add(testScriptDetailList);
             objects.add(testCaseDetailList);
-            objects.add("edit");
-            objects.add(selectedItem);
+            objects.add("new");
+            objects.add(null);
             objects.add(testScriptDetailListDelete);
 
             if (testScriptDetailList != null){
