@@ -677,36 +677,43 @@ public class TestResultEditController {
             alert.setContentText("Press OK to confirm, or Cancel to go back.");
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
+                TestResultRepository testResultRepository = new TestResultRepository();
+                TestResultDetailRepository testResultDetailRepository = new TestResultDetailRepository();
+                List<TestResultDetail> testResultDetails = testResultDetailRepository.getAllTestResultDetails();
+                for (TestResultDetail testResultDetail : testResultDetails) {
+                    if (testResultDetail.getIdTR().equals(testResult.getIdTR())) {
+                        testResultDetailRepository.deleteTestResultDetail(testResultDetail.getIdTRD());
+                    }
+                }
+
+                testResultRepository.deleteTestResult(testResult.getIdTR());
                 testResultList.deleteTestResult(testResult);
                 testResultDetailListTemp.deleteTestResultDetailByID(testResult.getIdTR());
+
                 IRreport irId = iRreportList.findTRById(testResult.getIdTR().trim());
                 String id = String.valueOf(irId);
                 String[] parts = id.split(" : "); // แยกข้อความตาม " : "
                 String idIR = parts[0];
                 iRreportList.deleteIRreport(irId);
                 iRreportDetailList.deleteIRreportDetailByID(idIR);
-                TestResultRepository testResultRepository = new TestResultRepository();
-                testResultRepository.deleteTestResult(testResult.getIdTR());
-                TestResultDetailRepository testResultDetailRepository = new TestResultDetailRepository();
-                for (TestResultDetail testResultDetail : testResultDetailList.getTestResultDetailList()){
-                    testResultDetailRepository.deleteTestResultDetail(testResultDetail.getIdTRD());
-                }
+//                TestResultRepository testResultRepository = new TestResultRepository();
+//                testResultRepository.deleteTestResult(testResult.getIdTR());
+//                TestResultDetailRepository testResultDetailRepository = new TestResultDetailRepository();
+//                for (TestResultDetail testResultDetail : testResultDetailList.getTestResultDetailList()){
+//                    testResultDetailRepository.deleteTestResultDetail(testResultDetail.getIdTRD());
+//                }
                 IRReportRepository iRreportRepository = new IRReportRepository();
-                iRreportRepository.deleteIRReport(iRreport.getIdIR());
+                iRreportRepository.deleteIRReport(idIR);
                 IRDetailRepository iRreportDetailRepository = new IRDetailRepository();
                 for (IRreportDetail iRreportDetail : iRreportDetailList.getIRreportDetailList()){
                     iRreportDetailRepository.deleteIRreportdetail(iRreportDetail.getIdTRD());
                 }
             }
             saveProject();
-            objects = new ArrayList<>();
-            objects.add(projectName);
-            objects.add(directory);
-            objects.add(nameTester);
-            objects.add(null);
+            objects = new ArrayList<>(Arrays.asList(projectName, directory, nameTester, null));
             FXRouter.goTo("test_result", objects);
-            Node source = (Node) event.getSource();
-            Stage stage = (Stage) source.getScene().getWindow();
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
