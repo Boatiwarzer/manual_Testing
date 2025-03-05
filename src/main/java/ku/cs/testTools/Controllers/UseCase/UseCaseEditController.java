@@ -635,7 +635,6 @@ public class UseCaseEditController {
                 // แสดง Popup และรอการตอบกลับจากผู้ใช้
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.isPresent() && result.get() == ButtonType.OK) {
-
                     useCaseList.clearUseCase(ucId);
                     useCaseDetailList.clearUseCaseDetail(ucId);
 //                    useCase = useCaseList.findByUseCaseId(ucId);
