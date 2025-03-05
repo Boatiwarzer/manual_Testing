@@ -4,13 +4,11 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Services.Repository.ManagerRepository;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
@@ -104,7 +102,7 @@ public class TestCaseAddController {
     private String type = "new";
     private String typeTC = "new";
     private ArrayList<Object> objects;
-    private String name;
+    private String nameTester;
     private TestCaseDetailList testCaseDetailListDelete = new TestCaseDetailList();
 
 
@@ -115,7 +113,7 @@ public class TestCaseAddController {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            name = (String) objects.get(2);
+            nameTester = (String) objects.get(2);
             typeTC = (String) objects.get(3);
             onTableTestcase.isFocused();
             clearInfo();
@@ -175,7 +173,7 @@ public class TestCaseAddController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
-        objects.add(name);
+        objects.add(nameTester);
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");
         alert.setHeaderText(null);
@@ -566,7 +564,7 @@ public class TestCaseAddController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
-        objects.add(name);
+        objects.add(nameTester);
         objects.add(typeTC);
         objects.add(testCase);
         objects.add(testCaseDetailList);
@@ -658,7 +656,7 @@ public class TestCaseAddController {
             }
 
             // 🔹 บันทึก testCase ก่อน เพื่อให้มี ID
-            testCaseRepository.addTestCase(testCase);
+            testCaseRepository.saveOrUpdateTestCase(testCase);
 
             // 🔹 กำหนด testCase ให้กับทุก testCaseDetail และบันทึก
             for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()) {
@@ -681,7 +679,7 @@ public class TestCaseAddController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
-            objects.add(name);
+            objects.add(nameTester);
             objects.add(testCase);
 
             // 🔹 แจ้งเตือนว่าบันทึกข้อมูลสำเร็จ
@@ -781,6 +779,7 @@ public class TestCaseAddController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
+        objects.add(nameTester);
         objects.add(null);
     }
 

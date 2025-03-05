@@ -2,15 +2,11 @@ package ku.cs.testTools.Controllers.UseCase;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import ku.cs.testTools.Models.Manager.Manager;
-import ku.cs.testTools.Models.Manager.ManagerList;
-import ku.cs.testTools.Models.Manager.Tester;
 import ku.cs.testTools.Services.Repository.ManagerRepository;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
@@ -66,20 +62,18 @@ public class UseCaseController {
     private MenuBar homePageMenuBar;
     @FXML
     private MenuItem saveMenuItem;
-    private String projectName = "125", directory = "data", useCaseId; // directory, projectName
+    private String projectName, directory, useCaseId; // directory, projectName
     private UseCase useCase;
     private UseCase selectedUseCase = new UseCase();
     private UseCaseDetail selectedItem;
     private UseCaseList useCaseList = new UseCaseList();
-    private DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv"); //= new UseCaseListFileDataSource(directory, projectName + ".csv")
     private UseCaseDetail useCaseDetail;
     private UseCaseDetailList useCaseDetailList = new UseCaseDetailList();
-    private DataSource<UseCaseDetailList> useCaseDetailListDataSource = new UseCaseDetailListFileDataSource(directory, projectName + ".csv"); //= new UseCaseDetailListFileDataSource(directory, projectName + ".csv")
     private ArrayList <String> word = new ArrayList<>();
     private ArrayList<Object> objects;
     private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
     private ConnectionList connectionList = new ConnectionList();
-    private String name;
+    private String nameTester;
 
     @FXML
     void initialize() {
@@ -89,7 +83,7 @@ public class UseCaseController {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            name = (String) objects.get(2);
+            nameTester = (String) objects.get(2);
             if (objects.get(3) != null){
                 useCase = (UseCase) objects.get(3);
             }
@@ -172,7 +166,7 @@ public class UseCaseController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
-        objects.add(name);
+        objects.add(nameTester);
         objects.add(null);
     }
     private void loadProject() {
@@ -385,7 +379,7 @@ public class UseCaseController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
-            objects.add(name);
+            objects.add(nameTester);
             objects.add("newUC");
             objects.add(null);
             FXRouter.goTo("use_case_add",objects);
@@ -400,7 +394,7 @@ public class UseCaseController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
-            objects.add(name);
+            objects.add(nameTester);
             objects.add("editUC");
             objects.add(selectedUseCase);
             objects.add(useCaseDetailList);
@@ -429,7 +423,7 @@ public class UseCaseController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
-        objects.add(name);
+        objects.add(nameTester);
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");
         alert.setHeaderText(null);

@@ -2,13 +2,16 @@ package ku.cs.testTools;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Objects;
 
 public class Main extends Application {
     Connection connection = null;
@@ -16,13 +19,15 @@ public class Main extends Application {
     public void start(Stage stage) {
         try {
             // Binding the stage and setting window title and size
-            FXRouter.bind(this, stage, "Manual Test Tools", 1360, 780);
+            Screen screen = Screen.getPrimary();
+            Rectangle2D bounds = screen.getVisualBounds();
+            FXRouter.bind(this, stage, "Manual Test Tools", (int) bounds.getWidth(), (int) bounds.getHeight());
 
             // Configure routes for the different pages
             configRoute();
 
             // Set the default theme for JavaFX
-            Application.setUserAgentStylesheet(getClass().getResource("/style/Themes/nord-light.css").toExternalForm());
+            Application.setUserAgentStylesheet(Objects.requireNonNull(getClass().getResource("/style/Themes/nord-light.css")).toExternalForm());
 
             // Go to the initial route
             FXRouter.goTo("role"); // Replace this with the initial screen if needed

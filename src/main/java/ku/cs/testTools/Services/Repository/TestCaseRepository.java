@@ -15,24 +15,11 @@ public class TestCaseRepository {
     }
 
     // Create a new TestCase
-    public void addTestCase(TestCase testCase) {
-        EntityTransaction transaction = entityManager.getTransaction();
-        try {
-            transaction.begin();
-            entityManager.persist(testCase);
-            transaction.commit();
-        } catch (RuntimeException e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            throw e;
-        }
-    }
     public void saveOrUpdateTestCase(TestCase testCase) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            entityManager.merge(testCase); // ✅ ใช้ merge() แทน persist()
+            entityManager.merge(testCase);
             transaction.commit();
         } catch (RuntimeException e) {
             if (transaction.isActive()) {

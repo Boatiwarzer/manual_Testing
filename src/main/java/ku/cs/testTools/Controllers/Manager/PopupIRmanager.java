@@ -274,7 +274,7 @@ public class PopupIRmanager {
 
         // บันทึกข้อมูล ConnectionList
         for (Connection connection : connectionList.getConnectionList()) {
-            connectionRepository.updateConnection(connection);
+            connectionRepository.saveOrUpdateConnection(connection);
         }
 
         // บันทึกข้อมูล NoteList

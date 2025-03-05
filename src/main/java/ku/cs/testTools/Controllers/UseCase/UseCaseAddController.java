@@ -10,7 +10,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Services.Repository.ManagerRepository;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
@@ -97,7 +96,7 @@ public class UseCaseAddController {
     private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
     private ConnectionList connectionList = new ConnectionList();
     private String typeUC;
-    private String name;
+    private String nameTester;
 
     @FXML
     public void initialize() {
@@ -106,7 +105,7 @@ public class UseCaseAddController {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            name = (String) objects.get(2);
+            nameTester = (String) objects.get(2);
             typeUC = (String) objects.get(3);
             loadProject();
 
@@ -506,7 +505,7 @@ public class UseCaseAddController {
                     randomUUID();
                     UseCaseDetail useCaseDetail = new UseCaseDetail(id, ucId, "actor", actorNumber, textArea.getText());
                     useCaseDetailList.addUseCaseDetail(useCaseDetail);
-                    useCaseDetailRepository.updateUseCaseDetail(useCaseDetail);
+                    useCaseDetailRepository.saveOrUpdateUseCaseDetail(useCaseDetail);
                     actorNumber++;
                 }
             }
@@ -520,7 +519,7 @@ public class UseCaseAddController {
                     randomUUID();
                     UseCaseDetail useCaseDetail = new UseCaseDetail(id, ucId, "system", systemNumber, textArea.getText());
                     useCaseDetailList.addUseCaseDetail(useCaseDetail);
-                    useCaseDetailRepository.updateUseCaseDetail(useCaseDetail);
+                    useCaseDetailRepository.saveOrUpdateUseCaseDetail(useCaseDetail);
                     systemNumber++;
                 }
             }
@@ -529,7 +528,8 @@ public class UseCaseAddController {
 //            for (UseCaseDetail useCaseDetail1 : useCaseDetailList.getUseCaseDetailList()){
 //               useCaseDetailRepository.updateUseCaseDetail(useCaseDetail1);
 //            }
-            useCaseRepository.addUseCase(newUseCase);
+//            useCaseRepository.addUseCase(newUseCase);
+            useCaseRepository.saveOrUpdateUsecase(newUseCase);
             saveProject();
             isGenerated = false;
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -647,7 +647,7 @@ public class UseCaseAddController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
-        objects.add(name);
+        objects.add(nameTester);
         objects.add(null);
     }
     @FXML
@@ -661,7 +661,7 @@ public class UseCaseAddController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
-        objects.add(name);
+        objects.add(nameTester);
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");
         alert.setHeaderText(null);

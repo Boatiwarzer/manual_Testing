@@ -2,12 +2,10 @@ package ku.cs.testTools.Controllers.TestCase;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Services.Repository.ManagerRepository;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
@@ -86,7 +84,7 @@ public class TestCaseController {
     private TestScriptDetailList testScriptDetailListTemp = new TestScriptDetailList();
     private ConnectionList connectionList = new ConnectionList();
     private UseCaseList useCaseList = new UseCaseList();
-    private String name;
+    private String nameTester;
     private TestCaseDetailList testCaseDetailListDelete = new TestCaseDetailList();
 
     @FXML
@@ -97,7 +95,7 @@ public class TestCaseController {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            name = (String) objects.get(2);
+            nameTester = (String) objects.get(2);
             if (objects.get(3) != null){
                 testCase = (TestCase) objects.get(3);
             }
@@ -154,7 +152,7 @@ public class TestCaseController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
-        objects.add(name);
+        objects.add(nameTester);
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");
         alert.setHeaderText(null);
@@ -257,7 +255,7 @@ public class TestCaseController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
-        objects.add(name);
+        objects.add(nameTester);
         objects.add(null);
     }
     private void searchSet() {
@@ -541,7 +539,7 @@ public class TestCaseController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
-            objects.add(name);
+            objects.add(nameTester);
             objects.add("newTC");
             objects.add(null);
             FXRouter.goTo("test_case_add",objects);
@@ -556,7 +554,7 @@ public class TestCaseController {
            objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
-            objects.add(name);
+            objects.add(nameTester);
             objects.add("editTC");
             objects.add(selectedTestCase);
             objects.add(testCaseDetailList);

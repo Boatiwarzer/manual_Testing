@@ -7,8 +7,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import ku.cs.testTools.Models.Manager.Manager;
-import ku.cs.testTools.Models.Manager.Tester;
 import ku.cs.testTools.Services.Repository.*;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
@@ -133,7 +131,7 @@ public class LabelPageController {
             testScript = new TestScript(objectID,label,"-","-","-","-","-","-","-",testFlowPosition.getPositionID());
             testScriptList.addOrUpdateTestScript(testScript);
             TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
-            testFlowRepository.addTestFlowPosition(testFlowPosition);
+            testFlowRepository.saveOrUpdateTestFlowPosition(testFlowPosition);
             saveProject();
             saveRepo();
             //objects.add(testScript);
@@ -145,7 +143,7 @@ public class LabelPageController {
             testCase = new TestCase(objectID,label,"-","-","-","-",testFlowPosition.getPositionID(),"-","-");
             testCaseList.addOrUpdateTestCase(testCase);
             TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
-            testFlowRepository.addTestFlowPosition(testFlowPosition);
+            testFlowRepository.saveOrUpdateTestFlowPosition(testFlowPosition);
             saveProject();
             saveRepo();
             //objects.add(testCase);
@@ -157,7 +155,7 @@ public class LabelPageController {
             testFlowPosition = new TestFlowPosition(id,width,height,layoutX,layoutY,0,"decision",projectName,name);
             testFlowPositionList.addPosition(testFlowPosition);
             TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
-            testFlowRepository.addTestFlowPosition(testFlowPosition);
+            testFlowRepository.saveOrUpdateTestFlowPosition(testFlowPosition);
             saveProject();
             saveRepo();
 
@@ -208,7 +206,7 @@ public class LabelPageController {
 
         // บันทึกข้อมูล ConnectionList
         for (Connection connection : connectionList.getConnectionList()) {
-            connectionRepository.updateConnection(connection);
+            connectionRepository.saveOrUpdateConnection(connection);
         }
 
         // บันทึกข้อมูล NoteList

@@ -23,7 +23,7 @@ public class NoteRepository {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            entityManager.persist(note);
+            entityManager.merge(note);
             transaction.commit();
         } catch (RuntimeException e) {
             if (transaction.isActive()) {

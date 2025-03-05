@@ -21,7 +21,7 @@ public class TestResultRepository {
         this.entityManager = this.emf.createEntityManager();    }
 
     // Create a new TestScript
-    public void addTestResult(TestResult testResult) {
+    public void saveOrUpdateTestResult(TestResult testResult) {
         try {
             entityManager.getTransaction().begin();
             entityManager.persist(testResult);

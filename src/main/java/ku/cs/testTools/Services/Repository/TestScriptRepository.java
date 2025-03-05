@@ -2,7 +2,6 @@ package ku.cs.testTools.Services.Repository;
 
 import jakarta.persistence.*;
 import ku.cs.testTools.Models.TestToolModels.TestScript;
-import ku.cs.testTools.Models.TestToolModels.TestScriptList;
 import ku.cs.testTools.Services.JpaUtil;
 
 import java.util.List;
@@ -16,11 +15,11 @@ public class TestScriptRepository {
     }
 
     // Create a new TestScript
-    public void addTestScript(TestScript testScript) {
+    public void saveOrUpdateTestScript(TestScript testScript) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            entityManager.persist(testScript);
+            entityManager.merge(testScript);
             transaction.commit();
         } catch (RuntimeException e) {
             if (transaction.isActive()) {
@@ -58,21 +57,6 @@ public class TestScriptRepository {
         try {
             transaction.begin();
             entityManager.merge(testScript);
-            transaction.commit();
-        } catch (RuntimeException e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            throw e;
-        }
-    }
-    public void saveOrUpdateTestScript(TestScript testScript) {
-        EntityTransaction transaction = entityManager.getTransaction();
-        try {
-            transaction.begin();
-
-            entityManager.merge(testScript); // ✅ update ถ้ามี, insert ถ้าไม่มี
-
             transaction.commit();
         } catch (RuntimeException e) {
             if (transaction.isActive()) {

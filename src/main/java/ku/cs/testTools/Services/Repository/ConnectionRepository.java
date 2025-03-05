@@ -53,7 +53,7 @@ public class ConnectionRepository {
     }
 
     // Update an existing Connection
-    public void updateConnection(Connection connection) {
+    public void saveOrUpdateConnection(Connection connection) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();

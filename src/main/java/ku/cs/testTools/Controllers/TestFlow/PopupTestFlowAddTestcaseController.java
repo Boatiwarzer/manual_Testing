@@ -52,7 +52,7 @@ public class PopupTestFlowAddTestcaseController {
     private UUID position;
     private String projectName, directory;
     private String type;
-    private String name;
+    private String nameTester;
     private ArrayList<Object> objects;
     private TestCaseDetailList testCaseDetailListDelete = new TestCaseDetailList();
 
@@ -65,7 +65,7 @@ public class PopupTestFlowAddTestcaseController {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            name = (String) objects.get(2);
+            nameTester = (String) objects.get(2);
             position = (UUID) objects.get(3);
             testCase = (TestCase) objects.get(4);
             testCaseDetailList = (TestCaseDetailList) objects.get(5);
@@ -109,7 +109,7 @@ public class PopupTestFlowAddTestcaseController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
-        objects.add(name);
+        objects.add(nameTester);
         objects.add(position);
         objects.add(testCase);
         objects.add(testCaseDetailList);
@@ -139,7 +139,7 @@ public class PopupTestFlowAddTestcaseController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
-            objects.add(name);
+            objects.add(nameTester);
             objects.add(position);
             objects.add(testCase);
             objects.add(testCaseDetailList);

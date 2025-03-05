@@ -4,13 +4,11 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Services.Repository.ManagerRepository;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
@@ -551,7 +549,7 @@ public class TestScriptAddController {
             TestScriptRepository testScriptRepository = new TestScriptRepository();
             TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
             for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()){
-                testScriptDetailRepository.addTestScriptDetail(testScriptDetail);
+                testScriptDetailRepository.saveOrUpdateTestScriptDetail(testScriptDetail);
             }
             DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
             TestScriptDetailList testScriptDetailListTemp = testScriptDetailListDataSource.readData();
@@ -563,7 +561,7 @@ public class TestScriptAddController {
 
             // Write data to respective files
             saveProject();
-            testScriptRepository.addTestScript(testScript);
+            testScriptRepository.saveOrUpdateTestScript(testScript);
 
             objects = new ArrayList<>();
             objects.add(projectName);

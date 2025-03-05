@@ -1,4 +1,0 @@
-testFlowPosition,1,249.19999999999993,142.2,75.0,75.0,0.0,start
-connection,1,279.19999999999993,262.2,369.19999999999993,172.2,Start,none,none,none,!@#$%^&*()_+,start
-connection,2,351.19999999999993,301.40000000000003,466.6,391.59999999999997,Arrow,none,line,open,!@#$%^&*()_+,line
-useCase,UC-442,Test,tset,sts,test,teset,tset,2025-01-22 17:14:45

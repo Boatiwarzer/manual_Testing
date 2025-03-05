@@ -17,18 +17,18 @@ public class IRDetailRepository {
     }
 
     // Create a new TestScript
-    public void addIRRepository(IRreportDetail iRreportDetail) {
+    public void saveOrUpdateIRDetail(IRreportDetail iRreportDetail) {
+        EntityTransaction transaction = entityManager.getTransaction();
         try {
-            entityManager.getTransaction().begin();
-            entityManager.persist(iRreportDetail);
-            entityManager.getTransaction().commit();
-        }catch (RuntimeException e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
+            transaction.begin();
+            entityManager.merge(iRreportDetail);
+            transaction.commit();
+        } catch (RuntimeException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
             }
             throw e;
         }
-
     }
     public void findById(String id){
         Query query = entityManager.createNamedQuery("find IRreportDetail by id");

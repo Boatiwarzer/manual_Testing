@@ -15,7 +15,7 @@ public class TestResultDetailRepository {
     }
 
     // Create a new TestResultDetail
-    public void addTestResultDetail(TestResultDetail testResultDetail) {
+    public void saveOrUpdateTestResultDetail(TestResultDetail testResultDetail) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();

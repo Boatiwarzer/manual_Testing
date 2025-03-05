@@ -16,7 +16,7 @@ public class TestFlowPositionRepository {
     }
 
     // Create a new TestFlowPosition
-    public void addTestFlowPosition(TestFlowPosition testFlowPosition) {
+    public void saveOrUpdateTestFlowPosition(TestFlowPosition testFlowPosition) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
@@ -29,21 +29,7 @@ public class TestFlowPositionRepository {
             throw e;
         }
     }
-    public void saveOrUpdateTestFlowPosition(TestFlowPosition testFlowPosition) {
-        EntityTransaction transaction = entityManager.getTransaction();
-        try {
-            transaction.begin();
 
-            entityManager.merge(testFlowPosition); // ✅ update ถ้ามี, insert ถ้าไม่มี
-
-            transaction.commit();
-        } catch (RuntimeException e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            throw e;
-        }
-    }
     // Find a TestFlowPosition by ID
     public TestFlowPosition findById(UUID id) {
         try {

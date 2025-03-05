@@ -11,7 +11,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Services.Repository.*;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
@@ -92,7 +91,7 @@ public class UseCaseEditController {
     private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
     private ConnectionList connectionList = new ConnectionList();
     private String typeUC;
-    private String name;
+    private String nameTester;
     private UseCaseDetailList useCaseDetailListDelete = new UseCaseDetailList();
 
     @FXML
@@ -103,7 +102,7 @@ public class UseCaseEditController {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            name = (String) objects.get(2);
+            nameTester = (String) objects.get(2);
             typeUC = (String) objects.get(3);
             loadProject();
             selectedComboBox();
@@ -486,7 +485,7 @@ public class UseCaseEditController {
                     randomUUID();
                     UseCaseDetail useCaseDetail = new UseCaseDetail(id, ucId, "actor", actorNumber, textArea.getText());
                     useCaseDetailList.addUseCaseDetail(useCaseDetail);
-                    useCaseDetailRepository.updateUseCaseDetail(useCaseDetail);
+                    useCaseDetailRepository.saveOrUpdateUseCaseDetail(useCaseDetail);
                     actorNumber++;
                 }
             }
@@ -500,7 +499,7 @@ public class UseCaseEditController {
                     randomUUID();
                     UseCaseDetail useCaseDetail = new UseCaseDetail(id, ucId, "system", systemNumber, textArea.getText());
                     useCaseDetailList.addUseCaseDetail(useCaseDetail);
-                    useCaseDetailRepository.updateUseCaseDetail(useCaseDetail);
+                    useCaseDetailRepository.saveOrUpdateUseCaseDetail(useCaseDetail);
                     systemNumber++;
                 }
             }
@@ -510,6 +509,13 @@ public class UseCaseEditController {
 //                useCaseDetailRepository.updateUseCaseDetail(useCaseDetail1);
 //            }
             UseCaseRepository useCaseRepository = new UseCaseRepository();
+//            UseCaseDetailRepository useCaseDetailRepository = new UseCaseDetailRepository();
+//            for (UseCaseDetail useCaseDetail1 : useCaseDetailList.getUseCaseDetailList()){
+//                useCaseDetailRepository.saveOrUpdateUseCaseDetail(useCaseDetail1);
+//            }
+//            for (UseCaseDetail useCaseDetail1 : useCaseDetailListDelete.getUseCaseDetailList()){
+//                useCaseDetailRepository.deleteUseCaseDetail(useCaseDetail1.getUseCaseID());
+//            }
             useCaseRepository.updateUseCase(newUseCase);
             saveProject();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -660,7 +666,7 @@ public class UseCaseEditController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
-        objects.add(name);
+        objects.add(nameTester);
         objects.add(null);
     }
     @FXML
@@ -703,7 +709,7 @@ public class UseCaseEditController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
-        objects.add(name);
+        objects.add(nameTester);
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");
         alert.setHeaderText(null);

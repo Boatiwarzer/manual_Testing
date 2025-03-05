@@ -112,7 +112,7 @@ public class NewProjectController {
         managerRepository.addManager(manager);
         TesterRepository testerRepository = new TesterRepository();
         for (Tester tester : testerList.getTesterList()){
-            testerRepository.addTester(tester);
+            testerRepository.saveOrUpdateTester(tester);
         }
         //send the project name and directory to HomePage
         ArrayList<Object> objects = new ArrayList<>();

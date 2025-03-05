@@ -15,11 +15,11 @@ public class TesterRepository {
     }
 
     // Create a new Tester
-    public void addTester(Tester tester) {
+    public void saveOrUpdateTester(Tester tester) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            entityManager.persist(tester);
+            entityManager.merge(tester);
             transaction.commit();
         } catch (RuntimeException e) {
             if (transaction.isActive()) {

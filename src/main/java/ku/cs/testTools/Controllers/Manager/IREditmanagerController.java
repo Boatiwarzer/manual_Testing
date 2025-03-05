@@ -2,7 +2,6 @@ package ku.cs.testTools.Controllers.Manager;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -11,7 +10,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Models.Manager.ManagerList;
@@ -114,6 +112,7 @@ public class IREditmanagerController {
                 onTableIR.isFocused();
                 selectedIRD();
                 selectedListView();
+                loadRepo();
                 loadProject();
                 if (objects.get(4) != null){
                     iRreport = (IRreport) objects.get(4);
@@ -296,7 +295,7 @@ public class IREditmanagerController {
 
         // บันทึกข้อมูล ConnectionList
         for (Connection connection : connectionList.getConnectionList()) {
-            connectionRepository.updateConnection(connection);
+            connectionRepository.saveOrUpdateConnection(connection);
         }
 
         // บันทึกข้อมูล NoteList

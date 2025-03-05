@@ -60,6 +60,10 @@ public class TestCaseDetailList {
     public void clearTestCaseDetail(String ID) {
         testCaseDetailList.removeIf(testCaseDetail -> testCaseDetail.getIdTCD().equals(ID));
     }
+    public void clearItems() {
+        testCaseDetailList.clear();
+    }
+
     public void sort(Comparator<TestCaseDetail> cmp) {
         testCaseDetailList.sort(cmp);
     }

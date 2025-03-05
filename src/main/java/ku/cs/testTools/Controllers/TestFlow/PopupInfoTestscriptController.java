@@ -22,9 +22,7 @@ import ku.cs.testTools.Services.Repository.TestScriptRepository;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public class PopupInfoTestscriptController {
 
@@ -59,7 +57,7 @@ public class PopupInfoTestscriptController {
     private TableView<TestScriptDetail> onTableTestscript;
 
     @FXML
-    private ComboBox<String> onTestNameCombobox;
+    private ComboBox<String> onTestNameCombobox = new ComboBox<>();
 
     @FXML
     private TextArea onTestNoteField;
@@ -75,7 +73,7 @@ public class PopupInfoTestscriptController {
 
     @FXML
     private Label testIDLabel;
-    private String projectName = "125", directory = "data";
+    private String projectName, directory;
     private TestScriptList testScriptList = new TestScriptList();
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
     private TestScript testScript;
@@ -253,7 +251,9 @@ public class PopupInfoTestscriptController {
         tsId = testScript.getIdTS();
         testIDLabel.setText(tsId);
         String name = testScript.getNameTS();
-        onTestNameCombobox.getSelectionModel().select(name);
+        String ts = testScript.getIdTS() + " : " + testScript.getNameTS();
+        System.out.println(ts);
+        onTestNameCombobox.getSelectionModel().select(ts);
         String useCase = testScript.getUseCase();
         onUsecaseCombobox.getSelectionModel().select(useCase);
         String description = testScript.getDescriptionTS();
@@ -315,6 +315,7 @@ public class PopupInfoTestscriptController {
 
     private void selectedComboBox() {
         testScriptCombobox();
+        onTestNameCombobox.getItems().clear();
         onTestNameCombobox.setOnAction(event -> {
             String selectedItem = onTestNameCombobox.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
@@ -322,8 +323,6 @@ public class PopupInfoTestscriptController {
                 Platform.runLater(onTestNameCombobox.getEditor()::end);
                 if (!selectedItem.equals("None")) {
                     selectedComboBoxSetInfoTS(selectedItem);
-                }else {
-                    clearTestscrpt();
                 }
             }
 
@@ -370,12 +369,17 @@ public class PopupInfoTestscriptController {
     }
 
     private void selectedComboBoxSetInfoTS(String selectedItem) {
-        String[] data = selectedItem.split("[:,]");
-        // ตรวจสอบว่า data มี UseCase ID ใน index 0 หรือไม่
+        if (selectedItem == null || selectedItem.isEmpty()) return;
+
+        String[] data = selectedItem.split("\\s*:\\s*", 2);
+        testIDLabel.setText("");
+        onTableTestscript.getItems().clear();
+        testScriptDetailList.clearItems();
+
         if (data.length > 0 && testScriptList.findTSById(data[0].trim()) != null) {
             testScript = testScriptList.findTSById(data[0].trim());
 
-            // อัปเดตข้อมูลใน Label
+            // ตั้งค่าใน Label และ Fields
             testIDLabel.setText(testScript.getIdTS());
             onTestcaseCombobox.setValue(testScript.getTestCase());
             onUsecaseCombobox.setValue(testScript.getUseCase());
@@ -384,25 +388,38 @@ public class PopupInfoTestscriptController {
             infoPostconLabel.setText(testScript.getPostCon());
             onTestNoteField.setText(testScript.getFreeText());
 
-            onTableTestscript.getItems().clear();
             for (TestScriptDetail testScriptDetail : testScriptDetailListTemp.getTestScriptDetailList()) {
-                if (testScript.getIdTS().trim().equals(testScriptDetail.getIdTS().trim())){
-                    testScriptDetailList.addOrUpdateTestScriptDetail(testScriptDetail);
-                }
+                testScriptDetailList.addOrUpdateTestScriptDetail(testScriptDetail);
             }
-            if (testScriptDetailList != null){
+
+            if (testScriptDetailList != null) {
                 loadTable(testScriptDetailList);
             }
 
         }
     }
 
+
+
     private void testScriptCombobox() {
-        for (TestScript testScript : testScriptList.getTestScriptList()){
-            String ts = testScript.getIdTS() + " : " + testScript.getNameTS();
-            onTestNameCombobox.getItems().add(ts);
+        onTestNameCombobox.getItems().clear(); // เคลียร์ค่าก่อน
+        Set<String> uniqueItems = new HashSet<>(); // ใช้ Set เพื่อตรวจสอบค่าซ้ำ
+
+        for (TestScript testScript : testScriptList.getTestScriptList()) {
+            String tsId = testScript.getIdTS().trim();
+            String tsName = testScript.getNameTS().trim();
+            String ts = tsId + " : " + tsName;
+
+            // ตรวจสอบว่ามีค่าอยู่แล้วหรือไม่
+            if (!uniqueItems.contains(ts)) {
+                uniqueItems.add(ts);
+                onTestNameCombobox.getItems().add(ts);
+            }
         }
     }
+
+
+
 
     private void selectedComboBoxSetInfoTC(String selectedItem) {
         String[] data = selectedItem.split("[:,]");
@@ -473,7 +490,8 @@ public class PopupInfoTestscriptController {
 
     @FXML
     void onAddButton(ActionEvent event) {
-        String name = onTestNameCombobox.getValue();
+        String[] data = onTestNameCombobox.getValue().split(":");
+        String name = data[1].trim();
         String idTS = tsId;
         String date = testDateLabel.getText();
         String useCase = onUsecaseCombobox.getValue();
@@ -488,7 +506,7 @@ public class PopupInfoTestscriptController {
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
-            objects.add(name);
+            objects.add(nameTester);
             objects.add(position);
             objects.add(testScript);
             objects.add(testScriptDetailList);
@@ -590,7 +608,8 @@ public class PopupInfoTestscriptController {
     void onEditListButton(ActionEvent event) {
 
         try {
-            String name = onTestNameCombobox.getValue();
+            String[] data = onTestNameCombobox.getValue().split(":");
+            String name = data[1].trim();
             String idTS = tsId;
             String date = testDateLabel.getText();
             String useCase = onUsecaseCombobox.getValue();
@@ -628,8 +647,10 @@ public class PopupInfoTestscriptController {
         }
 
         // Validate fields
-        String name = onTestNameCombobox.getValue();
-        String idTS = tsId;
+        String selectedItem = onTestNameCombobox.getValue();
+        String[] data = selectedItem.split("[:,]");
+        String name = data[1].trim();
+        String idTS = data[0].trim();
         String date = testDateLabel.getText();
         String useCase = onUsecaseCombobox.getValue();
         String description = infoDescriptLabel.getText();
