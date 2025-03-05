@@ -555,6 +555,7 @@ public class TestCaseEditController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(nameTester);
             objects.add(testCase);
             FXRouter.goTo("test_case", objects);
             Node source = (Node) event.getSource();

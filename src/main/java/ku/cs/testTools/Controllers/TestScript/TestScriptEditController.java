@@ -134,7 +134,7 @@ public class TestScriptEditController {
     private TestScriptDetailList testScriptDetailListDelete = new TestScriptDetailList();
     private String typeTS;
     private ArrayList<Object> objects;
-    private String name;
+    private String nameTester;
     private TestFlowPosition testFlowPosition;
 
     @FXML
@@ -147,7 +147,7 @@ public class TestScriptEditController {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            name = (String) objects.get(2);
+            nameTester = (String) objects.get(2);
             typeTS = (String) objects.get(3);
             onTableTestscript.isFocused();
             loadProject();
@@ -565,7 +565,7 @@ public class TestScriptEditController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
-            objects.add(name);
+            objects.add(nameTester);
             objects.add(typeTS);
             objects.add(testScript);
             objects.add(testScriptDetailList);
@@ -591,7 +591,7 @@ public class TestScriptEditController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
-            objects.add(name);
+            objects.add(nameTester);
             objects.add(typeTS);
             objects.add(testScript);
             objects.add(testScriptDetailList);
@@ -660,7 +660,7 @@ public class TestScriptEditController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
-        objects.add(name);
+        objects.add(nameTester);
         objects.add(testScript);
         // Show success message
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -702,7 +702,7 @@ public class TestScriptEditController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
-            objects.add(name);
+            objects.add(nameTester);
             objects.add(null);
             FXRouter.goTo("test_script", objects);
             Node source = (Node) event.getSource();
@@ -819,7 +819,7 @@ public class TestScriptEditController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
-        objects.add(name);
+        objects.add(nameTester);
         objects.add(null);
     }
     @FXML
@@ -833,7 +833,7 @@ public class TestScriptEditController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
-        objects.add(name);
+        objects.add(nameTester);
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");
         alert.setHeaderText(null);

@@ -1,9 +1,0 @@
-testScript,TS-265,0,05-03-2025,UC-140 : 0,0,TC-3 : 0,0,0,0,d53f2c4e-864b-48fe-9e64-b151d7dd0def
-testScriptDetail,TSD-931,0,0,0 : 0,0,TS-265,05-03-2025
-testCase,TC-3,0,05-03-2025,UC-140 : 0,00,0,659f021a-4d41-431d-ac04-3c9a29ea1173,0,0
-testCaseDetail,TCD-234,0,0,0,05-03-2025,TC-3
-useCase,UC-140,0,0,0,0,0,0,2025-03-05 20:26:59
-useCaseDetail,UC-140,actor,1,0
-useCaseDetail,UC-140,system,1,0
-testResult,TR-345,02,2025-03-05 20:27:49,-
-testResultDetail,TRD-39,10,TS-265 : 0,TC-3 : 0,0,0,0 : 0,1. 0|,0,0,Pass,None,2025-03-05,A,...,1,Waiting,,TR-345
