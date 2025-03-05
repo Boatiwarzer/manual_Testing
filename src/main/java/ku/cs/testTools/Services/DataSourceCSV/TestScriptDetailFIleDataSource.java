@@ -64,9 +64,9 @@ public class TestScriptDetailFIleDataSource implements DataSource<TestScriptDeta
                     TestScriptDetail testScriptDetail = new TestScriptDetail(
                             data[1].trim(), // idTSD
                             data[2].trim(), // testNo
-                            data[3].trim(), // steps
-                            data[4].trim(), // inputData
-                            data[5].trim(),
+                            data[3].trim().replace("#$#","\n").replace("%$%",","), // steps
+                            data[4].trim().replace("#$#","\n").replace("%$%",","), // inputData
+                            data[5].trim().replace("#$#","\n").replace("%$%",","),
                             data[6].trim(),
                             data[7].trim()// expected
                     );
@@ -204,10 +204,10 @@ public class TestScriptDetailFIleDataSource implements DataSource<TestScriptDeta
         return "testScriptDetail," +
                 testScriptDetail.getIdTSD() + "," +
                 testScriptDetail.getTestNo() + "," +
-                testScriptDetail.getSteps() + "," +
-                testScriptDetail.getInputData() + "," +
-                testScriptDetail.getExpected()+ "," +
-                testScriptDetail.getIdTS()+ "," +
+                testScriptDetail.getSteps().replace("\n","#$#").replace(",","%$%") + "," +
+                testScriptDetail.getInputData().replace("\n","#$#").replace(",","%$%") + "," +
+                testScriptDetail.getExpected().replace("\n","#$#").replace(",","%$%") + "," +
+                testScriptDetail.getIdTS() + "," +
                 testScriptDetail.getDateTSD();
     }
 }

@@ -437,16 +437,15 @@ public class TestCaseController {
 
     private void setTable() {
         new TableviewSet<>(onTableTestcase);
+
         ArrayList<StringConfiguration> configs = new ArrayList<>();
-        configs.add(new StringConfiguration("title:TSD-ID."));
+        configs.add(new StringConfiguration("title:TC-ID."));
         configs.add(new StringConfiguration("title:Test No."));
-        configs.add(new StringConfiguration("title:Test Step."));
-        configs.add(new StringConfiguration("title:Input Data."));
-        configs.add(new StringConfiguration("title:Expected Result."));
+        configs.add(new StringConfiguration("title:Name Variable."));
+        configs.add(new StringConfiguration("title:Type Variable."));
         configs.add(new StringConfiguration("title:Date."));
 
         int index = 0;
-
         for (StringConfiguration conf: configs) {
             TableColumn col = new TableColumn(conf.get("title"));
             if (index <= 1) {  // ถ้าเป็นคอลัมน์แรก
@@ -454,13 +453,12 @@ public class TestCaseController {
                 col.setMaxWidth(80);   // จำกัดขนาดสูงสุดของคอลัมน์แรก
                 col.setMinWidth(80); // ตั้งค่าขนาดคอลัมน์แรก
             }
-            index++;
-            new TableColumns(col);
+            col.setSortable(false);
+            col.setReorderable(false);
             onTableTestcase.getColumns().add(col);
+            index++;
 
         }
-
-
     }
     @FXML
     void onSearchButton(ActionEvent event) {

@@ -469,7 +469,7 @@ public class TestResultController {
                 });
             }
             // กำหนดเงื่อนไขการแสดงผลเฉพาะของคอลัมน์
-            if (conf.get("field").equals("stepsTRD")) {
+            if (!conf.get("field").equals("imageTRD")) {
                 col.setCellFactory(column -> new TableCell<>() {
                     private final Text text = new Text();
                     @Override
@@ -478,26 +478,7 @@ public class TestResultController {
                         if (empty || item == null) {
                             setGraphic(null);
                         } else {
-//                            setText(item.replace("|", "\n"));
-                            text.setText(item.replace("|", "\n"));
-                            text.wrappingWidthProperty().bind(column.widthProperty().subtract(10)); // ตั้งค่าการห่อข้อความตามขนาดคอลัมน์
-                            setGraphic(text); // แสดงผล Text Node แทนข้อความธรรมดา
-                        }
-                    }
-                });
-            }
-
-            if (conf.get("field").equals("inputdataTRD")) {
-                col.setCellFactory(column -> new TableCell<>() {
-                    private final Text text = new Text();
-                    @Override
-                    protected void updateItem(String item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty || item == null) {
-                            setGraphic(null);
-                        } else {
-//                            setText(item.replace("|", ", "));
-                            text.setText(item.replace("|", ", "));
+                            text.setText(item.replace("#$#","\n").replace("%$%",", "));
                             text.wrappingWidthProperty().bind(column.widthProperty().subtract(10)); // ตั้งค่าการห่อข้อความตามขนาดคอลัมน์
                             setGraphic(text); // แสดงผล Text Node
                         }

@@ -7,6 +7,9 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import ku.cs.testTools.Services.DataSource;
+import ku.cs.testTools.Services.DataSourceCSV.TestCaseDetailFileDataSource;
+import ku.cs.testTools.Services.DataSourceCSV.TestScriptDetailFIleDataSource;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.AutoCompleteComboBoxListener;
@@ -15,6 +18,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PopupAddTestscriptController {
 
@@ -153,12 +157,6 @@ public class PopupAddTestscriptController {
         String Expect = onExpectedArea.getText();
         setDateTSD();  // Assuming this method sets the date, make sure it's valid
 
-        // Check if any required field is empty
-        if (TsNo.isEmpty() || TsStep.isEmpty() || Input == null || Input.isEmpty() || Expect.isEmpty()) {
-            // Show an alert if any field is missing or invalid
-            showAlert("Input Error", "Please fill in all required fields.");
-            return; // Prevent further execution if the fields are incomplete
-        }
 
         // Create a new TestScriptDetail object and add it to the list
         testScriptDetail = new TestScriptDetail(id, TsNo, TsStep, Input, Expect, idTS, date);
@@ -166,13 +164,7 @@ public class PopupAddTestscriptController {
         // Add or update the TestScriptDetail in the list
         testScriptDetailList.addOrUpdateTestScriptDetail(testScriptDetail);
     }
-    private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
-    }
+
     boolean handleSaveAction() {
         if (onTestNo.getText() == null || onTestNo.getText().trim().isEmpty()) {
             showAlert("กรุณากรอกข้อมูล Test No.");
@@ -256,9 +248,19 @@ public class PopupAddTestscriptController {
     }
 
     private void inputCombobox() {
+//        for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()){
+//            String tcd = testCaseDetail.getVariableTCD() + " : " + testCaseDetail.getNameTCD();
+//            onInputDataCombobox.getItems().add(tcd);
+//        }
+        String selectedTcId = testScript.getTestCase();
+        String[] partsTC = selectedTcId.split(" : "); // แยกข้อความตาม " : "
+        String tcId = partsTC[0];
+        
         for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()){
-            String tcd = testCaseDetail.getVariableTCD() + " : " + testCaseDetail.getNameTCD();
-            onInputDataCombobox.getItems().add(tcd);
+            if (testCaseDetail.getIdTC().equals(tcId)) {
+                String tcd = testCaseDetail.getVariableTCD() + " : " + testCaseDetail.getNameTCD();
+                onInputDataCombobox.getItems().add(tcd);
+            }
         }
     }
 

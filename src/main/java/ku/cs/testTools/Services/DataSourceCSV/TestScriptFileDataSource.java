@@ -58,13 +58,13 @@ public class TestScriptFileDataSource implements DataSource<TestScriptList>, Man
                 if (data[0].trim().equals("testScript")) {
                     TestScript testScript = new TestScript(
                             data[1].trim(), // data[1]
-                            data[2].trim(), // data[2]
+                            data[2].trim().replace("#$#","\n").replace("%$%",","), // data[2]
                             data[3].trim(), // data[3]
-                            data[4].trim(), // data[4]
-                            data[5].trim(), // data[5]
-                            data[6].trim(), // data[6]
-                            data[7].trim(), // data[7]
-                            data[8].trim(),
+                            data[4].trim().replace("#$#","\n").replace("%$%",","), // data[4]
+                            data[5].trim().replace("#$#","\n").replace("%$%",","), // data[5]
+                            data[6].trim().replace("#$#","\n").replace("%$%",","), // data[6]
+                            data[7].trim().replace("#$#","\n").replace("%$%",","), // data[7]
+                            data[8].trim().replace("#$#","\n").replace("%$%",","),
                             data[9].trim(),// data[8]
                             UUID.fromString(data[10].trim())
                     );
@@ -207,14 +207,14 @@ public class TestScriptFileDataSource implements DataSource<TestScriptList>, Man
     public String createLine(TestScript testScript) {
         return "testScript,"
                 + testScript.getIdTS() + ","
-                + testScript.getNameTS() + ","
+                + testScript.getNameTS().replace("\n","#$#").replace(",","%$%") + ","
                 + testScript.getDateTS() + ","
-                + testScript.getUseCase() + ","
-                + testScript.getDescriptionTS() + ","
-                + testScript.getTestCase() + ","
-                + testScript.getPreCon() + ","
-                + testScript.getPostCon() + ","
-                + testScript.getFreeText()+ ","
+                + testScript.getUseCase().replace("\n","#$#").replace(",","%$%") + ","
+                + testScript.getDescriptionTS().replace("\n","#$#").replace(",","%$%") + ","
+                + testScript.getTestCase().replace("\n","#$#").replace(",","%$%") + ","
+                + testScript.getPreCon().replace("\n","#$#").replace(",","%$%") + ","
+                + testScript.getPostCon().replace("\n","#$#").replace(",","%$%") + ","
+                + testScript.getFreeText().replace("\n","#$#").replace(",","%$%") + ","
                 + testScript.getPosition();
     }
 }

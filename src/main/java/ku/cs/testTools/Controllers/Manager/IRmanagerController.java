@@ -692,7 +692,7 @@ public class IRmanagerController {
                     }
                 });
             }
-            if (conf.get("field").equals("rcaIRD")) {
+            if (!conf.get("field").equals("imageTRD")) {
                 col.setCellFactory(column -> new TableCell<>() {
                     private final Text text = new Text();
                     @Override
@@ -701,8 +701,7 @@ public class IRmanagerController {
                         if (empty || item == null) {
                             setGraphic(null);
                         } else {
-//                            setText(item.replace("|", ", "));
-                            text.setText(item.replace("|", ", "));
+                            text.setText(item.replace("#$#","\n").replace("%$%",", "));
                             text.wrappingWidthProperty().bind(column.widthProperty().subtract(10)); // ตั้งค่าการห่อข้อความตามขนาดคอลัมน์
                             setGraphic(text); // แสดงผล Text Node
                         }

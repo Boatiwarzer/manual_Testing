@@ -1,5 +1,8 @@
 package ku.cs.testTools.Services.DataSourceCSV;
 
+import com.opencsv.CSVParserBuilder;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Models.Manager.ManagerList;
 import ku.cs.testTools.Models.TestToolModels.*;
@@ -54,12 +57,12 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
                 if (data[0].trim().equals("useCase")) {
                     UseCase useCase = new UseCase(
                             data[1], // useCaseID
-                            data[2], // useCaseName
-                            data[3], // actor
-                            data[4], // description
-                            data[5], // preCondition
-                            data[6], // postCondition
-                            data[7], // note
+                            data[2].replace("#$#","\n").replace("%$%",","), // useCaseName
+                            data[3].replace("#$#","\n").replace("%$%",","), // actor
+                            data[4].replace("#$#","\n").replace("%$%",","), // description
+                            data[5].replace("#$#","\n").replace("%$%",","), // preCondition
+                            data[6].replace("#$#","\n").replace("%$%",","), // postCondition
+                            data[7].replace("#$#","\n").replace("%$%",","), // note
                             data[8]  // date
                     );
                     useCaseList.addUseCase(useCase);
@@ -198,12 +201,12 @@ public class UseCaseListFileDataSource implements DataSource<UseCaseList>, Manag
     public String createLine(UseCase useCase) {
         return "useCase" + ","
                 + useCase.getUseCaseID() + ","
-                + useCase.getUseCaseName() + ","
-                + useCase.getActor() + ","
-                + useCase.getDescription() + ","
-                + useCase.getPreCondition() + ","
-                + useCase.getPostCondition() + ","
-                + useCase.getNote() + ","
+                + useCase.getUseCaseName().replace("\n","#$#").replace(",","%$%") + ","
+                + useCase.getActor().replace("\n","#$#").replace(",","%$%") + ","
+                + useCase.getDescription().replace("\n","#$#").replace(",","%$%") + ","
+                + useCase.getPreCondition().replace("\n","#$#").replace(",","%$%") + ","
+                + useCase.getPostCondition().replace("\n","#$#").replace(",","%$%") + ","
+                + useCase.getNote().replace("\n","#$#").replace(",","%$%") + ","
                 + useCase.getDate();
     }
 }

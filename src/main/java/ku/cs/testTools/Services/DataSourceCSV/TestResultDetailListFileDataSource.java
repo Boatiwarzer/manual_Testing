@@ -54,22 +54,22 @@ public class TestResultDetailListFileDataSource implements DataSource<TestResult
                     TestResultDetail testResultDetail = new TestResultDetail(
                             data[1].trim(),
                             data[2].trim(),
-                            data[3].trim(),
-                            data[4].trim(),
-                            data[5].trim(),
-                            data[6].trim(),
-                            data[7].trim(),
-                            data[8].trim(),
-                            data[9].trim(),
-                            data[10].trim(),
+                            data[3].trim().replace("#$#","\n").replace("%$%",","),
+                            data[4].trim().replace("#$#","\n").replace("%$%",","),
+                            data[5].trim().replace("#$#","\n").replace("%$%",","),
+                            data[6].trim().replace("#$#","\n").replace("%$%",","),
+                            data[7].trim().replace("#$#","\n").replace("%$%",","),
+                            data[8].trim().replace("#$#","\n").replace("%$%",","),
+                            data[9].trim().replace("#$#","\n").replace("%$%",","),
+                            data[10].trim().replace("#$#","\n").replace("%$%",","),
                             data[11].trim(),
                             data[12].trim(),
                             data[13].trim(),
-                            data[14].trim(),
+                            data[14].trim().replace("#$#","\n").replace("%$%",","),
                             data[15].trim(),
                             data[16].trim(),
                             data[17].trim(),
-                            data[18].trim(),
+                            data[18].trim().replace("#$#","\n").replace("%$%",","),
                             data[19].trim()
                     );
 
@@ -201,22 +201,22 @@ public class TestResultDetailListFileDataSource implements DataSource<TestResult
         return "testResultDetail," +
                 testResultDetail.getIdTRD() + "," +
                 testResultDetail.getTestNo() + "," +
-                testResultDetail.getTsIdTRD() + "," +
-                testResultDetail.getTcIdTRD() + "," +
-                testResultDetail.getActorTRD() + "," +
-                testResultDetail.getDescriptTRD() + "," +
-                testResultDetail.getInputdataTRD() .replace(", ", "|") + "," +
-                testResultDetail.getStepsTRD().replace("\n", "|") + "," +
-                testResultDetail.getExpectedTRD() + "," +
-                testResultDetail.getActualTRD() + "," +
+                testResultDetail.getTsIdTRD().replace("\n","#$#").replace(",","%$%") + "," +
+                testResultDetail.getTcIdTRD().replace("\n","#$#").replace(",","%$%") + "," +
+                testResultDetail.getActorTRD().replace("\n","#$#").replace(",","%$%") + "," +
+                testResultDetail.getDescriptTRD().replace("\n","#$#").replace(",","%$%") + "," +
+                testResultDetail.getInputdataTRD() .replace("\n","#$#").replace(",","%$%") + "," +
+                testResultDetail.getStepsTRD().replace("\n","#$#").replace(",","%$%") + "," +
+                testResultDetail.getExpectedTRD().replace("\n","#$#").replace(",","%$%") + "," +
+                testResultDetail.getActualTRD().replace("\n","#$#").replace(",","%$%") + "," +
                 testResultDetail.getStatusTRD() + "," +
                 testResultDetail.getPriorityTRD() + "," +
                 testResultDetail.getDateTRD() + "," +
-                testResultDetail.getTesterTRD() + "," +
+                testResultDetail.getTesterTRD().replace("\n","#$#").replace(",","%$%") + "," +
                 testResultDetail.getImageTRD() + "," +
                 testResultDetail.getRetestTRD() + "," +
                 testResultDetail.getApproveTRD() + "," +
-                testResultDetail.getRemarkTRD() + "," +
+                testResultDetail.getRemarkTRD().replace("\n","#$#").replace(",","%$%") + "," +
                 testResultDetail.getIdTR();
     }
     //        List<String> fileLines = new ArrayList<>();

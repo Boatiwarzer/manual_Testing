@@ -57,9 +57,9 @@ public class IRreportListFileDataSource implements DataSource<IRreportList>, Man
                 if (data[0].trim().equals("iRreport")) {
                     IRreport iRreport = new IRreport(
                             data[1].trim(), // data[1]
-                            data[2].trim(), // data[2]
+                            data[2].trim().replace("#$#","\n").replace("%$%",","), // data[2]
                             data[3].trim(),  // data[3]
-                            data[4].trim(),
+                            data[4].trim().replace("#$#","\n").replace("%$%",","),
                             data[5].trim()
 //                            data[6].trim()
                     );
@@ -199,9 +199,9 @@ public class IRreportListFileDataSource implements DataSource<IRreportList>, Man
     public String createLine(IRreport iRreport) {
         return "iRreport,"
                 + iRreport.getIdIR() + ","
-                + iRreport.getNameIR() + ","
+                + iRreport.getNameIR().replace("\n","#$#").replace(",","%$%") + ","
                 + iRreport.getDateIR() + ","
-                + iRreport.getNoteIR() + ","
+                + iRreport.getNoteIR().replace("\n","#$#").replace(",","%$%") + ","
                 + iRreport.getTrIR();
     }
 }

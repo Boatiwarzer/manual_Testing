@@ -82,7 +82,8 @@ public class UseCaseAddController {
     private MenuBar homePageMenuBar;
     @FXML
     private MenuItem saveMenuItem;
-    private String projectName, directory, useCaseId; // directory, projectName
+    private String projectName, directory, useCaseId, ucd; // directory, projectName
+    private UUID id;
     private UseCase useCase;
     private UseCase selectedUseCase;
     private UseCaseDetail selectedItem;
@@ -449,6 +450,19 @@ public class UseCaseAddController {
         onSearchList.getItems().addAll(searchList(onSearchField.getText(),useCaseList.getUseCaseList()));
     }
 
+    private void randomUUID() {
+        UUID i = UUID.randomUUID();
+        this.id = i;
+    }
+
+//    public void randomId(){
+//        int min = 1;
+//        int upperbound = 999;
+//        String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
+//        this.ucd = String.format("UCD-%s", random1);
+//
+//    }
+
     @FXML
     void onSubmitButton(ActionEvent event) {
         if (!handleSaveAction()) {
@@ -482,14 +496,17 @@ public class UseCaseAddController {
             useCaseList.addUseCase(newUseCase);
 
 //        useCaseDetailList.clearUseCaseDetail(ucId);
+            UseCaseDetailRepository useCaseDetailRepository = new UseCaseDetailRepository();
             // Get the text from the textAreas in the actorActionVBox and write them to the useCaseDetailList
             int actorNumber = 1;
             for (Node node : actorActionVBox.getChildren()) {
                 HBox hBox = (HBox) node;
                 TextArea textArea = (TextArea) hBox.getChildren().get(0);
                 if (!textArea.getText().isEmpty()) {
-                    UseCaseDetail useCaseDetail = new UseCaseDetail(ucId, "actor", actorNumber, textArea.getText());
+                    randomUUID();
+                    UseCaseDetail useCaseDetail = new UseCaseDetail(id, ucId, "actor", actorNumber, textArea.getText());
                     useCaseDetailList.addUseCaseDetail(useCaseDetail);
+                    useCaseDetailRepository.updateUseCaseDetail(useCaseDetail);
                     actorNumber++;
                 }
             }
@@ -500,16 +517,18 @@ public class UseCaseAddController {
                 HBox hBox = (HBox) node;
                 TextArea textArea = (TextArea) hBox.getChildren().get(0);
                 if (!textArea.getText().isEmpty()) {
-                    UseCaseDetail useCaseDetail = new UseCaseDetail(ucId, "system", systemNumber, textArea.getText());
+                    randomUUID();
+                    UseCaseDetail useCaseDetail = new UseCaseDetail(id, ucId, "system", systemNumber, textArea.getText());
                     useCaseDetailList.addUseCaseDetail(useCaseDetail);
+                    useCaseDetailRepository.updateUseCaseDetail(useCaseDetail);
                     systemNumber++;
                 }
             }
             UseCaseRepository useCaseRepository = new UseCaseRepository();
-            UseCaseDetailRepository useCaseDetailRepository = new UseCaseDetailRepository();
-            for (UseCaseDetail useCaseDetail1 : useCaseDetailList.getUseCaseDetailList()){
-               useCaseDetailRepository.updateUseCaseDetail(useCaseDetail1);
-            }
+//            UseCaseDetailRepository useCaseDetailRepository = new UseCaseDetailRepository();
+//            for (UseCaseDetail useCaseDetail1 : useCaseDetailList.getUseCaseDetailList()){
+//               useCaseDetailRepository.updateUseCaseDetail(useCaseDetail1);
+//            }
             useCaseRepository.addUseCase(newUseCase);
             saveProject();
             isGenerated = false;

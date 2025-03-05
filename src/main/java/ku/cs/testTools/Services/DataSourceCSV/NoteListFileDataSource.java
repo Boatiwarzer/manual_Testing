@@ -54,7 +54,7 @@ public class NoteListFileDataSource implements DataSource<NoteList>, ManageDataS
                 if (data[0].trim().equals("note")) {
                     Note note = new Note(
                             data[1].trim(), // data[1]
-                            data[2].trim(),
+                            data[2].trim().replace("#$#","\n").replace("%$%",","),
                             data[3].trim(), // data[1]
                             data[4].trim()// data[2]
                     );
@@ -195,7 +195,7 @@ public class NoteListFileDataSource implements DataSource<NoteList>, ManageDataS
     public String createLine(Note note) {
         return "note,"
                 + note.getNoteID() + ","
-                + note.getNote() + ","
+                + note.getNote().replace("\n","#$#").replace(",","%$%") + ","
                 + note.getProjectName() + ","
                 + note.getTester();
     }

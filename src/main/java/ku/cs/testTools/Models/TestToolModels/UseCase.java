@@ -15,7 +15,7 @@ import java.util.UUID;
 public class UseCase {
 
     @Id
-    @Column(name = "id_uc", nullable = false,unique = true)
+    @Column(name = "id_uc", nullable = false, unique = true)
     private String useCaseID;
 
     @Column(name = "name_uc", length = 255, nullable = false)

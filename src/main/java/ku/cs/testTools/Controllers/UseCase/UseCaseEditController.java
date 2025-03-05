@@ -13,7 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ku.cs.testTools.Models.Manager.Manager;
-import ku.cs.testTools.Services.Repository.ManagerRepository;
+import ku.cs.testTools.Services.Repository.*;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.AutoCompleteComboBoxListener;
@@ -22,8 +22,6 @@ import ku.cs.testTools.Services.DataSourceCSV.ConnectionListFileDataSource;
 import ku.cs.testTools.Services.DataSourceCSV.TestFlowPositionListFileDataSource;
 import ku.cs.testTools.Services.DataSourceCSV.UseCaseDetailListFileDataSource;
 import ku.cs.testTools.Services.DataSourceCSV.UseCaseListFileDataSource;
-import ku.cs.testTools.Services.Repository.UseCaseDetailRepository;
-import ku.cs.testTools.Services.Repository.UseCaseRepository;
 import ku.cs.testTools.Services.UseCaseComparable;
 import org.controlsfx.control.textfield.TextFields;
 
@@ -82,6 +80,7 @@ public class UseCaseEditController {
     private MenuItem saveMenuItem;
     private UseCase selectedUseCase;
     private String projectName, directory, useCaseId; // directory, projectName
+    private UUID id;
     private UseCase useCase;
     private UseCaseDetail selectedItem;
     private UseCaseList useCaseList = new UseCaseList();
@@ -128,6 +127,7 @@ public class UseCaseEditController {
         DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
         DataSource<UseCaseDetailList> useCaseDetailListFileDataSource = new UseCaseDetailListFileDataSource(directory,projectName+".csv");
         useCaseDetailList = useCaseDetailListFileDataSource.readData();
+        useCaseDetailListDelete = useCaseDetailListFileDataSource.readData();
         testFlowPositionList = testFlowPositionListDataSource.readData();
         connectionList = connectionListDataSource.readData();
         useCaseList = useCaseListDataSource.readData();
@@ -433,6 +433,12 @@ public class UseCaseEditController {
         hBox.getChildren().add(deleteButton);
         systemActionVBox.getChildren().add(hBox);
     }
+
+    private void randomUUID() {
+        UUID i = UUID.randomUUID();
+        this.id = i;
+    }
+
     @FXML
     void onSubmitButton(ActionEvent event) {
         if (!handleSaveAction()) {
@@ -465,14 +471,22 @@ public class UseCaseEditController {
             useCaseList.addUseCase(newUseCase);
 
             useCaseDetailList.clearUseCaseDetail(ucId);
+            System.out.println(useCaseDetailListDelete.getUseCaseDetailList());
+            UseCaseDetailRepository useCaseDetailRepository = new UseCaseDetailRepository();
+            for (UseCaseDetail useCaseDetail : useCaseDetailListDelete.getUseCaseDetailList()){
+                useCaseDetailRepository.deleteUseCaseDetail(useCaseDetail.getId());
+            }
+
             // Get the text from the textAreas in the actorActionVBox and write them to the useCaseDetailList
             int actorNumber = 1;
             for (Node node : actorActionVBox.getChildren()) {
                 HBox hBox = (HBox) node;
                 TextArea textArea = (TextArea) hBox.getChildren().get(0);
                 if (!textArea.getText().isEmpty()) {
-                    UseCaseDetail useCaseDetail = new UseCaseDetail(ucId, "actor", actorNumber, textArea.getText());
+                    randomUUID();
+                    UseCaseDetail useCaseDetail = new UseCaseDetail(id, ucId, "actor", actorNumber, textArea.getText());
                     useCaseDetailList.addUseCaseDetail(useCaseDetail);
+                    useCaseDetailRepository.updateUseCaseDetail(useCaseDetail);
                     actorNumber++;
                 }
             }
@@ -483,19 +497,19 @@ public class UseCaseEditController {
                 HBox hBox = (HBox) node;
                 TextArea textArea = (TextArea) hBox.getChildren().get(0);
                 if (!textArea.getText().isEmpty()) {
-                    UseCaseDetail useCaseDetail = new UseCaseDetail(ucId, "system", systemNumber, textArea.getText());
+                    randomUUID();
+                    UseCaseDetail useCaseDetail = new UseCaseDetail(id, ucId, "system", systemNumber, textArea.getText());
                     useCaseDetailList.addUseCaseDetail(useCaseDetail);
+                    useCaseDetailRepository.updateUseCaseDetail(useCaseDetail);
                     systemNumber++;
                 }
             }
+
+//            UseCaseDetailRepository useCaseDetailRepository = new UseCaseDetailRepository();
+//            for (UseCaseDetail useCaseDetail1 : useCaseDetailList.getUseCaseDetailList()){
+//                useCaseDetailRepository.updateUseCaseDetail(useCaseDetail1);
+//            }
             UseCaseRepository useCaseRepository = new UseCaseRepository();
-            UseCaseDetailRepository useCaseDetailRepository = new UseCaseDetailRepository();
-            for (UseCaseDetail useCaseDetail1 : useCaseDetailList.getUseCaseDetailList()){
-                useCaseDetailRepository.updateUseCaseDetail(useCaseDetail1);
-            }
-            for (UseCaseDetail useCaseDetail1 : useCaseDetailListDelete.getUseCaseDetailList()){
-                useCaseDetailRepository.deleteUseCaseDetail(useCaseDetail1.getUseCaseID());
-            }
             useCaseRepository.updateUseCase(newUseCase);
             saveProject();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -612,6 +626,13 @@ public class UseCaseEditController {
 
                     useCaseList.clearUseCase(ucId);
                     useCaseDetailList.clearUseCaseDetail(ucId);
+//                    useCase = useCaseList.findByUseCaseId(ucId);
+                    UseCaseRepository useCaseRepository = new UseCaseRepository();
+                    useCaseRepository.deleteUseCase(ucId);
+                    UseCaseDetailRepository useCaseDetailRepository = new UseCaseDetailRepository();
+                    for (UseCaseDetail useCaseDetail : useCaseDetailListDelete.getUseCaseDetailList()){
+                        useCaseDetailRepository.deleteUseCaseDetail(useCaseDetail.getId());
+                    }
                     saveProject();
                     FXRouter.goTo("use_case");
                 } else {

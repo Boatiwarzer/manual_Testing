@@ -53,7 +53,7 @@ public class UseCaseDetailList {
     }
 
 //    private List<UseCaseDetail> useCaseDetailList;
-    public List<UseCaseDetail> getUseCaseDetailList() {
+    public List<UseCaseDetail> getUseCaseDetailList1() {
         return useCaseDetailList;
     }
     public boolean isDetailExist(String useCaseID, String action, int number, String detail) {

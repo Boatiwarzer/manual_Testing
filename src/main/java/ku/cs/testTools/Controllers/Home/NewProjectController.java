@@ -228,12 +228,18 @@ public class NewProjectController {
         if (onManagerField.getText() == null || onManagerField.getText().trim().isEmpty()) {
             showAlert("กรุณากรอกข้อมูล Manager");
             return false;
+        } else if (onManagerField.getText().matches(".*[\\W_].*")) {
+            showAlert("ห้ามกรอกอักษรพิเศษ ตรวจสอบอีกครั้ง");
+            return false;
         }
 
         // ตรวจสอบ Project Name
         String projectName = onProjectNameField.getText();
         if (projectName == null || projectName.trim().isEmpty()) {
             showAlert("กรุณากรอกข้อมูล Project Name");
+            return false;
+        } else if (projectName.matches(".*[\\W_].*")) {
+            showAlert("ห้ามกรอกอักษรพิเศษ ตรวจสอบอีกครั้ง");
             return false;
         }
 
@@ -260,6 +266,9 @@ public class NewProjectController {
         TextArea lastTextArea = (TextArea) lastHBox.getChildren().get(0);
         if (lastTextArea.getText().trim().isEmpty()) {
             showAlert("กรุณากรอกข้อมูล Tester");
+            return false;
+        } else if (lastTextArea.getText().matches(".*[\\W_].*")) {
+            showAlert("ห้ามกรอกอักษรพิเศษ ตรวจสอบอีกครั้ง");
             return false;
         }
 
