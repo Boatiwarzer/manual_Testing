@@ -472,8 +472,14 @@ public class UseCaseEditController {
             useCaseDetailList.clearUseCaseDetail(ucId);
             System.out.println(useCaseDetailListDelete.getUseCaseDetailList());
             UseCaseDetailRepository useCaseDetailRepository = new UseCaseDetailRepository();
+            List<UseCaseDetail> matchedUseCases = new ArrayList<>();
             for (UseCaseDetail useCaseDetail : useCaseDetailListDelete.getUseCaseDetailList()){
-                useCaseDetailRepository.deleteUseCaseDetail(useCaseDetail.getId());
+                if (useCaseDetail.getUseCaseID().equals(ucId)) {
+                    matchedUseCases.add(useCaseDetail);
+                }
+            }
+            for (UseCaseDetail useCaseDetail1 : matchedUseCases){
+                useCaseDetailRepository.deleteUseCaseDetail(useCaseDetail1.getId());
             }
 
             // Get the text from the textAreas in the actorActionVBox and write them to the useCaseDetailList
@@ -634,10 +640,16 @@ public class UseCaseEditController {
                     useCaseDetailList.clearUseCaseDetail(ucId);
 //                    useCase = useCaseList.findByUseCaseId(ucId);
                     UseCaseRepository useCaseRepository = new UseCaseRepository();
-                    useCaseRepository.deleteUseCase(ucId);
                     UseCaseDetailRepository useCaseDetailRepository = new UseCaseDetailRepository();
+                    useCaseRepository.deleteUseCase(ucId);
+                    List<UseCaseDetail> matchedUseCases = new ArrayList<>();
                     for (UseCaseDetail useCaseDetail : useCaseDetailListDelete.getUseCaseDetailList()){
-                        useCaseDetailRepository.deleteUseCaseDetail(useCaseDetail.getId());
+                        if (useCaseDetail.getUseCaseID().equals(ucId)) {
+                            matchedUseCases.add(useCaseDetail);
+                        }
+                    }
+                    for (UseCaseDetail useCaseDetail1 : matchedUseCases){
+                        useCaseDetailRepository.deleteUseCaseDetail(useCaseDetail1.getId());
                     }
                     saveProject();
                     FXRouter.goTo("use_case");
