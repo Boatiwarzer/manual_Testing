@@ -106,7 +106,7 @@ public class TestCaseEditController {
     private String type;
     private String typeTC;
     private UUID position = UUID.randomUUID();
-    private String name;
+    private String nameTester;
     private TestCaseDetailList testCaseDetailListDelete = new TestCaseDetailList();
     private TestFlowPosition testFlowPosition;
 
@@ -118,7 +118,7 @@ public class TestCaseEditController {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
-            name = (String) objects.get(2);
+            nameTester = (String) objects.get(2);
             typeTC = (String) objects.get(3);
             loadProject();
             setDate();
@@ -166,11 +166,9 @@ public class TestCaseEditController {
         DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
         DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
         DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
-        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
         testFlowPositionListDataSource.writeData(testFlowPositionList);
         testCaseListDataSource.writeData(testCaseList);
         testCaseDetailListDataSource.writeData(testCaseDetailList);
-        connectionListDataSource.writeData(connectionList);
 
     }
 
@@ -472,7 +470,7 @@ public class TestCaseEditController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
-        objects.add(name);
+        objects.add(nameTester);
         objects.add(typeTC);
         objects.add(testCase);
         objects.add(testCaseDetailList);
@@ -599,7 +597,7 @@ public class TestCaseEditController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
-            objects.add(name);
+            objects.add(nameTester);
             objects.add(testCase);
 
             // 🔹 แจ้งเตือนว่าบันทึกข้อมูลสำเร็จ
@@ -664,7 +662,7 @@ public class TestCaseEditController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
-            objects.add(name);
+            objects.add(nameTester);
             objects.add(null);
             FXRouter.goTo("test_case",objects);
         } catch (IOException e) {
@@ -678,7 +676,7 @@ public class TestCaseEditController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
-            objects.add(name);
+            objects.add(nameTester);
             objects.add(null);
             FXRouter.goTo("test_flow",objects);
         } catch (IOException e) {
@@ -692,7 +690,7 @@ public class TestCaseEditController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
-            objects.add(name);
+            objects.add(nameTester);
             objects.add(null);
             FXRouter.goTo("test_result",objects);
         } catch (IOException e) {
@@ -706,7 +704,7 @@ public class TestCaseEditController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
-            objects.add(name);
+            objects.add(nameTester);
             objects.add(null);
             FXRouter.goTo("test_script",objects);
         } catch (IOException e) {
@@ -720,7 +718,7 @@ public class TestCaseEditController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
-            objects.add(name);
+            objects.add(nameTester);
             objects.add(null);
             FXRouter.goTo("use_case",objects);
         } catch (IOException e) {
@@ -735,7 +733,7 @@ public class TestCaseEditController {
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
-            objects.add(name);
+            objects.add(nameTester);
             objects.add(null);
             FXRouter.goTo("test_case",objects);
         } catch (IOException e) {
@@ -755,7 +753,7 @@ public class TestCaseEditController {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
-        objects.add(name);
+        objects.add(nameTester);
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");
         alert.setHeaderText(null);
