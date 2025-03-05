@@ -14,7 +14,7 @@ public class TestScriptDetailList {
     // หากคุณต้องการให้มี Singleton สำหรับ DataSource ให้สร้างแยกต่างหาก
 
     public TestScriptDetailList() {
-        testScriptDetailList = new ArrayList<>();
+        testScriptDetailList = new ArrayList<TestScriptDetail>();
     }
 
     public void addTestScriptDetail(TestScriptDetail testScriptDetail) {
