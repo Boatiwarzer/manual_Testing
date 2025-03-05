@@ -186,14 +186,12 @@ public class TestScriptEditController {
         DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
         DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
         DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
-        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
 
         testScriptList = testScriptListDataSource.readData();
         testScriptDetailListTemp = testScriptDetailListDataSource.readData();
         testCaseList = testCaseListDataSource.readData();
         testCaseDetailList = testCaseDetailListDataSource.readData();
         testFlowPositionList = testFlowPositionListDataSource.readData();
-        connectionList = connectionListDataSource.readData();
         useCaseList = useCaseListDataSource.readData();
 
     }
@@ -204,14 +202,12 @@ public class TestScriptEditController {
         DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
         DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
         DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
-        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
         testFlowPositionListDataSource.writeData(testFlowPositionList);
         testScriptListDataSource.writeData(testScriptList);
         testScriptDetailListDataSource.writeData(testScriptDetailList);
         testCaseListDataSource.writeData(testCaseList);
         testCaseDetailListDataSource.writeData(testCaseDetailList);
-        connectionListDataSource.writeData(connectionList);
-        //useCaseListDataSource.writeData(useCaseList);
+        useCaseListDataSource.writeData(useCaseList);
 
     }
     private void selectedComboBox() {
