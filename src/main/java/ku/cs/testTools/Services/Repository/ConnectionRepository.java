@@ -68,7 +68,7 @@ public class ConnectionRepository {
     }
 
     // Delete a Connection by ID
-    public void deleteConnection(String id) {
+    public void deleteConnection(UUID id) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();

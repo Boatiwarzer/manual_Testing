@@ -547,42 +547,45 @@ public class PopupInfoTestscriptController {
     @FXML
     void onDeleteButton(ActionEvent event) {
         // Pop up to confirm deletion
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Delete Confirmation");
-        alert.setHeaderText("Are you sure you want to delete this item?");
-        alert.setContentText("Press OK to confirm, or Cancel to go back.");
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK) {
-            testScript = testScriptList.findTSByPosition(position);
-            System.out.println("testscript : " + testScript);
-            testScriptList.deleteTestScriptByPositionID(position);
-            testScriptDetailList.deleteTestScriptDetailByTestScriptID(testScript.getIdTS());
-            testFlowPositionList.removePositionByID(position);
-            TestScriptRepository testScriptRepository = new TestScriptRepository();
-            testScriptRepository.deleteTestScript(testScript.getIdTS());
-            TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
-            for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()){
-                testScriptDetailRepository.deleteTestScriptDetail(testScriptDetail.getIdTSD());
-            }
-            TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
-            testFlowRepository.deleteTestFlowPosition(position);
+        try {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Delete Confirmation");
+            alert.setHeaderText("Are you sure you want to delete this item?");
+            alert.setContentText("Press OK to confirm, or Cancel to go back.");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                TestScriptRepository testScriptRepository = new TestScriptRepository();
+                TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
+                TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
+                List<TestScriptDetail> detailsToDelete = testScriptDetailList.getTestScriptDetailList();
+                for (TestScriptDetail testScriptDetail : detailsToDelete) {
+                    if (testScriptDetail.getIdTS().equals(testScript.getIdTS())) {
+                        testScriptDetailRepository.deleteTestScriptDetail(testScriptDetail.getIdTSD());
+                    }
+                }
+                testScriptRepository.deleteTestScript(testScript.getIdTS());
 
+                testScriptList.deleteTestScript(testScript);
+                testScriptDetailList.deleteTestScriptDetailByTestScriptID(testScript.getIdTS());
+                testFlowPositionList.removePositionByID(testScript.getPosition());
+
+
+                testFlowRepository.deleteTestFlowPosition(testScript.getPosition());
+
+            }
             saveProject();
-            try {
-                ArrayList<Object> objects = new ArrayList<>();
-                objects.add(projectName);
-                objects.add(directory);
-                objects.add(nameTester);
-                objects.add("none");
-                FXRouter.goTo("test_flow", objects);
-                Node source = (Node) event.getSource();
-                Stage stage = (Stage) source.getScene().getWindow();
-                stage.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
 
+            ArrayList<Object> objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add(nameTester);
+            FXRouter.goTo("test_flow", objects);
+            Node source = (Node) event.getSource();
+            Stage stage = (Stage) source.getScene().getWindow();
+            stage.close();
 
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
 
     }
