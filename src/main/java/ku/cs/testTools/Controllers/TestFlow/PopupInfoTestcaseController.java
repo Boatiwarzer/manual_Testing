@@ -478,44 +478,59 @@ public class PopupInfoTestcaseController {
 
     @FXML
     void onDeleteButton(ActionEvent event) {
-
-        // Pop up to confirm deletion
+    try {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Delete Confirmation");
         alert.setHeaderText("Are you sure you want to delete this item?");
         alert.setContentText("Press OK to confirm, or Cancel to go back.");
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK) {
-            testCase = testCaseList.findTCByPosition(position);
-            System.out.println("testcase : " + testCase);
-            testCaseList.deleteTestCaseByPositionID(position);
-            testCaseDetailList.deleteTestCaseDetailByTestScriptID(testCase.getIdTC());
-            testFlowPositionList.removePositionByID(position);
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // Initialize repositories once
             TestCaseRepository testCaseRepository = new TestCaseRepository();
-            testCaseRepository.deleteTestCase(testCase.getIdTC());
             TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
-            for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()){
-                testCaseDetailRepository.deleteTestCaseDetail(testCaseDetail.getIdTCD());
-            }
             TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
-            testFlowRepository.deleteTestFlowPosition(position);
-            saveProject();
-            try {
-                ArrayList<Object> objects = new ArrayList<>();
-                objects.add(projectName);
-                objects.add(directory);
-                objects.add(nameTester);
-                objects.add("none");
-                FXRouter.goTo("test_flow", objects);
-                Node source = (Node) event.getSource();
-                Stage stage = (Stage) source.getScene().getWindow();
-                stage.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+
+            // Delete all test case details related to this test case
+            List<TestCaseDetail> testCaseDetails = testCaseDetailRepository.getAllTestCaseDetails();
+            for (TestCaseDetail testCaseDetail : testCaseDetails) {
+                if (testCaseDetail.getIdTC().equals(testCase.getIdTC())) {
+                    testCaseDetailRepository.deleteTestCaseDetail(testCaseDetail.getIdTCD());
+                }
             }
 
+            // Delete test case
+            testCaseRepository.deleteTestCase(testCase.getIdTC());
 
+            // Remove from local lists
+            testCaseList.deleteTestCase(testCase);
+            testCaseDetailList.deleteTestCaseDetailByTestScriptID(testCase.getIdTC());
+            testFlowPositionList.removePositionByID(testCase.getPosition());
+
+            // Delete test flow position
+            testFlowRepository.deleteTestFlowPosition(testCase.getPosition());
+
+            // Save project state
+
+            saveProject();
+            ArrayList<Object> objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add(nameTester);
+            FXRouter.goTo("test_flow", objects);
+            Node source = (Node) event.getSource();
+            Stage stage = (Stage) source.getScene().getWindow();
+            stage.close();
         }
+    }catch (IOException e) {
+        throw new RuntimeException(e);
+    }
+        // Pop up to confirm deletion
+
+
+
+
+
+
 
     }
 

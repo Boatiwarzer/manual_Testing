@@ -5,7 +5,6 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -16,73 +15,69 @@
 <?import javafx.scene.text.Font?>
 
 
-<ScrollPane xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.testTools.Controllers.Home.HomeManagerController">
-   <content>
-      <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="780.0" prefWidth="1360.0">
-         <top>
-            <MenuBar prefHeight="30.0" style="-fx-background-color: #98aeca;" BorderPane.alignment="CENTER">
-              <menus>
-                 <Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
-                    <items>
-                       <MenuItem fx:id="newMenuItem" mnemonicParsing="false" onAction="#handleNewMenuItem" text="New" />
-                       <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" onAction="#handleSaveMenuItem" text="Save" />
-                       <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#handleOpenMenuItem" text="Open…" />
-      <!--                 <SeparatorMenuItem mnemonicParsing="false" />-->
-      <!--                 <Menu fx:id="exportMenu" mnemonicParsing="false" text="Export">-->
-      <!--                    <items>-->
-      <!--                       <MenuItem fx:id="exportMenuItem" mnemonicParsing="false" onAction="#handleExportMenuItem" text="Export..." />-->
-      <!--                       <MenuItem fx:id="exportPDF" mnemonicParsing="false" onAction="#handleExportPDF" text="Export All..." />-->
-      <!--                    </items>-->
-      <!--                 </Menu>-->
-                       <SeparatorMenuItem mnemonicParsing="false" />
-                       <MenuItem fx:id="exitQuit" mnemonicParsing="false" onAction="#handleExit" text="Change Role" />
-                    </items>
-                 </Menu>
-                 <Menu mnemonicParsing="false" text="Help">
-                    <items>
-                       <MenuItem mnemonicParsing="false" text="About Manual Test Tools" />
-                    </items>
-                 </Menu>
-              </menus>
-            </MenuBar>
-         </top>
-         <center>
-            <VBox prefHeight="720.0" prefWidth="1360.0" BorderPane.alignment="CENTER">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="780.0" prefWidth="1360.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ku.cs.testTools.Controllers.Home.HomeManagerController">
+   <top>
+      <MenuBar prefHeight="30.0" style="-fx-background-color: #98aeca;" BorderPane.alignment="CENTER">
+        <menus>
+           <Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
+              <items>
+                 <MenuItem fx:id="newMenuItem" mnemonicParsing="false" onAction="#handleNewMenuItem" text="New" />
+                 <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" onAction="#handleSaveMenuItem" text="Save" />
+                 <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#handleOpenMenuItem" text="Open…" />
+<!--                 <SeparatorMenuItem mnemonicParsing="false" />-->
+<!--                 <Menu fx:id="exportMenu" mnemonicParsing="false" text="Export">-->
+<!--                    <items>-->
+<!--                       <MenuItem fx:id="exportMenuItem" mnemonicParsing="false" onAction="#handleExportMenuItem" text="Export..." />-->
+<!--                       <MenuItem fx:id="exportPDF" mnemonicParsing="false" onAction="#handleExportPDF" text="Export All..." />-->
+<!--                    </items>-->
+<!--                 </Menu>-->
+                 <SeparatorMenuItem mnemonicParsing="false" />
+                 <MenuItem fx:id="exitQuit" mnemonicParsing="false" onAction="#handleExit" text="Change Role" />
+              </items>
+           </Menu>
+           <Menu mnemonicParsing="false" text="Help">
+              <items>
+                 <MenuItem mnemonicParsing="false" text="About Manual Test Tools" />
+              </items>
+           </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <center>
+      <VBox prefHeight="720.0" prefWidth="1360.0" BorderPane.alignment="CENTER">
+         <children>
+            <AnchorPane>
                <children>
-                  <AnchorPane>
+                  <HBox alignment="CENTER" prefHeight="40.0" prefWidth="1680.0" spacing="150.0" AnchorPane.topAnchor="12.0">
                      <children>
-                        <HBox alignment="CENTER" prefHeight="40.0" prefWidth="1680.0" spacing="150.0" AnchorPane.topAnchor="12.0">
-                           <children>
-                              <Hyperlink fx:id="onClickTestflow" onAction="#onClickTestflow" text="Test Flow">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </Hyperlink>
-                              <Hyperlink fx:id="onClickTestresult" alignment="CENTER" onAction="#onClickTestresult" text="Test Result">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </Hyperlink>
-                              <Hyperlink fx:id="onClickIR" alignment="CENTER" onAction="#onClickIR" text="IR Report">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </Hyperlink>
-                           </children>
-                        </HBox>
-                        <ImageView fitHeight="720.0" fitWidth="1680.0" layoutY="30.0" pickOnBounds="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
-                           <image>
-                              <Image url="@../icon/Welcome_manager.png" />
-                           </image>
-                        </ImageView>
+                        <Hyperlink fx:id="onClickTestflow" onAction="#onClickTestflow" text="Test Flow">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Hyperlink>
+                        <Hyperlink fx:id="onClickTestresult" alignment="CENTER" onAction="#onClickTestresult" text="Test Result">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Hyperlink>
+                        <Hyperlink fx:id="onClickIR" alignment="CENTER" onAction="#onClickIR" text="IR Report">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Hyperlink>
                      </children>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                  </AnchorPane>
+                  </HBox>
+                  <ImageView fitHeight="720.0" fitWidth="1680.0" layoutY="30.0" pickOnBounds="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+                     <image>
+                        <Image url="@../icon/Welcome_manager.png" />
+                     </image>
+                  </ImageView>
                </children>
-            </VBox>
-         </center>
-      </BorderPane>
-   </content>
-</ScrollPane>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </AnchorPane>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

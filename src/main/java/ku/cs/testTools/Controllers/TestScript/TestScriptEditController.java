@@ -684,18 +684,24 @@ public class TestScriptEditController {
             alert.setHeaderText("Are you sure you want to delete this item?");
             alert.setContentText("Press OK to confirm, or Cancel to go back.");
             Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() == ButtonType.OK) {
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                TestScriptRepository testScriptRepository = new TestScriptRepository();
+                TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
+                TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
+                List<TestScriptDetail> detailsToDelete = testScriptDetailList.getTestScriptDetailList();
+                for (TestScriptDetail testScriptDetail : detailsToDelete) {
+                    if (testScriptDetail.getIdTS().equals(testScript.getIdTS())) {
+                        testScriptDetailRepository.deleteTestScriptDetail(testScriptDetail.getIdTSD());
+                    }
+                }
+                testScriptRepository.deleteTestScript(testScript.getIdTS());
+
                 testScriptList.deleteTestScript(testScript);
                 testScriptDetailList.deleteTestScriptDetailByTestScriptID(testScript.getIdTS());
                 testFlowPositionList.removePositionByID(testScript.getPosition());
-                TestScriptRepository testScriptRepository = new TestScriptRepository();
-                testScriptRepository.deleteTestScript(testScript.getIdTS());
-                TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
-                for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()){
-                    testScriptDetailRepository.deleteTestScriptDetail(testScriptDetail.getIdTSD());
-                }
-                TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
-                testFlowRepository.deleteTestFlowPosition(position);
+
+
+                testFlowRepository.deleteTestFlowPosition(testScript.getPosition());
 
             }
             saveProject();

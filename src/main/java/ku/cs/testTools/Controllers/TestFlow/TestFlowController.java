@@ -124,7 +124,7 @@ public class TestFlowController {
     private ArrayList<Object> objects;
     private Rectangle border;
     private Rectangle[] anchors;
-    private StackPane stackPane;
+    private StackPane stackPane = new StackPane();
     private Circle circle;
     private List<StackPane> stackPaneList = new ArrayList<>();
     //private Map<Integer, StackPane> testScriptPaneMap; // Mapping positionID -> StackPane
@@ -134,6 +134,7 @@ public class TestFlowController {
     private String name;
     private boolean check = true;
     private UUID id;
+    private UseCaseList useCaseList;
 
     @FXML
     void initialize() {
@@ -412,7 +413,7 @@ public class TestFlowController {
         DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory,projectName + ".csv");
         DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory,projectName + ".csv");
         DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
-        //DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
+        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
         DataSource<NoteList> noteListDataSource = new NoteListFileDataSource(directory,projectName + ".csv");
         //testScriptDetailList.clearItems();
         //onNoteTextArea.clear();
@@ -424,7 +425,7 @@ public class TestFlowController {
         testFlowPositionList = testFlowPositionListDataSource.readData();
         connectionList = connectionListDataSource.readData();
         noteList = noteListDataSource.readData();
-        //useCaseList = useCaseListDataSource.readData();
+        useCaseList = useCaseListDataSource.readData();
 
         loadData(projectName,name);
     }
@@ -520,16 +521,21 @@ public class TestFlowController {
                 }
             }
 
-            for (Connection connection : connectionList.getConnectionList()) {
-                if (connection == null) continue;
-
+            connectionList.getConnectionList().forEach(connection -> {
+                String type = connection.getType();
                 if (projectNameLower.equals(connection.getProjectName().toLowerCase())
                         && nameTesterLower.equals(connection.getTester().toLowerCase())) {
-                    drawLine(connection.getConnectionID(), connection.getStartX(), connection.getStartY(),
-                            connection.getEndX(), connection.getEndY(), connection.getLabel(),
-                            connection.getArrowHead(), connection.getLineType(), connection.getArrowTail());
+                    if (type.equals("line")) {
+                        drawLine(connection.getConnectionID(), connection.getStartX(), connection.getStartY(),
+                                connection.getEndX(), connection.getEndY(), connection.getLabel(),
+                                connection.getArrowHead(), connection.getLineType(), connection.getArrowTail());
+                    } else if (type.equals("arrow")) {
+                        drawLine(connection.getConnectionID(), connection.getStartX(), connection.getStartY(),
+                                connection.getEndX(), connection.getEndY(), connection.getLabel(),
+                                connection.getArrowHead(), connection.getLineType(), connection.getArrowTail());
+                    }
                 }
-            }
+            });
         }
 
         if (noteList != null) {
@@ -2125,44 +2131,98 @@ public class TestFlowController {
 
                     if(Objects.equals(type, "testscript")) {
                         TestScript testScript = testScriptList.findTSByPosition(ID);
-                        System.out.println("testscript : " + testScript);
-                        testScriptList.deleteTestScriptByPositionID(ID);
+                        TestScriptRepository testScriptRepository = new TestScriptRepository();
+                        TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
+                        TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
+                        List<TestScriptDetail> detailsToDelete = testScriptDetailList.getTestScriptDetailList();
+                        for (TestScriptDetail testScriptDetail : detailsToDelete) {
+                            if (testScriptDetail.getIdTS().equals(testScript.getIdTS())) {
+                                testScriptDetailRepository.deleteTestScriptDetail(testScriptDetail.getIdTSD());
+                            }
+                        }
+                        testScriptRepository.deleteTestScript(testScript.getIdTS());
+
+                        testScriptList.deleteTestScript(testScript);
                         testScriptDetailList.deleteTestScriptDetailByTestScriptID(testScript.getIdTS());
-                        testFlowPositionList.removePositionByID(ID);
+                        testFlowPositionList.removePositionByID(testScript.getPosition());
+
+
+                        testFlowRepository.deleteTestFlowPosition(testScript.getPosition());
                     }else if (Objects.equals(type, "testcase")){
                         TestCase testCase = testCaseList.findTCByPosition(ID);
                         System.out.println("testcase : " + testScript);
-                        testCaseList.deleteTestCaseByPositionID(ID);
+                        TestCaseRepository testCaseRepository = new TestCaseRepository();
+                        TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
+                        TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
+
+                        // Delete all test case details related to this test case
+                        List<TestCaseDetail> testCaseDetails = testCaseDetailRepository.getAllTestCaseDetails();
+                        for (TestCaseDetail testCaseDetail : testCaseDetails) {
+                            if (testCaseDetail.getIdTC().equals(testCase.getIdTC())) {
+                                testCaseDetailRepository.deleteTestCaseDetail(testCaseDetail.getIdTCD());
+                            }
+                        }
+
+                        // Delete test case
+                        testCaseRepository.deleteTestCase(testCase.getIdTC());
+
+                        // Remove from local lists
+                        testCaseList.deleteTestCase(testCase);
                         testCaseDetailList.deleteTestCaseDetailByTestScriptID(testCase.getIdTC());
-                        testFlowPositionList.removePositionByID(ID);
+                        testFlowPositionList.removePositionByID(testCase.getPosition());
+
+                        // Delete test flow position
+                        testFlowRepository.deleteTestFlowPosition(testCase.getPosition());
                     }else if (Objects.equals(type, "decision")){
+                        ConnectionRepository connectionRepository = new ConnectionRepository();
+                        TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
+                        testFlowRepository.deleteTestFlowPosition(ID);
+                        connectionRepository.deleteConnection(ID);
                         connectionList.deleteDecisionByID(ID);
                         testFlowPositionList.removePositionByID(ID);
                     }else if (Objects.equals(type, "start")){
+                        ConnectionRepository connectionRepository = new ConnectionRepository();
+                        TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
+                        testFlowRepository.deleteTestFlowPosition(ID);
+                        connectionRepository.deleteConnection(ID);
                         connectionList.deleteDecisionByID(ID);
                         testFlowPositionList.removePositionByID(ID);
                     }else if (Objects.equals(type, "end")){
+                        ConnectionRepository connectionRepository = new ConnectionRepository();
+                        TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
+                        testFlowRepository.deleteTestFlowPosition(ID);
+                        connectionRepository.deleteConnection(ID);
                         connectionList.deleteDecisionByID(ID);
                         testFlowPositionList.removePositionByID(ID);
                     }else if (Objects.equals(type, "line")){
+                        ConnectionRepository connectionRepository = new ConnectionRepository();
+                        TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
+                        testFlowRepository.deleteTestFlowPosition(ID);
+                        connectionRepository.deleteConnection(ID);
                         connectionList.deleteDecisionByID(ID);
                         testFlowPositionList.removePositionByID(ID);
                     }else if (Objects.equals(type, "arrow")){
+                        ConnectionRepository connectionRepository = new ConnectionRepository();
+                        TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
+                        testFlowRepository.deleteTestFlowPosition(ID);
+                        connectionRepository.deleteConnection(ID);
                         connectionList.deleteDecisionByID(ID);
                         testFlowPositionList.removePositionByID(ID);
                     }
                     onDesignArea.getChildren().remove(node);
                     saveProject();
-                    saveRepo();
                     loadProject();
                     System.out.println("Item Removed");
                 }
             });
             generate.setOnAction(e -> {
                 TestCase testCase = testCaseList.findTCByPosition(ID);
+                System.out.println(testCase);
                 if (testCase != null) {
                     String useCaseID = testCase.getUseCase();
+                    System.out.println(useCaseID);
                     TestScript relatedScript = testScriptList.findByUseCaseID(useCaseID);
+                    System.out.println(relatedScript);
                     TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(relatedScript.getPosition());
                     // คำนวณตำแหน่ง TestScript (ใช้ขนาดและตำแหน่ง)
                     double relatedWidth = testFlowPosition.getFitWidth();
@@ -2178,7 +2238,7 @@ public class TestFlowController {
 
                     // สร้างตำแหน่งเริ่มต้น
                     Point2D start = getCenterBottom((StackPane) node);
-
+                    randomId();
                     // วาดเส้น
                     drawLine(
                             id,
@@ -2239,6 +2299,7 @@ public class TestFlowController {
     @FXML
     void onClickTestcase(ActionEvent event) {
         try {
+            objects();
             FXRouter.goTo("test_case",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -2248,6 +2309,7 @@ public class TestFlowController {
     @FXML
     void onClickTestflow(ActionEvent event) {
         try {
+            objects();
             FXRouter.goTo("test_flow",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);

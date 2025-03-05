@@ -803,13 +803,18 @@ public class TREditmanagerController {
             currentNewData();
 //            objects.add("edit");
 //            objects.add(selectedItem);
+            loadProject();
+
             testResultList.addOrUpdateTestResult(testResult);
+            TestResultRepository testResultRepository = new TestResultRepository();
+            testResultRepository.saveOrUpdateTestResult(testResult);
             // Write data to respective files
             saveProject();
 
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
+            objects.add(name);
             objects.add(testResult);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Success");

@@ -189,13 +189,13 @@ public class IRmanagerController {
         // โหลด IRReportList
         irReportList = new IRreportList();
         for (IRreport report : irReportRepository.getAllIRReports()) {
-            irReportList.addOrUpdateIRreport(report);
+            iRreportList.addOrUpdateIRreport(report);
         }
 
         // โหลด IRDetailList
-        irDetailList = new IRreportDetailList();
+        iRreportDetailList = new IRreportDetailList();
         for (IRreportDetail detail : irDetailRepository.getAllIRReportDetIL()) {
-            irDetailList.addOrUpdateIRreportDetail(detail);
+            iRreportDetailList.addOrUpdateIRreportDetail(detail);
         }
 
         // โหลด ConnectionList
