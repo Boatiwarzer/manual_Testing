@@ -228,6 +228,22 @@ public class IRTestresultController {
                 });
             }
 
+            if (!conf.get("field").equals("imageTRD")) {
+                col.setCellFactory(column -> new TableCell<>() {
+                    private final Text text = new Text();
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            setGraphic(null);
+                        } else {
+                            text.setText(item.replace("#$#","\n").replace("%$%",", "));
+                            text.wrappingWidthProperty().bind(column.widthProperty().subtract(10)); // ตั้งค่าการห่อข้อความตามขนาดคอลัมน์
+                            setGraphic(text); // แสดงผล Text Node
+                        }
+                    }
+                });
+            }
             if (conf.get("field").equals("priorityIRD")) {
                 col.setCellFactory(column -> new TableCell<>() {
                     private final Text text = new Text();
@@ -250,22 +266,6 @@ public class IRTestresultController {
                             } else {
                                 text.setFill(Color.BLACK); // สีปกติสำหรับค่าอื่น ๆ
                             }
-                            setGraphic(text); // แสดงผล Text Node
-                        }
-                    }
-                });
-            }
-            if (!conf.get("field").equals("imageTRD")) {
-                col.setCellFactory(column -> new TableCell<>() {
-                    private final Text text = new Text();
-                    @Override
-                    protected void updateItem(String item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty || item == null) {
-                            setGraphic(null);
-                        } else {
-                            text.setText(item.replace("#$#","\n").replace("%$%",", "));
-                            text.wrappingWidthProperty().bind(column.widthProperty().subtract(10)); // ตั้งค่าการห่อข้อความตามขนาดคอลัมน์
                             setGraphic(text); // แสดงผล Text Node
                         }
                     }
