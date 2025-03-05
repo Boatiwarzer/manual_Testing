@@ -13,6 +13,8 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ku.cs.testTools.Models.Manager.Manager;
+import ku.cs.testTools.Services.Repository.IRDetailRepository;
+import ku.cs.testTools.Services.Repository.IRReportRepository;
 import ku.cs.testTools.Services.Repository.ManagerRepository;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
@@ -244,7 +246,7 @@ public class TestResultController {
         objects.add(null);
     }
     private void loadProject() {
-        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
+        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(projectName, directory + ".csv");
         DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
         DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
         DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
@@ -735,6 +737,7 @@ public class TestResultController {
                 iRreportList.addIR(newIR);
                 newIRreport = newIR;
 
+
                 List<TestResultDetail> trdList = testResultDetailList.findAllTRinTRDById(idTR.trim());
                 for (TestResultDetail trd : trdList) {
                     System.out.println("trd " + trd);
@@ -869,7 +872,7 @@ public class TestResultController {
                         iRreportDetailList.clearIRDetail(idIrd);
                     }
                 }
-
+                saveRepo();
                 saveProject();
             } else {
                 System.out.println("ID " + idTR + " does not exist in the file.");
@@ -882,7 +885,8 @@ public class TestResultController {
                 iRreport = new IRreport(idIR, nameIR, dateIR, noteIR, idTR);
                 iRreportList.addOrUpdateIRreport(iRreport);
                 newIRreport = iRreport;
-
+                IRReportRepository irReportRepository = new IRReportRepository();
+                irReportRepository.saveOrUpdateIR(iRreport);
                 List<TestResultDetail> trdList = testResultDetailList.findAllTRinTRDById(idTR.trim());
                 for (TestResultDetail trd : trdList) {
                     System.out.println("trd " + trd);
@@ -924,6 +928,7 @@ public class TestResultController {
                     iRreportDetail = new IRreportDetail(irID, testNo, testerIRD, tsIdIRD, tcIdIRD, descriptIRD, conditionIRD, imageIRD, retestIRD, priorityIRD, rcaIRD, managerIRD, statusIRD, remarkIRD, irId, idTrd);
                     iRreportDetailList.addOrUpdateIRreportDetail(iRreportDetail);
                 }
+                saveRepo();
                 saveProject();
             }
 
@@ -939,6 +944,15 @@ public class TestResultController {
             FXRouter.popup("test_result_ir", objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void saveRepo() {
+        IRReportRepository irReportRepository = new IRReportRepository();
+        IRDetailRepository irDetailRepository = new IRDetailRepository();
+        irReportRepository.saveOrUpdateIR(newIRreport);
+        for (IRreportDetail iRreportDetail : iRreportDetailList.getIRreportDetailList()){
+            irDetailRepository.saveOrUpdateIRDetail(iRreportDetail);
         }
     }
 

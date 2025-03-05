@@ -108,7 +108,7 @@ public class RoleController {
 
         ConnectionRepository connectionRepository = new ConnectionRepository();
         for (Connection connection : connectionList.getConnectionList()) {
-            connectionRepository.updateConnection(connection);
+            connectionRepository.saveOrUpdateConnection(connection);
         }
 
         NoteRepository noteRepository = new NoteRepository();
@@ -133,7 +133,7 @@ public class RoleController {
 
         UseCaseDetailRepository useCaseDetailRepository = new UseCaseDetailRepository();
         for (UseCaseDetail useCaseDetail : useCaseDetailList.getUseCaseDetailList()) {
-            useCaseDetailRepository.updateUseCaseDetail(useCaseDetail);
+            useCaseDetailRepository.saveOrUpdateUseCaseDetail(useCaseDetail);
         }
 
         IRReportRepository iRReportRepository = new IRReportRepository();

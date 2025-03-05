@@ -64,7 +64,7 @@ public class UCmanagerController {
     private MenuBar homePageMenuBar;
     @FXML
     private MenuItem saveMenuItem;
-    private String projectName = "125", directory = "data", useCaseId; // directory, projectName
+    private String projectName, directory, useCaseId; // directory, projectName
     private UseCase useCase;
     private UseCase selectedUseCase = new UseCase();
     private UseCaseDetail selectedItem;

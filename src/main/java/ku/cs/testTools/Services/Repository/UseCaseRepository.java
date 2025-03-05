@@ -15,11 +15,11 @@ public class UseCaseRepository {
     }
 
     // Create a new UseCase
-    public void addUseCase(UseCase useCase) {
+    public void saveOrUpdateUsecase(UseCase useCase) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            entityManager.persist(useCase);
+            entityManager.merge(useCase);
             transaction.commit();
         } catch (RuntimeException e) {
             if (transaction.isActive()) {

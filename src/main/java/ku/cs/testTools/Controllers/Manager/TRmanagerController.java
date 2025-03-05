@@ -4,14 +4,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Models.Manager.ManagerList;
@@ -108,7 +106,8 @@ public class TRmanagerController {
                 testResult = (TestResult) objects.get(3);
             }
             clearInfo();
-            loadProject();
+            loadRepo();
+            //loadProject();
             setTable();
             loadListView(testResultList);
             selected();
@@ -406,7 +405,7 @@ public class TRmanagerController {
 
         // บันทึกข้อมูล ConnectionList
         for (Connection connection : connectionList.getConnectionList()) {
-            connectionRepository.updateConnection(connection);
+            connectionRepository.saveOrUpdateConnection(connection);
         }
 
         // บันทึกข้อมูล NoteList

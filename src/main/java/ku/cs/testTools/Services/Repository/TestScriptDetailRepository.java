@@ -15,7 +15,7 @@ public class TestScriptDetailRepository {
     }
 
     // Create a new TestScriptDetail
-    public void addTestScriptDetail(TestScriptDetail testScriptDetail) {
+    public void saveOrUpdateTestScriptDetail(TestScriptDetail testScriptDetail) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
@@ -50,21 +50,7 @@ public class TestScriptDetailRepository {
     public TestScriptDetail getTestScriptDetailById(String idTSD) {
         return entityManager.find(TestScriptDetail.class, idTSD);
     }
-    public void saveOrUpdateTestScriptDetail(TestScriptDetail testScriptDetail) {
-        EntityTransaction transaction = entityManager.getTransaction();
-        try {
-            transaction.begin();
 
-            entityManager.merge(testScriptDetail); // ✅ update ถ้ามี, insert ถ้าไม่มี
-
-            transaction.commit();
-        } catch (RuntimeException e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            throw e;
-        }
-    }
 
     // Update an existing TestScriptDetail
     public void updateTestScriptDetail(TestScriptDetail testScriptDetail) {

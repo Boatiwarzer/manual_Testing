@@ -57,7 +57,7 @@ public class UseCaseDetailRepository {
     }
 
     // Update an existing UseCaseDetail
-    public void updateUseCaseDetail(UseCaseDetail useCaseDetail) {
+    public void saveOrUpdateUseCaseDetail(UseCaseDetail useCaseDetail) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();

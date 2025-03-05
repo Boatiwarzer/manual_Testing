@@ -2,7 +2,6 @@ package ku.cs.testTools.Controllers.TestResult;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -10,7 +9,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Services.Repository.ManagerRepository;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
@@ -793,9 +791,9 @@ public class TestResultAddController {
             TestResultRepository testResultRepository = new TestResultRepository();
             TestResultDetailRepository testResultDetailRepository = new TestResultDetailRepository();
             for (TestResultDetail testResultDetail : testResultDetailList.getTestResultDetailList()){
-                testResultDetailRepository.addTestResultDetail(testResultDetail);
+                testResultDetailRepository.saveOrUpdateTestResultDetail(testResultDetail);
             }
-            testResultRepository.addTestResult(testResult);
+            testResultRepository.saveOrUpdateTestResult(testResult);
             DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
             TestResultDetailList testResultDetailList1 = testResultDetailListDataSource.readData();
             for (TestResultDetail testResultDetail : testResultDetailList1.getTestResultDetailList()){

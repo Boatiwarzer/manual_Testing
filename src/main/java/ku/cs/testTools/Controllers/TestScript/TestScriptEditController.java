@@ -135,6 +135,7 @@ public class TestScriptEditController {
     private String typeTS;
     private ArrayList<Object> objects;
     private String name;
+    private TestFlowPosition testFlowPosition;
 
     @FXML
     void initialize() {
@@ -553,7 +554,12 @@ public class TestScriptEditController {
         String post = infoPostconLabel.getText();
 
         testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post,note,position);
-
+        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+        testFlowPositionList = testFlowPositionListDataSource.readData();
+        if (testFlowPositionList.findByPositionId(testScript.getPosition()) != null) {
+            testFlowPosition = testFlowPositionList.findByPositionId(testScript.getPosition());
+            testScript.setPosition(testFlowPosition.getPositionID());
+        }
     }
     @FXML
     void onAddButton(ActionEvent event) {
@@ -643,8 +649,16 @@ public class TestScriptEditController {
         for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()){
             testScriptDetailRepository.updateTestScriptDetail(testScriptDetail);
         }
-        for (TestScriptDetail testScriptDetail : testScriptDetailListDelete.getTestScriptDetailList()){
-            testScriptDetailRepository.deleteTestScriptDetail(testScriptDetail.getIdTSD());
+        if (testScriptDetailListDelete != null){
+            for (TestScriptDetail testScriptDetail : testScriptDetailListDelete.getTestScriptDetailList()){
+                testScriptDetailRepository.deleteTestScriptDetail(testScriptDetail.getIdTSD());
+            }
+        }
+        if (testFlowPosition != null){
+            TestFlowPositionRepository testFlowPositionRepository = new TestFlowPositionRepository();
+            testFlowPositionRepository.saveOrUpdateTestFlowPosition(testFlowPosition);
+            testFlowPositionList.addPosition(testFlowPosition);
+
         }
         testScriptRepository.updateTestScript(testScript);
         objects = new ArrayList<>();

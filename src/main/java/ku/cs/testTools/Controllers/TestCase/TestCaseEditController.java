@@ -108,6 +108,7 @@ public class TestCaseEditController {
     private UUID position = UUID.randomUUID();
     private String name;
     private TestCaseDetailList testCaseDetailListDelete = new TestCaseDetailList();
+    private TestFlowPosition testFlowPosition;
 
 
     @FXML
@@ -155,13 +156,9 @@ public class TestCaseEditController {
         DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
         DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
         DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
-        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
-        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
 
         testCaseList = testCaseListDataSource.readData();
         testCaseDetailList = testCaseDetailListDataSource.readData();
-        testFlowPositionList = testFlowPositionListDataSource.readData();
-        connectionList = connectionListDataSource.readData();
         useCaseList = useCaseListDataSource.readData();
 
     }
@@ -463,6 +460,12 @@ public class TestCaseEditController {
         String preCon = infoPreconField.getText();
         String post = infoPostconField.getText();
         testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post);
+        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+        testFlowPositionList = testFlowPositionListDataSource.readData();
+        if (testFlowPositionList.findByPositionId(testCase.getPosition()) != null) {
+            testFlowPosition = testFlowPositionList.findByPositionId(testCase.getPosition());
+            testCase.setPosition(testFlowPosition.getPositionID());
+        }
 
     }
     private void objects() {
@@ -576,15 +579,19 @@ public class TestCaseEditController {
             currentNewDataForSubmit();
             TestCaseRepository testCaseRepository = new TestCaseRepository();
             TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
-            testCaseRepository.addTestCase(testCase);
+            testCaseRepository.saveOrUpdateTestCase(testCase);
             for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()) {
                 testCaseDetailRepository.updateTestCaseDetail(testCaseDetail);
             }
             for (TestCaseDetail testCaseDetail : testCaseDetailListDelete.getTestCaseDetailList()){
                 testCaseDetailRepository.deleteTestCaseDetail(testCaseDetail.getIdTCD());
             }
+            if (testFlowPosition != null){
+                TestFlowPositionRepository testFlowPositionRepository = new TestFlowPositionRepository();
+                testFlowPositionRepository.saveOrUpdateTestFlowPosition(testFlowPosition);
+                testFlowPositionList.addPosition(testFlowPosition);
 
-
+            }
             testCaseList.addOrUpdateTestCase(testCase);
             saveProject();
 

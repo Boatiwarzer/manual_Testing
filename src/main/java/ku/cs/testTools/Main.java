@@ -9,6 +9,7 @@ import ku.cs.testTools.Services.fxrouter.FXRouter;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Objects;
 
 public class Main extends Application {
     Connection connection = null;
@@ -22,7 +23,7 @@ public class Main extends Application {
             configRoute();
 
             // Set the default theme for JavaFX
-            Application.setUserAgentStylesheet(getClass().getResource("/style/Themes/nord-light.css").toExternalForm());
+            Application.setUserAgentStylesheet(Objects.requireNonNull(getClass().getResource("/style/Themes/nord-light.css")).toExternalForm());
 
             // Go to the initial route
             FXRouter.goTo("role"); // Replace this with the initial screen if needed

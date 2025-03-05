@@ -22,9 +22,7 @@ import ku.cs.testTools.Services.Repository.TestFlowPositionRepository;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public class PopupInfoTestcaseController {
     @FXML
@@ -239,7 +237,12 @@ public class PopupInfoTestcaseController {
         tsId = testCase.getIdTC();
         testIDLabel.setText(tsId);
         String name = testCase.getNameTC();
-        onTestNameCombobox.getSelectionModel().select(name);
+        String tc = testCase.getIdTC() + " : " + testCase.getNameTC();
+        System.out.println(testCase.getIdTC());
+        System.out.println(testCase.getNameTC());
+        System.out.println(tc);
+
+        onTestNameCombobox.getSelectionModel().select(tc);
         //testDateLabel.setText(date);
         String useCase = testCase.getUseCase();
         onUsecaseCombobox.getSelectionModel().select(useCase);
@@ -335,11 +338,13 @@ public class PopupInfoTestcaseController {
     }
 
     private void selectedComboBoxSetInfoTC(String selectedItem) {
-        String[] data = selectedItem.split("[:,]");
+        String[] data = selectedItem.split("\\s*:\\s*", 2); // แยกแค่ 2 ส่วนแรก
+        testIDLabel.setText("");
+        onTableTestCase.getItems().clear();
 
-        // ตรวจสอบว่า data มี UseCase ID ใน index 0 หรือไม่
         if (data.length > 0 && testCaseList.findTCById(data[0].trim()) != null) {
-            testCase = testCaseList.findTCById(data[0].trim());
+            this.testCase = testCaseList.findTCById(data[0].trim());
+            setDataTC();
 
             // อัปเดตข้อมูลใน Label
             testIDLabel.setText(testCase.getIdTC());
@@ -349,25 +354,34 @@ public class PopupInfoTestcaseController {
             infoPostconLabel.setText(testCase.getPostCon());
             onTestNoteField.setText(testCase.getNote());
 
-            onTableTestCase.getItems().clear();
             for (TestCaseDetail testCaseDetail : testCaseDetailListTemp.getTestCaseDetailList()) {
-                if (testCase.getIdTC().trim().equals(testCaseDetail.getIdTC().trim())){
-                    testCaseDetailList.addOrUpdateTestCase(testCaseDetail);
-                }
+                testCaseDetailList.addOrUpdateTestCase(testCaseDetail);
             }
-            if (testCaseDetailList != null){
+            if (testCaseDetailList != null) {
                 loadTable(testCaseDetailList);
             }
-
         }
     }
+
 
     private void testCaseCombobox() {
-        for (TestCase testCase : testCaseList.getTestCaseList()){
-            String tc = testCase.getIdTC() + " : " + testCase.getNameTC();
-            onTestNameCombobox.getItems().add(tc);
+        onTestNameCombobox.getItems().clear(); // เคลียร์ค่าก่อน
+        Set<String> uniqueItems = new HashSet<>(); // ใช้ Set เพื่อตรวจสอบค่าซ้ำ
+
+        for (TestCase testCase : testCaseList.getTestCaseList()) {
+            String tcId = testCase.getIdTC().trim();
+            String tcName = testCase.getNameTC().trim();
+            String tc = tcId + " : " + tcName;
+
+            // ตรวจสอบว่ามีค่าอยู่แล้วหรือไม่
+            if (!uniqueItems.contains(tc)) {
+                uniqueItems.add(tc);
+                onTestNameCombobox.getItems().add(tc);
+            }
         }
+
     }
+
 
     private void clearUsecase() {
         infoPreconLabel.setText("");
@@ -410,7 +424,8 @@ public class PopupInfoTestcaseController {
 
     @FXML
     void onAddButton(ActionEvent event) {
-        String name = onTestNameCombobox.getValue();
+        String[] data = onTestNameCombobox.getValue().split(":");
+        String name = data[1].trim();
         String idTC = tsId;
         String date = testDateLabel.getText();
         String useCase = onUsecaseCombobox.getValue();
@@ -525,7 +540,8 @@ public class PopupInfoTestcaseController {
     void onEditListButton(ActionEvent event) {
 
         try {
-            String name = onTestNameCombobox.getValue();
+            String[] data = onTestNameCombobox.getValue().split(":");
+            String name = data[1].trim();
             String idTC = tsId;
             String date = testDateLabel.getText();
             String useCase = onUsecaseCombobox.getValue();
@@ -539,7 +555,7 @@ public class PopupInfoTestcaseController {
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
-            objects.add(name);
+            objects.add(nameTester);
             objects.add(position);
             objects.add(testCase);
             objects.add(testCaseDetailList);
@@ -562,8 +578,10 @@ public class PopupInfoTestcaseController {
         }
         try {
             // Validate fields
-            String name = onTestNameCombobox.getValue();
-            String idTC = tsId;
+            String selectedItem = onTestNameCombobox.getValue();
+            String[] data = selectedItem.split("[:,]");
+            String name = data[1].trim();
+            String idTC = data[0].trim();
             String date = testDateLabel.getText();
             String useCase = onUsecaseCombobox.getValue();
             String description = infoDescriptLabel.getText();
@@ -609,7 +627,7 @@ public class PopupInfoTestcaseController {
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
-            objects.add(name);
+            objects.add(nameTester);
 
             // ✅ Show success message
             Alert alert = new Alert(Alert.AlertType.INFORMATION);

@@ -4,7 +4,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -117,7 +116,8 @@ public class IRmanagerController {
                 iRreport = (IRreport) objects.get(3);
             }
             clearInfo();
-            loadProject();
+            loadRepo();
+            //loadProject();
             setTable();
             loadListView(iRreportList);
             selected();
@@ -285,7 +285,7 @@ public class IRmanagerController {
 
         // บันทึกข้อมูล ConnectionList
         for (Connection connection : connectionList.getConnectionList()) {
-            connectionRepository.updateConnection(connection);
+            connectionRepository.saveOrUpdateConnection(connection);
         }
 
         // บันทึกข้อมูล NoteList

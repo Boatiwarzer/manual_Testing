@@ -184,33 +184,33 @@ public class TestFlowController {
 
         // บันทึกข้อมูล TestScriptList
         for (TestScript script : testScriptList.getTestScriptList()) {
-            testScriptRepository.updateTestScript(script);
+            testScriptRepository.saveOrUpdateTestScript(script);
         }
 
         // บันทึกข้อมูล TestScriptDetailList
         for (TestScriptDetail detail : testScriptDetailList.getTestScriptDetailList()) {
-            testScriptDetailRepository.updateTestScriptDetail(detail);
+            testScriptDetailRepository.saveOrUpdateTestScriptDetail(detail);
         }
 
         // บันทึกข้อมูล TestFlowPositionList
         for (TestFlowPosition position : testFlowPositionList.getPositionList()) {
-            testFlowPositionRepository.updateTestFlowPosition(position);
+            testFlowPositionRepository.saveOrUpdateTestFlowPosition(position);
         }
 
         // บันทึกข้อมูล TestCaseList
         for (TestCase testCase : testCaseList.getTestCaseList()) {
-            testCaseRepository.updateTestCase(testCase);
+            testCaseRepository.saveOrUpdateTestCase(testCase);
         }
 
         // บันทึกข้อมูล TestCaseDetailList
         for (TestCaseDetail detail : testCaseDetailList.getTestCaseDetailList()) {
-            testCaseDetailRepository.updateTestCaseDetail(detail);
+            testCaseDetailRepository.saveOrUpdateTestCaseDetail(detail);
         }
 
 
         // บันทึกข้อมูล ConnectionList
         for (Connection connection : connectionList.getConnectionList()) {
-            connectionRepository.updateConnection(connection);
+            connectionRepository.saveOrUpdateConnection(connection);
         }
 
         // บันทึกข้อมูล NoteList
@@ -390,7 +390,7 @@ public class TestFlowController {
         System.out.println(testFlowPositionList);
         System.out.println(testScriptList);
         onDesignArea.getChildren().clear();
-        onDesignArea.requestLayout();
+//        onDesignArea.requestLayout();
         onNoteTextArea.clear();
         DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
         DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
@@ -1909,7 +1909,7 @@ public class TestFlowController {
                 testFlowPositionList.addPosition(testFlowPosition);
                 drawStart(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(), connection.getLabel(), testFlowPosition.getPositionID());
                 TestFlowPositionRepository testFlowPositionRepository = new TestFlowPositionRepository();
-                testFlowPositionRepository.addTestFlowPosition(testFlowPosition);
+                testFlowPositionRepository.saveOrUpdateTestFlowPosition(testFlowPosition);
                 saveProject();
                 saveRepo();
 
@@ -1920,7 +1920,7 @@ public class TestFlowController {
                 testFlowPositionList.addPosition(testFlowPosition);
                 drawEnd(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(), connection.getLabel(), testFlowPosition.getPositionID());
                 TestFlowPositionRepository testFlowPositionRepository = new TestFlowPositionRepository();
-                testFlowPositionRepository.addTestFlowPosition(testFlowPosition);
+                testFlowPositionRepository.saveOrUpdateTestFlowPosition(testFlowPosition);
                 saveProject();
                 saveRepo();
             }else if (event.getDragboard().getString().equals("Kite")) {

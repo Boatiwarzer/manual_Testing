@@ -15,11 +15,11 @@ public class IRReportRepository {
     }
 
     // Create a new IRReport
-    public void addIRReport(IRreport irReport) {
+    public void saveOrUpdateIR(IRreport irReport) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            entityManager.persist(irReport);
+            entityManager.merge(irReport);
             transaction.commit();
         } catch (RuntimeException e) {
             if (transaction.isActive()) {
