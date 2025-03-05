@@ -685,11 +685,9 @@ public class TestScriptEditController {
             alert.setContentText("Press OK to confirm, or Cancel to go back.");
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
-                testScript = testScriptList.findTSByPosition(position);
-                System.out.println("testscript : " + testScript);
-                testScriptList.deleteTestScriptByPositionID(position);
+                testScriptList.deleteTestScript(testScript);
                 testScriptDetailList.deleteTestScriptDetailByTestScriptID(testScript.getIdTS());
-                testFlowPositionList.removePositionByID(position);
+                testFlowPositionList.removePositionByID(testScript.getPosition());
                 TestScriptRepository testScriptRepository = new TestScriptRepository();
                 testScriptRepository.deleteTestScript(testScript.getIdTS());
                 TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();

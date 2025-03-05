@@ -12,9 +12,7 @@
     <list default="true" id="339e8b6d-7c1d-4583-b039-ece96beb9415" name="Changes" comment="mergh">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestCase/TestCaseEditController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestCase/TestCaseEditController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestResult/TestResultController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestResult/TestResultController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/TestScriptEditController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/TestScriptEditController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/ir_manager.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/ir_manager.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,7 +113,7 @@
       <workItem from="1740840832874" duration="4496000" />
       <workItem from="1740909410991" duration="11818000" />
       <workItem from="1740965031326" duration="9705000" />
-      <workItem from="1741176039653" duration="3496000" />
+      <workItem from="1741176039653" duration="4454000" />
     </task>
     <task id="LOCAL-00001" summary="mergh">
       <option name="closed" value="true" />
