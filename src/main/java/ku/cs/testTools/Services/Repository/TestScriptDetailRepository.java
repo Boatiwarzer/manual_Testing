@@ -19,7 +19,7 @@ public class TestScriptDetailRepository {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            entityManager.persist(testScriptDetail);
+            entityManager.merge(testScriptDetail);
             transaction.commit();
         } catch (RuntimeException e) {
             if (transaction.isActive()) {

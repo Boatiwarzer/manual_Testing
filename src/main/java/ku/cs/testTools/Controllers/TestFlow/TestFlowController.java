@@ -151,76 +151,90 @@ public class TestFlowController {
         loadStatusButton();
         loadProject();
         if (check){
-            onNoteTextArea.setOnKeyTyped(keyEvent -> {
-                if (noteList.findBynoteID("1") == null) {
-                    if (!onNoteTextArea.getText().isEmpty()) {
-                        noteList.addNote(new Note("1", onNoteTextArea.getText(),projectName,name));
-                    } else {
-                        noteList.addNote(new Note("1", "!@#$%^&*()_+",projectName,name));
-                    }
+            if (noteList != null) {
+                Note existingNote = noteList.findBynoteID("1");
+                String noteText = onNoteTextArea.getText().isEmpty() ? "!@#$%^&*()_+" : onNoteTextArea.getText();
+
+                if (existingNote == null) {
+                    noteList.addNote(new Note("1", noteText, projectName, name));
                 } else {
-                    if (!onNoteTextArea.getText().isEmpty()) {
-                        noteList.updateNoteBynoteID("1", onNoteTextArea.getText());
-                    } else {
-                        noteList.updateNoteBynoteID("1", "!@#$%^&*()_+");
-                    }
+                    noteList.updateNoteBynoteID("1", noteText);
                 }
-            });
+            } else {
+                System.out.println("Error: noteList is null");
+            }
+
         }
 
         saveProject();
         saveRepo();
-        loadProject();
     }
 
     private void saveRepo() {
-        TestScriptRepository testScriptRepository = new TestScriptRepository();
-        TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
-        TestFlowPositionRepository testFlowPositionRepository = new TestFlowPositionRepository();
-        TestCaseRepository testCaseRepository = new TestCaseRepository();
-        TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
-        ConnectionRepository connectionRepository = new ConnectionRepository();
-        NoteRepository noteRepository = new NoteRepository();
-
-        // บันทึกข้อมูล TestScriptList
-        for (TestScript script : testScriptList.getTestScriptList()) {
-            testScriptRepository.saveOrUpdateTestScript(script);
+        if (testScriptList != null) {
+            TestScriptRepository testScriptRepository = new TestScriptRepository();
+            for (TestScript script : testScriptList.getTestScriptList()) {
+                if (script != null) {
+                    testScriptRepository.saveOrUpdateTestScript(script);
+                }
+            }
         }
 
-        // บันทึกข้อมูล TestScriptDetailList
-        for (TestScriptDetail detail : testScriptDetailList.getTestScriptDetailList()) {
-            testScriptDetailRepository.saveOrUpdateTestScriptDetail(detail);
+        if (testScriptDetailList != null) {
+            TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
+            for (TestScriptDetail detail : testScriptDetailList.getTestScriptDetailList()) {
+                if (detail != null) {
+                    testScriptDetailRepository.saveOrUpdateTestScriptDetail(detail);
+                }
+            }
         }
 
-        // บันทึกข้อมูล TestFlowPositionList
-        for (TestFlowPosition position : testFlowPositionList.getPositionList()) {
-            testFlowPositionRepository.saveOrUpdateTestFlowPosition(position);
+        if (testFlowPositionList != null) {
+            TestFlowPositionRepository testFlowPositionRepository = new TestFlowPositionRepository();
+            for (TestFlowPosition position : testFlowPositionList.getPositionList()) {
+                if (position != null) {
+                    testFlowPositionRepository.saveOrUpdateTestFlowPosition(position);
+                }
+            }
         }
 
-        // บันทึกข้อมูล TestCaseList
-        for (TestCase testCase : testCaseList.getTestCaseList()) {
-            testCaseRepository.saveOrUpdateTestCase(testCase);
+        if (testCaseList != null) {
+            TestCaseRepository testCaseRepository = new TestCaseRepository();
+            for (TestCase testCase : testCaseList.getTestCaseList()) {
+                if (testCase != null) {
+                    testCaseRepository.saveOrUpdateTestCase(testCase);
+                }
+            }
         }
 
-        // บันทึกข้อมูล TestCaseDetailList
-        for (TestCaseDetail detail : testCaseDetailList.getTestCaseDetailList()) {
-            testCaseDetailRepository.saveOrUpdateTestCaseDetail(detail);
+        if (testCaseDetailList != null) {
+            TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
+            for (TestCaseDetail detail : testCaseDetailList.getTestCaseDetailList()) {
+                if (detail != null) {
+                    testCaseDetailRepository.saveOrUpdateTestCaseDetail(detail);
+                }
+            }
         }
 
-
-        // บันทึกข้อมูล ConnectionList
-        for (Connection connection : connectionList.getConnectionList()) {
-            connectionRepository.saveOrUpdateConnection(connection);
+        if (connectionList != null) {
+            ConnectionRepository connectionRepository = new ConnectionRepository();
+            for (Connection connection : connectionList.getConnectionList()) {
+                if (connection != null) {
+                    connectionRepository.saveOrUpdateConnection(connection);
+                }
+            }
         }
 
-        // บันทึกข้อมูล NoteList
-        for (Note note : noteList.getNoteList()) {
-            noteRepository.updateNote(note);
+        if (noteList != null) {
+            NoteRepository noteRepository = new NoteRepository();
+            for (Note note : noteList.getNoteList()) {
+                if (note != null) {
+                    noteRepository.updateNote(note);
+                }
+            }
         }
-
-        // บันทึกข้อมูล TesterList
-
     }
+
 
     private void loadStatusButton() {
         ManagerRepository managerRepository = new ManagerRepository();
@@ -416,114 +430,116 @@ public class TestFlowController {
     }
 
     private void loadData(String projectName, String nameTester) {
-        if (projectName == null || projectName.trim().isEmpty() ||
-                nameTester == null || nameTester.trim().isEmpty()) {
+        if (projectName == null || projectName.trim().isEmpty() || nameTester == null || nameTester.trim().isEmpty()) {
             System.out.println("Error: projectName or nameTester is invalid.");
             return;
         }
 
-        // แปลงค่าให้เป็นตัวพิมพ์เล็กทั้งหมดเพื่อให้เปรียบเทียบได้แบบ case-insensitive
         String projectNameLower = projectName.toLowerCase();
         String nameTesterLower = nameTester.toLowerCase();
-
-        // 🔹 ใช้ Set เก็บ Position ID ที่เคยวาดไปแล้ว
         Set<UUID> drawnPositionIds = new HashSet<>();
 
-        testScriptList.getTestScriptList().forEach(testScript -> {
-            List<TestFlowPosition> testFlowPositions = testFlowPositionList.findAllByPositionId(
-                    testScript.getPosition(), projectNameLower, nameTesterLower
-            );
+        if (testScriptList != null) {
+            for (TestScript testScript : testScriptList.getTestScriptList()) {
+                if (testScript == null) continue;
 
-            // 🔍 Debug: เช็คค่าที่ได้จาก findAllByPositionId()
-            System.out.println("🔎 Position ID: " + testScript.getPosition());
-            System.out.println("📌 Found TestFlowPositions: " + testFlowPositions.size());
-            for (TestFlowPosition position : testFlowPositions) {
-                System.out.println("✅ Found -> ID: " + position.getPositionID() +
-                        ", Project: " + position.getProjectName() +
-                        ", Tester: " + position.getTester());
-            }
+                if (testFlowPositionList != null) {
+                    List<TestFlowPosition> testFlowPositions = testFlowPositionList.findAllByPositionId(
+                            testScript.getPosition(), projectNameLower, nameTesterLower
+                    );
 
-            testFlowPositions.forEach(testFlowPosition -> {
-                if (!drawnPositionIds.contains(testFlowPosition.getPositionID())) { // ✅ ตรวจสอบว่าถูกวาดไปแล้วหรือยัง
-                    drawTestScript(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
-                            testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
-                            testScript.getIdTS() + " : " + testScript.getNameTS(),
-                            testFlowPosition.getPositionID());
+                    for (TestFlowPosition testFlowPosition : testFlowPositions) {
+                        if (testFlowPosition == null || drawnPositionIds.contains(testFlowPosition.getPositionID())) continue;
 
-                    drawnPositionIds.add(testFlowPosition.getPositionID()); // ✅ บันทึกว่าเคยวาดแล้ว
-                }
-            });
-        });
+                        drawTestScript(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
+                                testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
+                                testScript.getIdTS() + " : " + testScript.getNameTS(),
+                                testFlowPosition.getPositionID());
 
-        testCaseList.getTestCaseList().forEach(testCase -> {
-            List<TestFlowPosition> testFlowPositions = testFlowPositionList.findAllByPositionId(
-                    testCase.getPosition(), projectNameLower, nameTesterLower
-            );
-
-            testFlowPositions.forEach(testFlowPosition -> {
-                if (!drawnPositionIds.contains(testFlowPosition.getPositionID())) { // ✅ กันการวาดซ้ำ
-                    drawTestCase(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
-                            testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
-                            testCase.getIdTC() + " : " + testCase.getNameTC(),
-                            testFlowPosition.getPositionID());
-
-                    drawnPositionIds.add(testFlowPosition.getPositionID()); // ✅ บันทึกว่าเคยวาดแล้ว
-                }
-            });
-        });
-
-        connectionList.getConnectionList().forEach(connection -> {
-            List<TestFlowPosition> testFlowPositions = testFlowPositionList.findAllByPositionId(
-                    connection.getConnectionID(), projectNameLower, nameTesterLower
-            );
-
-            testFlowPositions.forEach(testFlowPosition -> {
-                if (!drawnPositionIds.contains(testFlowPosition.getPositionID())) { // ✅ กันซ้ำ
-                    switch (testFlowPosition.getType()) {
-                        case "start":
-                            drawStart(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
-                                    testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
-                                    "start", testFlowPosition.getPositionID());
-                            break;
-                        case "end":
-                            drawEnd(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
-                                    testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
-                                    "end", testFlowPosition.getPositionID());
-                            break;
-                        case "decision":
-                            drawDecision(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
-                                    testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
-                                    connection.getLabel(), testFlowPosition.getPositionID());
-                            break;
+                        drawnPositionIds.add(testFlowPosition.getPositionID());
                     }
-
-                    drawnPositionIds.add(testFlowPosition.getPositionID()); // ✅ บันทึกว่าเคยวาดแล้ว
-                }
-            });
-        });
-
-        connectionList.getConnectionList().forEach(connection -> {
-            String type = connection.getType();
-            if (projectNameLower.equals(connection.getProjectName().toLowerCase())
-                    && nameTesterLower.equals(connection.getTester().toLowerCase())) {
-                if (type.equals("line")) {
-                    drawLine(connection.getConnectionID(), connection.getStartX(), connection.getStartY(),
-                            connection.getEndX(), connection.getEndY(), connection.getLabel(),
-                            connection.getArrowHead(), connection.getLineType(), connection.getArrowTail());
-                } else if (type.equals("arrow")) {
-                    drawLine(connection.getConnectionID(), connection.getStartX(), connection.getStartY(),
-                            connection.getEndX(), connection.getEndY(), connection.getLabel(),
-                            connection.getArrowHead(), connection.getLineType(), connection.getArrowTail());
                 }
             }
-        });
-
-        Note note = noteList.findBynoteID("1");
-        if (note != null && !Objects.equals(note.getNote(), "!@#$%^&*()_+")) {
-            onNoteTextArea.setText(note.getNote());
         }
 
+        if (testCaseList != null) {
+            for (TestCase testCase : testCaseList.getTestCaseList()) {
+                if (testCase == null) continue;
+
+                if (testFlowPositionList != null) {
+                    List<TestFlowPosition> testFlowPositions = testFlowPositionList.findAllByPositionId(
+                            testCase.getPosition(), projectNameLower, nameTesterLower
+                    );
+
+                    for (TestFlowPosition testFlowPosition : testFlowPositions) {
+                        if (testFlowPosition == null || drawnPositionIds.contains(testFlowPosition.getPositionID())) continue;
+
+                        drawTestCase(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
+                                testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
+                                testCase.getIdTC() + " : " + testCase.getNameTC(),
+                                testFlowPosition.getPositionID());
+
+                        drawnPositionIds.add(testFlowPosition.getPositionID());
+                    }
+                }
+            }
+        }
+
+        if (connectionList != null) {
+            for (Connection connection : connectionList.getConnectionList()) {
+                if (connection == null) continue;
+
+                if (testFlowPositionList != null) {
+                    List<TestFlowPosition> testFlowPositions = testFlowPositionList.findAllByPositionId(
+                            connection.getConnectionID(), projectNameLower, nameTesterLower
+                    );
+
+                    for (TestFlowPosition testFlowPosition : testFlowPositions) {
+                        if (testFlowPosition == null || drawnPositionIds.contains(testFlowPosition.getPositionID())) continue;
+
+                        switch (testFlowPosition.getType()) {
+                            case "start":
+                                drawStart(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
+                                        testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
+                                        "start", testFlowPosition.getPositionID());
+                                break;
+                            case "end":
+                                drawEnd(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
+                                        testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
+                                        "end", testFlowPosition.getPositionID());
+                                break;
+                            case "decision":
+                                drawDecision(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(),
+                                        testFlowPosition.getXPosition(), testFlowPosition.getYPosition(),
+                                        connection.getLabel(), testFlowPosition.getPositionID());
+                                break;
+                        }
+
+                        drawnPositionIds.add(testFlowPosition.getPositionID());
+                    }
+                }
+            }
+
+            for (Connection connection : connectionList.getConnectionList()) {
+                if (connection == null) continue;
+
+                if (projectNameLower.equals(connection.getProjectName().toLowerCase())
+                        && nameTesterLower.equals(connection.getTester().toLowerCase())) {
+                    drawLine(connection.getConnectionID(), connection.getStartX(), connection.getStartY(),
+                            connection.getEndX(), connection.getEndY(), connection.getLabel(),
+                            connection.getArrowHead(), connection.getLineType(), connection.getArrowTail());
+                }
+            }
+        }
+
+        if (noteList != null) {
+            Note note = noteList.findBynoteID("1");
+            if (note != null && !Objects.equals(note.getNote(), "!@#$%^&*()_+")) {
+                onNoteTextArea.setText(note.getNote());
+            }
+        }
     }
+
 
 
 

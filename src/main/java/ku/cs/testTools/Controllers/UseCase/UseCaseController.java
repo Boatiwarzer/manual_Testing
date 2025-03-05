@@ -67,10 +67,8 @@ public class UseCaseController {
     private UseCase selectedUseCase = new UseCase();
     private UseCaseDetail selectedItem;
     private UseCaseList useCaseList = new UseCaseList();
-    private DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv"); //= new UseCaseListFileDataSource(directory, projectName + ".csv")
     private UseCaseDetail useCaseDetail;
     private UseCaseDetailList useCaseDetailList = new UseCaseDetailList();
-    private DataSource<UseCaseDetailList> useCaseDetailListDataSource = new UseCaseDetailListFileDataSource(directory, projectName + ".csv"); //= new UseCaseDetailListFileDataSource(directory, projectName + ".csv")
     private ArrayList <String> word = new ArrayList<>();
     private ArrayList<Object> objects;
     private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
