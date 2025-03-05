@@ -5,6 +5,7 @@ import ku.cs.testTools.Models.TestToolModels.UseCaseDetail;
 import ku.cs.testTools.Services.JpaUtil;
 
 import java.util.List;
+import java.util.UUID;
 
 public class UseCaseDetailRepository {
     private final EntityManager entityManager;
@@ -72,7 +73,7 @@ public class UseCaseDetailRepository {
     }
 
     // Delete a UseCaseDetail by ID
-    public void deleteUseCaseDetail(String idUCD) {
+    public void deleteUseCaseDetail(UUID idUCD) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();

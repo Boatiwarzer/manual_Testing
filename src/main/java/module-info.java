@@ -19,6 +19,7 @@ module ku.cs.testTools {
     requires org.apache.poi.ooxml; // For handling Microsoft Excel files
     requires org.controlsfx.controls; // ControlsFX library for UI components
     requires atlantafx.base; // Custom JavaFX theme library
+    requires com.opencsv;
 
     // Opening packages to specific modules
     opens ku.cs.testTools.Controllers.Home to javafx.fxml, org.hibernate.orm.core;

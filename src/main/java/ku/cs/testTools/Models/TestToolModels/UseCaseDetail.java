@@ -14,6 +14,9 @@ import java.util.UUID;
 @NamedQuery(name = "find usecasedetail by id", query = "Select t from UseCaseDetail t where t.useCaseID = :id")
 public class UseCaseDetail {
     @Id
+    @Column
+    private UUID id;
+
     @Column(name = "idUC", nullable = false)
     private String useCaseID;
 
@@ -27,7 +30,8 @@ public class UseCaseDetail {
     private String detail;
 
 
-    public UseCaseDetail(String useCaseID, String action, int number, String detail) {
+    public UseCaseDetail(UUID id, String useCaseID, String action, int number, String detail) {
+        this.id = id;
         this.useCaseID = useCaseID;
         this.action = action;
         this.number = number;
@@ -45,6 +49,7 @@ public class UseCaseDetail {
     @Override
     public String toString() {
         return "UseCaseDetail{" +
+                "useCaseID='" + id + '\'' +
                 "useCaseID='" + useCaseID + '\'' +
                 ", action='" + action + '\'' +
                 ", number=" + number +

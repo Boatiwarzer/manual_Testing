@@ -52,14 +52,14 @@ public class TestCaseFileDataSource implements DataSource<TestCaseList>, ManageD
                     // Create the TestScriptDetail object
                     TestCase testCase = new TestCase(
                             data[1].trim(), // idTSD
-                            data[2].trim(), // testNo
+                            data[2].trim().replace("#$#","\n").replace("%$%",","), // testNo
                             data[3].trim(), // steps
-                            data[4].trim(), // inputData
-                            data[5].trim(),
-                            data[6].trim(),// expected
+                            data[4].trim().replace("#$#","\n").replace("%$%",","), // inputData
+                            data[5].trim().replace("#$#","\n").replace("%$%",","),
+                            data[6].trim().replace("#$#","\n").replace("%$%",","),// expected
                             UUID.fromString(data[7].trim()),
-                            data[8].trim(),
-                            data[9].trim()// expected
+                            data[8].trim().replace("#$#","\n").replace("%$%",","),
+                            data[9].trim().replace("#$#","\n").replace("%$%",",")// expected
 
                     );
 
@@ -191,13 +191,13 @@ public class TestCaseFileDataSource implements DataSource<TestCaseList>, ManageD
     public String createLine(TestCase testCase) {
         return "testCase," +
                 testCase.getIdTC() + "," +
-                testCase.getNameTC() + "," +
+                testCase.getNameTC().replace("\n","#$#").replace(",","%$%") + "," +
                 testCase.getDateTC() + "," +
-                testCase.getUseCase() + "," +
-                testCase.getDescriptionTC() + "," +
-                testCase.getNote() + "," +
-                testCase.getPosition()+ "," +
-                testCase.getPreCon() + "," +
-                testCase.getPostCon();
+                testCase.getUseCase().replace("\n","#$#").replace(",","%$%") + "," +
+                testCase.getDescriptionTC().replace("\n","#$#").replace(",","%$%") + "," +
+                testCase.getNote().replace("\n","#$#").replace(",","%$%") + "," +
+                testCase.getPosition() + "," +
+                testCase.getPreCon().replace("\n","#$#").replace(",","%$%") + "," +
+                testCase.getPostCon().replace("\n","#$#").replace(",","%$%");
     }
 }

@@ -52,8 +52,8 @@ public class TestCaseDetailFileDataSource implements DataSource<TestCaseDetailLi
                     TestCaseDetail testCaseDetail = new TestCaseDetail(
                             data[1].trim(), // idTSD
                             data[2].trim(), // testNo
-                            data[3].trim(), // steps
-                            data[4].trim(), // inputData
+                            data[3].trim().replace("#$#","\n").replace("%$%",","), // steps
+                            data[4].trim().replace("#$#","\n").replace("%$%",","), // inputData
                             data[5].trim(),
                             data[6].trim()// expected
                     );
@@ -188,8 +188,8 @@ public class TestCaseDetailFileDataSource implements DataSource<TestCaseDetailLi
         return "testCaseDetail," +
                 testCaseDetail.getIdTCD() + "," +
                 testCaseDetail.getTestNo() + "," +
-                testCaseDetail.getNameTCD() + "," +
-                testCaseDetail.getVariableTCD() + "," +
+                testCaseDetail.getNameTCD().replace("\n","#$#").replace(",","%$%") + "," +
+                testCaseDetail.getVariableTCD().replace("\n","#$#").replace(",","%$%") + "," +
                 testCaseDetail.getDateTCD()+ "," +
                 testCaseDetail.getIdTC();
     }

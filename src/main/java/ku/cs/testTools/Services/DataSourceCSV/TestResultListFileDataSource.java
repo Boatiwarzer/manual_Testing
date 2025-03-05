@@ -53,9 +53,9 @@ public class TestResultListFileDataSource implements DataSource<TestResultList>,
                 if (data[0].trim().equals("testResult")) {
                     TestResult testResult = new TestResult(
                             data[1].trim(), // data[1]
-                            data[2].trim(), // data[2]
+                            data[2].trim().replace("#$#","\n").replace("%$%",","), // data[2]
                             data[3].trim(), // data[3]
-                            data[4].trim()
+                            data[4].trim().replace("#$#","\n").replace("%$%",",")
 //                            data[5].trim()
                     );
                     testResultList.addOrUpdateTestResult(testResult);
@@ -194,9 +194,9 @@ public class TestResultListFileDataSource implements DataSource<TestResultList>,
     public String createLine(TestResult testResult) {
         return "testResult,"
                 + testResult.getIdTR() + ","
-                + testResult.getNameTR() + ","
+                + testResult.getNameTR().replace("\n","#$#").replace(",","%$%") + ","
                 + testResult.getDateTR() + ","
-                + testResult.getNoteTR();
+                + testResult.getNoteTR().replace("\n","#$#").replace(",","%$%");
     }
 
     //            List<String> fileLines = new ArrayList<>();

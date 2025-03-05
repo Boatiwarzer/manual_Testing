@@ -67,17 +67,17 @@ public class IRreportDetailListFileDataSource implements DataSource<IRreportDeta
                             data[1].trim(),
                             data[2].trim(),
                             data[3].trim(),
-                            data[4].trim(),
-                            data[5].trim(),
-                            data[6].trim(),
-                            data[7].trim(),
+                            data[4].trim().replace("#$#","\n").replace("%$%",","),
+                            data[5].trim().replace("#$#","\n").replace("%$%",","),
+                            data[6].trim().replace("#$#","\n").replace("%$%",","),
+                            data[7].trim().replace("#$#","\n").replace("%$%",","),
                             data[8].trim(),
                             data[9].trim(),
                             data[10].trim(),
-                            data[11].trim(),
+                            data[11].trim().replace("#$#","\n").replace("%$%",","),
                             data[12].trim(),
                             data[13].trim(),
-                            data[14].trim(),
+                            data[14].trim().replace("#$#","\n").replace("%$%",","),
                             data[15].trim(),
                             data[16].trim()
                     );
@@ -221,17 +221,17 @@ public class IRreportDetailListFileDataSource implements DataSource<IRreportDeta
                 iRreportDetail.getIdIRD() + "," +
                 iRreportDetail.getTestNoIRD() + "," +
                 iRreportDetail.getTesterIRD() + "," +
-                iRreportDetail.getTsIdIRD() + "," +
-                iRreportDetail.getTcIdIRD() + "," +
-                iRreportDetail.getDescriptIRD() + "," +
-                iRreportDetail.getConditionIRD() + "," +
+                iRreportDetail.getTsIdIRD().replace("\n","#$#").replace(",","%$%") + "," +
+                iRreportDetail.getTcIdIRD().replace("\n","#$#").replace(",","%$%") + "," +
+                iRreportDetail.getDescriptIRD().replace("\n","#$#").replace(",","%$%") + "," +
+                iRreportDetail.getConditionIRD().replace("\n","#$#").replace(",","%$%") + "," +
                 iRreportDetail.getImageIRD() + "," +
                 iRreportDetail.getRetestIRD() + "," +
                 iRreportDetail.getPriorityIRD() + "," +
-                iRreportDetail.getRcaIRD() + "," +
+                iRreportDetail.getRcaIRD().replace("\n","#$#").replace(",","%$%") + "," +
                 iRreportDetail.getManagerIRD() + "," +
                 iRreportDetail.getStatusIRD() + "," +
-                iRreportDetail.getRemarkIRD() + "," +
+                iRreportDetail.getRemarkIRD().replace("\n","#$#").replace(",","%$%") + "," +
                 iRreportDetail.getIdIR() + "," +
                 iRreportDetail.getIdTRD();
     }

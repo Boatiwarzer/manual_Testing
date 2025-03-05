@@ -8,6 +8,7 @@ import ku.cs.testTools.Services.ManageDataSource;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 public class UseCaseDetailListFileDataSource implements DataSource<UseCaseDetailList>, ManageDataSource<UseCaseDetail> {
     private String directory;
@@ -53,10 +54,11 @@ public class UseCaseDetailListFileDataSource implements DataSource<UseCaseDetail
                 String[] data = line.split(",");
                 if (data[0].trim().equals("useCaseDetail")) {
                     UseCaseDetail useCaseDetail = new UseCaseDetail(
-                            data[1], // useCaseID
-                            data[2], // action
-                            Integer.parseInt(data[3]), // number
-                            data[4] // detail
+                            UUID.fromString(data[1].trim()),
+                            data[2], // useCaseID
+                            data[3], // action
+                            Integer.parseInt(data[4]), // number
+                            data[5].replace("#$#","\n").replace("%$%",",") // detail
                     );
                     useCaseDetailList.addUseCaseDetail(useCaseDetail);
                 }
@@ -195,9 +197,10 @@ public class UseCaseDetailListFileDataSource implements DataSource<UseCaseDetail
     @Override
     public String createLine(UseCaseDetail useCaseDetail) {
         return "useCaseDetail" + ","
+                + useCaseDetail.getId() + ","
                 + useCaseDetail.getUseCaseID() + ","
                 + useCaseDetail.getAction() + ","
                 + useCaseDetail.getNumber() + ","
-                + useCaseDetail.getDetail();
+                + useCaseDetail.getDetail().replace("\n","#$#").replace(",","%$%");
     }
 }
