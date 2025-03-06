@@ -103,13 +103,15 @@ public class TestScriptAddController {
     private TestCaseList testCaseList = new TestCaseList();
     private UseCaseList useCaseList = new UseCaseList();
     private UUID position = UUID.randomUUID();
+    private UUID positionTC = UUID.randomUUID();
+
     private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
     private ConnectionList connectionList;
     private String type = "new";
     private String typeTS = "new";
     private ArrayList<Object> objects;
     private String name;
-    private TestCase testcase;
+    private TestCase testcase = new TestCase();
     private String tcId;
 
     @FXML
@@ -140,7 +142,7 @@ public class TestScriptAddController {
             }
 
             loadListView(testScriptList);
-            setTestcase();
+            onTestNameField.setOnKeyReleased(event -> setTestcase());
             for (TestScript testScript : testScriptList.getTestScriptList()) {
                 word.add(testScript.getNameTS());
             }
@@ -155,6 +157,17 @@ public class TestScriptAddController {
         }
 
     private void setTestcase() {
+        onTestcaseCombobox.getItems().clear();
+        String name = onTestNameField.getText();
+        String usecase = onUsecaseCombobox.getValue();
+        String description = infoDescriptLabel.getText();
+        String preCon = infoPreconLabel.getText();
+        String post = infoPostconLabel.getText();
+        setDate();
+
+        testcase = new TestCase(tcId,name,testDateLabel.getText(),usecase,description,"-",positionTC,preCon,post);
+        String tc_combobox = testcase.getIdTC() + " : " + testcase.getNameTC();
+        onTestcaseCombobox.setValue(tc_combobox);
     }
 
     private void loadProject() {

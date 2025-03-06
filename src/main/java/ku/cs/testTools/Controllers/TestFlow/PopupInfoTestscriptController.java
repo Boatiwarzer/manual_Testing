@@ -90,6 +90,7 @@ public class PopupInfoTestscriptController {
     private String type = "new";
     private String nameTester;
     private TestScriptDetailList testScriptDetailListDelete;
+    private TestCase testcase;
 
     @FXML
     void initialize() {
@@ -127,6 +128,8 @@ public class PopupInfoTestscriptController {
                 if (testScriptDetailList != null){
                     loadTable(testScriptDetailList);
                 }
+                //onTestNameCombobox.setOnKeyReleased(event -> setTestcase());
+
             }
             else{
                 setTable();
@@ -140,6 +143,21 @@ public class PopupInfoTestscriptController {
         System.out.println(testScriptDetailList);
 
     }
+
+//    private void setTestcase() {
+//        onTestcaseCombobox.getItems().clear();
+//        String name = onTestNameCombobox.getValue();
+//        String usecase = onUsecaseCombobox.getValue();
+//        String description = infoDescriptLabel.getText();
+//        String preCon = infoPreconLabel.getText();
+//        String post = infoPostconLabel.getText();
+//        setDate();
+//
+//        testcase = new TestCase(tcId,name,testDateLabel.getText(),usecase,description,"-",positionTC,preCon,post);
+//        String tc_combobox = testcase.getIdTC() + " : " + testcase.getNameTC();
+//        onTestcaseCombobox.setValue(tc_combobox);
+//    }
+
     private void loadStatusButton() {
         ManagerRepository managerRepository = new ManagerRepository();
         Manager manager = managerRepository.getManagerByProjectName(projectName);
@@ -201,8 +219,6 @@ public class PopupInfoTestscriptController {
         configs.add(new StringConfiguration("title:TSD-ID.", "field:idTSD"));
         configs.add(new StringConfiguration("title:Test No.", "field:testNo"));
         configs.add(new StringConfiguration("title:Test Step.", "field:steps"));
-        configs.add(new StringConfiguration("title:Input Data.", "field:inputData"));
-        configs.add(new StringConfiguration("title:Expected Result.", "field:expected"));
         configs.add(new StringConfiguration("title:Date.", "field:dateTSD"));
 
         int index = 0;

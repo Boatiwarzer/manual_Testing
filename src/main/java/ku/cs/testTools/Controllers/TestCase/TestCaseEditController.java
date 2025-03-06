@@ -186,8 +186,8 @@ public class TestCaseEditController {
         ArrayList<StringConfiguration> configs = new ArrayList<>();
         configs.add(new StringConfiguration("title:TC-ID."));
         configs.add(new StringConfiguration("title:Test No."));
-        configs.add(new StringConfiguration("title:Name Variable."));
-        configs.add(new StringConfiguration("title:Type Variable."));
+        configs.add(new StringConfiguration("title:Variable."));
+        configs.add(new StringConfiguration("title:Expected."));
         configs.add(new StringConfiguration("title:Date."));
 
         int index = 0;
@@ -344,8 +344,8 @@ public class TestCaseEditController {
         ArrayList<StringConfiguration> configs = new ArrayList<>();
         configs.add(new StringConfiguration("title:TC-ID.", "field:idTCD"));
         configs.add(new StringConfiguration("title:Test No.", "field:testNo"));
-        configs.add(new StringConfiguration("title:Name Variable.", "field:nameTCD"));
-        configs.add(new StringConfiguration("title:Type Variable.", "field:variableTCD"));
+        configs.add(new StringConfiguration("title:Variable.", "field:variableTCD"));
+        configs.add(new StringConfiguration("title:Expected.", "field:expectedTCD"));
         configs.add(new StringConfiguration("title:Date.", "field:dateTCD"));
 
         int index = 0;
