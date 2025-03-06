@@ -11,6 +11,30 @@
   <component name="ChangeListManager">
     <list default="true" id="339e8b6d-7c1d-4583-b039-ece96beb9415" name="Changes" comment="mergh">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/views/home_tester.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/home_tester.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/views/popup_add_ir_manager.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/popup_add_ir_manager.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/views/popup_add_testcase.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/popup_add_testcase.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/views/popup_add_testresult.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/popup_add_testresult.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/views/popup_add_testresult_manager.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/popup_add_testresult_manager.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/views/popup_add_testscript.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/popup_add_testscript.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/views/popup_delete_testcase.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/views/popup_delete_testresult.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/views/popup_delete_testscript.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/views/popup_testflow_add_testcase.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/popup_testflow_add_testcase.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/views/popup_testflow_add_testscript.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/popup_testflow_add_testscript.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_case.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_case.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_case_add.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_case_add.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_case_edit.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_case_edit.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_flow.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_flow.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_result.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_result.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_result_add.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_result_add.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_result_edit.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_result_edit.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_script.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_script.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_script_add.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_script_add.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_script_edit.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_script_edit.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/views/use_case.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/use_case.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/views/use_case_add.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/use_case_add.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/views/use_case_edit.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/use_case_edit.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -111,7 +135,9 @@
       <workItem from="1740840832874" duration="4496000" />
       <workItem from="1740909410991" duration="11818000" />
       <workItem from="1740965031326" duration="9705000" />
-      <workItem from="1741176039653" duration="17970000" />
+      <workItem from="1741176039653" duration="18366000" />
+      <workItem from="1741256479206" duration="690000" />
+      <workItem from="1741265505870" duration="770000" />
     </task>
     <task id="LOCAL-00001" summary="mergh">
       <option name="closed" value="true" />
