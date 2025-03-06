@@ -79,11 +79,11 @@ public class TestCaseDetailRepository {
         }
     }
     // Delete a TestCaseDetail by ID
-    public void deleteTestCaseDetail(String idTS) {
+    public void deleteTestCaseDetail(String idTC) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            TestCaseDetail testCaseDetail = entityManager.find(TestCaseDetail.class, idTS);
+            TestCaseDetail testCaseDetail = entityManager.find(TestCaseDetail.class, idTC);
             if (testCaseDetail != null) {
                 entityManager.remove(testCaseDetail);
             }

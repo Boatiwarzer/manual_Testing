@@ -26,7 +26,7 @@ module ku.cs.testTools {
     opens ku.cs.testTools.Controllers.UseCase to javafx.fxml, org.hibernate.orm.core;
     opens ku.cs.testTools.Controllers.TestCase to javafx.fxml, org.hibernate.orm.core;
     opens ku.cs.testTools.Controllers.TestScript to javafx.fxml, org.hibernate.orm.core;
-    opens ku.cs.testTools.Controllers.TestFlow to javafx.fxml, org.hibernate.orm.core;
+    opens ku.cs.testTools.Controllers.TestFlow to javafx.fxml, javafx.controls, org.hibernate.orm.core;
     opens ku.cs.testTools.Controllers.TestResult to javafx.fxml, org.hibernate.orm.core;
     opens ku.cs.testTools.Controllers.Manager to javafx.fxml, org.hibernate.orm.core;
     opens ku.cs.testTools.Models.TestToolModels to javafx.base,jakarta.persistence, jakarta.validation, jakarta.inject, org.hibernate.orm.core, lombok;

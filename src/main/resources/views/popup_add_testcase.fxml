@@ -21,7 +21,6 @@
                   </Label>
                </children>
             </HBox>
-            <HBox prefHeight="30.0" prefWidth="200.0" />
             <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
                <children>
                   <Label prefHeight="30.0" prefWidth="120.0" text="Test No.">
@@ -36,32 +35,32 @@
                   </TextField>
                </children>
             </HBox>
-            <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
+            <HBox alignment="TOP_CENTER" prefHeight="90.0" prefWidth="200.0" spacing="30.0">
                <children>
-                  <Label prefHeight="30.0" prefWidth="120.0" text="Name Variables">
+                  <Label prefHeight="30.0" prefWidth="120.0" text="Variables">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="onNameVariablesField" prefHeight="30.0" prefWidth="450.0">
+                  <TextArea fx:id="onVariablesArea" prefHeight="90.0" prefWidth="450.0" wrapText="true">
                      <font>
                         <Font size="14.0" />
                      </font>
-                  </TextField>
+                  </TextArea>
                </children>
             </HBox>
-            <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
+            <HBox alignment="TOP_CENTER" prefHeight="90.0" prefWidth="200.0" spacing="30.0">
                <children>
-                  <Label prefHeight="30.0" prefWidth="120.0" text="Type Variables">
+                  <Label prefHeight="30.0" prefWidth="120.0" text="Expected Result">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="onTypeVariableField" prefHeight="30.0" prefWidth="450.0">
+                  <TextArea fx:id="onExpectedArea" prefHeight="90.0" prefWidth="450.0" wrapText="true">
                      <font>
                         <Font size="14.0" />
                      </font>
-                  </TextField>
+                  </TextArea>
                </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0" spacing="50.0">
