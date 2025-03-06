@@ -1344,7 +1344,7 @@ public class TestFlowController {
         rectangle.setArcHeight(30);
         rectangle.setFill(Color.TRANSPARENT);
         rectangle.setStroke(Color.BLACK);
-        rectangle.setStrokeWidth(0.5);
+        rectangle.setStrokeWidth(1);
 
         // Add the label inside the rectangle
         Label testScriptName = new Label(label);
@@ -1411,7 +1411,7 @@ public class TestFlowController {
         Rectangle rectangle = new Rectangle(width, height);
         rectangle.setFill(Color.TRANSPARENT); // Transparent fill
         rectangle.setStroke(Color.BLACK); // Border color
-        rectangle.setStrokeWidth(0.2); // Border width
+        rectangle.setStrokeWidth(1); // Border width
 
         // Create a label for the test case
         Label testCaseName = new Label(label);
@@ -1459,7 +1459,7 @@ public class TestFlowController {
         //Label testScriptName = new Label(label);
 
         circle.setStroke(Color.BLACK);
-        circle.setStrokeWidth(0.2);
+        circle.setStrokeWidth(1);
 
 
         // Create the border rectangle
@@ -1506,12 +1506,11 @@ public class TestFlowController {
     private void drawEnd(double width, double height, double layoutX, double layoutY, String label, UUID positionID) {
         Circle circle = new Circle(width, height,15);
 
-        circle.setStyle("-fx-fill: transparent");
+//        circle.setStyle("-fx-fill: transparent");
        // Label testScriptName = new Label(label);
-
         circle.setStroke(Color.LIGHTGRAY);
         circle.setStrokeWidth(5);
-        circle.setFill(Color.BLACK);
+        circle.setStyle("-fx-fill: black");
 
 
         border = drawBorder(width,height);
@@ -1556,7 +1555,7 @@ public class TestFlowController {
         polygon.setStyle("-fx-fill: transparent");
         polygon.setFill(Color.BLACK);
         polygon.setStroke(Color.BLACK);
-        polygon.setStrokeWidth(0.2);
+        polygon.setStrokeWidth(1);
 
         // สร้าง Label
         Label decision = new Label(label);
