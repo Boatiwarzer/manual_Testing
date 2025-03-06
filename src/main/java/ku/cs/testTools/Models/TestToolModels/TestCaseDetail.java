@@ -2,11 +2,8 @@ package ku.cs.testTools.Models.TestToolModels;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.UuidGenerator;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -23,11 +20,11 @@ public class TestCaseDetail {
     @Column(name = "test_no_tcd", nullable = false)
     private String testNo;
 
-    @Column(name = "name_tcd", nullable = false)
-    private String nameTCD;
-
-    @Column(name = "variable_tcd")
+    @Column(name = "variable_tcd", nullable = false)
     private String variableTCD;
+
+    @Column(name = "expected_tcd")
+    private String expectedTCD;
 
     @Column(name = "date_tcd")
     private String dateTCD;
@@ -37,11 +34,11 @@ public class TestCaseDetail {
 
 
 
-    public TestCaseDetail(String idTCD, String testNo, String nameTCD, String variableTCD, String dateTCD, String testCase) {
+    public TestCaseDetail(String idTCD, String testNo, String variableTCD, String expectedTCD, String dateTCD, String testCase) {
         this.idTCD = idTCD;
         this.testNo = testNo;
-        this.nameTCD = nameTCD;
         this.variableTCD = variableTCD;
+        this.expectedTCD = expectedTCD;
         this.dateTCD = dateTCD;
         this.idTC = testCase;
     }

@@ -7,9 +7,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import ku.cs.testTools.Services.DataSource;
-import ku.cs.testTools.Services.DataSourceCSV.TestCaseDetailFileDataSource;
-import ku.cs.testTools.Services.DataSourceCSV.TestScriptDetailFIleDataSource;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.AutoCompleteComboBoxListener;
@@ -18,7 +15,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 
 public class PopupAddTestscriptController {
 
@@ -27,12 +23,6 @@ public class PopupAddTestscriptController {
 
     @FXML
     private Button onConfirmButton;
-
-    @FXML
-    private TextArea onExpectedArea;
-
-    @FXML
-    private ComboBox<String> onInputDataCombobox;
 
     @FXML
     private TextField onTestNo;
@@ -53,12 +43,12 @@ public class PopupAddTestscriptController {
     private String id;
     private String idTS;
     private String date;
-    private TestCaseDetailList testCaseDetailList;
     private TestScriptDetailList testScriptDetailListDelete = new TestScriptDetailList();
     private String type;
     private String typeTS;
     private ArrayList<Object> objects;
     private String name;
+    private TestCase testCase;
 
     @FXML
     void initialize() {
@@ -72,11 +62,10 @@ public class PopupAddTestscriptController {
             System.out.println(testScript);
             testScriptDetailList = (TestScriptDetailList) objects.get(5);
             idTS = testScript.getIdTS();
-            testCaseDetailList = (TestCaseDetailList) objects.get(6);
+            testCase = (TestCase) objects.get(6);
             type = (String) objects.get(7);
             System.out.println(type);
-            selectedComboBox();
-            System.out.println(testCaseDetailList);
+            //selectedComboBox();
             if (objects.get(8) != null && type.equals("edit")){
                 testScriptDetail = (TestScriptDetail) objects.get(8);
                 testScriptDetailListDelete = (TestScriptDetailList)  objects.get(9);
@@ -95,8 +84,6 @@ public class PopupAddTestscriptController {
     private void setTextEdit() {
         onTestNo.setText(testScriptDetail.getTestNo());
         onTeststepsArea.setText(testScriptDetail.getSteps().toLowerCase());;
-        onInputDataCombobox.getSelectionModel().select(testScriptDetail.getInputData());
-        onExpectedArea.setText(testScriptDetail.getExpected());;
         testScriptIDLabel.setText(testScriptDetail.getIdTSD());
         testScriptNameLabel.setText("");
     }
@@ -123,7 +110,7 @@ public class PopupAddTestscriptController {
         objects.add(typeTS);
         objects.add(testScript);
         objects.add(testScriptDetailList);
-        objects.add(testCaseDetailList);
+        objects.add(testCase);
         objects.add(type);
         objects.add(testScriptDetailListDelete);
     }
@@ -154,13 +141,11 @@ public class PopupAddTestscriptController {
         // Retrieve the values from the fields
         String TsNo = onTestNo.getText();
         String TsStep = onTeststepsArea.getText().toLowerCase();
-        String Input = onInputDataCombobox.getValue();
-        String Expect = onExpectedArea.getText();
         setDateTSD();  // Assuming this method sets the date, make sure it's valid
 
 
         // Create a new TestScriptDetail object and add it to the list
-        testScriptDetail = new TestScriptDetail(id, TsNo, TsStep, Input, Expect, idTS, date);
+        testScriptDetail = new TestScriptDetail(id, TsNo, TsStep, idTS, date);
 
         // Add or update the TestScriptDetail in the list
         testScriptDetailList.addOrUpdateTestScriptDetail(testScriptDetail);
@@ -175,17 +160,8 @@ public class PopupAddTestscriptController {
             return false;
         }
 
-        if (onInputDataCombobox.getValue() == null || onInputDataCombobox.getValue().trim().isEmpty() || onInputDataCombobox.getValue().equals("None")) {
-            showAlert("กรุณาเลือก Input Data");
-            return false;
-        }
-
         if (onTeststepsArea.getText() == null || onTeststepsArea.getText().trim().isEmpty()) {
             showAlert("กรุณากรอกข้อมูล Test Steps");
-            return false;
-        }
-        if (onExpectedArea.getText() == null || onExpectedArea.getText().trim().isEmpty()) {
-            showAlert("กรุณากรอกข้อมูล Expected Result");
             return false;
         }
         return true;
@@ -223,8 +199,6 @@ public class PopupAddTestscriptController {
         id = "";
         onTestNo.setText("");
         onTeststepsArea.setText("");
-        onInputDataCombobox.getSelectionModel().selectFirst();
-        onExpectedArea.setText("");
     }
 
     public void randomId(){
@@ -233,37 +207,37 @@ public class PopupAddTestscriptController {
         String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
         this.id = String.format("TSD-%s", random1);
     }
-    private void selectedComboBox(){
-        onInputDataCombobox.setItems(FXCollections.observableArrayList("None"));
-        inputCombobox();
-        new AutoCompleteComboBoxListener<>(onInputDataCombobox);
-        onInputDataCombobox.setOnAction(event -> {
-            String selectedItem = onInputDataCombobox.getSelectionModel().getSelectedItem();
-            if (selectedItem != null) {
-                onInputDataCombobox.getEditor().setText(selectedItem); // Set selected item in editor
-                Platform.runLater(onInputDataCombobox.getEditor()::end);
-            }
+//    private void selectedComboBox(){
+//        onInputDataCombobox.setItems(FXCollections.observableArrayList("None"));
+//        inputCombobox();
+//        new AutoCompleteComboBoxListener<>(onInputDataCombobox);
+//        onInputDataCombobox.setOnAction(event -> {
+//            String selectedItem = onInputDataCombobox.getSelectionModel().getSelectedItem();
+//            if (selectedItem != null) {
+//                onInputDataCombobox.getEditor().setText(selectedItem); // Set selected item in editor
+//                Platform.runLater(onInputDataCombobox.getEditor()::end);
+//            }
+//
+//        });
+//
+//    }
 
-        });
-
-    }
-
-    private void inputCombobox() {
+//    private void inputCombobox() {
+////        for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()){
+////            String tcd = testCaseDetail.getVariableTCD() + " : " + testCaseDetail.getNameTCD();
+////            onInputDataCombobox.getItems().add(tcd);
+////        }
+//        String selectedTcId = testScript.getTestCase();
+//        String[] partsTC = selectedTcId.split(" : "); // แยกข้อความตาม " : "
+//        String tcId = partsTC[0];
+//
 //        for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()){
-//            String tcd = testCaseDetail.getVariableTCD() + " : " + testCaseDetail.getNameTCD();
-//            onInputDataCombobox.getItems().add(tcd);
+//            if (testCaseDetail.getIdTC().equals(tcId)) {
+//                String tcd = testCaseDetail.getExpectedTCD() + " : " + testCaseDetail.getVariableTCD();
+//                onInputDataCombobox.getItems().add(tcd);
+//            }
 //        }
-        String selectedTcId = testScript.getTestCase();
-        String[] partsTC = selectedTcId.split(" : "); // แยกข้อความตาม " : "
-        String tcId = partsTC[0];
-        
-        for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()){
-            if (testCaseDetail.getIdTC().equals(tcId)) {
-                String tcd = testCaseDetail.getVariableTCD() + " : " + testCaseDetail.getNameTCD();
-                onInputDataCombobox.getItems().add(tcd);
-            }
-        }
-    }
+//    }
 
 
 }

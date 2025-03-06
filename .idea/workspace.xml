@@ -11,30 +11,25 @@
   <component name="ChangeListManager">
     <list default="true" id="339e8b6d-7c1d-4583-b039-ece96beb9415" name="Changes" comment="mergh">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/home_tester.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/home_tester.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/popup_add_ir_manager.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/popup_add_ir_manager.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestCase/PopupAddTestcaseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestCase/PopupAddTestcaseController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestCase/TestCaseAddController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestCase/TestCaseAddController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestCase/TestCaseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestCase/TestCaseController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestCase/TestCaseEditController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestCase/TestCaseEditController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestFlow/PopupTestFlowAddTestcaseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestFlow/PopupTestFlowAddTestcaseController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestFlow/PopupTestFlowAddTestscriptController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestFlow/PopupTestFlowAddTestscriptController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/PopupAddTestscriptController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/PopupAddTestscriptController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/TestScriptAddController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/TestScriptAddController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/TestScriptController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/TestScriptController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/TestScriptEditController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/TestScriptEditController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestCaseDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestCaseDetail.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestScriptDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestScriptDetail.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Services/DataSourceCSV/TestCaseDetailFileDataSource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Services/DataSourceCSV/TestCaseDetailFileDataSource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Services/DataSourceCSV/TestScriptDetailFIleDataSource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Services/DataSourceCSV/TestScriptDetailFIleDataSource.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/views/popup_add_testcase.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/popup_add_testcase.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/popup_add_testresult.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/popup_add_testresult.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/popup_add_testresult_manager.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/popup_add_testresult_manager.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/views/popup_add_testscript.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/popup_add_testscript.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/popup_delete_testcase.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/popup_delete_testresult.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/popup_delete_testscript.fxml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/views/popup_testflow_add_testcase.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/popup_testflow_add_testcase.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/views/popup_testflow_add_testscript.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/popup_testflow_add_testscript.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_case.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_case.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_case_add.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_case_add.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_case_edit.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_case_edit.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_flow.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_flow.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_result.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_result.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_result_add.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_result_add.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_result_edit.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_result_edit.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_script.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_script.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_script_add.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_script_add.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_script_edit.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_script_edit.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/use_case.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/use_case.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/use_case_add.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/use_case_add.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/use_case_edit.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/use_case_edit.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -155,7 +150,15 @@
       <option name="project" value="LOCAL" />
       <updated>1741155846536</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="merge">
+      <option name="closed" value="true" />
+      <created>1741266848086</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1741266848086</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

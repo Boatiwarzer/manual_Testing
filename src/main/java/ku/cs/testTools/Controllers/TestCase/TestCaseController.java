@@ -53,6 +53,8 @@ public class TestCaseController {
     @FXML
     private ComboBox<String> infoUsecaseCombobox ;
     @FXML
+    private ComboBox<String> onTestscriptCombobox;
+    @FXML
     private TextArea infoDescriptField, infoNoteField,infoPreconField,infoPostconField;
     @FXML
     private Label testNameLabel;

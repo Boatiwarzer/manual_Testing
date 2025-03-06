@@ -8,9 +8,6 @@ import ku.cs.testTools.Services.ManageDataSource;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TestCaseDetailFileDataSource implements DataSource<TestCaseDetailList>, ManageDataSource<TestCaseDetail> {
     private String directory;
@@ -188,8 +185,8 @@ public class TestCaseDetailFileDataSource implements DataSource<TestCaseDetailLi
         return "testCaseDetail," +
                 testCaseDetail.getIdTCD() + "," +
                 testCaseDetail.getTestNo() + "," +
-                testCaseDetail.getNameTCD().replace("\n","#$#").replace(",","%$%") + "," +
                 testCaseDetail.getVariableTCD().replace("\n","#$#").replace(",","%$%") + "," +
+                testCaseDetail.getExpectedTCD().replace("\n","#$#").replace(",","%$%") + "," +
                 testCaseDetail.getDateTCD()+ "," +
                 testCaseDetail.getIdTC();
     }

@@ -223,7 +223,7 @@ public class PopupTestFlowAddTestscriptController {
 
     private void inputCombobox() {
         for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()){
-            String tcd = testCaseDetail.getVariableTCD() + " : " + testCaseDetail.getNameTCD();
+            String tcd = testCaseDetail.getExpectedTCD() + " : " + testCaseDetail.getVariableTCD();
             onInputDataCombobox.getItems().add(tcd);
         }
 

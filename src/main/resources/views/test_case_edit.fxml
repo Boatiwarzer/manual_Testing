@@ -85,6 +85,7 @@
                      <Font size="14.0" />
                   </font>
                </Hyperlink>
+               </children>
             </HBox>
             <HBox alignment="TOP_CENTER" prefHeight="720.0" prefWidth="1680.0" AnchorPane.topAnchor="30.0">
                <children>

@@ -65,10 +65,8 @@ public class TestScriptDetailFIleDataSource implements DataSource<TestScriptDeta
                             data[1].trim(), // idTSD
                             data[2].trim(), // testNo
                             data[3].trim().replace("#$#","\n").replace("%$%",","), // steps
-                            data[4].trim().replace("#$#","\n").replace("%$%",","), // inputData
-                            data[5].trim().replace("#$#","\n").replace("%$%",","),
-                            data[6].trim(),
-                            data[7].trim()// expected
+                            data[4].trim(),
+                            data[5].trim()// expected
                     );
 
                     // Add the detail to the list

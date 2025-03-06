@@ -61,6 +61,8 @@ public class TestCaseAddController {
     @FXML
     private ComboBox<String> onUsecaseCombobox;
     @FXML
+    private ComboBox<String> onTestscriptCombobox;
+    @FXML
     private Label testDateLabel;
     @FXML
     private Label testIDLabel;
