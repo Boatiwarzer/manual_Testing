@@ -345,6 +345,9 @@ public class TestCaseController {
         infoPreconField.setText(pre);
         String post = testCase.getPostCon();
         infoPostconField.setText(post);
+        String ts = testCase.getIdTS();
+        onTestscriptCombobox.getSelectionModel().select(ts);
+
 
     }
 
@@ -426,7 +429,7 @@ public class TestCaseController {
         testIDLabel.setText("");
         testNameField.setText("");
         testDateLabel.setText("");
-        onClickUsecase.setText("");
+        infoUsecaseLabel.setText("");
         infoDescriptField.setText("");
         infoNoteField.setText("");
 

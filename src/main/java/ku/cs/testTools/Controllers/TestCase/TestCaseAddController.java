@@ -545,7 +545,7 @@ public class TestCaseAddController {
 
 
         // Create a new TestCase object
-        testCase = new TestCase(idTC, name, date, useCase, description, note, position, preCon, post);
+        testCase = new TestCase(idTC, name, date, useCase, description, note, position, preCon, post,"-");
     }
     private void currentNewDataForSubmit() {
         // Retrieve the values from the fields
@@ -559,7 +559,7 @@ public class TestCaseAddController {
         String post = infoPostconField.getText();
 
         // Create a new TestCase object
-        testCase = new TestCase(idTC, name, date, useCase, description, note, position, preCon, post);
+        testCase = new TestCase(idTC, name, date, useCase, description, note, position, preCon, post,"-");
     }
 
     private void objects() {

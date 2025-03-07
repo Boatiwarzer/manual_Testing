@@ -11,6 +11,7 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Services.Repository.ManagerRepository;
+import ku.cs.testTools.Services.Repository.TestCaseRepository;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
@@ -164,10 +165,21 @@ public class TestScriptAddController {
         String preCon = infoPreconLabel.getText();
         String post = infoPostconLabel.getText();
         setDate();
+        if (tcId != null && tsId != null){
+            testcase = new TestCase(tcId,name,testDateLabel.getText(),usecase,description,"-",positionTC,preCon,post,tsId);
+            String tc_combobox = testcase.getIdTC() + " : " + testcase.getNameTC();
+            onTestcaseCombobox.setValue(tc_combobox);
+        }else {
+            testcase.setNameTC(name);
+            testcase.setDateTC(testDateLabel.getText());
+            testcase.setUseCase(usecase);
+            testcase.setDescriptionTC(description);
+            testcase.setPreCon(preCon);
+            testcase.setPostCon(post);
+            String tc_combobox = testcase.getIdTC() + " : " + testcase.getNameTC();
+            onTestcaseCombobox.setValue(tc_combobox);
 
-        testcase = new TestCase(tcId,name,testDateLabel.getText(),usecase,description,"-",positionTC,preCon,post);
-        String tc_combobox = testcase.getIdTC() + " : " + testcase.getNameTC();
-        onTestcaseCombobox.setValue(tc_combobox);
+        }
     }
 
     private void loadProject() {
@@ -475,9 +487,15 @@ public class TestScriptAddController {
         String preCon = infoPreconLabel.getText();
         String note = onTestNoteField.getText();
         String post = infoPostconLabel.getText();
-
+        String idTC = tcId;
         // Only create the TestScript object after all fields are validated
         testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, post, note, position);
+        testcase = new TestCase(testcase.getIdTC(),name,date,useCase,description,"-",positionTC,preCon,post,idTS);
+
+        String[] data = tc.split(":");
+        System.out.println(tc);
+        System.out.println(Arrays.toString(data));
+        testcase.setNameTC(data[1]);
     }
     private void objects() {
         objects = new ArrayList<>();
@@ -557,6 +575,7 @@ public class TestScriptAddController {
             currentNewDataForSubmit();
 
             TestScriptRepository testScriptRepository = new TestScriptRepository();
+            TestCaseRepository testCaseRepository = new TestCaseRepository();
             TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
             for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()){
                 testScriptDetailRepository.saveOrUpdateTestScriptDetail(testScriptDetail);
@@ -568,10 +587,11 @@ public class TestScriptAddController {
             }
             // Add or update test script
             testScriptList.addOrUpdateTestScript(testScript);
-
+            testCaseList.addOrUpdateTestCase(testcase);
             // Write data to respective files
             saveProject();
             testScriptRepository.saveOrUpdateTestScript(testScript);
+            testCaseRepository.saveOrUpdateTestCase(testcase);
 
             objects = new ArrayList<>();
             objects.add(projectName);
@@ -639,16 +659,17 @@ public class TestScriptAddController {
         onTestcaseCombobox.setItems(FXCollections.observableArrayList("None"));
         new AutoCompleteComboBoxListener<>(onTestcaseCombobox);
         onTestcaseCombobox.getSelectionModel().selectFirst();
-        testCaseCombobox();
-        onTestcaseCombobox.setOnAction(event -> {
-            String selectedItem = onTestcaseCombobox.getSelectionModel().getSelectedItem();
-            if (selectedItem != null) {
-                onTestcaseCombobox.getEditor().setText(selectedItem); // Set selected item in editor
-                Platform.runLater(onTestcaseCombobox.getEditor()::end);
-
-            }
-
-        });
+        onTestcaseCombobox.setEditable(false);
+        //testCaseCombobox();
+//        onTestcaseCombobox.setOnAction(event -> {
+//            String selectedItem = onTestcaseCombobox.getSelectionModel().getSelectedItem();
+//            if (selectedItem != null) {
+//                onTestcaseCombobox.getEditor().setText(selectedItem); // Set selected item in editor
+//                Platform.runLater(onTestcaseCombobox.getEditor()::end);
+//
+//            }
+//
+//        });
 
         onUsecaseCombobox.getItems().clear();
         onUsecaseCombobox.setItems(FXCollections.observableArrayList("None"));

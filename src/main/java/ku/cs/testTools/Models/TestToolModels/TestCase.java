@@ -46,8 +46,10 @@ public class TestCase {
 
     @Column(name = "post_con") // Maps to `postcon` in the database
     private String postCon;
+    @Column(name = "id_ts")
+    private String idTS;
 
-    public TestCase(String idTC, String nameTC, String dateTC, String useCase, String descriptionTC, String note, UUID position, String preCon, String postCon) {
+    public TestCase(String idTC, String nameTC, String dateTC, String useCase, String descriptionTC, String note, UUID position, String preCon, String postCon, String idTS) {
         this.idTC = idTC;
         this.nameTC = nameTC;
         this.dateTC = dateTC;
@@ -57,7 +59,10 @@ public class TestCase {
         this.position = position;
         this.preCon = preCon;
         this.postCon = postCon;
+        this.idTS = idTS;
     }
+
+
 
     @Override
     public final boolean equals(Object o) {

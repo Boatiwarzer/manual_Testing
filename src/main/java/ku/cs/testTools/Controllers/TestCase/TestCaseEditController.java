@@ -279,6 +279,8 @@ public class TestCaseEditController {
         infoPreconField.setText(preCon);
         String post = testCase.getPostCon();
         infoPostconField.setText(post);
+        String idTs = testCase.getIdTS();
+        onTestscriptCombobox.setValue(idTs);
     }
 
     private void selectedListView() {
@@ -445,8 +447,9 @@ public class TestCaseEditController {
         String note = onTestNoteField.getText();
         String preCon = infoPreconField.getText();
         String post = infoPostconField.getText();
+        String idTS = onTestscriptCombobox.getValue();
 
-        testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post);
+        testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post,idTS);
 
     }
     private void currentNewDataForSubmit(){
@@ -458,7 +461,9 @@ public class TestCaseEditController {
         String note = onTestNoteField.getText();
         String preCon = infoPreconField.getText();
         String post = infoPostconField.getText();
-        testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post);
+        String idTS = onTestscriptCombobox.getValue();
+
+        testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post,idTS);
         DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
         testFlowPositionList = testFlowPositionListDataSource.readData();
         if (testFlowPositionList.findByPositionId(testCase.getPosition()) != null) {

@@ -59,7 +59,8 @@ public class TestCaseFileDataSource implements DataSource<TestCaseList>, ManageD
                             data[6].trim().replace("#$#","\n").replace("%$%",","),// expected
                             UUID.fromString(data[7].trim()),
                             data[8].trim().replace("#$#","\n").replace("%$%",","),
-                            data[9].trim().replace("#$#","\n").replace("%$%",",")// expected
+                            data[9].trim().replace("#$#","\n").replace("%$%",","),
+                            data[10].trim().replace("#$#","\n").replace("%$%",",")// expected
 
                     );
 
@@ -198,6 +199,7 @@ public class TestCaseFileDataSource implements DataSource<TestCaseList>, ManageD
                 testCase.getNote().replace("\n","#$#").replace(",","%$%") + "," +
                 testCase.getPosition() + "," +
                 testCase.getPreCon().replace("\n","#$#").replace(",","%$%") + "," +
-                testCase.getPostCon().replace("\n","#$#").replace(",","%$%");
+                testCase.getPostCon().replace("\n","#$#").replace(",","%$%")+ "," +
+                testCase.getIdTS().replace("\n","#$#").replace(",","%$%");
     }
 }

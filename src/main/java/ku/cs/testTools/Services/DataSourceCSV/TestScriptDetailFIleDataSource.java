@@ -203,8 +203,6 @@ public class TestScriptDetailFIleDataSource implements DataSource<TestScriptDeta
                 testScriptDetail.getIdTSD() + "," +
                 testScriptDetail.getTestNo() + "," +
                 testScriptDetail.getSteps().replace("\n","#$#").replace(",","%$%") + "," +
-                testScriptDetail.getInputData().replace("\n","#$#").replace(",","%$%") + "," +
-                testScriptDetail.getExpected().replace("\n","#$#").replace(",","%$%") + "," +
                 testScriptDetail.getIdTS() + "," +
                 testScriptDetail.getDateTSD();
     }

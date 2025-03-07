@@ -128,7 +128,7 @@ public class PopupInfoTestscriptController {
                 if (testScriptDetailList != null){
                     loadTable(testScriptDetailList);
                 }
-                //onTestNameCombobox.setOnKeyReleased(event -> setTestcase());
+                onTestNameCombobox.setOnKeyReleased(event -> setTestcase());
 
             }
             else{
@@ -144,19 +144,24 @@ public class PopupInfoTestscriptController {
 
     }
 
-//    private void setTestcase() {
-//        onTestcaseCombobox.getItems().clear();
-//        String name = onTestNameCombobox.getValue();
-//        String usecase = onUsecaseCombobox.getValue();
-//        String description = infoDescriptLabel.getText();
-//        String preCon = infoPreconLabel.getText();
-//        String post = infoPostconLabel.getText();
-//        setDate();
-//
-//        testcase = new TestCase(tcId,name,testDateLabel.getText(),usecase,description,"-",positionTC,preCon,post);
-//        String tc_combobox = testcase.getIdTC() + " : " + testcase.getNameTC();
-//        onTestcaseCombobox.setValue(tc_combobox);
-//    }
+    private void setTestcase() {
+        onTestcaseCombobox.getItems().clear();
+        String[] name = onTestNameCombobox.getValue().split(":,");
+        String usecase = onUsecaseCombobox.getValue();
+        String description = infoDescriptLabel.getText();
+        String preCon = infoPreconLabel.getText();
+        String post = infoPostconLabel.getText();
+        String tc = onTestcaseCombobox.getValue();
+        String[] data = tc.split(":");
+
+        setDate();
+        testcase = testCaseList.findTCById(data[0]);
+        if (testcase != null){
+            testcase = new TestCase(testcase.getIdTC(),name[1],testDateLabel.getText(),usecase,description,"-",testcase.getPosition(),preCon,post,testcase.getIdTC());
+            String tc_combobox = testcase.getIdTC() + " : " + testcase.getNameTC();
+            onTestcaseCombobox.setValue(tc_combobox);
+        }
+    }
 
     private void loadStatusButton() {
         ManagerRepository managerRepository = new ManagerRepository();
