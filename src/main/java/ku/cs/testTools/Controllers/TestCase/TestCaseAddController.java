@@ -61,6 +61,8 @@ public class TestCaseAddController {
     @FXML
     private ComboBox<String> onUsecaseCombobox;
     @FXML
+    private ComboBox<String> onTestscriptCombobox;
+    @FXML
     private Label testDateLabel;
     @FXML
     private Label testIDLabel;
@@ -282,8 +284,8 @@ public class TestCaseAddController {
         ArrayList<StringConfiguration> configs = new ArrayList<>();
         configs.add(new StringConfiguration("title:TC-ID."));
         configs.add(new StringConfiguration("title:Test No."));
-        configs.add(new StringConfiguration("title:Name Variable."));
-        configs.add(new StringConfiguration("title:Type Variable."));
+        configs.add(new StringConfiguration("title:Variable."));
+        configs.add(new StringConfiguration("title:Expected."));
         configs.add(new StringConfiguration("title:Date."));
 
         int index = 0;
@@ -440,8 +442,8 @@ public class TestCaseAddController {
         ArrayList<StringConfiguration> configs = new ArrayList<>();
         configs.add(new StringConfiguration("title:TC-ID.", "field:idTCD"));
         configs.add(new StringConfiguration("title:Test No.", "field:testNo"));
-        configs.add(new StringConfiguration("title:Name Variable.", "field:nameTCD"));
-        configs.add(new StringConfiguration("title:Type Variable.", "field:variableTCD"));
+        configs.add(new StringConfiguration("title:Variable.", "field:variableTCD"));
+        configs.add(new StringConfiguration("title:Expected.", "field:expectedTCD"));
         configs.add(new StringConfiguration("title:Date.", "field:dateTCD"));
 
         int index = 0;
@@ -543,7 +545,7 @@ public class TestCaseAddController {
 
 
         // Create a new TestCase object
-        testCase = new TestCase(idTC, name, date, useCase, description, note, position, preCon, post);
+        testCase = new TestCase(idTC, name, date, useCase, description, note, position, preCon, post,"-");
     }
     private void currentNewDataForSubmit() {
         // Retrieve the values from the fields
@@ -557,7 +559,7 @@ public class TestCaseAddController {
         String post = infoPostconField.getText();
 
         // Create a new TestCase object
-        testCase = new TestCase(idTC, name, date, useCase, description, note, position, preCon, post);
+        testCase = new TestCase(idTC, name, date, useCase, description, note, position, preCon, post,"-");
     }
 
     private void objects() {

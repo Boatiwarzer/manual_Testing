@@ -77,7 +77,8 @@ public class TestCaseEditController {
 
     @FXML
     private ComboBox<String> onUsecaseCombobox;
-
+    @FXML
+    private ComboBox<String> onTestscriptCombobox;
     @FXML
     private Label testDateLabel;
 
@@ -185,8 +186,8 @@ public class TestCaseEditController {
         ArrayList<StringConfiguration> configs = new ArrayList<>();
         configs.add(new StringConfiguration("title:TC-ID."));
         configs.add(new StringConfiguration("title:Test No."));
-        configs.add(new StringConfiguration("title:Name Variable."));
-        configs.add(new StringConfiguration("title:Type Variable."));
+        configs.add(new StringConfiguration("title:Variable."));
+        configs.add(new StringConfiguration("title:Expected."));
         configs.add(new StringConfiguration("title:Date."));
 
         int index = 0;
@@ -278,6 +279,8 @@ public class TestCaseEditController {
         infoPreconField.setText(preCon);
         String post = testCase.getPostCon();
         infoPostconField.setText(post);
+        String idTs = testCase.getIdTS();
+        onTestscriptCombobox.setValue(idTs);
     }
 
     private void selectedListView() {
@@ -343,8 +346,8 @@ public class TestCaseEditController {
         ArrayList<StringConfiguration> configs = new ArrayList<>();
         configs.add(new StringConfiguration("title:TC-ID.", "field:idTCD"));
         configs.add(new StringConfiguration("title:Test No.", "field:testNo"));
-        configs.add(new StringConfiguration("title:Name Variable.", "field:nameTCD"));
-        configs.add(new StringConfiguration("title:Type Variable.", "field:variableTCD"));
+        configs.add(new StringConfiguration("title:Variable.", "field:variableTCD"));
+        configs.add(new StringConfiguration("title:Expected.", "field:expectedTCD"));
         configs.add(new StringConfiguration("title:Date.", "field:dateTCD"));
 
         int index = 0;
@@ -444,8 +447,9 @@ public class TestCaseEditController {
         String note = onTestNoteField.getText();
         String preCon = infoPreconField.getText();
         String post = infoPostconField.getText();
+        String idTS = onTestscriptCombobox.getValue();
 
-        testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post);
+        testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post,idTS);
 
     }
     private void currentNewDataForSubmit(){
@@ -457,7 +461,9 @@ public class TestCaseEditController {
         String note = onTestNoteField.getText();
         String preCon = infoPreconField.getText();
         String post = infoPostconField.getText();
-        testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post);
+        String idTS = onTestscriptCombobox.getValue();
+
+        testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post,idTS);
         DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
         testFlowPositionList = testFlowPositionListDataSource.readData();
         if (testFlowPositionList.findByPositionId(testCase.getPosition()) != null) {

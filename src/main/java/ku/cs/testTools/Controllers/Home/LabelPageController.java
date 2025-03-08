@@ -140,7 +140,7 @@ public class LabelPageController {
             randomId();
             testFlowPosition = new TestFlowPosition(id,width,height,layoutX,layoutY,0,"testcase",projectName,name);
             testFlowPositionList.addPosition(testFlowPosition);
-            testCase = new TestCase(objectID,label,"-","-","-","-",testFlowPosition.getPositionID(),"-","-");
+            testCase = new TestCase(objectID,label,"-","-","-","-",testFlowPosition.getPositionID(),"-","-","-");
             testCaseList.addOrUpdateTestCase(testCase);
             TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
             testFlowRepository.saveOrUpdateTestFlowPosition(testFlowPosition);

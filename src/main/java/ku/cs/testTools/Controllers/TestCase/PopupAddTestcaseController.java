@@ -3,10 +3,7 @@ package ku.cs.testTools.Controllers.TestCase;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
@@ -25,13 +22,13 @@ public class PopupAddTestcaseController {
     private Button onConfirmButton;
 
     @FXML
-    private TextField onNameVariablesField;
+    private TextArea onVariablesArea;
 
     @FXML
     private TextField onTestNo;
 
     @FXML
-    private TextField onTypeVariableField;
+    private TextArea onExpectedArea;
 
     @FXML
     private Label testCaseIDLabel;
@@ -84,8 +81,8 @@ public class PopupAddTestcaseController {
 
     private void setTextEdit() {
         onTestNo.setText(testCaseDetail.getTestNo());
-        onNameVariablesField.setText(testCaseDetail.getNameTCD());;
-        onTypeVariableField.setText(testCaseDetail.getVariableTCD());;
+        onVariablesArea.setText(testCaseDetail.getVariableTCD());;
+        onExpectedArea.setText(testCaseDetail.getExpectedTCD());;
     }
 
     private void randomId() {
@@ -98,8 +95,8 @@ public class PopupAddTestcaseController {
     private void clearInfo() {
         id = "";
         onTestNo.setText("");
-        onNameVariablesField.setText("");
-        onTypeVariableField.setText("");
+        onVariablesArea.setText("");
+        onExpectedArea.setText("");
     }
     private void objects() {
         objects = new ArrayList<>();
@@ -137,8 +134,8 @@ public class PopupAddTestcaseController {
     private void currentNewData() {
         // Retrieve the values from the fields
         String TsNo = onTestNo.getText();
-        String Name = onNameVariablesField.getText();
-        String Type = onTypeVariableField.getText();
+        String Name = onVariablesArea.getText();
+        String Type = onExpectedArea.getText();
 
         setDateTCD(); // Ensure this method correctly sets dateTCD
 
@@ -177,11 +174,11 @@ public class PopupAddTestcaseController {
             return false;
         }
 
-        if (onNameVariablesField.getText() == null || onNameVariablesField.getText().trim().isEmpty()) {
+        if (onVariablesArea.getText() == null || onVariablesArea.getText().trim().isEmpty()) {
             showAlert("กรุณากรอกข้อมูล Name Variables");
             return false;
         }
-        if (onTypeVariableField.getText() == null || onTypeVariableField.getText().trim().isEmpty()) {
+        if (onExpectedArea.getText() == null || onExpectedArea.getText().trim().isEmpty()) {
             showAlert("กรุณากรอกข้อมูล Type Variables");
             return false;
         }

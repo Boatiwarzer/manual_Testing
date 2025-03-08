@@ -12,14 +12,11 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ku.cs.testTools.Models.Manager.Manager;
-import ku.cs.testTools.Services.Repository.ManagerRepository;
+import ku.cs.testTools.Services.Repository.*;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
 import ku.cs.testTools.Services.DataSourceCSV.*;
-import ku.cs.testTools.Services.Repository.TestFlowPositionRepository;
-import ku.cs.testTools.Services.Repository.TestScriptDetailRepository;
-import ku.cs.testTools.Services.Repository.TestScriptRepository;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.File;
@@ -136,6 +133,8 @@ public class TestScriptEditController {
     private ArrayList<Object> objects;
     private String nameTester;
     private TestFlowPosition testFlowPosition;
+    private TestCase testcase;
+    private TestFlowPosition testFlowPositionTC;
 
     @FXML
     void initialize() {
@@ -174,11 +173,29 @@ public class TestScriptEditController {
                 word.add(testScript.getNameTS());
             }
             searchSet();
+            onTestNameField.setOnKeyReleased(event -> setTestcase());
 
         }
 
     }
+    private void setTestcase() {
+        onTestcaseCombobox.getItems().clear();
+        String name = onTestNameField.getText();
+        String usecase = onUsecaseCombobox.getValue();
+        String description = infoDescriptLabel.getText();
+        String preCon = infoPreconLabel.getText();
+        String post = infoPostconLabel.getText();
+        String tc = onTestcaseCombobox.getValue();
+        String[] data = tc.split(":");
 
+        setDate();
+        testcase = testCaseList.findTCById(data[0]);
+        if (testcase != null){
+            testcase = new TestCase(testcase.getIdTC(),name,testDateLabel.getText(),usecase,description,"-",testcase.getPosition(),preCon,post,testcase.getIdTC());
+            String tc_combobox = testcase.getIdTC() + " : " + testcase.getNameTC();
+            onTestcaseCombobox.setValue(tc_combobox);
+        }
+    }
     private void loadProject() {
         DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
         DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
@@ -211,19 +228,11 @@ public class TestScriptEditController {
 
     }
     private void selectedComboBox() {
+        onTestcaseCombobox.getItems().clear();
         onTestcaseCombobox.setItems(FXCollections.observableArrayList("None"));
         new AutoCompleteComboBoxListener<>(onTestcaseCombobox);
         onTestcaseCombobox.getSelectionModel().selectFirst();
-        testCaseCombobox();
-        onTestcaseCombobox.setOnAction(event -> {
-            String selectedItem = onTestcaseCombobox.getSelectionModel().getSelectedItem();
-            if (selectedItem != null) {
-                onTestcaseCombobox.getEditor().setText(selectedItem); // Set selected item in editor
-                Platform.runLater(onTestcaseCombobox.getEditor()::end);
-
-            }
-
-        });
+        onTestcaseCombobox.setEditable(false);
         onUsecaseCombobox.getItems().clear();
         onUsecaseCombobox.setItems(FXCollections.observableArrayList("None"));
         new AutoCompleteComboBoxListener<>(onUsecaseCombobox);
@@ -396,8 +405,6 @@ public class TestScriptEditController {
         configs.add(new StringConfiguration("title:TSD-ID.", "field:idTSD"));
         configs.add(new StringConfiguration("title:Test No.", "field:testNo"));
         configs.add(new StringConfiguration("title:Test Step.", "field:steps"));
-        configs.add(new StringConfiguration("title:Input Data.", "field:inputData"));
-        configs.add(new StringConfiguration("title:Expected Result.", "field:expected"));
         configs.add(new StringConfiguration("title:Date.", "field:dateTSD"));
 
         int index = 0;
@@ -455,8 +462,6 @@ public class TestScriptEditController {
         configs.add(new StringConfiguration("title:TSD-ID."));
         configs.add(new StringConfiguration("title:Test No."));
         configs.add(new StringConfiguration("title:Test Step."));
-        configs.add(new StringConfiguration("title:Input Data."));
-        configs.add(new StringConfiguration("title:Expected Result."));
         configs.add(new StringConfiguration("title:Date."));
 
         int index = 0;
@@ -536,6 +541,7 @@ public class TestScriptEditController {
         String post = infoPostconLabel.getText();
 
         testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post,note,position);
+        testcase = new TestCase(testcase.getIdTC(),name,testDateLabel.getText(),useCase,description,"-",testcase.getPosition(),preCon,post,testcase.getIdTC());
 
     }
     private void currentNewDataForSubmit(){
@@ -550,11 +556,17 @@ public class TestScriptEditController {
         String post = infoPostconLabel.getText();
 
         testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post,note,position);
+        testcase = new TestCase(testcase.getIdTC(),name,testDateLabel.getText(),useCase,description,"-",testcase.getPosition(),preCon,post,testcase.getIdTC());
+
         DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
         testFlowPositionList = testFlowPositionListDataSource.readData();
         if (testFlowPositionList.findByPositionId(testScript.getPosition()) != null) {
             testFlowPosition = testFlowPositionList.findByPositionId(testScript.getPosition());
             testScript.setPosition(testFlowPosition.getPositionID());
+        }
+        if (testFlowPositionList.findByPositionId(testcase.getPosition()) != null) {
+            testFlowPositionTC = testFlowPositionList.findByPositionId(testcase.getPosition());
+            testcase.setPosition(testFlowPosition.getPositionID());
         }
     }
     @FXML
@@ -636,11 +648,14 @@ public class TestScriptEditController {
         currentNewDataForSubmit();
         // Add or update test script
         testScriptList.addTestScript(testScript);
+        testCaseList.addOrUpdateTestCase(testcase);
 
 
         // Write data to respective files
         saveProject();
         TestScriptRepository testScriptRepository = new TestScriptRepository();
+        TestCaseRepository testCaseRepository = new TestCaseRepository();
+
         TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
         for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()){
             testScriptDetailRepository.updateTestScriptDetail(testScriptDetail);
@@ -653,10 +668,14 @@ public class TestScriptEditController {
         if (testFlowPosition != null){
             TestFlowPositionRepository testFlowPositionRepository = new TestFlowPositionRepository();
             testFlowPositionRepository.saveOrUpdateTestFlowPosition(testFlowPosition);
+            testFlowPositionRepository.saveOrUpdateTestFlowPosition(testFlowPositionTC);
             testFlowPositionList.addPosition(testFlowPosition);
+            testFlowPositionList.addPosition(testFlowPositionTC);
 
         }
         testScriptRepository.updateTestScript(testScript);
+        testCaseRepository.saveOrUpdateTestCase(testcase);
+
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);

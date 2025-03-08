@@ -309,8 +309,6 @@ public class TestScriptController {
         configs.add(new StringConfiguration("title:TSD-ID.", "field:idTSD"));
         configs.add(new StringConfiguration("title:Test No.", "field:testNo"));
         configs.add(new StringConfiguration("title:Test Step.", "field:steps"));
-        configs.add(new StringConfiguration("title:Input Data.", "field:inputData"));
-        configs.add(new StringConfiguration("title:Expected Result.", "field:expected"));
         configs.add(new StringConfiguration("title:Date.", "field:dateTSD"));
 
         int index = 0;
@@ -397,8 +395,6 @@ public class TestScriptController {
         configs.add(new StringConfiguration("title:TSD-ID."));
         configs.add(new StringConfiguration("title:Test No."));
         configs.add(new StringConfiguration("title:Test Step."));
-        configs.add(new StringConfiguration("title:Input Data."));
-        configs.add(new StringConfiguration("title:Expected Result."));
         configs.add(new StringConfiguration("title:Date."));
 
         int index = 0;

@@ -68,16 +68,17 @@
                         <Font size="14.0" />
                      </font>
                   </Hyperlink>
-                  <Hyperlink fx:id="onClickTestcase" onAction="#onClickTestcase" text="Test Case">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Hyperlink>
                   <Hyperlink fx:id="onClickTestscript" onAction="#onClickTestscript" text="Test Script">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Hyperlink>
+                  <Hyperlink fx:id="onClickTestcase" onAction="#onClickTestcase" text="Test Case">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Hyperlink>
+
                   <Hyperlink fx:id="onClickTestresult" alignment="CENTER" onAction="#onClickTestresult" text="Test Result">
                      <font>
                         <Font size="14.0" />

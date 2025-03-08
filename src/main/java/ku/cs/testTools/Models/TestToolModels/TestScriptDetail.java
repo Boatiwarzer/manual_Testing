@@ -39,32 +39,12 @@ public class TestScriptDetail {
     private String dateTSD;
 
 
-
-    public TestScriptDetail(String idTSD, String testNo, String steps, String inputData, String expected, String idTS, String dateTSD) {
+    public TestScriptDetail(String idTSD, String testNo, String steps, String idTS, String dateTSD) {
         this.idTSD = idTSD;
         this.testNo = testNo;
         this.steps = steps;
-        this.inputData = inputData;
-        this.expected = expected;
         this.idTS = idTS;
         this.dateTSD = dateTSD;
-    }
-
-    public TestScriptDetail(String idTSD, String testNo, String steps, String inputData, String expected) {
-        this.idTSD = idTSD;
-        this.testNo = testNo;
-        this.steps = steps;
-        this.inputData = inputData;
-        this.expected = expected;
-    }
-
-    public TestScriptDetail(String idTSD, String testNo, String steps, String inputData, String expected, String idTS) {
-        this.idTSD = idTSD;
-        this.testNo = testNo;
-        this.steps = steps;
-        this.inputData = inputData;
-        this.expected = expected;
-        this.idTS = idTS;
     }
 
     @Override

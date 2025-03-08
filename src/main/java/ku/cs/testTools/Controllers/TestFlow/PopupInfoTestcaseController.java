@@ -63,6 +63,9 @@ public class PopupInfoTestcaseController {
 
     @FXML
     private ComboBox<String> onUsecaseCombobox;
+    @FXML
+    private ComboBox<String> onTestscriptCombobox;
+
 
     @FXML
     private Label testDateLabel;
@@ -186,8 +189,8 @@ public class PopupInfoTestcaseController {
         ArrayList<StringConfiguration> configs = new ArrayList<>();
         configs.add(new StringConfiguration("title:TC-ID.", "field:idTCD"));
         configs.add(new StringConfiguration("title:Test No.", "field:testNo"));
-        configs.add(new StringConfiguration("title:Name Variable.", "field:nameTCD"));
-        configs.add(new StringConfiguration("title:Type Variable.", "field:variableTCD"));
+        configs.add(new StringConfiguration("title:Variable.", "field:variableTCD"));
+        configs.add(new StringConfiguration("title:Expected.", "field:expectedTCD"));
         configs.add(new StringConfiguration("title:Date.", "field:dateTCD"));
 
         int index = 0;
@@ -254,6 +257,8 @@ public class PopupInfoTestcaseController {
         onTestNoteField.setText(note);;
         String post = testCase.getPostCon();
         infoPostconLabel.setText(post);
+        String ts = testCase.getIdTS();
+        onTestscriptCombobox.getSelectionModel().select(ts);
     }
 
 
@@ -435,7 +440,7 @@ public class PopupInfoTestcaseController {
         String post = infoPostconLabel.getText();
         try {
 
-            testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post);
+            testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post,data[0]);
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
@@ -565,7 +570,7 @@ public class PopupInfoTestcaseController {
             String note = onTestNoteField.getText();
             String post = infoPostconLabel.getText();
 
-            testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post);
+            testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post,data[0]);
             onEditListButton.setOnAction(event1 -> onTableTestCase.requestFocus());
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
@@ -605,7 +610,7 @@ public class PopupInfoTestcaseController {
             String post = infoPostconLabel.getText();
 
             // ✅ ค้นหา TestCase ถ้ายังไม่มี สร้างใหม่
-            testCase = new TestCase(idTC, name, date, useCase, description, note, position, preCon, post);
+            testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post,data[0]);
 
 
             // ✅ ใช้ saveOrUpdate() แทน addTestCase() เพื่อลดโอกาสเกิดปัญหา identifier ซ้ำ

@@ -11,6 +11,7 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Services.Repository.ManagerRepository;
+import ku.cs.testTools.Services.Repository.TestCaseRepository;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
@@ -94,7 +95,7 @@ public class TestScriptAddController {
     private MenuItem saveMenuItem;
     private String tsId;
     private String projectName, directory;
-    private  TestScriptList testScriptList = new TestScriptList();
+    private TestScriptList testScriptList = new TestScriptList();
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
     private TestScriptDetail selectedItem;
     private TestScript testScript;
@@ -103,13 +104,16 @@ public class TestScriptAddController {
     private TestCaseList testCaseList = new TestCaseList();
     private UseCaseList useCaseList = new UseCaseList();
     private UUID position = UUID.randomUUID();
-    private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
+    private UUID positionTC = UUID.randomUUID();
+
     private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
     private ConnectionList connectionList;
     private String type = "new";
     private String typeTS = "new";
     private ArrayList<Object> objects;
     private String name;
+    private TestCase testcase = new TestCase();
+    private String tcId;
 
     @FXML
     void initialize() {
@@ -131,7 +135,7 @@ public class TestScriptAddController {
             if (objects.get(4) != null){
                 testScript = (TestScript) objects.get(4);
                 testScriptDetailList = (TestScriptDetailList) objects.get(5);
-                testCaseDetailList = (TestCaseDetailList) objects.get(6);
+                testcase = (TestCase) objects.get(6);
                 type = (String) objects.get(7);
                 setDataTS();
             }else {
@@ -139,6 +143,7 @@ public class TestScriptAddController {
             }
 
             loadListView(testScriptList);
+            onTestNameField.setOnKeyReleased(event -> setTestcase());
             for (TestScript testScript : testScriptList.getTestScriptList()) {
                 word.add(testScript.getNameTS());
             }
@@ -151,9 +156,34 @@ public class TestScriptAddController {
         }
 
         }
+
+    private void setTestcase() {
+        onTestcaseCombobox.getItems().clear();
+        String name = onTestNameField.getText();
+        String usecase = onUsecaseCombobox.getValue();
+        String description = infoDescriptLabel.getText();
+        String preCon = infoPreconLabel.getText();
+        String post = infoPostconLabel.getText();
+        setDate();
+        if (tcId != null && tsId != null){
+            testcase = new TestCase(tcId,name,testDateLabel.getText(),usecase,description,"-",positionTC,preCon,post,tsId);
+            String tc_combobox = testcase.getIdTC() + " : " + testcase.getNameTC();
+            onTestcaseCombobox.setValue(tc_combobox);
+        }else {
+            testcase.setNameTC(name);
+            testcase.setDateTC(testDateLabel.getText());
+            testcase.setUseCase(usecase);
+            testcase.setDescriptionTC(description);
+            testcase.setPreCon(preCon);
+            testcase.setPostCon(post);
+            String tc_combobox = testcase.getIdTC() + " : " + testcase.getNameTC();
+            onTestcaseCombobox.setValue(tc_combobox);
+
+        }
+    }
+
     private void loadProject() {
         DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
-        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
         DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
         DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
         DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
@@ -161,9 +191,7 @@ public class TestScriptAddController {
         DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
 
         testScriptList = testScriptListDataSource.readData();
-        TestScriptDetailList testScriptDetailListTemp = testScriptDetailListDataSource.readData();
         testCaseList = testCaseListDataSource.readData();
-        testCaseDetailList = testCaseDetailListDataSource.readData();
         testFlowPositionList = testFlowPositionListDataSource.readData();
         connectionList = connectionListDataSource.readData();
         useCaseList = useCaseListDataSource.readData();
@@ -171,17 +199,14 @@ public class TestScriptAddController {
     }
     private void saveProject() {
         DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
-        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
         DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
         DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
         DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
         DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
         testFlowPositionListDataSource.writeData(testFlowPositionList);
         testScriptListDataSource.writeData(testScriptList);
         testScriptDetailListDataSource.writeData(testScriptDetailList);
         testCaseListDataSource.writeData(testCaseList);
-        testCaseDetailListDataSource.writeData(testCaseDetailList);
         connectionListDataSource.writeData(connectionList);
         //useCaseListDataSource.writeData(useCaseList);
 
@@ -314,8 +339,6 @@ public class TestScriptAddController {
         configs.add(new StringConfiguration("title:TSD-ID.", "field:idTSD"));
         configs.add(new StringConfiguration("title:Test No.", "field:testNo"));
         configs.add(new StringConfiguration("title:Test Step.", "field:steps"));
-        configs.add(new StringConfiguration("title:Input Data.", "field:inputData"));
-        configs.add(new StringConfiguration("title:Expected Result.", "field:expected"));
         configs.add(new StringConfiguration("title:Date.", "field:dateTSD"));
 
         int index = 0;
@@ -372,8 +395,6 @@ public class TestScriptAddController {
         configs.add(new StringConfiguration("title:TSD-ID"));
         configs.add(new StringConfiguration("title:Test No."));
         configs.add(new StringConfiguration("title:Test Step."));
-        configs.add(new StringConfiguration("title:Input Data."));
-        configs.add(new StringConfiguration("title:Expected Result."));
         configs.add(new StringConfiguration("title:Date."));
 
 
@@ -404,6 +425,7 @@ public class TestScriptAddController {
         int upperbound = 999;
         String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
         this.tsId = String.format("TS-%s", random1);
+        this.tcId = String.format("TC-%s", random1);
 
     }
     void selectedTSD() {
@@ -465,9 +487,15 @@ public class TestScriptAddController {
         String preCon = infoPreconLabel.getText();
         String note = onTestNoteField.getText();
         String post = infoPostconLabel.getText();
-
+        String idTC = tcId;
         // Only create the TestScript object after all fields are validated
         testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, post, note, position);
+        testcase = new TestCase(testcase.getIdTC(),name,date,useCase,description,"-",positionTC,preCon,post,idTS);
+
+        String[] data = tc.split(":");
+        System.out.println(tc);
+        System.out.println(Arrays.toString(data));
+        testcase.setNameTC(data[1]);
     }
     private void objects() {
         objects = new ArrayList<>();
@@ -477,7 +505,7 @@ public class TestScriptAddController {
         objects.add(typeTS);
         objects.add(testScript);
         objects.add(testScriptDetailList);
-        objects.add(testCaseDetailList);
+        objects.add(testcase);
     }
     private void objectsend() {
         objects = new ArrayList<>();
@@ -547,6 +575,7 @@ public class TestScriptAddController {
             currentNewDataForSubmit();
 
             TestScriptRepository testScriptRepository = new TestScriptRepository();
+            TestCaseRepository testCaseRepository = new TestCaseRepository();
             TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
             for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()){
                 testScriptDetailRepository.saveOrUpdateTestScriptDetail(testScriptDetail);
@@ -558,10 +587,11 @@ public class TestScriptAddController {
             }
             // Add or update test script
             testScriptList.addOrUpdateTestScript(testScript);
-
+            testCaseList.addOrUpdateTestCase(testcase);
             // Write data to respective files
             saveProject();
             testScriptRepository.saveOrUpdateTestScript(testScript);
+            testCaseRepository.saveOrUpdateTestCase(testcase);
 
             objects = new ArrayList<>();
             objects.add(projectName);
@@ -629,16 +659,17 @@ public class TestScriptAddController {
         onTestcaseCombobox.setItems(FXCollections.observableArrayList("None"));
         new AutoCompleteComboBoxListener<>(onTestcaseCombobox);
         onTestcaseCombobox.getSelectionModel().selectFirst();
-        testCaseCombobox();
-        onTestcaseCombobox.setOnAction(event -> {
-            String selectedItem = onTestcaseCombobox.getSelectionModel().getSelectedItem();
-            if (selectedItem != null) {
-                onTestcaseCombobox.getEditor().setText(selectedItem); // Set selected item in editor
-                Platform.runLater(onTestcaseCombobox.getEditor()::end);
-
-            }
-
-        });
+        onTestcaseCombobox.setEditable(false);
+        //testCaseCombobox();
+//        onTestcaseCombobox.setOnAction(event -> {
+//            String selectedItem = onTestcaseCombobox.getSelectionModel().getSelectedItem();
+//            if (selectedItem != null) {
+//                onTestcaseCombobox.getEditor().setText(selectedItem); // Set selected item in editor
+//                Platform.runLater(onTestcaseCombobox.getEditor()::end);
+//
+//            }
+//
+//        });
 
         onUsecaseCombobox.getItems().clear();
         onUsecaseCombobox.setItems(FXCollections.observableArrayList("None"));

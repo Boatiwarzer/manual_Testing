@@ -59,31 +59,32 @@
          <children>
             <HBox alignment="BOTTOM_CENTER" prefHeight="40.0" prefWidth="1680.0" spacing="150.0">
                <children>
-                  <Hyperlink fx:id="onClickUsecase" onAction="#onClickUsecase" text="Use Case">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Hyperlink>
-                  <Hyperlink fx:id="onClickTestflow" onAction="#onClickTestflow" text="Test Flow">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Hyperlink>
-                  <Hyperlink fx:id="onClickTestcase" onAction="#onClickTestcase" text="Test Case">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Hyperlink>
-                  <Hyperlink fx:id="onClickTestscript" onAction="#onClickTestscript" text="Test Script">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Hyperlink>
-                  <Hyperlink fx:id="onClickTestresult" alignment="CENTER" onAction="#onClickTestresult" text="Test Result">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Hyperlink>
+               <Hyperlink fx:id="onClickUsecase" onAction="#onClickUsecase" text="Use Case">
+                  <font>
+                     <Font size="14.0" />
+                  </font>
+               </Hyperlink>
+               <Hyperlink fx:id="onClickTestflow" onAction="#onClickTestflow" text="Test Flow">
+                  <font>
+                     <Font size="14.0" />
+                  </font>
+               </Hyperlink>
+               <Hyperlink fx:id="onClickTestscript" onAction="#onClickTestscript" text="Test Script">
+                  <font>
+                     <Font size="14.0" />
+                  </font>
+               </Hyperlink>
+               <Hyperlink fx:id="onClickTestcase" onAction="#onClickTestcase" text="Test Case">
+                  <font>
+                     <Font size="14.0" />
+                  </font>
+               </Hyperlink>
+
+               <Hyperlink fx:id="onClickTestresult" alignment="CENTER" onAction="#onClickTestresult" text="Test Result">
+                  <font>
+                     <Font size="14.0" />
+                  </font>
+               </Hyperlink>
                </children>
             </HBox>
             <HBox alignment="TOP_CENTER" prefHeight="720.0" prefWidth="1680.0" AnchorPane.topAnchor="30.0">

@@ -1,0 +1,7 @@
+testScript,TS-379,S,07-03-2025,UC-470 : Z,Z,TC-379 : S,Z,Z,S,dc23b039-a0ac-44b3-9633-4884ad92f058
+testScriptDetail,TSD-643,01,01,TS-379,07-03-2025
+testCase,TC-379,S,07-03-2025,UC-470 : Z,Z,-,67090bbb-6783-49ff-bded-fbafae62dc4f,Z,Z
+useCase,UC-470,Z,Z,Z,Z,Z,Z,2025-03-07 15:23:21
+useCaseDetail,6f885061-d1a2-4fb2-83bf-a1acf79f7829,UC-470,actor,1,Z
+useCaseDetail,1887afbf-2436-4181-8309-f7f7fc5e04cd,UC-470,system,1,Z
+note,1,!@#$%^&*()_+,Z,Z

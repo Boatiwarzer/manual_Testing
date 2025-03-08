@@ -53,6 +53,8 @@ public class TestCaseController {
     @FXML
     private ComboBox<String> infoUsecaseCombobox ;
     @FXML
+    private ComboBox<String> onTestscriptCombobox;
+    @FXML
     private TextArea infoDescriptField, infoNoteField,infoPreconField,infoPostconField;
     @FXML
     private Label testNameLabel;
@@ -343,6 +345,9 @@ public class TestCaseController {
         infoPreconField.setText(pre);
         String post = testCase.getPostCon();
         infoPostconField.setText(post);
+        String ts = testCase.getIdTS();
+        onTestscriptCombobox.getSelectionModel().select(ts);
+
 
     }
 
@@ -353,8 +358,8 @@ public class TestCaseController {
         ArrayList<StringConfiguration> configs = new ArrayList<>();
         configs.add(new StringConfiguration("title:TC-ID.", "field:idTCD"));
         configs.add(new StringConfiguration("title:Test No.", "field:testNo"));
-        configs.add(new StringConfiguration("title:Name Variable.", "field:nameTCD"));
-        configs.add(new StringConfiguration("title:Type Variable.", "field:variableTCD"));
+        configs.add(new StringConfiguration("title:Variable.", "field:variableTCD"));
+        configs.add(new StringConfiguration("title:Expected.", "field:expectedTCD"));
         configs.add(new StringConfiguration("title:Date.", "field:dateTCD"));
 
         int index = 0;
@@ -424,7 +429,7 @@ public class TestCaseController {
         testIDLabel.setText("");
         testNameField.setText("");
         testDateLabel.setText("");
-        onClickUsecase.setText("");
+        infoUsecaseLabel.setText("");
         infoDescriptField.setText("");
         infoNoteField.setText("");
 
@@ -439,8 +444,8 @@ public class TestCaseController {
         ArrayList<StringConfiguration> configs = new ArrayList<>();
         configs.add(new StringConfiguration("title:TC-ID."));
         configs.add(new StringConfiguration("title:Test No."));
-        configs.add(new StringConfiguration("title:Name Variable."));
-        configs.add(new StringConfiguration("title:Type Variable."));
+        configs.add(new StringConfiguration("title:Variable."));
+        configs.add(new StringConfiguration("title:Expected."));
         configs.add(new StringConfiguration("title:Date."));
 
         int index = 0;
