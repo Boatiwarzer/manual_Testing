@@ -33,6 +33,7 @@
                         <MenuItem fx:id="submitMenuItem" mnemonicParsing="false" onAction="#handleSubmitMenuItem" text="Submit" />
                         <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" onAction="#handleSaveMenuItem" text="Save" />
                         <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#handleOpenMenuItem" text="Open…" />
+                        <MenuItem fx:id="export" mnemonicParsing="false" onAction="#handleExport" text="Export All..." />
                         <!--                 <SeparatorMenuItem mnemonicParsing="false" />-->
                         <!--                 <Menu fx:id="exportMenu" mnemonicParsing="false" text="Export">-->
                         <!--                    <items>-->
@@ -173,7 +174,7 @@
                                           <Font size="18.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="infoTestscriptCombobox" disable="true" prefHeight="30.0" prefWidth="360.0">
+                                    <ComboBox fx:id="onTestscriptCombobox" disable="true" prefHeight="30.0" prefWidth="360.0">
                                        <cursor>
                                           <Cursor fx:constant="TEXT" />
                                        </cursor>

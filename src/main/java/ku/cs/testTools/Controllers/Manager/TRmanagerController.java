@@ -924,168 +924,36 @@ public class TRmanagerController {
     }
     @FXML
     void onExportButton(ActionEvent event) throws IOException {
-        Map<String, List<String[]>> testResults = new LinkedHashMap<>();
+        Stage stage = (Stage) onTableTestresult.getScene().getWindow();
 
-        for (TestResult testResult : testResultList.getTestResultList()) {
-            String id = testResult.getIdTR();
-            testResults.put(id, new ArrayList<>());
+        List<TestResultDetail> testResultDetails = onTableTestresult.getItems();
+        String csvFileName = projectName;
+
+        saveToExcel(stage, testResultDetails, csvFileName);
+    }
+
+    @FXML
+    void handleSubmitMenuItem(ActionEvent event) throws IOException {
+        loadManagerStatus();
+        objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(nameManager);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText("Submit successfully and go to home page.");
+        alert.showAndWait();
+        FXRouter.goTo("home_manager", objects);
+    }
+
+    private void loadManagerStatus() {
+        ManagerRepository managerRepository = new ManagerRepository();
+        Manager manager = managerRepository.getManagerByProjectName(projectName);
+
+        if (manager != null) {  // ตรวจสอบว่าพบ Manager หรือไม่
+            manager.setStatusTrue();
+            managerRepository.updateManager(manager);
         }
-
-        for (TestResultDetail testResultDetail : testResultDetailList.getTestResultDetailList()) {
-            String trId = testResultDetail.getIdTR();
-            if (testResults.containsKey(trId)) {
-                testResults.get(trId).add(testResultDetail.toArray());
-            }
-        }
-
-        Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("TestResults");
-        int currentRow = 0;
-
-        //สร้างสไตล์หัวตาราง
-        CellStyle headerStyle = workbook.createCellStyle();
-        headerStyle.setFillForegroundColor(IndexedColors.LIGHT_ORANGE.getIndex());
-        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        headerStyle.setWrapText(true);
-        headerStyle.setAlignment(HorizontalAlignment.CENTER);
-        headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-
-        //สร้างสไตล์สำหรับเนื้อหา (Wrap Text + จัดชิดบนซ้าย)
-        CellStyle contentStyle = workbook.createCellStyle();
-        contentStyle.setWrapText(true);
-        contentStyle.setAlignment(HorizontalAlignment.LEFT);
-        contentStyle.setVerticalAlignment(VerticalAlignment.TOP);
-
-        Row csvFileNameRow = sheet.createRow(currentRow++);
-        org.apache.poi.ss.usermodel.Cell csvFileNameCell = csvFileNameRow.createCell(0);
-        csvFileNameCell.setCellValue("Project Name: " + projectName);
-
-        // เพิ่มวันเวลา Export
-        Row exportTimeRow = sheet.createRow(currentRow++);
-        org.apache.poi.ss.usermodel.Cell exportTimeCell = exportTimeRow.createCell(0);
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        exportTimeCell.setCellValue("Export Date and Time: " + now.format(formatter));
-
-//        Row NameRow = sheet.createRow(currentRow++);
-//        org.apache.poi.ss.usermodel.Cell NameCell = NameRow.createCell(0);
-//        csvFileNameCell.setCellValue("Tester: " + nameTester);
-
-        for (Map.Entry<String, List<String[]>> entry : testResults.entrySet()) {
-            String trId = entry.getKey();
-            List<String[]> details = entry.getValue();
-
-            Row trRow = sheet.createRow(currentRow++);
-            trRow.setRowStyle(contentStyle);
-            trRow.createCell(0).setCellValue("testResult: " + trId);
-
-            TestResult testResult = testResultList.findTRById(trId);
-            if (testResult != null) {
-                trRow.createCell(2).setCellValue(testResult.getNameTR());
-            }
-
-            currentRow += 1;
-
-            // **สร้าง Header ของ testResultDetail**
-            Row headerRow = sheet.createRow(currentRow++);
-            String[] columns = {
-                    "TRD-ID", "Test No.", "TS-ID", "TC-ID", "Actor",
-                    "Description", "Input Data", "Test Steps", "Expected Result", "Actual Result",
-                    "Status", "Priority", "Date", "Tester", "Image", "Test times", "Approval", "Remark"
-            };
-
-            for (int i = 0; i < columns.length; i++) {
-                Cell cell = headerRow.createCell(i);
-                cell.setCellValue(columns[i]);
-                cell.setCellStyle(headerStyle);
-//                sheet.autoSizeColumn(i);
-            }
-
-            Drawing<?> drawing = sheet.createDrawingPatriarch();
-
-            // **ใส่ข้อมูล testResultDetail**
-            for (String[] detail : details) {
-                Row row = sheet.createRow(currentRow++);
-                row.setHeightInPoints(40); // ⬆️ ตั้งค่าความสูงของแถว (อัตโนมัติเมื่อ wrapText)
-
-                for (int i = 0; i < columns.length; i++) {
-                    Cell cell = row.createCell(i);
-                    if (i < detail.length) {
-                        cell.setCellValue(detail[i]);
-                    } else {
-                        cell.setCellValue("");
-                    }
-                    cell.setCellStyle(contentStyle);
-                }
-
-                // **ใส่รูปภาพใน column "Image"**
-                int imageColumnIndex = 14;
-                if (detail.length > imageColumnIndex && detail[imageColumnIndex] != null && !detail[imageColumnIndex].isEmpty()) {
-                    String imagePaths = detail[imageColumnIndex];
-                    String[] parts = imagePaths.split(" : ");
-                    String imagePath = parts.length > 1 ? parts[1] : "";
-
-                    if (Files.exists(Paths.get(imagePath))) {
-                        try (InputStream is = new FileInputStream(imagePath)) {
-                            byte[] bytes = IOUtils.toByteArray(is);
-                            int pictureIdx = workbook.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
-
-                            double colWidth = 160.0 / 7.5;
-                            sheet.setColumnWidth(imageColumnIndex, (int) colWidth * 256);
-                            row.setHeightInPoints(90);
-
-                            ClientAnchor anchor = workbook.getCreationHelper().createClientAnchor();
-                            anchor.setCol1(imageColumnIndex);
-                            anchor.setRow1(currentRow - 1);
-                            anchor.setCol2(imageColumnIndex + 1);
-                            anchor.setRow2(currentRow);
-
-                            Picture picture = drawing.createPicture(anchor, pictureIdx);
-                            picture.resize(1);
-                        } catch (IOException e) {
-                            System.err.println("ไม่สามารถโหลดรูปภาพ: " + imagePath);
-                            row.createCell(imageColumnIndex).setCellValue("...");
-                        }
-                    } else {
-                        row.createCell(imageColumnIndex).setCellValue("...");
-                    }
-                } else {
-                    row.createCell(imageColumnIndex).setCellValue("...");
-                }
-            }
-            currentRow += 1;
-        }
-
-        // 📂 เลือกตำแหน่งบันทึกไฟล์
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("เลือกตำแหน่งบันทึกไฟล์");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files (*.xlsx)", "*.xlsx"));
-
-        File fileToSave = fileChooser.showSaveDialog(((Node) event.getSource()).getScene().getWindow());
-
-        if (fileToSave != null) {
-            String filePath = fileToSave.getAbsolutePath();
-            if (!filePath.toLowerCase().endsWith(".xlsx")) {
-                filePath += ".xlsx";
-            }
-
-            try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
-                workbook.write(fileOut);
-                System.out.println("บันทึกไฟล์สำเร็จ: " + filePath);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("ยกเลิกการบันทึกไฟล์");
-        }
-
-        workbook.close();
-
-    // ดึงข้อมูลจาก TableView โดยใช้ getItems()
-//        List<TestResultDetail> testResultDetails = onTableTestresult.getItems();
-//        String csvFileName = projectName;
-//
-//        // เรียกฟังก์ชัน saveAsExcel
-//        saveToExcel(stage, testResultDetails, csvFileName);
     }
 }

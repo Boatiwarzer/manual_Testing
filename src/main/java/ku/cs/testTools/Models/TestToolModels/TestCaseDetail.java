@@ -32,8 +32,6 @@ public class TestCaseDetail {
     @Column(name = "idTC")
     private String idTC;
 
-
-
     public TestCaseDetail(String idTCD, String testNo, String variableTCD, String expectedTCD, String dateTCD, String testCase) {
         this.idTCD = idTCD;
         this.testNo = testNo;
@@ -57,5 +55,15 @@ public class TestCaseDetail {
 
     public boolean isId(String id) {
         return this.idTCD != null && this.idTCD.equals(id);
+    }
+
+    public String[] toArray() {
+        return new String[]{
+                this.getIdTCD(),
+                this.getTestNo(),
+                this.getVariableTCD(),
+                this.getExpectedTCD(),
+                this.getDateTCD()
+        };
     }
 }
