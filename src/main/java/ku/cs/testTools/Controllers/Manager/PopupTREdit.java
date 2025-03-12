@@ -414,8 +414,8 @@ public class PopupTREdit {
         onImage.setText("...");
         onTestcaseIDComboBox.setText("-");
         onTestscriptIDComboBox.setText("-");
-        testResultIDLabel.setText("");
-        testResultNameLabel.setText("");
+//        testResultIDLabel.setText("");
+//        testResultNameLabel.setText("");
         onApproveCheck.setSelected(false);
         onNotapproveCheck.setSelected(false);
         onRemark.setText("");

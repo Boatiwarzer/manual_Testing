@@ -11,25 +11,7 @@
   <component name="ChangeListManager">
     <list default="true" id="339e8b6d-7c1d-4583-b039-ece96beb9415" name="Changes" comment="mergh">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Manager/IRmanagerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Manager/IRmanagerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Manager/TFmanagerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Manager/TFmanagerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Manager/TRmanagerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Manager/TRmanagerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestCase/TestCaseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestCase/TestCaseController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestResult/PopupAddTestresultController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestResult/PopupAddTestresultController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestResult/TestResultController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestResult/TestResultController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/TestScriptAddController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/TestScriptAddController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/TestScriptController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/TestScriptController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestCase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestCase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestCaseDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestCaseDetail.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestCaseList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestCaseList.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestScriptDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/TestScriptDetail.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/ir_manager.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/ir_manager.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/popup_add_testresult.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/popup_add_testresult.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_case.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_case.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_flow_manager.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_flow_manager.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_result.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_result.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_result_manager.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_result_manager.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_script.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_script.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Manager/PopupTREdit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Manager/PopupTREdit.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,6 +28,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "1Miquella"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/Boatiwarzer/manual_Testing.git",
+    "accountId": "fbaab34b-ec6c-401e-be6d-3b71007458fc"
+  }
+}]]></component>
   <component name="JpbToolWindowState">
     <option name="isToolWindowVisible" value="false" />
   </component>
@@ -118,7 +112,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="jdk-17.0.10-corretto-17.0.10-4caba194b151-5cd809f4" />
+        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.18034.62" />
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-IU-241.18034.62" />
       </set>
     </attachedChunks>
   </component>
@@ -137,6 +132,7 @@
       <workItem from="1741256479206" duration="690000" />
       <workItem from="1741265505870" duration="770000" />
       <workItem from="1741334847712" duration="2887000" />
+      <workItem from="1741761745539" duration="2076000" />
     </task>
     <task id="LOCAL-00001" summary="mergh">
       <option name="closed" value="true" />
