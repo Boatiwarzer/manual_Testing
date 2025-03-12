@@ -173,7 +173,7 @@
                                           <Font size="18.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="infoTestscriptCombobox" disable="true" prefHeight="30.0" prefWidth="360.0">
+                                    <ComboBox fx:id="onTestscriptCombobox" disable="true" prefHeight="30.0" prefWidth="360.0">
                                        <cursor>
                                           <Cursor fx:constant="TEXT" />
                                        </cursor>
