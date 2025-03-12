@@ -2,19 +2,29 @@ package ku.cs.testTools.Controllers.TestCase;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Window;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Services.Repository.ManagerRepository;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
 import ku.cs.testTools.Services.DataSourceCSV.*;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.util.IOUtils;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -41,7 +51,7 @@ public class TestCaseController {
     @FXML
     private Button onSearchButton;
     @FXML
-    private TextField onSearchField, testNameField ;
+    private TextField onSearchField, testNameField;
     @FXML
     private ListView<TestCase> onSearchList;
     @FXML
@@ -51,11 +61,11 @@ public class TestCaseController {
     @FXML
     private Label testIDLabel;
     @FXML
-    private ComboBox<String> infoUsecaseCombobox ;
+    private ComboBox<String> infoUsecaseCombobox;
     @FXML
     private ComboBox<String> onTestscriptCombobox;
     @FXML
-    private TextArea infoDescriptField, infoNoteField,infoPreconField,infoPostconField;
+    private TextArea infoDescriptField, infoNoteField, infoPreconField, infoPostconField;
     @FXML
     private Label testNameLabel;
     @FXML
@@ -65,7 +75,7 @@ public class TestCaseController {
     @FXML
     private MenuItem exportMenuItem;
     @FXML
-    private MenuItem exportPDF;
+    private MenuItem export;
     @FXML
     private Menu fileMenu;
     @FXML
@@ -98,7 +108,7 @@ public class TestCaseController {
             projectName = (String) objects.get(0);
             directory = (String) objects.get(1);
             nameTester = (String) objects.get(2);
-            if (objects.get(3) != null){
+            if (objects.get(3) != null) {
                 testCase = (TestCase) objects.get(3);
             }
             loadStatusButton();
@@ -112,7 +122,9 @@ public class TestCaseController {
 
         }
 
-    }private void loadStatusButton() {
+    }
+
+    private void loadStatusButton() {
         ManagerRepository managerRepository = new ManagerRepository();
         Manager manager = managerRepository.getManagerByProjectName(projectName);
 
@@ -126,6 +138,7 @@ public class TestCaseController {
             System.out.println("No Manager found for project: " + projectName);
         }
     }
+
     public void handleExportMenuItem(ActionEvent actionEvent) {
         boolean noteAdded = false;
 //        try {
@@ -143,8 +156,9 @@ public class TestCaseController {
 //        }
 
     }
+
     @FXML
-    void handleSaveMenuItem(ActionEvent event) throws IOException{
+    void handleSaveMenuItem(ActionEvent event) throws IOException {
         saveProject();
     }
 
@@ -160,7 +174,7 @@ public class TestCaseController {
         alert.setHeaderText(null);
         alert.setContentText("Submit successfully and go to home page.");
         alert.showAndWait();
-        FXRouter.goTo("home_tester",objects);
+        FXRouter.goTo("home_tester", objects);
 
     }
 
@@ -228,9 +242,9 @@ public class TestCaseController {
         DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
         DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
         DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
+        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory, projectName + ".csv");
         DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
-        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory, projectName + ".csv");
 
         testScriptDetailList = testScriptDetailListDataSource.readData();
         testCaseList = testCaseListDataSource.readData();
@@ -240,12 +254,13 @@ public class TestCaseController {
         useCaseList = useCaseListDataSource.readData();
 
     }
+
     private void saveProject() {
         DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
         DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
         DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
         DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
-        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory, projectName + ".csv");
         testFlowPositionListDataSource.writeData(testFlowPositionList);
         testScriptDetailListDataSource.writeData(testScriptDetailList);
         testCaseListDataSource.writeData(testCaseList);
@@ -253,15 +268,17 @@ public class TestCaseController {
         connectionListDataSource.writeData(connectionList);
 
     }
-    public void objects(){
+
+    public void objects() {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(directory);
         objects.add(nameTester);
         objects.add(null);
     }
+
     private void searchSet() {
-        ArrayList <String> word = new ArrayList<>();
+        ArrayList<String> word = new ArrayList<>();
         for (TestCase testCase : testCaseList.getTestCaseList()) {
             word.add(testCase.getNameTC());
 
@@ -299,20 +316,20 @@ public class TestCaseController {
     }
 
     private void selected() {
-        if (testCase != null){
+        if (testCase != null) {
             onSearchList.getSelectionModel().getSelectedItems();
             onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue == null) {
                     clearInfo();
                     selectedTestCase = null;
-                } else{
+                } else {
                     onEditButton.setVisible(newValue.getIdTC() != null);
                     showInfo(newValue);
                     selectedTestCase = newValue;
                 }
             });
 
-        }else {
+        } else {
             onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue == null) {
                     clearInfo();
@@ -337,7 +354,8 @@ public class TestCaseController {
         String useCase = testCase.getUseCase();
         infoUsecaseCombobox.getSelectionModel().select(useCase);
         String description = testCase.getDescriptionTC();
-        infoDescriptField.setText(description);;
+        infoDescriptField.setText(description);
+        ;
         String note = testCase.getNote();
         infoNoteField.setText(note);
         setTableInfo(testCase);
@@ -347,7 +365,6 @@ public class TestCaseController {
         infoPostconField.setText(post);
         String ts = testCase.getIdTS();
         onTestscriptCombobox.getSelectionModel().select(ts);
-
 
     }
 
@@ -400,25 +417,26 @@ public class TestCaseController {
 
         //Add items to the table
         for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()) {
-            if (testCaseDetail.getIdTC().trim().equals(testCase.getIdTC().trim())){
+            if (testCaseDetail.getIdTC().trim().equals(testCase.getIdTC().trim())) {
                 onTableTestcase.getItems().add(testCaseDetail);
 
             }
         }
 
     }
+
     private void loadListView(TestCaseList testCaseList) {
         onEditButton.setVisible(false);
         onSearchList.refresh();
-        if (testCaseList != null){
+        if (testCaseList != null) {
             testCaseList.sort(new TestCaseComparable());
             for (TestCase testCase : testCaseList.getTestCaseList()) {
-                if (!testCase.getDateTC().equals("null")){
+                if (!testCase.getDateTC().equals("null")) {
                     onSearchList.getItems().add(testCase);
 
                 }
             }
-        }else {
+        } else {
             setTable();
             clearInfo();
         }
@@ -449,7 +467,7 @@ public class TestCaseController {
         configs.add(new StringConfiguration("title:Date."));
 
         int index = 0;
-        for (StringConfiguration conf: configs) {
+        for (StringConfiguration conf : configs) {
             TableColumn col = new TableColumn(conf.get("title"));
             if (index <= 1) {  // ถ้าเป็นคอลัมน์แรก
                 col.setPrefWidth(80);
@@ -463,10 +481,11 @@ public class TestCaseController {
 
         }
     }
+
     @FXML
     void onSearchButton(ActionEvent event) {
         onSearchList.getItems().clear();
-        onSearchList.getItems().addAll(searchList(onSearchField.getText(),testCaseList.getTestCaseList()));
+        onSearchList.getItems().addAll(searchList(onSearchField.getText(), testCaseList.getTestCaseList()));
     }
 
     private List<TestCase> searchList(String searchWords, ArrayList<TestCase> listOfScripts) {
@@ -487,12 +506,11 @@ public class TestCaseController {
     }
 
 
-
     @FXML
     void onClickTestcase(ActionEvent event) {
         try {
             objects();
-            FXRouter.goTo("test_case",objects);
+            FXRouter.goTo("test_case", objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -502,7 +520,7 @@ public class TestCaseController {
     void onClickTestflow(ActionEvent event) {
         try {
             objects();
-            FXRouter.goTo("test_flow",objects);
+            FXRouter.goTo("test_flow", objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -512,7 +530,7 @@ public class TestCaseController {
     void onClickTestresult(ActionEvent event) {
         try {
             objects();
-            FXRouter.goTo("test_result",objects);
+            FXRouter.goTo("test_result", objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -522,7 +540,7 @@ public class TestCaseController {
     void onClickTestscript(ActionEvent event) {
         try {
             objects();
-            FXRouter.goTo("test_script",objects);
+            FXRouter.goTo("test_script", objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -532,7 +550,7 @@ public class TestCaseController {
     void onClickUsecase(ActionEvent event) {
         try {
             objects();
-            FXRouter.goTo("use_case",objects);
+            FXRouter.goTo("use_case", objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -547,7 +565,7 @@ public class TestCaseController {
             objects.add(nameTester);
             objects.add("newTC");
             objects.add(null);
-            FXRouter.goTo("test_case_add",objects);
+            FXRouter.goTo("test_case_add", objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -556,7 +574,7 @@ public class TestCaseController {
     @FXML
     void onEditButton(ActionEvent event) {
         try {
-           objects = new ArrayList<>();
+            objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);
             objects.add(nameTester);
@@ -565,11 +583,133 @@ public class TestCaseController {
             objects.add(testCaseDetailList);
             objects.add("new");
             objects.add(testCaseDetailListDelete);
-            FXRouter.goTo("test_case_edit",objects);
+            FXRouter.goTo("test_case_edit", objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
+    @FXML
+    void handleExport(ActionEvent event) throws IOException {
+        Map<String, List<String[]>> testCases = new LinkedHashMap<>();
 
+        for (TestCase testCase : testCaseList.getTestCaseList()) {
+            String id = testCase.getIdTC();
+            testCases.put(id, new ArrayList<>());
+        }
+
+        for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()) {
+            String tcId = testCaseDetail.getIdTC();
+            if (testCases.containsKey(tcId)) {
+                testCases.get(tcId).add(testCaseDetail.toArray());
+            }
+        }
+
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("TestCases");
+        int currentRow = 0;
+
+        //สร้างสไตล์หัวตาราง
+        CellStyle headerStyle = workbook.createCellStyle();
+        headerStyle.setFillForegroundColor(IndexedColors.LIGHT_ORANGE.getIndex());
+        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        headerStyle.setWrapText(true);
+        headerStyle.setAlignment(HorizontalAlignment.CENTER);
+        headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+        //สร้างสไตล์สำหรับเนื้อหา (Wrap Text + จัดชิดบนซ้าย)
+        CellStyle contentStyle = workbook.createCellStyle();
+        contentStyle.setWrapText(true);
+        contentStyle.setAlignment(HorizontalAlignment.LEFT);
+        contentStyle.setVerticalAlignment(VerticalAlignment.TOP);
+
+        Row csvFileNameRow = sheet.createRow(currentRow++);
+        org.apache.poi.ss.usermodel.Cell csvFileNameCell = csvFileNameRow.createCell(0);
+        csvFileNameCell.setCellValue("Project Name: " + projectName);
+
+        // เพิ่มวันเวลา Export
+        Row exportTimeRow = sheet.createRow(currentRow++);
+        org.apache.poi.ss.usermodel.Cell exportTimeCell = exportTimeRow.createCell(0);
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        exportTimeCell.setCellValue("Export Date and Time: " + now.format(formatter));
+
+        Row NameRow = sheet.createRow(currentRow++);
+        org.apache.poi.ss.usermodel.Cell NameCell = NameRow.createCell(0);
+        NameCell.setCellValue("Tester: " + nameTester);
+
+        for (Map.Entry<String, List<String[]>> entry : testCases.entrySet()) {
+            String tcId = entry.getKey();
+            List<String[]> details = entry.getValue();
+
+            Row trRow = sheet.createRow(currentRow++);
+            trRow.setRowStyle(contentStyle);
+            trRow.createCell(0).setCellValue("testCase: " + tcId);
+
+            TestCase testCase = testCaseList.findTCById(tcId);
+            if (testCase != null) {
+                trRow.createCell(2).setCellValue(testCase.getNameTC());
+            }
+
+            currentRow += 1;
+
+            // **สร้าง Header ของ testResultDetail**
+            Row headerRow = sheet.createRow(currentRow++);
+            String[] columns = {
+                    "TCD-ID", "Test No.", "Variables", "Expected Result", "Date"
+            };
+
+            for (int i = 0; i < columns.length; i++) {
+                org.apache.poi.ss.usermodel.Cell cell = headerRow.createCell(i);
+                cell.setCellValue(columns[i]);
+                cell.setCellStyle(headerStyle);
+//                sheet.autoSizeColumn(i);
+            }
+
+            Drawing<?> drawing = sheet.createDrawingPatriarch();
+
+            // **ใส่ข้อมูล testResultDetail**
+            for (String[] detail : details) {
+                Row row = sheet.createRow(currentRow++);
+                row.setHeightInPoints(40); // ตั้งค่าความสูงของแถว (อัตโนมัติเมื่อ wrapText)
+
+                for (int i = 0; i < columns.length; i++) {
+                    Cell cell = row.createCell(i);
+                    if (i < detail.length) {
+                        cell.setCellValue(detail[i]);
+                    } else {
+                        cell.setCellValue("");
+                    }
+                    cell.setCellStyle(contentStyle);
+                }
+                currentRow += 1;
+            }
+
+            // 📂 เลือกตำแหน่งบันทึกไฟล์
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("เลือกตำแหน่งบันทึกไฟล์");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files (*.xlsx)", "*.xlsx"));
+
+            Window window = ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+            File fileToSave = fileChooser.showSaveDialog(window);
+
+            if (fileToSave != null) {
+                String filePath = fileToSave.getAbsolutePath();
+                if (!filePath.toLowerCase().endsWith(".xlsx")) {
+                    filePath += ".xlsx";
+                }
+
+                try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
+                    workbook.write(fileOut);
+                    System.out.println("บันทึกไฟล์สำเร็จ: " + filePath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("ยกเลิกการบันทึกไฟล์");
+            }
+
+            workbook.close();
+        }
+    }
 }

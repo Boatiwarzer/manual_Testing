@@ -76,4 +76,13 @@ public class TestScriptDetail {
         this.idTS = null;
         this.dateTSD = null;
     }
+
+    public String[] toArray() {
+        return new String[]{
+                this.getIdTSD(),
+                this.getTestNo(),
+                this.getSteps(),
+                this.getDateTSD()
+        };
+    }
 }

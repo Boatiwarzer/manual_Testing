@@ -490,7 +490,7 @@ public class TestScriptAddController {
         String idTC = tcId;
         // Only create the TestScript object after all fields are validated
         testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, post, note, position);
-        testcase = new TestCase(testcase.getIdTC(),name,date,useCase,description,"-",positionTC,preCon,post,idTS);
+        testcase = new TestCase(testcase.getIdTC(),name,date,useCase,description,"-",positionTC,preCon,post,idTS + " : " + name);
 
         String[] data = tc.split(":");
         System.out.println(tc);

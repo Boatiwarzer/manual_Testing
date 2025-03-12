@@ -115,4 +115,27 @@ public class TestResultDetail {
     public boolean isIdTR(String id) {
         return this.idTR.equals(id);
     }
+
+    public String[] toArray() {
+        return new String[]{
+                this.getIdTRD(),
+                this.getTestNo(),
+                this.getTsIdTRD(),
+                this.getTcIdTRD(),
+                this.getActorTRD(),
+                this.getDescriptTRD(),
+                this.getInputdataTRD(),
+                this.getStepsTRD(),
+                this.getExpectedTRD(),
+                this.getActualTRD(),
+                this.getStatusTRD(),
+                this.getPriorityTRD(),
+                this.getDateTRD(),
+                this.getTesterTRD(),
+                this.getImageTRD(),
+                this.getRetestTRD(),
+                this.getApproveTRD(),
+                this.getRemarkTRD()
+        };
+    }
 }

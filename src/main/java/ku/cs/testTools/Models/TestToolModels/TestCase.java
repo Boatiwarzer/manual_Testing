@@ -85,4 +85,8 @@ public class TestCase {
     public boolean isId(String id) {
         return this.idTC != null && this.idTC.equals(id);
     }
+
+    public boolean isIdTS(String id) {
+        return this.idTS != null && this.idTS.equals(id);
+    }
 }

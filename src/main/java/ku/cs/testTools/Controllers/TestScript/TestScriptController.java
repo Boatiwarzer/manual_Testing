@@ -5,22 +5,29 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Services.Repository.ManagerRepository;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
 import ku.cs.testTools.Services.DataSourceCSV.*;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.util.IOUtils;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class TestScriptController {
@@ -89,7 +96,7 @@ public class TestScriptController {
     @FXML
     private MenuItem exportMenuItem;
     @FXML
-    private MenuItem exportPDF;
+    private MenuItem export;
     @FXML
     private Menu fileMenu;
     @FXML
@@ -617,6 +624,130 @@ public class TestScriptController {
 //            throw new RuntimeException(e);
 //        }
 
+    }
+
+    @FXML
+    void handleExport(ActionEvent event) throws IOException {
+        Map<String, List<String[]>> testScripts = new LinkedHashMap<>();
+
+        for (TestScript testScript : testScriptList.getTestScriptList()) {
+            String id = testScript.getIdTS();
+            testScripts.put(id, new ArrayList<>());
+        }
+
+        for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()) {
+            String tsId = testScriptDetail.getIdTS();
+            if (testScripts.containsKey(tsId)) {
+                testScripts.get(tsId).add(testScriptDetail.toArray());
+            }
+        }
+
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("TestScripts");
+        int currentRow = 0;
+
+        //สร้างสไตล์หัวตาราง
+        CellStyle headerStyle = workbook.createCellStyle();
+        headerStyle.setFillForegroundColor(IndexedColors.LIGHT_ORANGE.getIndex());
+        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        headerStyle.setWrapText(true);
+        headerStyle.setAlignment(HorizontalAlignment.CENTER);
+        headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+        //สร้างสไตล์สำหรับเนื้อหา (Wrap Text + จัดชิดบนซ้าย)
+        CellStyle contentStyle = workbook.createCellStyle();
+        contentStyle.setWrapText(true);
+        contentStyle.setAlignment(HorizontalAlignment.LEFT);
+        contentStyle.setVerticalAlignment(VerticalAlignment.TOP);
+
+        Row csvFileNameRow = sheet.createRow(currentRow++);
+        org.apache.poi.ss.usermodel.Cell csvFileNameCell = csvFileNameRow.createCell(0);
+        csvFileNameCell.setCellValue("Project Name: " + projectName);
+
+        // เพิ่มวันเวลา Export
+        Row exportTimeRow = sheet.createRow(currentRow++);
+        org.apache.poi.ss.usermodel.Cell exportTimeCell = exportTimeRow.createCell(0);
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        exportTimeCell.setCellValue("Export Date and Time: " + now.format(formatter));
+
+        Row NameRow = sheet.createRow(currentRow++);
+        org.apache.poi.ss.usermodel.Cell NameCell = NameRow.createCell(0);
+        NameCell.setCellValue("Tester: " + name);
+
+        for (Map.Entry<String, List<String[]>> entry : testScripts.entrySet()) {
+            String tcId = entry.getKey();
+            List<String[]> details = entry.getValue();
+
+            Row trRow = sheet.createRow(currentRow++);
+            trRow.setRowStyle(contentStyle);
+            trRow.createCell(0).setCellValue("testScript: " + tcId);
+
+            TestCase testCase = testCaseList.findTCById(tcId);
+            if (testCase != null) {
+                trRow.createCell(2).setCellValue(testCase.getNameTC());
+            }
+
+            currentRow += 1;
+
+            // **สร้าง Header ของ testResultDetail**
+            Row headerRow = sheet.createRow(currentRow++);
+            String[] columns = {
+                    "TSD-ID", "Test No.", "Test Steps", "Date"
+            };
+
+            for (int i = 0; i < columns.length; i++) {
+                org.apache.poi.ss.usermodel.Cell cell = headerRow.createCell(i);
+                cell.setCellValue(columns[i]);
+                cell.setCellStyle(headerStyle);
+//                sheet.autoSizeColumn(i);
+            }
+
+            Drawing<?> drawing = sheet.createDrawingPatriarch();
+
+            // **ใส่ข้อมูล testResultDetail**
+            for (String[] detail : details) {
+                Row row = sheet.createRow(currentRow++);
+                row.setHeightInPoints(40); // ตั้งค่าความสูงของแถว (อัตโนมัติเมื่อ wrapText)
+
+                for (int i = 0; i < columns.length; i++) {
+                    Cell cell = row.createCell(i);
+                    if (i < detail.length) {
+                        cell.setCellValue(detail[i]);
+                    } else {
+                        cell.setCellValue("");
+                    }
+                    cell.setCellStyle(contentStyle);
+                }
+                currentRow += 1;
+            }
+
+            // 📂 เลือกตำแหน่งบันทึกไฟล์
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("เลือกตำแหน่งบันทึกไฟล์");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files (*.xlsx)", "*.xlsx"));
+
+            Window window = ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+            File fileToSave = fileChooser.showSaveDialog(window);
+
+            if (fileToSave != null) {
+                String filePath = fileToSave.getAbsolutePath();
+                if (!filePath.toLowerCase().endsWith(".xlsx")) {
+                    filePath += ".xlsx";
+                }
+
+                try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
+                    workbook.write(fileOut);
+                    System.out.println("บันทึกไฟล์สำเร็จ: " + filePath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("ยกเลิกการบันทึกไฟล์");
+            }
+
+            workbook.close();
+        }
     }
 
 }

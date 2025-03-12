@@ -28,7 +28,7 @@ import java.util.*;
 public class PopupAddTestresultController {
 
     @FXML
-    private TextField onTestNo, onInputdata;
+    private TextField onTestNo;
     @FXML
     private TextArea onTeststeps, onActual;
 
@@ -49,6 +49,9 @@ public class PopupAddTestresultController {
 
     @FXML
     private ComboBox<String> onTestcaseIDComboBox;
+
+    @FXML
+    private ComboBox<String> onInputdataCombobox;
 
     private TestResultList testResultList = new TestResultList();
     private TestResultDetailList testResultDetailList = new TestResultDetailList();
@@ -165,10 +168,6 @@ public class PopupAddTestresultController {
         connectionListDataSource.writeData(connectionList);
 
     }
-    private void setData() {
-        testResultNameLabel.setText(testResult.getNameTR());
-        testResultIDLabel.setText(testResult.getIdTR());
-    }
 
     private void setTextEdit() {
 //        testResultNameLabel.setText(testResult.getNameTR());
@@ -178,7 +177,7 @@ public class PopupAddTestresultController {
         onTestcaseIDComboBox.getSelectionModel().select(testResultDetail.getTcIdTRD());
         onDescription.setText(testResultDetail.getDescriptTRD());
         onActor.setText(testResultDetail.getActorTRD());
-        onInputdata.setText(testResultDetail.getInputdataTRD().replace("|", ", "));
+        onInputdataCombobox.getSelectionModel().select(testResultDetail.getInputdataTRD());
         onTeststeps.setText(testResultDetail.getStepsTRD().replace("|", "\n"));
         onExpected.setText(testResultDetail.getExpectedTRD());
         onActual.setText(testResultDetail.getActualTRD());
@@ -226,8 +225,8 @@ public class PopupAddTestresultController {
         onActor.setText("");
         //onTester.setText("-");
         onImage.setText("...");
-        testResultIDLabel.setText("");
-        testResultNameLabel.setText("");
+//        testResultIDLabel.setText("");
+//        testResultNameLabel.setText("");
         onRetest.setText("-");
     }
 
@@ -350,11 +349,13 @@ public class PopupAddTestresultController {
                         onActual.setText("No Actor found for ID: " + tsId);
                     }
                 }
+                loadProject();
                 DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
                 List<TestScriptDetail> testScriptDetailList = testScriptDetailListDataSource.readData().getTestScriptDetailList();
+                DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
+                List<TestCaseDetail> testCaseDetailList = testCaseDetailListDataSource.readData().getTestCaseDetailList();
 
                 List<String> matchingSteps = new ArrayList<>();
-                List<String> matchingInput = new ArrayList<>();
 
                 // ค้นหาข้อมูล testSteps สำหรับ id ที่ตรง
                 for (TestScriptDetail testScriptDetail : testScriptDetailList) {
@@ -362,7 +363,16 @@ public class PopupAddTestresultController {
                     if (testScriptDetail.getIdTS().equals(tsId)) {
                         // ถ้าตรง ก็เพิ่ม testSteps ลงใน List
                         matchingSteps.add(testScriptDetail.getSteps());
-                        matchingInput.add(testScriptDetail.getInputData());
+                    }
+                }
+                for (TestCaseDetail testCaseDetail : testCaseDetailList){
+                    TestCase ts = testCaseList.findTCByIdTS(selectedId);
+                    String tc = ts.getIdTC();
+                    String[] partsTc = tc.split(" : "); // แยกข้อความตาม " : "
+                    String id = partsTc[0];
+                    if (testCaseDetail.getIdTC().equals(id)) {
+                        // ถ้าตรง ก็เพิ่ม testSteps ลงใน List
+                        onInputdataCombobox.getItems().add(testCaseDetail.getVariableTCD());
                     }
                 }
 
@@ -378,13 +388,6 @@ public class PopupAddTestresultController {
                     System.out.println("No test steps found for " + tsId);
                 }
 
-                if (!matchingInput.isEmpty()) {
-                    String formattedText = String.join(", ", matchingInput);
-                    onInputdata.setText(formattedText);
-                    System.out.println("Test Input for " + tsId + ": " + matchingInput);
-                } else {
-                    System.out.println("No test Input found for " + tsId);
-                }
             }
         });
 
@@ -453,7 +456,7 @@ public class PopupAddTestresultController {
         String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String descript = onDescription.getText();
         String actor = onActor.getText();
-        String inputdata = onInputdata.getText();
+        String inputdata = onInputdataCombobox.getValue();
         String teststeps = onTeststeps.getText();;
         String expected = onExpected.getText();
         String actual = onActual.getText();
@@ -524,8 +527,8 @@ public class PopupAddTestresultController {
             return false;
         }
 
-        if (onInputdata.getText() == null || onInputdata.getText().trim().isEmpty()) {
-            showAlert("กรุณากรอก Input Data");
+        if (onInputdataCombobox.getValue() == null || onInputdataCombobox.getValue().trim().isEmpty()) {
+            showAlert("กรุณาเลือก Input Data");
             return false;
         }
 

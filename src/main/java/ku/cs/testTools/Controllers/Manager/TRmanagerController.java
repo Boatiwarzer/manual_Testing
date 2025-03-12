@@ -1,13 +1,17 @@
 package ku.cs.testTools.Controllers.Manager;
 
+import com.opencsv.CSVParser;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -20,19 +24,20 @@ import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
 import ku.cs.testTools.Services.DataSourceCSV.*;
 import ku.cs.testTools.Services.Repository.*;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class TRmanagerController {
@@ -646,13 +651,13 @@ public class TRmanagerController {
                             text.setText(item);
                             text.wrappingWidthProperty().bind(column.widthProperty().subtract(10));
                             if (item.equals("Pass")) {
-                                text.setFill(javafx.scene.paint.Color.GREEN); // สีเขียวสำหรับ "Pass"
+                                text.setFill(Color.GREEN); // สีเขียวสำหรับ "Pass"
                             } else if (item.equals("Fail")) {
-                                text.setFill(javafx.scene.paint.Color.RED); // สีแดงสำหรับ "Fail"
+                                text.setFill(Color.RED); // สีแดงสำหรับ "Fail"
                             } else if (item.equals("Withdraw")) {
-                                text.setFill(javafx.scene.paint.Color.BLUE);
+                                text.setFill(Color.BLUE);
                             } else {
-                                text.setFill(javafx.scene.paint.Color.BLACK); // สีปกติสำหรับค่าอื่น ๆ
+                                text.setFill(Color.BLACK); // สีปกติสำหรับค่าอื่น ๆ
                             }
                             setGraphic(text);
                         }
@@ -827,7 +832,7 @@ public class TRmanagerController {
         // เปิดหน้าต่างให้ผู้ใช้เลือกตำแหน่งไฟล์
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Excel files (*.xlsx)", "*.xlsx");
         fileChooser.getExtensionFilters().add(extFilter);
-        java.io.File file = fileChooser.showSaveDialog(stage);
+        File file = fileChooser.showSaveDialog(stage);
 
         if (file != null) {
             try {
@@ -849,7 +854,7 @@ public class TRmanagerController {
     public void exportToExcel(String filePath, List<TestResultDetail> testResultDetails, String csvFileName) throws IOException {
         // สร้าง Workbook และ Sheet
         Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("IR Report Details");
+        Sheet sheet = workbook.createSheet("Test Result");
 
         // ส่วน Meta Data
         int currentRow = 0; // ตัวแปรติดตาม row ปัจจุบันใน Excel
@@ -865,6 +870,10 @@ public class TRmanagerController {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         exportTimeCell.setCellValue("Export Date and Time: " + now.format(formatter));
+
+        Row NameRow = sheet.createRow(currentRow++);
+        org.apache.poi.ss.usermodel.Cell NameCell = NameRow.createCell(0);
+        NameCell.setCellValue("Test Result: " + testIDLabel.getText() + " " + testNameLabel.getText());
 
         // เว้นแถวก่อนเริ่มหัวข้อข้อมูลตาราง
         currentRow++;
@@ -914,14 +923,37 @@ public class TRmanagerController {
         workbook.close();
     }
     @FXML
-    void onExportButton(ActionEvent event) {
+    void onExportButton(ActionEvent event) throws IOException {
         Stage stage = (Stage) onTableTestresult.getScene().getWindow();
 
-        // ดึงข้อมูลจาก TableView โดยใช้ getItems()
         List<TestResultDetail> testResultDetails = onTableTestresult.getItems();
         String csvFileName = projectName;
 
-        // เรียกฟังก์ชัน saveAsExcel
         saveToExcel(stage, testResultDetails, csvFileName);
+    }
+
+    @FXML
+    void handleSubmitMenuItem(ActionEvent event) throws IOException {
+        loadManagerStatus();
+        objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(directory);
+        objects.add(nameManager);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText("Submit successfully and go to home page.");
+        alert.showAndWait();
+        FXRouter.goTo("home_manager", objects);
+    }
+
+    private void loadManagerStatus() {
+        ManagerRepository managerRepository = new ManagerRepository();
+        Manager manager = managerRepository.getManagerByProjectName(projectName);
+
+        if (manager != null) {  // ตรวจสอบว่าพบ Manager หรือไม่
+            manager.setStatusTrue();
+            managerRepository.updateManager(manager);
+        }
     }
 }

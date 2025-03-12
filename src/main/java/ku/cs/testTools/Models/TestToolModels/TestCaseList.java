@@ -36,6 +36,15 @@ public class TestCaseList {
         }
         return null;
     }
+    public TestCase findTCByIdTS(String id) {
+        for (TestCase testCase : testCaseList) {
+            if (testCase.isIdTS(id) ) {
+                return testCase;
+            }
+        }
+        return null;
+    }
+
     public void addOrUpdateTestCase(TestCase testCase) {
         boolean exists = false;
 

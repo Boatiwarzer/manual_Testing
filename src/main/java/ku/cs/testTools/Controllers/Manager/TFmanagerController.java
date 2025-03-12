@@ -491,8 +491,7 @@ public class TFmanagerController {
         alert.setHeaderText(null);
         alert.setContentText("Submit successfully and go to home page.");
         alert.showAndWait();
-        FXRouter.goTo("home_manager",objects);
-
+        FXRouter.goTo("home_manager", objects);
     }
 
     private void loadManagerStatus() {
@@ -1092,4 +1091,5 @@ private void loadProject() {
 //            throw new RuntimeException(e);
 //        }
 //    }
+
 }
