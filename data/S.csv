@@ -1,6 +1,8 @@
 testScript,TS-683,SS,12-03-2025,UC-318 : S,S,TC-683 : SS,S,S,S,e00c1673-5875-47e6-9f3a-de805a48c0a0
 testScriptDetail,TSD-515,01,s,TS-683,12-03-2025
-testCase,TC-683,SS,12-03-2025,UC-318 : S,S,-,e10f7eed-e7c0-4d86-bfd9-af6372384268,S,S,TS-683
+testCase,TC-683,SS,12-03-2025,UC-318 : S,S,-,6b71accd-44d6-4706-826d-fb78b0cb5076,S,S,TS-683
+testCaseDetail,TCD-672,01,01,01,12-03-2025,TC-683
 useCase,UC-318,S,S,S,S,S,S,2025-03-12 10:25:47
 useCaseDetail,b3e36a32-62be-4066-9fc3-27375916f621,UC-318,actor,1,S
 useCaseDetail,9cfafae9-ef78-45c7-bfca-67c0360a37fe,UC-318,system,1,S
+note,1,!@#$%^&*()_+,S,S

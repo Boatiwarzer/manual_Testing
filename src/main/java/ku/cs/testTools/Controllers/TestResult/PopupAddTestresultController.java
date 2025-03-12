@@ -366,10 +366,11 @@ public class PopupAddTestresultController {
                     }
                 }
                 for (TestCaseDetail testCaseDetail : testCaseDetailList){
-                    TestCase ts = testCaseList.findTCByIdTS(selectedId);
+
+                    TestCase ts = testCaseList.findTCByIdTS(tsId);
                     String tc = ts.getIdTC();
                     String[] partsTc = tc.split(" : "); // แยกข้อความตาม " : "
-                    String id = partsTc[0];
+                    String id = partsTc[0].trim();
                     if (testCaseDetail.getIdTC().equals(id)) {
                         // ถ้าตรง ก็เพิ่ม testSteps ลงใน List
                         onInputdataCombobox.getItems().add(testCaseDetail.getVariableTCD());
@@ -391,11 +392,7 @@ public class PopupAddTestresultController {
             }
         });
 
-//        for (Equipment equipment : equipmentList.getEquipmentList()){
-//            if (!categoryBox.getItems().contains(equipment.getType_equipment())) {
-//                categoryBox.getItems().add(equipment.getType_equipment());
-//            }
-//        }
+
     }
 
     private void IdTSCombobox() {
