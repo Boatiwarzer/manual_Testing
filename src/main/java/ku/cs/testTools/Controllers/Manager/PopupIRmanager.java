@@ -32,7 +32,7 @@ public class PopupIRmanager {
     private Button onConfirmButton, onCancelButton;
 
     @FXML
-    private Label onRetest, irNameLabel, irIDLabel, onTester, onTestscriptIDComboBox, onTestcaseIDComboBox, onTestNo, onManager, onImage, onCondition, onDescription;
+    private Label onRetest, onTester, onTestscriptIDComboBox, onTestcaseIDComboBox, onTestNo, onManager, onImage, onCondition, onDescription;
 
     @FXML
     private ComboBox<String> onPriorityComboBox;
@@ -348,10 +348,7 @@ public class PopupIRmanager {
         onDescription.getStyleClass().add("custom-label");
         onRetest.getStyleClass().add("custom-label");
     }
-    private void setData() {
-        irNameLabel.setText(iRreport.getNameIR());
-        irIDLabel.setText(iRreport.getIdIR());
-    }
+
 
     private void setTextEdit() {
         onTestNo.setText(iRreportDetail.getTestNoIRD());
@@ -407,8 +404,6 @@ public class PopupIRmanager {
     }
 
     private void clearInfo() {
-        irNameLabel.setText("");
-        irIDLabel.setText("");
         onTestNo.setText("-");
         onTester.setText("-");
         onTestscriptIDComboBox.setText("-");

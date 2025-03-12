@@ -5,4 +5,8 @@ testCaseDetail,TCD-672,01,01,01,12-03-2025,TC-683
 useCase,UC-318,S,S,S,S,S,S,2025-03-12 10:25:47
 useCaseDetail,b3e36a32-62be-4066-9fc3-27375916f621,UC-318,actor,1,S
 useCaseDetail,9cfafae9-ef78-45c7-bfca-67c0360a37fe,UC-318,system,1,S
+testResult,TR-258,01,2025-03-12 10:49:13,-
+testResultDetail,TRD-850,01,TS-683 : SS,TC-683 : SS,S,S,01,1. s#$#,S,01,Fail,Low,2025-03-12,S,...,1,Waiting,,TR-258
+iRreport,IR-246,01,2025-03-12 10:49:17,,TR-258
+iRreportDetail,IRD-875,1,S,TS-683 : SS,TC-683 : SS,S,S,...,1,Low,,,In Manager,,IR-246,TRD-850
 note,1,!@#$%^&*()_+,S,S

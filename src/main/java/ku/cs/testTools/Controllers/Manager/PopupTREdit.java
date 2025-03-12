@@ -34,7 +34,7 @@ public class PopupTREdit {
     private Button onCancelButton, onConfirmButton;
 
     @FXML
-    private Label onRetest, onTestcaseIDComboBox, onTestscriptIDComboBox, onTestNo, onDate, onDescription, testResultIDLabel, testResultNameLabel, onExpected, onTester, onImage, onActor;
+    private Label onRetest, onTestcaseIDComboBox, onTestscriptIDComboBox, onTestNo, onDate, onDescription,  onExpected, onTester, onImage, onActor;
 
     @FXML
     private ComboBox<String> onStatusComboBox;
@@ -330,10 +330,10 @@ public class PopupTREdit {
         testCaseDetailListDataSource.writeData(testCaseDetailList);
         connectionListDataSource.writeData(connectionList);
     }
-    private void setData() {
-        testResultNameLabel.setText(testResult.getNameTR());
-        testResultIDLabel.setText(testResult.getIdTR());
-    }
+//    private void setData() {
+//        testResultNameLabel.setText(testResult.getNameTR());
+//        testResultIDLabel.setText(testResult.getIdTR());
+//    }
 
     private void setTextEdit() {
 //        testResultNameLabel.setText(testResult.getNameTR());
@@ -414,8 +414,6 @@ public class PopupTREdit {
         onImage.setText("...");
         onTestcaseIDComboBox.setText("-");
         onTestscriptIDComboBox.setText("-");
-        testResultIDLabel.setText("");
-        testResultNameLabel.setText("");
         onApproveCheck.setSelected(false);
         onNotapproveCheck.setSelected(false);
         onRemark.setText("");
