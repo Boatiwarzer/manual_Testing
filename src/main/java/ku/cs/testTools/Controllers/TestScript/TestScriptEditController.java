@@ -135,6 +135,7 @@ public class TestScriptEditController {
     private TestFlowPosition testFlowPosition;
     private TestCase testcase;
     private TestFlowPosition testFlowPositionTC;
+    private TestCase testCase;
 
     @FXML
     void initialize() {
@@ -156,7 +157,7 @@ public class TestScriptEditController {
             if (objects.get(4) != null){
                 testScript = (TestScript) objects.get(4);
                 testScriptDetailList = (TestScriptDetailList) objects.get(5);
-                testCaseDetailList = (TestCaseDetailList) objects.get(6);
+                testCase = (TestCase) objects.get(6);
                 type = (String) objects.get(7);
                 testScriptDetailListDelete = (TestScriptDetailList) objects.get(8);
 
@@ -581,7 +582,7 @@ public class TestScriptEditController {
             objects.add(typeTS);
             objects.add(testScript);
             objects.add(testScriptDetailList);
-            objects.add(testCaseDetailList);
+            objects.add(testcase);
             objects.add("new");
             objects.add(null);
             objects.add(testScriptDetailListDelete);
