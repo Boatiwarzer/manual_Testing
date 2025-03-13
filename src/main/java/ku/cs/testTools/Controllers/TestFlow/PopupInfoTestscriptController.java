@@ -531,7 +531,7 @@ public class PopupInfoTestscriptController {
             objects.add(position);
             objects.add(testScript);
             objects.add(testScriptDetailList);
-            objects.add(testCaseDetailList);
+            objects.add(testcase);
             objects.add("new");
             objects.add(null);
             objects.add(testScriptDetailListDelete);

@@ -540,6 +540,7 @@ public class TestCaseAddController {
         String note = onTestNoteField.getText();
         String preCon = infoPreconField.getText();
         String post = infoPostconField.getText();
+        String idts = onTestscriptCombobox.getValue();
 
         // Check if any required field is empty
 
@@ -557,9 +558,9 @@ public class TestCaseAddController {
         String note = onTestNoteField.getText();
         String preCon = infoPreconField.getText();
         String post = infoPostconField.getText();
-
+        String idts = onTestscriptCombobox.getValue();
         // Create a new TestCase object
-        testCase = new TestCase(idTC, name, date, useCase, description, note, position, preCon, post,"-");
+        testCase = new TestCase(idTC, name, date, useCase, description, note, position, preCon, post,idts);
     }
 
     private void objects() {

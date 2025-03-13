@@ -757,7 +757,11 @@ public class TREditmanagerController {
     @FXML
     void onClickIR(ActionEvent event) {
         try {
-            objects();
+            objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add(name);
+            objects.add(null);
             FXRouter.goTo("ir_manager",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -767,7 +771,11 @@ public class TREditmanagerController {
     @FXML
     void onClickTestflow(ActionEvent event) {
         try {
-            objects();
+            objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add(name);
+            objects.add(null);
             FXRouter.goTo("test_flow_manager",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -777,8 +785,11 @@ public class TREditmanagerController {
     @FXML
     void onClickTestresult(ActionEvent event) {
         try {
-            objects();
-            FXRouter.goTo("test_result_manager",objects);
+            objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(directory);
+            objects.add(name);
+            objects.add(null);            FXRouter.goTo("test_result_manager",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
