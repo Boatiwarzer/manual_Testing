@@ -92,7 +92,7 @@
                <children>
                   <AnchorPane prefHeight="700.0" prefWidth="270.0">
                      <children>
-                        <Button fx:id="onCreateButton" layoutX="15.0" layoutY="15.0" mnemonicParsing="false" onAction="#onCreateButton" prefHeight="30.0" prefWidth="110.0" style="-fx-background-color: #6fadac;" text="Create">
+                        <Button fx:id="onCreateButton" layoutX="15.0" layoutY="15.0" mnemonicParsing="false" onAction="#onCreateButton" prefHeight="30.0" prefWidth="110.0" style="-fx-background-color: #6fadac;" text="Create" visible="false">
                            <font>
                               <Font size="14.0" />
                            </font>
