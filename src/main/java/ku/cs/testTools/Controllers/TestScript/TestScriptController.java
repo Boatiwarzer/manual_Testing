@@ -120,6 +120,7 @@ public class TestScriptController {
     private ArrayList<Object> objects;
     private String name;
     private TestScriptDetailList testScriptDetailListDelete = new TestScriptDetailList();
+    private TestCase testcase;
 
     @FXML
     void initialize() {
@@ -301,6 +302,8 @@ public class TestScriptController {
         infoPostconLabel.setText(post);
         String tc = testScript.getTestCase();
         infoTestcaseLabel.getSelectionModel().select(tc);
+        String[] t = tc.split(" : ");
+        testcase = testCaseList.findTCById(t[0]) ;
         String preCon = testScript.getPreCon();
         infoPreconLabel.setText(preCon);
         String note = testScript.getFreeText();
@@ -520,7 +523,7 @@ public class TestScriptController {
             objects.add("editTS");
             objects.add(selectedTestScript);
             objects.add(testScriptDetailList);
-            objects.add(testCaseDetailList);
+            objects.add(testcase);
             objects.add("new");
             objects.add(testScriptDetailListDelete);
             FXRouter.goTo("test_script_edit",objects);
