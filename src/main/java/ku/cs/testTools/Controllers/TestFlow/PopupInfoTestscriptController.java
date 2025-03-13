@@ -336,7 +336,7 @@ public class PopupInfoTestscriptController {
 
     private void selectedComboBox() {
         testScriptCombobox();
-        onTestNameCombobox.getItems().clear();
+//        onTestNameCombobox.getItems().clear();
         onTestNameCombobox.setOnAction(event -> {
             String selectedItem = onTestNameCombobox.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {

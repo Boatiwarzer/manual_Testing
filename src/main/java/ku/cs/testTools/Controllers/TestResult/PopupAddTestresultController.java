@@ -318,11 +318,31 @@ public class PopupAddTestresultController {
                 String selectedId = onTestscriptIDComboBox.getValue(); // ดึง ID จาก ComboBox
                 String[] parts = selectedId.split(" : "); // แยกข้อความตาม " : "
                 String tsId = parts[0]; // ดึงส่วนแรกออกมา
+                loadProject();
+                DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+                List<TestScriptDetail> testScriptDetailList = testScriptDetailListDataSource.readData().getTestScriptDetailList();
+                DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
+                List<TestCaseDetail> testCaseDetailList = testCaseDetailListDataSource.readData().getTestCaseDetailList();
+                for (TestCaseDetail testCaseDetail : testCaseDetailList){
+
+                    System.out.println(tsId);
+                    TestCase ts = testCaseList.findTCByIdTS(selectedId);
+                    System.out.println(ts);
+                    String tc = ts.getIdTC();
+                    System.out.println(tc);
+                    String[] partsTc = tc.split(" : "); // แยกข้อความตาม " : "
+                    String id = partsTc[0].trim();
+                    if (testCaseDetail.getIdTC().equals(id)) {
+                        // ถ้าตรง ก็เพิ่ม testSteps ลงใน List
+                        onInputdataCombobox.getItems().add(testCaseDetail.getVariableTCD());
+                    }
+                }
+
                 if (tsId != null && !tsId.trim().isEmpty()) {
                     TestScript script = testScriptList.findTSById(tsId.trim()); // ค้นหา TestScript โดย ID
                     if (script != null) {
                         onDescription.setText(script.getDescriptionTS());
-                        onExpected.setText(script.getPostCon());// แสดงผลใน Label
+//                        onExpected.setText(script.getPostCon());// แสดงผลใน Label
                         String uc = script.getUseCase();
                         String[] partsUc = uc.split(" : "); // แยกข้อความตาม " : "
                         String ucId = partsUc[0]; // ดึงส่วนแรกออกมา
@@ -349,13 +369,10 @@ public class PopupAddTestresultController {
                         onActual.setText("No Actor found for ID: " + tsId);
                     }
                 }
-                loadProject();
-                DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-                List<TestScriptDetail> testScriptDetailList = testScriptDetailListDataSource.readData().getTestScriptDetailList();
-                DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
-                List<TestCaseDetail> testCaseDetailList = testCaseDetailListDataSource.readData().getTestCaseDetailList();
+
 
                 List<String> matchingSteps = new ArrayList<>();
+                List<String> matchedData = new ArrayList<>();
 
                 // ค้นหาข้อมูล testSteps สำหรับ id ที่ตรง
                 for (TestScriptDetail testScriptDetail : testScriptDetailList) {
@@ -365,20 +382,19 @@ public class PopupAddTestresultController {
                         matchingSteps.add(testScriptDetail.getSteps());
                     }
                 }
-                for (TestCaseDetail testCaseDetail : testCaseDetailList){
 
-                    System.out.println(tsId);
-                    TestCase ts = testCaseList.findTCByIdTS(selectedId);
-                    System.out.println(ts);
-                    String tc = ts.getIdTC();
-                    System.out.println(tc);
-                    String[] partsTc = tc.split(" : "); // แยกข้อความตาม " : "
-                    String id = partsTc[0].trim();
-                    if (testCaseDetail.getIdTC().equals(id)) {
-                        // ถ้าตรง ก็เพิ่ม testSteps ลงใน List
-                        onInputdataCombobox.getItems().add(testCaseDetail.getVariableTCD());
+                onInputdataCombobox.setOnAction(event1 -> {
+                    String selectedData = onInputdataCombobox.getSelectionModel().getSelectedItem();
+                    if (selectedData != null) {
+                        String selectedInput = onTestscriptIDComboBox.getValue();
+                        for (TestCaseDetail testCaseDetail : testCaseDetailList){
+                            if (testCaseDetail.getVariableTCD().equals(onInputdataCombobox.getValue())) {
+                                onExpected.setText(testCaseDetail.getExpectedTCD());
+                            }
+                        }
                     }
-                }
+                });
+
 
                 // แสดงผลข้อมูลที่ค้นพบ
                 if (!matchingSteps.isEmpty()) {

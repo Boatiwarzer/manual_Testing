@@ -541,7 +541,7 @@ public class TestScriptEditController {
         String post = infoPostconLabel.getText();
 
         testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post,note,position);
-        testcase = new TestCase(testcase.getIdTC(),name,testDateLabel.getText(),useCase,description,"-",testcase.getPosition(),preCon,post,testcase.getIdTC());
+        testcase = new TestCase(testcase.getIdTC(),name,testDateLabel.getText(),useCase,description,"-",testcase.getPosition(),preCon,post,testcase.getIdTS());
 
     }
     private void currentNewDataForSubmit(){
