@@ -26,12 +26,6 @@ public class TestScriptDetail {
     @Column(name = "steps_tsd")  // Add Column annotation for steps
     private String steps;
 
-    @Column(name = "inputdata_tsd")  // Add Column annotation for inputData
-    private String inputData;
-
-    @Column(name = "expected_tsd")  // Add Column annotation for expected
-    private String expected;
-
     @Column(name = "idTS")  // Add Column annotation for idTS
     private String idTS;
 
@@ -71,8 +65,6 @@ public class TestScriptDetail {
     public void clear() {
         this.testNo = null;
         this.steps = null;
-        this.inputData = null;
-        this.expected = null;
         this.idTS = null;
         this.dateTSD = null;
     }

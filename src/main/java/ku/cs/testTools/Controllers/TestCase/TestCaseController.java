@@ -131,7 +131,7 @@ public class TestCaseController {
         if (manager != null) {  // ตรวจสอบว่าพบ Manager หรือไม่
             String status = manager.getStatus();
             boolean check = Boolean.parseBoolean(status);
-            onCreateButton.setVisible(check);
+            //onCreateButton.setVisible(check);
             onEditButton.setVisible(check);
             System.out.println("Manager Status: " + status);
         } else {

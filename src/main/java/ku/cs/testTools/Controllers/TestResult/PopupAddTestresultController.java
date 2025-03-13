@@ -367,8 +367,11 @@ public class PopupAddTestresultController {
                 }
                 for (TestCaseDetail testCaseDetail : testCaseDetailList){
 
-                    TestCase ts = testCaseList.findTCByIdTS(tsId);
+                    System.out.println(tsId);
+                    TestCase ts = testCaseList.findTCByIdTS(selectedId);
+                    System.out.println(ts);
                     String tc = ts.getIdTC();
+                    System.out.println(tc);
                     String[] partsTc = tc.split(" : "); // แยกข้อความตาม " : "
                     String id = partsTc[0].trim();
                     if (testCaseDetail.getIdTC().equals(id)) {

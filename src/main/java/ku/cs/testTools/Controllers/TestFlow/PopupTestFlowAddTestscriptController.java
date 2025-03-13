@@ -25,12 +25,6 @@ public class PopupTestFlowAddTestscriptController {
     private Button onConfirmButton;
 
     @FXML
-    private TextArea onExpectedArea;
-
-    @FXML
-    private ComboBox<String> onInputDataCombobox;
-
-    @FXML
     private TextField onTestNo;
 
     @FXML
@@ -91,8 +85,6 @@ public class PopupTestFlowAddTestscriptController {
     private void setTextEdit() {
         onTestNo.setText(testScriptDetail.getTestNo());
         onTeststepsArea.setText(testScriptDetail.getSteps().toLowerCase());;
-        onInputDataCombobox.getSelectionModel().select(testScriptDetail.getInputData());
-        onExpectedArea.setText(testScriptDetail.getExpected());;
         testScriptIDLabel.setText(testScriptDetail.getIdTSD());
         testScriptNameLabel.setText("");
     }
@@ -130,19 +122,13 @@ public class PopupTestFlowAddTestscriptController {
             return false;
         }
 
-        if (onInputDataCombobox.getValue() == null || onInputDataCombobox.getValue().trim().isEmpty() || onInputDataCombobox.getValue().equals("None")) {
-            showAlert("กรุณาเลือก Input Data");
-            return false;
-        }
+
 
         if (onTeststepsArea.getText() == null || onTeststepsArea.getText().trim().isEmpty()) {
             showAlert("กรุณากรอกข้อมูล Test Steps");
             return false;
         }
-        if (onExpectedArea.getText() == null || onExpectedArea.getText().trim().isEmpty()) {
-            showAlert("กรุณากรอกข้อมูล Expected Result");
-            return false;
-        }
+
         return true;
     }
 
@@ -194,8 +180,6 @@ public class PopupTestFlowAddTestscriptController {
         id = "";
         onTestNo.setText("");
         onTeststepsArea.setText("");
-        onInputDataCombobox.getSelectionModel().selectFirst();
-        onExpectedArea.setText("");
         testScriptDetail.clear();
     }
 

@@ -321,7 +321,16 @@ public class PopupInfoTestcaseController {
             }
 
         });
+        new AutoCompleteComboBoxListener<>(onTestscriptCombobox);
+        testScriptCombobox();
+        onTestscriptCombobox.setOnAction(event -> {
+            String selectedItem = onTestscriptCombobox.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                onTestscriptCombobox.getEditor().setText(selectedItem); // Set selected item in editor
+                Platform.runLater(onTestscriptCombobox.getEditor()::end);
 
+            }
+        });
         onUsecaseCombobox.setItems(FXCollections.observableArrayList("None"));
         new AutoCompleteComboBoxListener<>(onUsecaseCombobox);
         onUsecaseCombobox.getSelectionModel().selectFirst();
@@ -417,6 +426,12 @@ public class PopupInfoTestcaseController {
         for (UseCase useCase : useCaseList.getUseCaseList()){
             String uc_combobox = useCase.getUseCaseID() + " : " + useCase.getUseCaseName();
             onUsecaseCombobox.getItems().add(uc_combobox);
+        }
+    }
+    private void testScriptCombobox() {
+        for (TestScript testScript : testScriptList.getTestScriptList()){
+            String ts = testScript.getIdTS() + " : " + testScript.getNameTS();
+            onTestscriptCombobox.getItems().add(ts);
         }
     }
 
