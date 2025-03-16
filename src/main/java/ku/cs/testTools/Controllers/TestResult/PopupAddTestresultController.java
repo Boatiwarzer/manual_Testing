@@ -489,6 +489,19 @@ public class PopupAddTestresultController {
                     }
                 }
 
+                onInputdataCombobox.setOnAction(event1 -> {
+                    String selectedData = onInputdataCombobox.getSelectionModel().getSelectedItem();
+                    if (selectedData != null) {
+                        String selectedInput = onTestscriptIDComboBox.getValue();
+                        for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()){
+                            if (testCaseDetail.getVariableTCD().equals(onInputdataCombobox.getValue())) {
+                                onExpected.setText(testCaseDetail.getExpectedTCD());
+                            }
+                        }
+                    }
+                });
+
+
                 // แสดงผลข้อมูลที่ค้นพบ
                 if (!matchingSteps.isEmpty()) {
                     StringBuilder formattedText = new StringBuilder();

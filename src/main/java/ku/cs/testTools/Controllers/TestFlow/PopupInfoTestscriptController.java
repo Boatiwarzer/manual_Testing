@@ -420,7 +420,7 @@ public class PopupInfoTestscriptController {
 
     private void selectedComboBox() {
         testScriptCombobox();
-        //onTestNameCombobox.getItems().clear();
+//        onTestNameCombobox.getItems().clear();
         onTestNameCombobox.setOnAction(event -> {
             String selectedItem = onTestNameCombobox.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
@@ -476,7 +476,7 @@ public class PopupInfoTestscriptController {
     private void selectedComboBoxSetInfoTS(String selectedItem) {
         if (selectedItem == null || selectedItem.isEmpty()) return;
 
-        String[] data = selectedItem.split(":");
+        String[] data = selectedItem.split("\\s*:\\s*", 2);
         testIDLabel.setText("");
         onTableTestscript.getItems().clear();
         testScriptDetailList.clearItems();

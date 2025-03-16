@@ -761,32 +761,30 @@ public class TestCaseController {
                 }
                 currentRow += 1;
             }
+        }
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("เลือกตำแหน่งบันทึกไฟล์");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files (*.xlsx)", "*.xlsx"));
 
-            // 📂 เลือกตำแหน่งบันทึกไฟล์
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("เลือกตำแหน่งบันทึกไฟล์");
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files (*.xlsx)", "*.xlsx"));
+        Window window = ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        File fileToSave = fileChooser.showSaveDialog(window);
 
-            Window window = ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
-            File fileToSave = fileChooser.showSaveDialog(window);
-
-            if (fileToSave != null) {
-                String filePath = fileToSave.getAbsolutePath();
-                if (!filePath.toLowerCase().endsWith(".xlsx")) {
-                    filePath += ".xlsx";
-                }
-
-                try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
-                    workbook.write(fileOut);
-                    System.out.println("บันทึกไฟล์สำเร็จ: " + filePath);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                System.out.println("ยกเลิกการบันทึกไฟล์");
+        if (fileToSave != null) {
+            String filePath = fileToSave.getAbsolutePath();
+            if (!filePath.toLowerCase().endsWith(".xlsx")) {
+                filePath += ".xlsx";
             }
 
-            workbook.close();
+            try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
+                workbook.write(fileOut);
+                System.out.println("บันทึกไฟล์สำเร็จ: " + filePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("ยกเลิกการบันทึกไฟล์");
         }
+
+        workbook.close();
     }
 }
