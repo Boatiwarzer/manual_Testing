@@ -17,7 +17,6 @@ import ku.cs.testTools.Models.Manager.Tester;
 import ku.cs.testTools.Models.Manager.TesterList;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
-import ku.cs.testTools.Services.DataSourceCSV.*;
 import ku.cs.testTools.Services.Repository.*;
 import org.controlsfx.control.textfield.TextFields;
 
@@ -113,7 +112,6 @@ public class IREditmanagerController {
                 selectedIRD();
                 selectedListView();
                 loadRepo();
-                loadProject();
                 if (objects.get(4) != null){
                     iRreport = (IRreport) objects.get(4);
                     iRreportDetailList = (IRreportDetailList) objects.get(5);
@@ -313,52 +311,52 @@ public class IREditmanagerController {
             managerRepository.updateManager(manager);
         }
     }
-    private void loadProject() {
-        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
-        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
-        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
-        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
-        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
-        DataSource<TestResultList> testResultListDataSource = new TestResultListFileDataSource(directory, projectName + ".csv");
-        DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
-        DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
-        DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
-        testResultList = testResultListDataSource.readData();
-        testResultDetailList = testResultDetailListDataSource.readData();
-        iRreportList = iRreportListDataSource.readData();
-        iRreportDetailListTemp = iRreportDetailListDataSource.readData();
-        testScriptList = testScriptListDataSource.readData();
-        testScriptDetailList = testScriptDetailListDataSource.readData();
-        testCaseList = testCaseListDataSource.readData();
-        testCaseDetailList = testCaseDetailListDataSource.readData();
-        testFlowPositionList = testFlowPositionListDataSource.readData();
-        connectionList = connectionListDataSource.readData();
-        useCaseList = useCaseListDataSource.readData();
-
-    }
-    private void saveProject() {
-        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
-        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
-        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
-        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
-        DataSource<TestResultList> testResultListDataSource = new TestResultListFileDataSource(directory, projectName + ".csv");
-        DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
-        DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
-        DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
-        testResultListDataSource.writeData(testResultList);
-        testResultDetailListDataSource.writeData(testResultDetailList);
-        iRreportListDataSource.writeData(iRreportList);
-        iRreportDetailListDataSource.writeData(iRreportDetailList);
-        testFlowPositionListDataSource.writeData(testFlowPositionList);
-        testScriptDetailListDataSource.writeData(testScriptDetailList);
-        testCaseListDataSource.writeData(testCaseList);
-        testCaseDetailListDataSource.writeData(testCaseDetailList);
-        connectionListDataSource.writeData(connectionList);
-
-    }
+//    private void loadProject() {
+//        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
+//        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
+//        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+//        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
+//        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
+//        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+//        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+//        DataSource<TestResultList> testResultListDataSource = new TestResultListFileDataSource(directory, projectName + ".csv");
+//        DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
+//        DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
+//        DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
+//        testResultList = testResultListDataSource.readData();
+//        testResultDetailList = testResultDetailListDataSource.readData();
+//        iRreportList = iRreportListDataSource.readData();
+//        iRreportDetailListTemp = iRreportDetailListDataSource.readData();
+//        testScriptList = testScriptListDataSource.readData();
+//        testScriptDetailList = testScriptDetailListDataSource.readData();
+//        testCaseList = testCaseListDataSource.readData();
+//        testCaseDetailList = testCaseDetailListDataSource.readData();
+//        testFlowPositionList = testFlowPositionListDataSource.readData();
+//        connectionList = connectionListDataSource.readData();
+//        useCaseList = useCaseListDataSource.readData();
+//
+//    }
+//    private void saveProject() {
+//        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
+//        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
+//        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
+//        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
+//        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
+//        DataSource<TestResultList> testResultListDataSource = new TestResultListFileDataSource(directory, projectName + ".csv");
+//        DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
+//        DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
+//        DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
+//        testResultListDataSource.writeData(testResultList);
+//        testResultDetailListDataSource.writeData(testResultDetailList);
+//        iRreportListDataSource.writeData(iRreportList);
+//        iRreportDetailListDataSource.writeData(iRreportDetailList);
+//        testFlowPositionListDataSource.writeData(testFlowPositionList);
+//        testScriptDetailListDataSource.writeData(testScriptDetailList);
+//        testCaseListDataSource.writeData(testCaseList);
+//        testCaseDetailListDataSource.writeData(testCaseDetailList);
+//        connectionListDataSource.writeData(connectionList);
+//
+//    }
     private void selectedListView() {
         if (iRreport != null){
             onSearchList.getSelectionModel().select(iRreport);
@@ -795,7 +793,7 @@ public class IREditmanagerController {
             }
             iRReportRepository.updateIRReport(iRreport);
             // Write data to respective files
-            saveProject();
+            //saveRepo();
 
             objects = new ArrayList<>();
             objects.add(projectName);
@@ -871,7 +869,7 @@ public class IREditmanagerController {
 
     @FXML
     void handleSaveMenuItem(ActionEvent event) throws IOException{
-        saveProject();
+        saveRepo();
     }
     @FXML
     void handleSubmitMenuItem(ActionEvent event) throws IOException {
@@ -923,7 +921,7 @@ public class IREditmanagerController {
 
             // Get the directory from the file path
             directory = file.getParent();
-            loadProject();
+            saveRepo();
             //send the project name and directory to HomePage
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);

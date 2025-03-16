@@ -6,8 +6,6 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import ku.cs.testTools.Services.DataSource;
-import ku.cs.testTools.Services.DataSourceCSV.*;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Models.Manager.ManagerList;
@@ -69,7 +67,9 @@ public class HomeTesterController {
     private ConnectionList connectionList;
     private IRreportList iRreportList;
     private IRreportDetailList iRreportDetailList;
-
+    private UseCaseList useCaseList;
+    private UseCase useCase;
+    private UseCaseDetailList useCaseDetailList;
 
     @FXML
     void initialize() {
@@ -84,8 +84,7 @@ public class HomeTesterController {
             boolean check = Boolean.parseBoolean(manager.getStatus());
             if (check){
                 loadRepo();
-                loadProject();
-                saveProject();
+
             }
 
 
@@ -94,34 +93,6 @@ public class HomeTesterController {
             System.out.println("Directory: " + directory);
         }
     }
-
-    private void loadProject() {
-        DataSource<TestResultList> testResultListDataSource = new TestResultListFileDataSource(directory, projectName + ".csv");
-        DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
-        DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
-        DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
-        DataSource<NoteList> noteListDataSource = new NoteListFileDataSource(directory,projectName + ".csv");
-
-        testResultList = testResultListDataSource.readData();
-        testResultDetailList = testResultDetailListDataSource.readData();
-        iRreportList = iRreportListDataSource.readData();
-        iRreportDetailList = iRreportDetailListDataSource.readData();
-        noteList = noteListDataSource.readData();
-    }
-
-    private void saveProject() {
-        DataSource<TestResultList> testResultListDataSource = new TestResultListFileDataSource(directory, projectName + ".csv");
-        DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
-        DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
-        DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
-        DataSource<NoteList> noteListDataSource = new NoteListFileDataSource(directory,projectName + ".csv");
-        testResultListDataSource.writeData(testResultList);
-        testResultDetailListDataSource.writeData(testResultDetailList);
-        iRreportListDataSource.writeData(iRreportList);
-        iRreportDetailListDataSource.writeData(iRreportDetailList);
-        noteListDataSource.writeData(noteList);
-    }
-
     private void loadRepo(){
         // สร้างออบเจ็กต์ของแต่ละ Repository
         TestScriptRepository testScriptRepository = new TestScriptRepository();
@@ -137,7 +108,17 @@ public class HomeTesterController {
         NoteRepository noteRepository = new NoteRepository();
         TesterRepository testerRepository = new TesterRepository(); // เพิ่ม TesterRepository
         ManagerRepository managerRepository = new ManagerRepository(); // เพิ่ม ManagerRepository
+        UseCaseRepository useCaseRepository = new UseCaseRepository();
+        UseCaseDetailRepository useCaseDetailRepository = new UseCaseDetailRepository();
 
+        useCaseList = new UseCaseList();
+        for (UseCase usecase : useCaseRepository.getAllUseCases()){
+            useCaseList.addUseCase(usecase);
+        }
+        useCaseDetailList = new UseCaseDetailList();
+        for (UseCaseDetail useCaseDetail : useCaseDetailRepository.getAllUseCaseDetails()){
+            useCaseDetailList.addUseCaseDetail(useCaseDetail);
+        }
         // โหลด TestScriptList
         testScriptList = new TestScriptList();
         for (TestScript script : testScriptRepository.getAllTestScripts()) {
@@ -216,7 +197,94 @@ public class HomeTesterController {
             managerList.addManager(manager);
         }
     }
+    private void saveRepo() {
+        // สร้างออบเจ็กต์ของแต่ละ Repository
+        TestScriptRepository testScriptRepository = new TestScriptRepository();
+        TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
+        TestFlowPositionRepository testFlowPositionRepository = new TestFlowPositionRepository();
+        TestCaseRepository testCaseRepository = new TestCaseRepository();
+        TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
+        TestResultRepository testResultRepository = new TestResultRepository();
+        TestResultDetailRepository testResultDetailRepository = new TestResultDetailRepository();
+        IRReportRepository irReportRepository = new IRReportRepository();
+        IRDetailRepository irDetailRepository = new IRDetailRepository();
+        ConnectionRepository connectionRepository = new ConnectionRepository();
+        NoteRepository noteRepository = new NoteRepository();
+        TesterRepository testerRepository = new TesterRepository();
+        ManagerRepository managerRepository = new ManagerRepository();
+        UseCaseRepository useCaseRepository = new UseCaseRepository();
+        UseCaseDetailRepository useCaseDetailRepository = new UseCaseDetailRepository();
+        for (UseCase useCase : useCaseList.getUseCaseList()){
+            useCaseRepository.updateUseCase(useCase);
+        }
+        for (UseCaseDetail useCaseDetail : useCaseDetailList.getUseCaseDetailList()){
+            useCaseDetailRepository.saveOrUpdateUseCaseDetail(useCaseDetail);
+        }
+        // บันทึกข้อมูล TestScriptList
+        for (TestScript script : testScriptList.getTestScriptList()) {
+            testScriptRepository.updateTestScript(script);
+        }
 
+        // บันทึกข้อมูล TestScriptDetailList
+        for (TestScriptDetail detail : testScriptDetailList.getTestScriptDetailList()) {
+            testScriptDetailRepository.updateTestScriptDetail(detail);
+        }
+
+        // บันทึกข้อมูล TestFlowPositionList
+        for (TestFlowPosition position : testFlowPositionList.getPositionList()) {
+            testFlowPositionRepository.updateTestFlowPosition(position);
+        }
+
+        // บันทึกข้อมูล TestCaseList
+        for (TestCase testCase : testCaseList.getTestCaseList()) {
+            testCaseRepository.updateTestCase(testCase);
+        }
+
+        // บันทึกข้อมูล TestCaseDetailList
+        for (TestCaseDetail detail : testCaseDetailList.getTestCaseDetailList()) {
+            testCaseDetailRepository.updateTestCaseDetail(detail);
+        }
+
+        // บันทึกข้อมูล TestResultList
+        for (TestResult result : testResultList.getTestResultList()) {
+            testResultRepository.updateTestResult(result);
+        }
+
+        // บันทึกข้อมูล TestResultDetailList
+        for (TestResultDetail detail : testResultDetailList.getTestResultDetailList()) {
+            testResultDetailRepository.updateTestResultDetail(detail);
+        }
+
+        // บันทึกข้อมูล IRReportList
+        for (IRreport report : irReportList.getIRreportList()) {
+            irReportRepository.updateIRReport(report);
+        }
+
+        // บันทึกข้อมูล IRDetailList
+        for (IRreportDetail detail : irDetailList.getIRreportDetailList()) {
+            irDetailRepository.updateIRReportDetail(detail);
+        }
+
+        // บันทึกข้อมูล ConnectionList
+        for (Connection connection : connectionList.getConnectionList()) {
+            connectionRepository.saveOrUpdateConnection(connection);
+        }
+
+        // บันทึกข้อมูล NoteList
+        for (Note note : noteList.getNoteList()) {
+            noteRepository.updateNote(note);
+        }
+
+        // บันทึกข้อมูล TesterList
+        for (Tester tester : testerList.getTesterList()) {
+            testerRepository.updateTester(tester);
+        }
+
+        // บันทึกข้อมูล ManagerList
+        for (Manager manager : managerList.getManagerList()) {
+            managerRepository.updateManager(manager);
+        }
+    }
     @FXML
     void handleSaveMenuItem(ActionEvent event) {
         //saveProject();

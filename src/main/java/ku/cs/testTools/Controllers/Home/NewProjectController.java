@@ -14,8 +14,6 @@ import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Models.Manager.ManagerList;
 import ku.cs.testTools.Models.Manager.Tester;
 import ku.cs.testTools.Models.Manager.TesterList;
-import ku.cs.testTools.Services.DataSource;
-import ku.cs.testTools.Services.DataSourceCSV.ManagerListFileDataSource;
 import ku.cs.testTools.Services.Repository.ManagerRepository;
 import ku.cs.testTools.Services.Repository.TesterRepository;
 
@@ -106,8 +104,6 @@ public class NewProjectController {
         }
 
         managerList.addOrUpdateManager(manager);
-        DataSource<ManagerList> managerListDataSource = new ManagerListFileDataSource(directory, projectName + ".csv");
-        managerListDataSource.writeData(managerList);
         ManagerRepository managerRepository = new ManagerRepository();
         managerRepository.addManager(manager);
         TesterRepository testerRepository = new TesterRepository();
