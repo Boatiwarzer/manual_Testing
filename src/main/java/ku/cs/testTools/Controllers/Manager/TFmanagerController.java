@@ -24,8 +24,6 @@ import ku.cs.testTools.Models.Manager.ManagerList;
 import ku.cs.testTools.Models.Manager.Tester;
 import ku.cs.testTools.Models.Manager.TesterList;
 import ku.cs.testTools.Models.TestToolModels.*;
-import ku.cs.testTools.Services.DataSource;
-import ku.cs.testTools.Services.DataSourceCSV.*;
 import ku.cs.testTools.Services.Repository.*;
 
 import javax.imageio.ImageIO;
@@ -122,7 +120,6 @@ public class TFmanagerController {
                     noteList.updateNoteBynoteID("1", "!@#$%^&*()_+");
                 }
             }
-            saveProject();
             saveRepo();
         });
     }
@@ -462,7 +459,7 @@ public class TFmanagerController {
     }
     @FXML
     void handleSaveMenuItem(ActionEvent event) {
-        saveProject();
+        saveRepo();
     }
 
     @FXML
@@ -757,27 +754,6 @@ private void loadProject() {
         }
     }
 
-    private void saveProject() {
-        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
-        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory,projectName + ".csv");
-        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory,projectName + ".csv");
-        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
-        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
-        DataSource<NoteList> noteListDataSource = new NoteListFileDataSource(directory,projectName + ".csv");
-        testFlowPositionListDataSource.writeData(testFlowPositionList);
-        testScriptListDataSource.writeData(testScriptList);
-        testScriptDetailListDataSource.writeData(testScriptDetailList);
-        testCaseListDataSource.writeData(testCaseList);
-        testCaseDetailListDataSource.writeData(testCaseDetailList);
-        connectionListDataSource.writeData(connectionList);
-        noteListDataSource.writeData(noteList);
-        //useCaseListDataSource.writeData(useCaseList);
-        System.out.println("Project Saved");
-
-
-    }
     public StackPane drawStackPane(double layoutX,double layoutY){
         StackPane stackPane = new StackPane();
         stackPane.setAlignment(Pos.CENTER);

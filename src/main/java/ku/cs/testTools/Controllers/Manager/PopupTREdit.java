@@ -14,8 +14,6 @@ import ku.cs.testTools.Models.Manager.ManagerList;
 import ku.cs.testTools.Models.Manager.Tester;
 import ku.cs.testTools.Models.Manager.TesterList;
 import ku.cs.testTools.Models.TestToolModels.*;
-import ku.cs.testTools.Services.DataSource;
-import ku.cs.testTools.Services.DataSourceCSV.*;
 import ku.cs.testTools.Services.Repository.*;
 
 import java.io.File;
@@ -98,7 +96,7 @@ public class PopupTREdit {
             testResultDetailList = (TestResultDetailList) objects.get(5);
             idTR = testResult.getIdTR();
             type = (String) objects.get(6);
-            loadProject();
+            loadRepo();
             setLabel();
             if (objects.get(7) != null && type.equals("edit")) {
                 testResultDetail = (TestResultDetail) objects.get(7);
@@ -126,7 +124,17 @@ public class PopupTREdit {
         NoteRepository noteRepository = new NoteRepository();
         TesterRepository testerRepository = new TesterRepository(); // เพิ่ม TesterRepository
         ManagerRepository managerRepository = new ManagerRepository(); // เพิ่ม ManagerRepository
+        UseCaseRepository useCaseRepository = new UseCaseRepository();
+        UseCaseDetailRepository useCaseDetailRepository = new UseCaseDetailRepository();
 
+        useCaseList = new UseCaseList();
+        for (UseCase usecase : useCaseRepository.getAllUseCases()){
+            useCaseList.addUseCase(usecase);
+        }
+        useCaseDetailList = new UseCaseDetailList();
+        for (UseCaseDetail useCaseDetail : useCaseDetailRepository.getAllUseCaseDetails()){
+            useCaseDetailList.addUseCaseDetail(useCaseDetail);
+        }
         // โหลด TestScriptList
         testScriptList = new TestScriptList();
         for (TestScript script : testScriptRepository.getAllTestScripts()) {
@@ -220,7 +228,14 @@ public class PopupTREdit {
         NoteRepository noteRepository = new NoteRepository();
         TesterRepository testerRepository = new TesterRepository();
         ManagerRepository managerRepository = new ManagerRepository();
-
+        UseCaseRepository useCaseRepository = new UseCaseRepository();
+        UseCaseDetailRepository useCaseDetailRepository = new UseCaseDetailRepository();
+        for (UseCase useCase : useCaseList.getUseCaseList()){
+            useCaseRepository.updateUseCase(useCase);
+        }
+        for (UseCaseDetail useCaseDetail : useCaseDetailList.getUseCaseDetailList()){
+            useCaseDetailRepository.saveOrUpdateUseCaseDetail(useCaseDetail);
+        }
         // บันทึกข้อมูล TestScriptList
         for (TestScript script : testScriptList.getTestScriptList()) {
             testScriptRepository.updateTestScript(script);
@@ -285,50 +300,6 @@ public class PopupTREdit {
         for (Manager manager : managerList.getManagerList()) {
             managerRepository.updateManager(manager);
         }
-    }
-    private void loadProject() {
-        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
-        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
-        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
-        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
-        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
-        DataSource<TestResultList> testResultListDataSource = new TestResultListFileDataSource(directory, projectName + ".csv");
-        DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
-        DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
-        DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
-        testResultList = testResultListDataSource.readData();
-        testResultDetailListTemp = testResultDetailListDataSource.readData();
-        iRreportList = iRreportListDataSource.readData();
-        iRreportDetailList = iRreportDetailListDataSource.readData();
-        testScriptList = testScriptListDataSource.readData();
-        testScriptDetailList = testScriptDetailListDataSource.readData();
-        testCaseList = testCaseListDataSource.readData();
-        testCaseDetailList = testCaseDetailListDataSource.readData();
-        testFlowPositionList = testFlowPositionListDataSource.readData();
-        connectionList = connectionListDataSource.readData();
-        useCaseList = useCaseListDataSource.readData();
-    }
-    private void saveProject() {
-        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
-        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
-        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
-        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
-        DataSource<TestResultList> testResultListDataSource = new TestResultListFileDataSource(directory, projectName + ".csv");
-        DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
-        DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
-        DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
-        testResultListDataSource.writeData(testResultList);
-        testResultDetailListDataSource.writeData(testResultDetailList);
-        iRreportListDataSource.writeData(iRreportList);
-        iRreportDetailListDataSource.writeData(iRreportDetailList);
-        testFlowPositionListDataSource.writeData(testFlowPositionList);
-        testScriptDetailListDataSource.writeData(testScriptDetailList);
-        testCaseListDataSource.writeData(testCaseList);
-        testCaseDetailListDataSource.writeData(testCaseDetailList);
-        connectionListDataSource.writeData(connectionList);
     }
 //    private void setData() {
 //        testResultNameLabel.setText(testResult.getNameTR());

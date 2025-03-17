@@ -26,8 +26,6 @@ import javafx.stage.FileChooser;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
-import ku.cs.testTools.Services.DataSource;
-import ku.cs.testTools.Services.DataSourceCSV.*;
 import ku.cs.testTools.Services.Repository.*;
 
 import javax.imageio.ImageIO;
@@ -167,7 +165,6 @@ public class TestFlowController {
 
         }
 
-        saveProject();
         saveRepo();
     }
 
@@ -287,7 +284,6 @@ public class TestFlowController {
     }
     @FXML
     void handleSaveMenuItem(ActionEvent event) throws IOException{
-        saveProject();
         saveRepo();
     }
 
@@ -407,25 +403,55 @@ public class TestFlowController {
         onDesignArea.getChildren().clear();
 //        onDesignArea.requestLayout();
         onNoteTextArea.clear();
-        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
-        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory,projectName + ".csv");
-        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory,projectName + ".csv");
-        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
-        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
-        DataSource<NoteList> noteListDataSource = new NoteListFileDataSource(directory,projectName + ".csv");
-        //testScriptDetailList.clearItems();
-        //onNoteTextArea.clear();
+        TestScriptRepository testScriptRepository = new TestScriptRepository();
+        TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
+        TestFlowPositionRepository testFlowPositionRepository = new TestFlowPositionRepository();
+        TestCaseRepository testCaseRepository = new TestCaseRepository();
+        TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
+        ConnectionRepository connectionRepository = new ConnectionRepository();
+        NoteRepository noteRepository = new NoteRepository();
 
-        testScriptList = testScriptListDataSource.readData();
-        testScriptDetailList = testScriptDetailListDataSource.readData();
-        testCaseList = testCaseListDataSource.readData();
-        testCaseDetailList = testCaseDetailListDataSource.readData();
-        testFlowPositionList = testFlowPositionListDataSource.readData();
-        connectionList = connectionListDataSource.readData();
-        noteList = noteListDataSource.readData();
-        useCaseList = useCaseListDataSource.readData();
+        // โหลด TestScriptList
+        testScriptList = new TestScriptList();
+        for (TestScript script : testScriptRepository.getAllTestScripts()) {
+            testScriptList.addTestScript(script);
+        }
+
+        // โหลด TestScriptDetailList
+        testScriptDetailList = new TestScriptDetailList();
+        for (TestScriptDetail detail : testScriptDetailRepository.getAllTestScriptDetail()) {
+            testScriptDetailList.addTestScriptDetail(detail);
+        }
+
+        // โหลด TestFlowPositionList
+        testFlowPositionList = new TestFlowPositionList();
+        for (TestFlowPosition position : testFlowPositionRepository.getAllTestFlowPositions()) {
+            testFlowPositionList.addPosition(position);
+        }
+
+        // โหลด TestCaseList
+        testCaseList = new TestCaseList();
+        for (TestCase testCase : testCaseRepository.getAllTestCases()) {
+            testCaseList.addTestCase(testCase);
+        }
+
+        // โหลด TestCaseDetailList
+        testCaseDetailList = new TestCaseDetailList();
+        for (TestCaseDetail detail : testCaseDetailRepository.getAllTestCaseDetails()) {
+            testCaseDetailList.addTestCaseDetail(detail);
+        }
+
+        // โหลด ConnectionList
+        connectionList = new ConnectionList();
+        for (Connection connection : connectionRepository.getAllConnections()) {
+            connectionList.addConnection(connection);
+        }
+
+        // โหลด NoteList
+        noteList = new NoteList();
+        for (Note note : noteRepository.getAllNote()) {
+            noteList.addNote(note);
+        }
 
         loadData(projectName,name);
     }
@@ -549,61 +575,74 @@ public class TestFlowController {
 
 
 
-    private void saveProject() {
-//        onDesignArea.getChildren().clear();
-//        onDesignArea.requestLayout();
-        // สร้าง DataSource สำหรับแต่ละประเภทของข้อมูล
-        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
-        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
-        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
-        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory, projectName + ".csv");
-        DataSource<NoteList> noteListDataSource = new NoteListFileDataSource(directory, projectName + ".csv");
+    private void loadRepo(){
+        // สร้างออบเจ็กต์ของแต่ละ Repository
+        TestScriptRepository testScriptRepository = new TestScriptRepository();
+        TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
+        TestFlowPositionRepository testFlowPositionRepository = new TestFlowPositionRepository();
+        TestCaseRepository testCaseRepository = new TestCaseRepository();
+        TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
+        TestResultRepository testResultRepository = new TestResultRepository();
+        TestResultDetailRepository testResultDetailRepository = new TestResultDetailRepository();
+        IRReportRepository irReportRepository = new IRReportRepository();
+        IRDetailRepository irDetailRepository = new IRDetailRepository();
+        ConnectionRepository connectionRepository = new ConnectionRepository();
+        NoteRepository noteRepository = new NoteRepository();
+        TesterRepository testerRepository = new TesterRepository(); // เพิ่ม TesterRepository
+        ManagerRepository managerRepository = new ManagerRepository(); // เพิ่ม ManagerRepository
+        UseCaseRepository useCaseRepository = new UseCaseRepository();
+        UseCaseDetailRepository useCaseDetailRepository = new UseCaseDetailRepository();
 
-        // บันทึกข้อมูลลงไฟล์
-        testFlowPositionListDataSource.writeData(testFlowPositionList);
-        testScriptListDataSource.writeData(testScriptList);
-        testScriptDetailListDataSource.writeData(testScriptDetailList);
-        testCaseListDataSource.writeData(testCaseList);
-        testCaseDetailListDataSource.writeData(testCaseDetailList);
-        connectionListDataSource.writeData(connectionList);
-        noteListDataSource.writeData(noteList);
+        useCaseList = new UseCaseList();
+        for (UseCase usecase : useCaseRepository.getAllUseCases()){
+            useCaseList.addUseCase(usecase);
+        }
+        // โหลด TestScriptList
+        testScriptList = new TestScriptList();
+        for (TestScript script : testScriptRepository.getAllTestScripts()) {
+            testScriptList.addTestScript(script);
+        }
 
-        // สร้างและอัพเดทแต่ละ Repository แยกกัน
-//        TestScriptRepository testScriptRepository = new TestScriptRepository();
-//        for (TestScript testScript : testScriptList.getTestScriptList()) {
-//            testScriptRepository.updateTestScript(testScript);
-//        }
-//
-//        TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
-//        for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()) {
-//            testScriptDetailRepository.updateTestScriptDetail(testScriptDetail);
-//        }
-//
-//        TestCaseRepository testCaseRepository = new TestCaseRepository();
-//        for (TestCase testCase : testCaseList.getTestCaseList()) {
-//            testCaseRepository.updateTestCase(testCase);
-//        }
-//
-//        TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
-//        for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()) {
-//            testCaseDetailRepository.updateTestCaseDetail(testCaseDetail);
-//        }
-//
-//        ConnectionRepository connectionRepository = new ConnectionRepository();
-//        for (Connection connection : connectionList.getConnectionList()) {
-//            connectionRepository.updateConnection(connection);
-//        }
-//
-//        NoteRepository noteRepository = new NoteRepository();
-//        for (Note note : noteList.getNoteList()) {
-//            noteRepository.updateNote(note);
-//        }
+        // โหลด TestScriptDetailList
+        testScriptDetailList = new TestScriptDetailList();
+        for (TestScriptDetail detail : testScriptDetailRepository.getAllTestScriptDetail()) {
+            testScriptDetailList.addTestScriptDetail(detail);
+        }
 
-        System.out.println("Project Saved");
+        // โหลด TestFlowPositionList
+        testFlowPositionList = new TestFlowPositionList();
+        for (TestFlowPosition position : testFlowPositionRepository.getAllTestFlowPositions()) {
+            testFlowPositionList.addPosition(position);
+        }
+
+        // โหลด TestCaseList
+        testCaseList = new TestCaseList();
+        for (TestCase testCase : testCaseRepository.getAllTestCases()) {
+            testCaseList.addTestCase(testCase);
+        }
+
+        // โหลด TestCaseDetailList
+        testCaseDetailList = new TestCaseDetailList();
+        for (TestCaseDetail detail : testCaseDetailRepository.getAllTestCaseDetails()) {
+            testCaseDetailList.addTestCaseDetail(detail);
+        }
+
+        // โหลด TestResultList
+
+        // โหลด ConnectionList
+        connectionList = new ConnectionList();
+        for (Connection connection : connectionRepository.getAllConnections()) {
+            connectionList.addConnection(connection);
+        }
+
+        // โหลด NoteList
+        noteList = new NoteList();
+        for (Note note : noteRepository.getAllNote()) {
+            noteList.addNote(note);
+        }
+
+        // โหลด TesterList
     }
-
 
     public Rectangle drawBorder(double width, double height){
         Rectangle border = new Rectangle(width, height);
@@ -767,7 +806,6 @@ public class TestFlowController {
         objects.add(positionID);
         objects.add(null);
         try {
-            saveProject();
             saveRepo();
             FXRouter.newPopup("popup_info_testcase", objects, true);
         } catch (IOException e) {
@@ -955,7 +993,7 @@ public class TestFlowController {
                         testFlowPositionList.updateSize(ID, newWidth, newHeight);
 
                         // บันทึกโปรเจค
-                        saveProject();
+                       
                         saveRepo();
                     }
                 });
@@ -1028,7 +1066,7 @@ public class TestFlowController {
                     testFlowPositionList.updateSize(ID, newRadius * 2, newRadius * 2);
 
                     // Save project state
-                    saveProject();
+                   
                     saveRepo();
 
                 });
@@ -1063,7 +1101,7 @@ public class TestFlowController {
                 // อัปเดตตำแหน่งของ Anchor Points
                 updateAnchorPositions(anchors, stackPane, rectangle);
                 testFlowPositionList.updatePosition(ID, newX, newY);
-                saveProject();
+               
                 saveRepo();
             });
         }
@@ -1092,7 +1130,7 @@ public class TestFlowController {
                 // อัปเดตตำแหน่งของ Anchor Points
                 updateAnchorPositions(anchors, stackPane, circle);
                 testFlowPositionList.updatePosition(ID, newX, newY);
-                saveProject();
+               
                 saveRepo();
             });
         }
@@ -1121,7 +1159,7 @@ public class TestFlowController {
                 // อัปเดตตำแหน่งของ Anchor Points
                 updateAnchorPositions(anchors, stackPane, polygon);
                 testFlowPositionList.updatePosition(positionID, newX, newY);
-                saveProject();
+               
                 saveRepo();
             });
         }
@@ -1243,7 +1281,7 @@ public class TestFlowController {
                         testFlowPositionList.updateSize(ID, newWidth, newHeight);
 
                         // บันทึกโปรเจค
-                        saveProject();
+                       
                         saveRepo();
                     }
                 });
@@ -1397,7 +1435,7 @@ public class TestFlowController {
         objects.add(positionID);
         objects.add(null);
         try {
-            saveProject();
+           
             saveRepo();
             FXRouter.newPopup("popup_info_testscript", objects, true);
         } catch (IOException e) {
@@ -1497,7 +1535,7 @@ public class TestFlowController {
         onDesignArea.setOnMouseClicked(mouseEvent -> {
             hideBorderAndAnchors(border, anchors);
         });
-        saveProject();
+       
         saveRepo();
     }
 
@@ -1546,7 +1584,7 @@ public class TestFlowController {
         onDesignArea.setOnMouseClicked(mouseEvent -> {
             hideBorderAndAnchors(border, anchors);
         });
-        saveProject();
+       
         saveRepo();
     }
     private void drawDecision(double width, double height, double layoutX, double layoutY, String label, UUID positionID) {
@@ -1601,7 +1639,7 @@ public class TestFlowController {
             hideBorderAndAnchors(border, anchors);
         });
         // บันทึกโปรเจค
-        saveProject();
+       
         saveRepo();
     }
 
@@ -1680,7 +1718,7 @@ public class TestFlowController {
 
             // ทำให้เส้นสามารถเลือกได้
             makeSelectable(line, "line", connectionID);
-            saveProject();
+           
             saveRepo();
 
             // Event handler สำหรับคลิกที่เส้นเพื่อแสดงจุด
@@ -1707,7 +1745,7 @@ public class TestFlowController {
 //                objects.add(directory);
 //                objects.add(connectionID);
 //                try {
-//                    saveProject();
+//                   
                         //saveRepo();
 //                    FXRouter.popup("ConnectionPage", objects);
 //                } catch (IOException e) {
@@ -1773,7 +1811,7 @@ public class TestFlowController {
 
         // Update the connection
         connectionList.updateConnection(connectionID, line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
-        saveProject();
+       
         saveRepo();
     }
 
@@ -1871,7 +1909,7 @@ public class TestFlowController {
             node.setLayoutX(newX);
             node.setLayoutY(newY);
             testFlowPositionList.updatePosition(ID, newX, newY);
-            saveProject();
+           
             saveRepo();
 
         });
@@ -1931,7 +1969,7 @@ public class TestFlowController {
                 drawStart(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(), connection.getLabel(), testFlowPosition.getPositionID());
                 TestFlowPositionRepository testFlowPositionRepository = new TestFlowPositionRepository();
                 testFlowPositionRepository.saveOrUpdateTestFlowPosition(testFlowPosition);
-                saveProject();
+               
                 saveRepo();
 
             }else if (event.getDragboard().getString().equals("BlackCircle")) {
@@ -1942,7 +1980,7 @@ public class TestFlowController {
                 drawEnd(testFlowPosition.getFitWidth(), testFlowPosition.getFitHeight(), testFlowPosition.getXPosition(), testFlowPosition.getYPosition(), connection.getLabel(), testFlowPosition.getPositionID());
                 TestFlowPositionRepository testFlowPositionRepository = new TestFlowPositionRepository();
                 testFlowPositionRepository.saveOrUpdateTestFlowPosition(testFlowPosition);
-                saveProject();
+               
                 saveRepo();
             }else if (event.getDragboard().getString().equals("Kite")) {
                 ArrayList<Object> objects = new ArrayList<>();
@@ -1960,13 +1998,13 @@ public class TestFlowController {
                 randomId();
                 addToConnectionList(event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Arrow", "none", "line", "open","line");
                 drawLine(id, event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Association", "none", "line", "open");
-                saveProject();
+               
                 saveRepo();
             }else if (event.getDragboard().getString().equals("Line")) {
                 randomId();
                 addToConnectionList(event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Line", "none", "line", "none","line");
                 drawLine(id, event.getX() - 45, event.getY() + 45 , event.getX() + 45, event.getY() - 45, "Association", "none", "line", "none");
-                saveProject();
+               
                 saveRepo();
             }
             event.setDropCompleted(true);
@@ -1997,7 +2035,7 @@ public class TestFlowController {
         connectionList.addConnection(connection);
         ConnectionRepository connectionRepository = new ConnectionRepository();
         connectionRepository.addConnection(connection);
-        saveProject();
+       
         saveRepo();
     }
 
@@ -2090,7 +2128,7 @@ public class TestFlowController {
                                 testFlowPositionList.updatePosition(ID, node.getLayoutX(), node.getLayoutY());
                                 // Update the size
                                 testFlowPositionList.updateSize(ID, newWidth, newHeight);
-                                saveProject();
+                               
                                 saveRepo();
                             }else if (Objects.equals(type, "testcase")){
                                 ((Rectangle) ((StackPane) node).getChildren().get(0)).setWidth(newWidth);
@@ -2099,7 +2137,7 @@ public class TestFlowController {
                                 testFlowPositionList.updatePosition(ID, node.getLayoutX(), node.getLayoutY());
                                 // Update the size
                                 testFlowPositionList.updateSize(ID, newWidth, newHeight);
-                                saveProject();
+                               
                                 saveRepo();
 
 
@@ -2109,7 +2147,7 @@ public class TestFlowController {
                 });
                 node.setOnMouseReleased(mouseEvent -> {
                     node.setOnMouseDragged(null);
-                    saveProject();
+                   
                     saveRepo();
                     if (!Objects.equals(type, "line") || !Objects.equals(type, "arrow")) {
                         makeDraggable(node, type, ID);
@@ -2209,7 +2247,7 @@ public class TestFlowController {
                         testFlowPositionList.removePositionByID(ID);
                     }
                     onDesignArea.getChildren().remove(node);
-                    saveProject();
+                   
                     loadProject();
                     System.out.println("Item Removed");
                 }
@@ -2263,7 +2301,7 @@ public class TestFlowController {
                             "open",
                             "line"
                     );
-                    saveProject();
+                   
                     saveRepo();
                 }
             });
@@ -2271,7 +2309,7 @@ public class TestFlowController {
 
             node.setOnMouseReleased(mouseEvent -> {
                 node.setOnMouseDragged(null);
-                saveProject();
+               
                 saveRepo();
                 if (!Objects.equals(type,"line")|| !Objects.equals(type, "arrow")) {
                     makeDraggable(node, type, ID);

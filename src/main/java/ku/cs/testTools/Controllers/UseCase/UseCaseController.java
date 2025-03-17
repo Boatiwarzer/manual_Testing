@@ -10,10 +10,8 @@ import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Services.Repository.ManagerRepository;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
-import ku.cs.testTools.Services.DataSource;
-import ku.cs.testTools.Services.DataSourceCSV.*;
 import ku.cs.testTools.Services.UseCaseComparable;
-
+import ku.cs.testTools.Services.Repository.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -88,7 +86,7 @@ public class UseCaseController {
                 useCase = (UseCase) objects.get(3);
             }
             loadStatusButton();
-            loadProject();
+            loadRepo();
             loadListView(useCaseList);
             selected();
             for (UseCase useCase : useCaseList.getUseCaseList()) {
@@ -97,7 +95,7 @@ public class UseCaseController {
             searchSet();
 
         }else {
-            loadProject();
+            loadRepo();
             loadListView(useCaseList);
             selected();
             for (UseCase useCase : useCaseList.getUseCaseList()) {
@@ -169,27 +167,82 @@ public class UseCaseController {
         objects.add(nameTester);
         objects.add(null);
     }
-    private void loadProject() {
-        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
-        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
-        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
-        DataSource<UseCaseDetailList> useCaseDetailListFileDataSource = new UseCaseDetailListFileDataSource(directory,projectName+".csv");
-        useCaseList = useCaseListDataSource.readData();
-        useCaseDetailList = useCaseDetailListFileDataSource.readData();
-        testFlowPositionList = testFlowPositionListDataSource.readData();
-        connectionList = connectionListDataSource.readData();
+    private void loadRepo(){
+        // สร้างออบเจ็กต์ของแต่ละ Repository
+        TestScriptRepository testScriptRepository = new TestScriptRepository();
+        TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
+        TestFlowPositionRepository testFlowPositionRepository = new TestFlowPositionRepository();
+        TestCaseRepository testCaseRepository = new TestCaseRepository();
+        TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
+        TestResultRepository testResultRepository = new TestResultRepository();
+        TestResultDetailRepository testResultDetailRepository = new TestResultDetailRepository();
+        IRReportRepository irReportRepository = new IRReportRepository();
+        IRDetailRepository irDetailRepository = new IRDetailRepository();
+        ConnectionRepository connectionRepository = new ConnectionRepository();
+        NoteRepository noteRepository = new NoteRepository();
+        TesterRepository testerRepository = new TesterRepository(); // เพิ่ม TesterRepository
+        ManagerRepository managerRepository = new ManagerRepository(); // เพิ่ม ManagerRepository
+        UseCaseRepository useCaseRepository = new UseCaseRepository();
+        UseCaseDetailRepository useCaseDetailRepository = new UseCaseDetailRepository();
+
+        useCaseList = new UseCaseList();
+        for (UseCase usecase : useCaseRepository.getAllUseCases()){
+            useCaseList.addUseCase(usecase);
+        }
+        useCaseDetailList = new UseCaseDetailList();
+        for (UseCaseDetail useCaseDetail : useCaseDetailRepository.getAllUseCaseDetails()){
+            useCaseDetailList.addUseCaseDetail(useCaseDetail);
+        }
+        // โหลด TestScriptList
+
+        // โหลด TestFlowPositionList
+        testFlowPositionList = new TestFlowPositionList();
+        for (TestFlowPosition position : testFlowPositionRepository.getAllTestFlowPositions()) {
+            testFlowPositionList.addPosition(position);
+        }
+
 
     }
-    private void saveProject() {
-        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
-        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
-        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
-        DataSource<UseCaseDetailList> useCaseDetailListFileDataSource = new UseCaseDetailListFileDataSource(directory,projectName+".csv");
+    private void saveRepo() {
+        // สร้างออบเจ็กต์ของแต่ละ Repository
+        TestScriptRepository testScriptRepository = new TestScriptRepository();
+        TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
+        TestFlowPositionRepository testFlowPositionRepository = new TestFlowPositionRepository();
+        TestCaseRepository testCaseRepository = new TestCaseRepository();
+        TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
+        TestResultRepository testResultRepository = new TestResultRepository();
+        TestResultDetailRepository testResultDetailRepository = new TestResultDetailRepository();
+        IRReportRepository irReportRepository = new IRReportRepository();
+        IRDetailRepository irDetailRepository = new IRDetailRepository();
+        ConnectionRepository connectionRepository = new ConnectionRepository();
+        NoteRepository noteRepository = new NoteRepository();
+        TesterRepository testerRepository = new TesterRepository();
+        ManagerRepository managerRepository = new ManagerRepository();
+        UseCaseRepository useCaseRepository = new UseCaseRepository();
+        UseCaseDetailRepository useCaseDetailRepository = new UseCaseDetailRepository();
+        for (UseCase useCase : useCaseList.getUseCaseList()){
+            useCaseRepository.updateUseCase(useCase);
+        }
+        for (UseCaseDetail useCaseDetail : useCaseDetailList.getUseCaseDetailList()){
+            useCaseDetailRepository.saveOrUpdateUseCaseDetail(useCaseDetail);
+        }
+        // บันทึกข้อมูล TestScriptList
 
-        testFlowPositionListDataSource.writeData(testFlowPositionList);
-        connectionListDataSource.writeData(connectionList);
-        useCaseListDataSource.writeData(useCaseList);
-        useCaseDetailListFileDataSource.writeData(useCaseDetailList);
+
+        // บันทึกข้อมูล TestFlowPositionList
+        for (TestFlowPosition position : testFlowPositionList.getPositionList()) {
+            testFlowPositionRepository.updateTestFlowPosition(position);
+        }
+
+        // บันทึกข้อมูล TestCaseList
+
+
+        // บันทึกข้อมูล ConnectionList
+        for (Connection connection : connectionList.getConnectionList()) {
+            connectionRepository.saveOrUpdateConnection(connection);
+        }
+
+        // บันทึกข้อมูล NoteList
 
     }
 
@@ -414,7 +467,7 @@ public class UseCaseController {
     }
     @FXML
     void handleSaveMenuItem(ActionEvent event) throws IOException{
-        saveProject();
+        saveRepo();
     }
 
     @FXML

@@ -10,11 +10,11 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import ku.cs.testTools.Services.Repository.*;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.AutoCompleteComboBoxListener;
-import ku.cs.testTools.Services.DataSource;
-import ku.cs.testTools.Services.DataSourceCSV.*;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -107,7 +107,7 @@ public class PopupAddTestresultController {
             idTR = testResult.getIdTR();
             type = (String) objects.get(6);
             System.out.println(nameTester);
-            loadProject();
+            loadRepo();
             selectedComboBox();
             onTester.setText(nameTester);
             if (objects.get(7) != null && type.equals("edit")) {
@@ -122,50 +122,163 @@ public class PopupAddTestresultController {
 
         }
     }
-    private void loadProject() {
-        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
-        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
-        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-        DataSource<TestScriptList> testScriptListDataSource = new TestScriptFileDataSource(directory, projectName + ".csv");
-        DataSource<UseCaseList> useCaseListDataSource = new UseCaseListFileDataSource(directory,projectName+".csv");
-        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
-        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
-        DataSource<TestResultList> testResultListDataSource = new TestResultListFileDataSource(directory, projectName + ".csv");
-        DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
-        DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
-        DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
-        testResultList = testResultListDataSource.readData();
-        testResultDetailListTemp = testResultDetailListDataSource.readData();
-        iRreportList = iRreportListDataSource.readData();
-        iRreportDetailList = iRreportDetailListDataSource.readData();
-        testScriptList = testScriptListDataSource.readData();
-        testScriptDetailList = testScriptDetailListDataSource.readData();
-        testCaseList = testCaseListDataSource.readData();
-        testCaseDetailList = testCaseDetailListDataSource.readData();
-        testFlowPositionList = testFlowPositionListDataSource.readData();
-        connectionList = connectionListDataSource.readData();
-        useCaseList = useCaseListDataSource.readData();
+    private void loadRepo(){
+        // สร้างออบเจ็กต์ของแต่ละ Repository
+        TestScriptRepository testScriptRepository = new TestScriptRepository();
+        TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
+        TestFlowPositionRepository testFlowPositionRepository = new TestFlowPositionRepository();
+        TestCaseRepository testCaseRepository = new TestCaseRepository();
+        TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
+        TestResultRepository testResultRepository = new TestResultRepository();
+        TestResultDetailRepository testResultDetailRepository = new TestResultDetailRepository();
+        IRReportRepository irReportRepository = new IRReportRepository();
+        IRDetailRepository irDetailRepository = new IRDetailRepository();
+        ConnectionRepository connectionRepository = new ConnectionRepository();
+        NoteRepository noteRepository = new NoteRepository();
+        TesterRepository testerRepository = new TesterRepository(); // เพิ่ม TesterRepository
+        ManagerRepository managerRepository = new ManagerRepository(); // เพิ่ม ManagerRepository
+        UseCaseRepository useCaseRepository = new UseCaseRepository();
+        UseCaseDetailRepository useCaseDetailRepository = new UseCaseDetailRepository();
+
+        useCaseList = new UseCaseList();
+        for (UseCase usecase : useCaseRepository.getAllUseCases()){
+            useCaseList.addUseCase(usecase);
+        }
+        // โหลด TestScriptList
+        testScriptList = new TestScriptList();
+        for (TestScript script : testScriptRepository.getAllTestScripts()) {
+            testScriptList.addTestScript(script);
+        }
+
+        // โหลด TestScriptDetailList
+        testScriptDetailList = new TestScriptDetailList();
+        for (TestScriptDetail detail : testScriptDetailRepository.getAllTestScriptDetail()) {
+            testScriptDetailList.addTestScriptDetail(detail);
+        }
+
+        // โหลด TestFlowPositionList
+        testFlowPositionList = new TestFlowPositionList();
+        for (TestFlowPosition position : testFlowPositionRepository.getAllTestFlowPositions()) {
+            testFlowPositionList.addPosition(position);
+        }
+
+        // โหลด TestCaseList
+        testCaseList = new TestCaseList();
+        for (TestCase testCase : testCaseRepository.getAllTestCases()) {
+            testCaseList.addTestCase(testCase);
+        }
+
+        // โหลด TestCaseDetailList
+        testCaseDetailList = new TestCaseDetailList();
+        for (TestCaseDetail detail : testCaseDetailRepository.getAllTestCaseDetails()) {
+            testCaseDetailList.addTestCaseDetail(detail);
+        }
+
+        // โหลด TestResultList
+        testResultList = new TestResultList();
+        for (TestResult result : testResultRepository.getAllTestResults()) {
+            testResultList.addTestResult(result);
+        }
+
+        // โหลด TestResultDetailList
+        testResultDetailList = new TestResultDetailList();
+        for (TestResultDetail detail : testResultDetailRepository.getAllTestResultDetails()) {
+            testResultDetailList.addTestResultDetail(detail);
+        }
+
+        // โหลด IRReportList
+        iRreportList = new IRreportList();
+        for (IRreport report : irReportRepository.getAllIRReports()) {
+            iRreportList.addOrUpdateIRreport(report);
+        }
+
+        // โหลด IRDetailList
+        iRreportDetailList = new IRreportDetailList();
+        for (IRreportDetail detail : irDetailRepository.getAllIRReportDetIL()) {
+            iRreportDetailList.addOrUpdateIRreportDetail(detail);
+        }
+
+        // โหลด ConnectionList
+        connectionList = new ConnectionList();
+        for (Connection connection : connectionRepository.getAllConnections()) {
+            connectionList.addConnection(connection);
+        }
+
+        // โหลด NoteList
 
     }
-    private void saveProject() {
-        DataSource<TestCaseList> testCaseListDataSource = new TestCaseFileDataSource(directory, projectName + ".csv");
-        DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
-        DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-        DataSource<TestFlowPositionList> testFlowPositionListDataSource = new TestFlowPositionListFileDataSource(directory, projectName + ".csv");
-        DataSource<ConnectionList> connectionListDataSource = new ConnectionListFileDataSource(directory,projectName + ".csv");
-        DataSource<TestResultList> testResultListDataSource = new TestResultListFileDataSource(directory, projectName + ".csv");
-        DataSource<TestResultDetailList> testResultDetailListDataSource = new TestResultDetailListFileDataSource(directory, projectName + ".csv");
-        DataSource<IRreportList> iRreportListDataSource = new IRreportListFileDataSource(directory, projectName + ".csv");
-        DataSource<IRreportDetailList> iRreportDetailListDataSource = new IRreportDetailListFileDataSource(directory, projectName + ".csv");
-        testResultListDataSource.writeData(testResultList);
-        testResultDetailListDataSource.writeData(testResultDetailList);
-        iRreportListDataSource.writeData(iRreportList);
-        iRreportDetailListDataSource.writeData(iRreportDetailList);
-        testFlowPositionListDataSource.writeData(testFlowPositionList);
-        testScriptDetailListDataSource.writeData(testScriptDetailList);
-        testCaseListDataSource.writeData(testCaseList);
-        testCaseDetailListDataSource.writeData(testCaseDetailList);
-        connectionListDataSource.writeData(connectionList);
+    private void saveRepo() {
+        // สร้างออบเจ็กต์ของแต่ละ Repository
+        TestScriptRepository testScriptRepository = new TestScriptRepository();
+        TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
+        TestFlowPositionRepository testFlowPositionRepository = new TestFlowPositionRepository();
+        TestCaseRepository testCaseRepository = new TestCaseRepository();
+        TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
+        TestResultRepository testResultRepository = new TestResultRepository();
+        TestResultDetailRepository testResultDetailRepository = new TestResultDetailRepository();
+        IRReportRepository irReportRepository = new IRReportRepository();
+        IRDetailRepository irDetailRepository = new IRDetailRepository();
+        ConnectionRepository connectionRepository = new ConnectionRepository();
+        NoteRepository noteRepository = new NoteRepository();
+        TesterRepository testerRepository = new TesterRepository();
+        ManagerRepository managerRepository = new ManagerRepository();
+        UseCaseRepository useCaseRepository = new UseCaseRepository();
+        UseCaseDetailRepository useCaseDetailRepository = new UseCaseDetailRepository();
+        for (UseCase useCase : useCaseList.getUseCaseList()){
+            useCaseRepository.updateUseCase(useCase);
+        }
+
+        // บันทึกข้อมูล TestScriptList
+        for (TestScript script : testScriptList.getTestScriptList()) {
+            testScriptRepository.updateTestScript(script);
+        }
+
+        // บันทึกข้อมูล TestScriptDetailList
+        for (TestScriptDetail detail : testScriptDetailList.getTestScriptDetailList()) {
+            testScriptDetailRepository.updateTestScriptDetail(detail);
+        }
+
+        // บันทึกข้อมูล TestFlowPositionList
+        for (TestFlowPosition position : testFlowPositionList.getPositionList()) {
+            testFlowPositionRepository.updateTestFlowPosition(position);
+        }
+
+        // บันทึกข้อมูล TestCaseList
+        for (TestCase testCase : testCaseList.getTestCaseList()) {
+            testCaseRepository.updateTestCase(testCase);
+        }
+
+        // บันทึกข้อมูล TestCaseDetailList
+        for (TestCaseDetail detail : testCaseDetailList.getTestCaseDetailList()) {
+            testCaseDetailRepository.updateTestCaseDetail(detail);
+        }
+
+        // บันทึกข้อมูล TestResultList
+        for (TestResult result : testResultList.getTestResultList()) {
+            testResultRepository.updateTestResult(result);
+        }
+
+        // บันทึกข้อมูล TestResultDetailList
+        for (TestResultDetail detail : testResultDetailList.getTestResultDetailList()) {
+            testResultDetailRepository.updateTestResultDetail(detail);
+        }
+
+        // บันทึกข้อมูล IRReportList
+        for (IRreport report : iRreportList.getIRreportList()) {
+            irReportRepository.updateIRReport(report);
+        }
+
+        // บันทึกข้อมูล IRDetailList
+        for (IRreportDetail detail : iRreportDetailList.getIRreportDetailList()) {
+            irDetailRepository.updateIRReportDetail(detail);
+        }
+
+        // บันทึกข้อมูล ConnectionList
+        for (Connection connection : connectionList.getConnectionList()) {
+            connectionRepository.saveOrUpdateConnection(connection);
+        }
+
+        // บันทึกข้อมูล NoteList
 
     }
 
@@ -318,31 +431,11 @@ public class PopupAddTestresultController {
                 String selectedId = onTestscriptIDComboBox.getValue(); // ดึง ID จาก ComboBox
                 String[] parts = selectedId.split(" : "); // แยกข้อความตาม " : "
                 String tsId = parts[0]; // ดึงส่วนแรกออกมา
-                loadProject();
-                DataSource<TestScriptDetailList> testScriptDetailListDataSource = new TestScriptDetailFIleDataSource(directory, projectName + ".csv");
-                List<TestScriptDetail> testScriptDetailList = testScriptDetailListDataSource.readData().getTestScriptDetailList();
-                DataSource<TestCaseDetailList> testCaseDetailListDataSource = new TestCaseDetailFileDataSource(directory, projectName + ".csv");
-                List<TestCaseDetail> testCaseDetailList = testCaseDetailListDataSource.readData().getTestCaseDetailList();
-                for (TestCaseDetail testCaseDetail : testCaseDetailList){
-
-                    System.out.println(tsId);
-                    TestCase ts = testCaseList.findTCByIdTS(selectedId);
-                    System.out.println(ts);
-                    String tc = ts.getIdTC();
-                    System.out.println(tc);
-                    String[] partsTc = tc.split(" : "); // แยกข้อความตาม " : "
-                    String id = partsTc[0].trim();
-                    if (testCaseDetail.getIdTC().equals(id)) {
-                        // ถ้าตรง ก็เพิ่ม testSteps ลงใน List
-                        onInputdataCombobox.getItems().add(testCaseDetail.getVariableTCD());
-                    }
-                }
-
                 if (tsId != null && !tsId.trim().isEmpty()) {
                     TestScript script = testScriptList.findTSById(tsId.trim()); // ค้นหา TestScript โดย ID
                     if (script != null) {
                         onDescription.setText(script.getDescriptionTS());
-//                        onExpected.setText(script.getPostCon());// แสดงผลใน Label
+                        onExpected.setText(script.getPostCon());// แสดงผลใน Label
                         String uc = script.getUseCase();
                         String[] partsUc = uc.split(" : "); // แยกข้อความตาม " : "
                         String ucId = partsUc[0]; // ดึงส่วนแรกออกมา
@@ -369,17 +462,30 @@ public class PopupAddTestresultController {
                         onActual.setText("No Actor found for ID: " + tsId);
                     }
                 }
-
+                loadRepo();
 
                 List<String> matchingSteps = new ArrayList<>();
-                List<String> matchedData = new ArrayList<>();
 
                 // ค้นหาข้อมูล testSteps สำหรับ id ที่ตรง
-                for (TestScriptDetail testScriptDetail : testScriptDetailList) {
+                for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()) {
                     // ตรวจสอบว่า id ของ testScriptDetail ตรงกับ tsId หรือไม่
                     if (testScriptDetail.getIdTS().equals(tsId)) {
                         // ถ้าตรง ก็เพิ่ม testSteps ลงใน List
                         matchingSteps.add(testScriptDetail.getSteps());
+                    }
+                }
+                for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()){
+
+                    System.out.println(tsId);
+                    TestCase ts = testCaseList.findTCByIdTS(selectedId);
+                    System.out.println(ts);
+                    String tc = ts.getIdTC();
+                    System.out.println(tc);
+                    String[] partsTc = tc.split(" : "); // แยกข้อความตาม " : "
+                    String id = partsTc[0].trim();
+                    if (testCaseDetail.getIdTC().equals(id)) {
+                        // ถ้าตรง ก็เพิ่ม testSteps ลงใน List
+                        onInputdataCombobox.getItems().add(testCaseDetail.getVariableTCD());
                     }
                 }
 
@@ -387,7 +493,7 @@ public class PopupAddTestresultController {
                     String selectedData = onInputdataCombobox.getSelectionModel().getSelectedItem();
                     if (selectedData != null) {
                         String selectedInput = onTestscriptIDComboBox.getValue();
-                        for (TestCaseDetail testCaseDetail : testCaseDetailList){
+                        for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()){
                             if (testCaseDetail.getVariableTCD().equals(onInputdataCombobox.getValue())) {
                                 onExpected.setText(testCaseDetail.getExpectedTCD());
                             }
