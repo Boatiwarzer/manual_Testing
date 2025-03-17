@@ -516,6 +516,7 @@ public class TestScriptController {
     @FXML
     void onEditButton(ActionEvent event) {
         try {
+            System.out.println(testcase);
             ArrayList<Object>objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(directory);

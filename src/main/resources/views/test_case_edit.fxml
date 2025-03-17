@@ -271,7 +271,12 @@
                               <Font size="14.0" />
                            </font>
                         </Button>
-                        <Button fx:id="onSubmitButton" layoutX="840.0" layoutY="675.0" mnemonicParsing="false" onAction="#onSubmitButton" prefHeight="30.0" prefWidth="110.0" style="-fx-background-color: #6fadac;" text="Submit">
+                        <Button fx:id="onSubmitButton" layoutX="715.0" layoutY="675.0" mnemonicParsing="false" onAction="#onSubmitButton" prefHeight="30.0" prefWidth="110.0" style="-fx-background-color: #6fadac;" text="Submit">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="onDeleteButton" layoutX="840.0" layoutY="675.0" mnemonicParsing="false" onAction="#onDeleteButton" prefHeight="30.0" prefWidth="110.0" style="-fx-background-color: #c57179;" text="Delete">
                            <font>
                               <Font size="14.0" />
                            </font>

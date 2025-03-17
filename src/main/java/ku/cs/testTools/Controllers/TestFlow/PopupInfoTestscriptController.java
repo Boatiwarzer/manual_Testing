@@ -10,14 +10,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ku.cs.testTools.Models.Manager.Manager;
-import ku.cs.testTools.Services.Repository.ManagerRepository;
+import ku.cs.testTools.Services.Repository.*;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
 import ku.cs.testTools.Services.DataSourceCSV.*;
-import ku.cs.testTools.Services.Repository.TestFlowPositionRepository;
-import ku.cs.testTools.Services.Repository.TestScriptDetailRepository;
-import ku.cs.testTools.Services.Repository.TestScriptRepository;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -157,7 +154,7 @@ public class PopupInfoTestscriptController {
         setDate();
         testcase = testCaseList.findTCById(data[0]);
         if (testcase != null){
-            testcase = new TestCase(testcase.getIdTC(),name[1],testDateLabel.getText(),usecase,description,"-",testcase.getPosition(),preCon,post,testcase.getIdTC());
+            testcase = new TestCase(testcase.getIdTC(),name[1],testDateLabel.getText(),usecase,description,"-",testcase.getPosition(),preCon,post,testcase.getIdTS());
             String tc_combobox = testcase.getIdTC() + " : " + testcase.getNameTC();
             onTestcaseCombobox.setValue(tc_combobox);
         }
@@ -682,16 +679,20 @@ public class PopupInfoTestscriptController {
         String preCon = infoPreconLabel.getText();
         String note = onTestNoteField.getText();
         String post = infoPostconLabel.getText();
-
+        setTestcase();
         // Create a new TestScript object
         testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, post, note, position);
+
         testScriptList.addOrUpdateTestScript(testScript);
+        testCaseList.addTestCase(testcase);
         TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(position);
         if (testFlowPosition == null) {
             testFlowPosition = new TestFlowPosition(); // ถ้ายังไม่มี สร้างใหม่
         }
+
         testFlowPositionList.addPosition(testFlowPosition);
         TestScriptRepository testScriptRepository = new TestScriptRepository();
+        TestCaseRepository testCaseRepository = new TestCaseRepository();
         TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
 
         // ✅ อัปเดตหรือเพิ่ม TestScriptDetail โดยใช้ merge() ป้องกันปัญหา identifier ซ้ำ
@@ -708,6 +709,7 @@ public class PopupInfoTestscriptController {
 
         // ✅ ใช้ merge() ป้องกันการเพิ่มซ้ำ
         testScriptRepository.saveOrUpdateTestScript(testScript);
+        testCaseRepository.saveOrUpdateTestCase(testcase);
 
         // ✅ ตรวจสอบก่อนเพิ่มตำแหน่ง
 
