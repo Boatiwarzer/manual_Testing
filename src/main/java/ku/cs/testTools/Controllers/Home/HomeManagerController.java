@@ -22,38 +22,22 @@ import java.util.ArrayList;
 public class HomeManagerController {
 
     @FXML
-    private Hyperlink onClickIR;
+    private Hyperlink onClickIR, onClickTestflow, onClickTestresult, onClickUsecase;
 
     @FXML
-    private Hyperlink onClickTestflow;
+    private MenuItem exitQuit, exportMenuItem, exportPDF, newMenuItem, saveMenuItem;
 
     @FXML
-    private Hyperlink onClickTestresult;
+    private Menu fileMenu, exportMenu;
 
-    @FXML
-    private Hyperlink onClickUsecase;
-
-    @FXML
-    private MenuItem exitQuit;
-    @FXML
-    private Menu exportMenu;
-    @FXML
-    private MenuItem exportMenuItem;
-    @FXML
-    private MenuItem exportPDF;
-    @FXML
-    private Menu fileMenu;
-    @FXML
-    private MenuItem newMenuItem;
     @FXML
     private MenuBar homePageMenuBar;
-    @FXML
-    private MenuItem saveMenuItem;
 
     private String projectName, directory;
     private ArrayList<Object> objects;
     private String name;
     private ConnectionList connectionList = new ConnectionList();
+    private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
     private UseCaseList useCaseList = new UseCaseList();
     private UseCaseDetailList useCaseDetailList = new UseCaseDetailList();
     private TestCaseList testCaseList = new TestCaseList();
@@ -64,10 +48,10 @@ public class HomeManagerController {
     private TestResultDetailList testResultDetailList = new TestResultDetailList();
     private IRreportList iRreportList = new IRreportList();
     private IRreportDetailList iRreportDetailList = new IRreportDetailList();
-    private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
+
     private ManagerList managerList1 = new ManagerList();
-    private NoteList noteList;
     private TesterList testerList;
+    private NoteList noteList;
     private ManagerList managerList;
     private IRreportList irReportList;
     private IRreportDetailList irDetailList;

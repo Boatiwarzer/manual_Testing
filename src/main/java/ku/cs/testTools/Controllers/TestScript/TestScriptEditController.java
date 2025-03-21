@@ -135,9 +135,8 @@ public class TestScriptEditController {
     private ArrayList<Object> objects;
     private String nameTester;
     private TestFlowPosition testFlowPosition;
-    private TestCase testcase;
-    private TestFlowPosition testFlowPositionTC;
     private TestCase testCase;
+    private TestFlowPosition testFlowPositionTC;
 
     @FXML
     void initialize() {
@@ -313,10 +312,10 @@ public class TestScriptEditController {
         String[] data = tc.split(":");
 
         setDate();
-        testcase = testCaseList.findTCById(data[0]);
-        if (testcase != null){
-            testcase = new TestCase(testcase.getIdTC(),name,testDateLabel.getText(),usecase,description,"-",testcase.getPosition(),preCon,post,testcase.getIdTC());
-            String tc_combobox = testcase.getIdTC() + " : " + testcase.getNameTC();
+        //testcase = testCaseList.findTCById(data[0]);
+        if (testCase != null){
+            testCase = new TestCase(testCase.getIdTC(),name,testDateLabel.getText(),usecase,description,"-", testCase.getPosition(),preCon,post, testCase.getIdTC());
+            String tc_combobox = testCase.getIdTC() + " : " + testCase.getNameTC();
             onTestcaseCombobox.setValue(tc_combobox);
         }
     }
@@ -634,7 +633,7 @@ public class TestScriptEditController {
         String post = infoPostconLabel.getText();
 
         testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post,note,position);
-        testcase = new TestCase(testcase.getIdTC(),name,testDateLabel.getText(),useCase,description,"-",testcase.getPosition(),preCon,post,testcase.getIdTS());
+        testCase = new TestCase(testCase.getIdTC(),name,testDateLabel.getText(),useCase,description,"-", testCase.getPosition(),preCon,post, testCase.getIdTS());
 
     }
     private void currentNewDataForSubmit(){
@@ -649,15 +648,15 @@ public class TestScriptEditController {
         String post = infoPostconLabel.getText();
 
         testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post,note,position);
-        testcase = new TestCase(testcase.getIdTC(),name,testDateLabel.getText(),useCase,description,"-",testcase.getPosition(),preCon,post,testcase.getIdTC());
+        testCase = new TestCase(testCase.getIdTC(),name,testDateLabel.getText(),useCase,description,"-", testCase.getPosition(),preCon,post, testCase.getIdTC());
 
         if (testFlowPositionList.findByPositionId(testScript.getPosition()) != null) {
             testFlowPosition = testFlowPositionList.findByPositionId(testScript.getPosition());
             testScript.setPosition(testFlowPosition.getPositionID());
         }
-        if (testFlowPositionList.findByPositionId(testcase.getPosition()) != null) {
-            testFlowPositionTC = testFlowPositionList.findByPositionId(testcase.getPosition());
-            testcase.setPosition(testFlowPosition.getPositionID());
+        if (testFlowPositionList.findByPositionId(testCase.getPosition()) != null) {
+            testFlowPositionTC = testFlowPositionList.findByPositionId(testCase.getPosition());
+            testCase.setPosition(testFlowPosition.getPositionID());
         }
     }
     @FXML
@@ -672,7 +671,7 @@ public class TestScriptEditController {
             objects.add(typeTS);
             objects.add(testScript);
             objects.add(testScriptDetailList);
-            objects.add(testcase);
+            objects.add(testCase);
             objects.add("new");
             objects.add(null);
             objects.add(testScriptDetailListDelete);
@@ -698,7 +697,7 @@ public class TestScriptEditController {
             objects.add(typeTS);
             objects.add(testScript);
             objects.add(testScriptDetailList);
-            objects.add(testCaseDetailList);
+            objects.add(testCase);
             objects.add("edit");
             objects.add(selectedItem);
             objects.add(testScriptDetailListDelete);
@@ -739,7 +738,7 @@ public class TestScriptEditController {
         currentNewDataForSubmit();
         // Add or update test script
         testScriptList.addTestScript(testScript);
-        testCaseList.addOrUpdateTestCase(testcase);
+        testCaseList.addOrUpdateTestCase(testCase);
 
 
         // Write data to respective files
@@ -765,7 +764,7 @@ public class TestScriptEditController {
 
         }
         testScriptRepository.updateTestScript(testScript);
-        testCaseRepository.saveOrUpdateTestCase(testcase);
+        testCaseRepository.saveOrUpdateTestCase(testCase);
 
         objects = new ArrayList<>();
         objects.add(projectName);

@@ -695,7 +695,9 @@ public class PopupInfoTestcaseController {
         try {
             // Validate fields
             String selectedItem = onTestNameCombobox.getValue();
+            String selectedItemTS = onTestscriptCombobox.getValue();
             String[] data = selectedItem.split("[:,]");
+            String[] dataTS = selectedItemTS.split("[:,]");
             String name = data[1].trim();
             String idTC = data[0].trim();
             String date = testDateLabel.getText();
@@ -706,7 +708,7 @@ public class PopupInfoTestcaseController {
             String post = infoPostconLabel.getText();
             UUID newID = UUID.randomUUID();
             // ✅ ค้นหา TestCase ถ้ายังไม่มี สร้างใหม่
-            testCase = new TestCase(idTC, name, date, useCase, description,note,newID,preCon,post,data[0]);
+            testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post,selectedItemTS);
             TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(position);
             testFlowPosition.setPositionID(newID);
 

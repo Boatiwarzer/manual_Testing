@@ -21,7 +21,7 @@ public class Main extends Application {
             // Binding the stage and setting window title and size
             Screen screen = Screen.getPrimary();
             Rectangle2D bounds = screen.getVisualBounds();
-            FXRouter.bind(this, stage, "Manual Test Tools", (int) bounds.getWidth(), (int) bounds.getHeight());
+            FXRouter.bind(this, stage, "Test Management Tools", (int) bounds.getWidth(), (int) bounds.getHeight());
 
             // Configure routes for the different pages
             configRoute();
