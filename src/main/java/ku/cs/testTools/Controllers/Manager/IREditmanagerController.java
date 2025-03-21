@@ -2,11 +2,13 @@ package ku.cs.testTools.Controllers.Manager;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -61,6 +63,10 @@ public class IREditmanagerController {
     private MenuBar homePageMenuBar;
     @FXML
     private MenuItem saveMenuItem;
+    @FXML
+    private VBox projectList;
+    private TitledPane selectedTitledPane;
+    private String nameTester;
     private ArrayList<String> word = new ArrayList<>();
     private String irId;
     private String projectName, directory;
@@ -112,6 +118,7 @@ public class IREditmanagerController {
                 selectedIRD();
                 selectedListView();
                 loadRepo();
+                selectedVbox();
                 if (objects.get(4) != null){
                     iRreport = (IRreport) objects.get(4);
                     iRreportDetailList = (IRreportDetailList) objects.get(5);
@@ -135,6 +142,62 @@ public class IREditmanagerController {
             }
         }
         System.out.println(iRreportDetailList);
+    }
+    private void selectedVbox() {
+        for (Node node : projectList.getChildren()) {
+            if (node instanceof TitledPane titledPane) {
+                Node content = titledPane.getContent();
+
+                // เก็บค่าของ TitledPane ที่ถูกคลิก
+                titledPane.setOnMouseClicked(event -> {
+                    selectedTitledPane = titledPane;
+                });
+
+                if (content instanceof ListView<?> listView) {
+                    listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                        if (newValue instanceof String) { // ตรวจสอบว่าเป็น String
+                            String[] data = ((String) newValue).split("[:,()]");
+                            if (data.length > 0) { // ตรวจสอบว่ามีค่ามากพอ
+                                String value = data[0].trim();
+
+                                // แสดงค่าของ TitledPane และค่าที่เลือกใน ListView
+                                if (selectedTitledPane != null) {
+                                    System.out.println("TitledPane: " + selectedTitledPane.getText().trim());
+                                    System.out.println("Selected Value: " + value);
+                                    showInfo(selectedTitledPane.getText().trim() , value);
+                                }
+                            }
+                        } else {
+                            clearInfo();
+                        }
+                    });
+                }
+            }
+        }
+    }
+    private void showInfo(String projectNames,String testerName) {
+        nameTester = testerName; // ดึงชื่อ Tester ตรงๆ
+        this.projectName = projectNames;
+
+        System.out.println("Tester: " + nameTester);
+
+        // หาว่า Tester นี้อยู่ใน Project ไหน
+        for (Node node : projectList.getChildren()) {
+            if (node instanceof TitledPane titledPane) {
+                ListView<String> listView = (ListView<String>) titledPane.getContent();
+                if (listView.getItems().contains(testerName)) {
+                    projectName = titledPane.getText(); // ดึงชื่อ Project จากหัวข้อของ TitledPane
+                    System.out.println("Project: " + projectName);
+                    break;
+                }
+            }
+        }
+
+        // โหลดข้อมูล
+        loadData(projectName, nameTester);
+    }
+
+    private void loadData(String projectName, String nameTester) {
     }
     private void loadRepo(){
         // สร้างออบเจ็กต์ของแต่ละ Repository

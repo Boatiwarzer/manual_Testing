@@ -24,7 +24,7 @@ public class TestResultRepository {
     public void saveOrUpdateTestResult(TestResult testResult) {
         try {
             entityManager.getTransaction().begin();
-            entityManager.persist(testResult);
+            entityManager.merge(testResult);
             entityManager.getTransaction().commit();
         }catch (RuntimeException e) {
             if (entityManager.getTransaction().isActive()) {

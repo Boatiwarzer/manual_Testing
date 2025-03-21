@@ -704,16 +704,19 @@ public class PopupInfoTestcaseController {
             String preCon = infoPreconLabel.getText();
             String note = onTestNoteField.getText();
             String post = infoPostconLabel.getText();
-
+            UUID newID = UUID.randomUUID();
             // ✅ ค้นหา TestCase ถ้ายังไม่มี สร้างใหม่
-            testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post,data[0]);
+            testCase = new TestCase(idTC, name, date, useCase, description,note,newID,preCon,post,data[0]);
+            TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(position);
+            testFlowPosition.setPositionID(newID);
 
+            testFlowPositionList.removePositionByID(position);
+            testCaseList.deleteTestCaseByPositionID(position);
 
             // ✅ ใช้ saveOrUpdate() แทน addTestCase() เพื่อลดโอกาสเกิดปัญหา identifier ซ้ำ
             testCaseList.addOrUpdateTestCase(testCase);
 
             // ✅ ค้นหา TestFlowPosition ถ้ายังไม่มีให้สร้างใหม่
-            TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(position);
             testFlowPositionList.addPosition(testFlowPosition);
 
             // ✅ ใช้ saveOrUpdate() สำหรับ Repository

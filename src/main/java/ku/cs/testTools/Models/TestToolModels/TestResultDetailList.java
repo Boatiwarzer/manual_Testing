@@ -107,7 +107,6 @@ public class TestResultDetailList {
         }
         return false;
     }
-
     public void clearItems() {
         testResultDetailList.clear();
     }

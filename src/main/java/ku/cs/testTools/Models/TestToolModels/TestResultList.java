@@ -4,9 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
 
 @Data
 public class TestResultList {
@@ -66,7 +64,20 @@ public class TestResultList {
     public void sort(Comparator<TestResult> cmp) {
         Collections.sort(testResultList, cmp);
     }
+    public List<TestResult> findAllByTestResultId(String testResultId, String projectName, String tester) {
+        List<TestResult> matchedTestResult = new ArrayList<>();
 
+        for (TestResult testResult : testResultList) {
+            if (testResult.getIdTR().equals(testResultId) &&  // ✅ ใช้ .equals()
+                    testResult.getProjectName().trim().equalsIgnoreCase(projectName.trim()) &&
+                    testResult.getTester().trim().equalsIgnoreCase(tester.trim())) {
+
+                matchedTestResult.add(testResult);
+            }
+        }
+
+        return matchedTestResult;
+    }
 //    @Override
 //    public String toString() {
 //        return "TestResultList{" +

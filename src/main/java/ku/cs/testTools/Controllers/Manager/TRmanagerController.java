@@ -11,6 +11,7 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -66,6 +67,10 @@ public class TRmanagerController {
     private ArrayList<String> word = new ArrayList<>();
     private IRreportList iRreportList = new IRreportList();
     private IRreportDetailList iRreportDetailList = new IRreportDetailList();
+    @FXML
+    private VBox projectList;
+    private TitledPane selectedTitledPane;
+    private String nameTester;
 
     @FXML
     private TableColumn<TestResult, String> imageColumn;
@@ -121,8 +126,11 @@ public class TRmanagerController {
             loadRepo();
             //loadProject();
             setTable();
-            loadListView(testResultList);
-            selected();
+            //selectedVbox();
+            //loadListView(testResultList);
+            //selected();
+            loadList();
+            handleSelection();
             for (TestResult testResult : testResultList.getTestResultList()) {
                 word.add(testResult.getNameTR());
             }
@@ -130,6 +138,164 @@ public class TRmanagerController {
 
         }
     }
+    private void loadList() {
+        Map<String, Set<String>> projectTestersMap = new HashMap<>();
+
+        testFlowPositionList.getPositionList().forEach(testFlowPosition -> {
+            String projectName = testFlowPosition.getProjectName();
+            String tester = testFlowPosition.getTester() + "(Tester)"; // ต่อท้าย "(Tester)"
+
+            // จัดกลุ่ม Tester ตาม Project Name
+            projectTestersMap.computeIfAbsent(projectName, k -> new HashSet<>()).add(tester);
+        });
+
+        projectList.getChildren().clear(); // ล้างข้อมูลเก่าออกก่อน
+        for (Map.Entry<String, Set<String>> entry : projectTestersMap.entrySet()) {
+            String projectName = entry.getKey();
+            Set<String> testers = entry.getValue();
+
+            // สร้าง ListView เพื่อเก็บ Tester
+            ListView<String> testerListView = new ListView<>();
+            testerListView.getItems().addAll(testers);
+            testerListView.setPrefHeight(100); // กำหนดขนาดความสูง (ปรับได้ตามต้องการ)
+
+            // สร้าง TitledPane และตั้งค่าให้ปิดเป็นค่าเริ่มต้น
+            TitledPane titledPane = new TitledPane(projectName, testerListView);
+            titledPane.setAnimated(true); // เปิดใช้งาน Animation
+            titledPane.setCollapsible(true); // ทำให้สามารถยุบ-ขยายได้
+            titledPane.setExpanded(false); // ตั้งค่าให้หุบไว้เริ่มต้น
+
+            projectList.getChildren().add(titledPane); // เพิ่ม TitledPane ลงใน VBox
+        }
+    }
+    private void handleSelection() {
+        // กรณีเลือกจาก onSearchList
+//        onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+//            if (newValue == null) {
+//                clearInfo();
+//                selectedTestResult = null;
+//            } else {
+//                clearInfo();
+//                System.out.println("Selected TestResult ID: " + newValue.getIdTR());
+//                onEditButton.setVisible(newValue.getIdTR() != null);
+//                onExportButton.setVisible(newValue.getIdTR() != null);
+//                selectedTestResult = newValue;
+//                showInfo(newValue);
+//            }
+//        });
+
+        // กรณีเลือกจาก projectList
+        for (Node node : projectList.getChildren()) {
+            if (node instanceof TitledPane titledPane) {
+                Node content = titledPane.getContent();
+                titledPane.setOnMouseClicked(event -> selectedTitledPane = titledPane);
+
+                if (content instanceof ListView<?> listView) {
+                    listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                        if (newValue instanceof String) {
+                            String[] data = ((String) newValue).split("[:,()]");
+                            if (data.length > 0) {
+                                String value = data[0].trim();
+                                if (selectedTitledPane != null) {
+                                    System.out.println("TitledPane: " + selectedTitledPane.getText().trim());
+                                    System.out.println("Selected Value: " + value);
+                                    showInfo(selectedTitledPane.getText().trim(), value);
+                                }
+                            }
+                        } else {
+                            clearInfo();
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    private void selectedVbox() {
+        for (Node node : projectList.getChildren()) {
+            if (node instanceof TitledPane titledPane) {
+                Node content = titledPane.getContent();
+
+                // เก็บค่าของ TitledPane ที่ถูกคลิก
+                titledPane.setOnMouseClicked(event -> {
+                    selectedTitledPane = titledPane;
+                });
+
+                if (content instanceof ListView<?> listView) {
+                    listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                        if (newValue instanceof String) { // ตรวจสอบว่าเป็น String
+                            String[] data = ((String) newValue).split("[:,()]");
+                            if (data.length > 0) { // ตรวจสอบว่ามีค่ามากพอ
+                                String value = data[0].trim();
+
+                                // แสดงค่าของ TitledPane และค่าที่เลือกใน ListView
+                                if (selectedTitledPane != null) {
+                                    System.out.println("TitledPane: " + selectedTitledPane.getText().trim());
+                                    System.out.println("Selected Value: " + value);
+                                    showInfo(selectedTitledPane.getText().trim() , value);
+                                }
+                            }
+                        } else {
+                            clearInfo();
+                        }
+                    });
+                }
+            }
+        }
+    }
+    private void showInfo(String projectNames,String testerName) {
+        nameTester = testerName; // ดึงชื่อ Tester ตรงๆ
+        this.projectName = projectNames;
+
+        System.out.println("Tester: " + nameTester);
+
+        // หาว่า Tester นี้อยู่ใน Project ไหน
+        for (Node node : projectList.getChildren()) {
+            if (node instanceof TitledPane titledPane) {
+                ListView<String> listView = (ListView<String>) titledPane.getContent();
+                if (listView.getItems().contains(testerName)) {
+                    projectName = titledPane.getText(); // ดึงชื่อ Project จากหัวข้อของ TitledPane
+                    System.out.println("Project: " + projectName);
+                    break;
+                }
+            }
+        }
+
+        // โหลดข้อมูล
+        loadData(projectName, nameTester);
+    }
+
+    private void loadData(String projectName, String nameTester) {
+        if (projectName == null || projectName.trim().isEmpty() ||
+                nameTester == null || nameTester.trim().isEmpty()) {
+            System.out.println("Error: projectName or nameTester is invalid.");
+            return;
+        }
+
+        // แปลงค่าให้เป็นตัวพิมพ์เล็กทั้งหมดเพื่อให้เปรียบเทียบได้แบบ case-insensitive
+        String projectNameLower = projectName.toLowerCase();
+        String nameTesterLower = nameTester.toLowerCase();
+
+        testResultList.getTestResultList().forEach(testResult -> {
+            List<TestResult> testResults = testResultList.findAllByTestResultId(
+                    testResult.getIdTR(), projectNameLower, nameTesterLower);
+
+            if (!testResults.isEmpty()) {
+                TestResult firstResult = testResults.get(0);
+                String testResultId = firstResult.getIdTR();
+                testIDLabel.setText(testResultId);
+                String testResultName = firstResult.getNameTR();
+                testNameLabel.setText(testResultName);
+                String testResultNote = firstResult.getNoteTR();
+                infoNoteLabel.setText(testResultNote);
+                String dateTR = firstResult.getDateTR();
+                setTableInfo(firstResult);
+
+                System.out.println("select " + testResultList.findTRById(testIDLabel.getText()));
+            }
+        });
+    }
+
     public void handleExportMenuItem(ActionEvent actionEvent) {
         boolean noteAdded = false;
 //        try {
@@ -443,6 +609,19 @@ public class TRmanagerController {
         }
     }
 
+    private void showInfo(TestResult testResult,String projectNames,String testerName) {
+        TestResultId = testResult.getIdTR();
+        testIDLabel.setText(TestResultId);
+        String testResultName = testResult.getNameTR();
+        testNameLabel.setText(testResultName);
+        String testResultNote = testResult.getNoteTR();
+        infoNoteLabel.setText(testResultNote);
+        String dateTR = testResult.getDateTR();
+        setTableInfo(testResult);
+
+        System.out.println("select " + testResultList.findTRById(testIDLabel.getText()));
+
+    }
     private void showInfo(TestResult testResult) {
         TestResultId = testResult.getIdTR();
         testIDLabel.setText(TestResultId);

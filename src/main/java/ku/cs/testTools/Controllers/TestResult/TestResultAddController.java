@@ -757,7 +757,7 @@ public class TestResultAddController {
         String nameTR = onTestNameField.getText();
         String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         String noteTR = onTestNoteField.getText();
-        testResult = new TestResult(idTR, nameTR, dateTR, noteTR);
+        testResult = new TestResult(idTR, nameTR, dateTR, noteTR,projectName, name);
     }
     @FXML
     void onAddButton(ActionEvent event) {
@@ -878,7 +878,7 @@ public class TestResultAddController {
             String nameTR = onTestNameField.getText();
             String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             String noteTR = onTestNoteField.getText();
-            testResult = new TestResult(idTR, nameTR, dateTR, noteTR);
+            testResult = new TestResult(idTR, nameTR, dateTR, noteTR,projectName, name)       ;
 
             TestResultRepository testResultRepository = new TestResultRepository();
             TestResultDetailRepository testResultDetailRepository = new TestResultDetailRepository();
