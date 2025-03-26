@@ -33,7 +33,7 @@ public class HomeManagerController {
     @FXML
     private MenuBar homePageMenuBar;
 
-    private String projectName, directory;
+    private String projectName;
     private ArrayList<Object> objects;
     private String name;
     private ConnectionList connectionList = new ConnectionList();
@@ -61,15 +61,16 @@ public class HomeManagerController {
             loadRepo();
             objects = (ArrayList) FXRouter.getData();
             // Load the project
-            projectName = (String) objects.get(0);
-            directory = (String) objects.get(1);
-            ManagerRepository managerRepository = new ManagerRepository();
-            name = managerRepository.findManagerByProjectName(projectName);
+            if (projectName != null) {
+                projectName = (String) objects.get(0);
+                ManagerRepository managerRepository = new ManagerRepository();
+                name = managerRepository.findManagerByProjectName(projectName);
 
 
-            System.out.println(name);
-            System.out.println("Project Name: " + projectName);
-            System.out.println("Directory: " + directory);
+                System.out.println(name);
+                System.out.println("Project Name: " + projectName);
+            }
+
         }
     }
 
@@ -293,44 +294,41 @@ public class HomeManagerController {
 
     @FXML
     void handleOpenMenuItem(ActionEvent actionEvent) throws IOException {
-        // Open file chooser
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Project");
-
-        // Set extension filter
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
-        fileChooser.getExtensionFilters().add(extFilter);
-
-        // Show open file dialog
-        File file = fileChooser.showOpenDialog(null);
-        if (file != null) {
-            System.out.println("Opening file: " + file.getName());
-
-            // Get the project name from the file name
-            projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
-
-            // Get the directory from the file path
-            directory = file.getParent();
-            loadRepo();
-            //send the project name and directory to HomePage
-            ArrayList<Object> objects = new ArrayList<>();
-            objects.add(projectName);
-            objects.add(directory);
-            objects.add(null);
-
-            // แก้พาท
-            String packageStr1 = "views/";
-            FXRouter.when("home_manager", packageStr1 + "home_manager.fxml", "TestTools | " + projectName);
-            FXRouter.goTo("home_manager", objects);
-        } else {
-            System.out.println("No file selected.");
-        }
+//        // Open file chooser
+//        FileChooser fileChooser = new FileChooser();
+//        fileChooser.setTitle("Open Project");
+//
+//        // Set extension filter
+//        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+//        fileChooser.getExtensionFilters().add(extFilter);
+//
+//        // Show open file dialog
+//        File file = fileChooser.showOpenDialog(null);
+//        if (file != null) {
+//            System.out.println("Opening file: " + file.getName());
+//
+//            // Get the project name from the file name
+//            projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
+//
+//            // Get the directory from the file path
+//            loadRepo();
+//            //send the project name and directory to HomePage
+//            ArrayList<Object> objects = new ArrayList<>();
+//            objects.add(projectName);
+//            objects.add(null);
+//
+//            // แก้พาท
+//            String packageStr1 = "views/";
+//            FXRouter.when("home_manager", packageStr1 + "home_manager.fxml", "TestTools | " + projectName);
+//            FXRouter.goTo("home_manager", objects);
+//        } else {
+//            System.out.println("No file selected.");
+//        }
     }
 
     public void objects(){
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(name);
         objects.add(null);
     }

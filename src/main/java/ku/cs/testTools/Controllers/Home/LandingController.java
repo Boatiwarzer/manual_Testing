@@ -39,23 +39,23 @@ public class LandingController {
     @FXML
     void onOpenfileTesterButton(ActionEvent actionEvent) throws IOException {
         // Open file chooser
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Project");
+//        FileChooser fileChooser = new FileChooser();
+//        fileChooser.setTitle("Open Project");
+//
+//        // Set extension filter
+//        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TestTools files (*.csv)", "*.csv");
+//        fileChooser.getExtensionFilters().add(extFilter);
+//
+//        // Show open file dialog
+//        File file = fileChooser.showOpenDialog(null);
 
-        // Set extension filter
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TestTools files (*.csv)", "*.csv");
-        fileChooser.getExtensionFilters().add(extFilter);
-
-        // Show open file dialog
-        File file = fileChooser.showOpenDialog(null);
-        if (file != null) {
-            System.out.println("Opening file: " + file.getName());
-
-            // Get the project name from the file name
-            String projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
-
-            // Get the directory from the file path
-            String directory = file.getParent();
+//            System.out.println("Opening file: " + file.getName());
+//
+//            // Get the project name from the file name
+//            String projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
+//
+//            // Get the directory from the file path
+//            String directory = file.getParent();
 
             // load preferenceList
             // PreferenceList preferenceList = new PreferenceList();
@@ -73,45 +73,42 @@ public class LandingController {
             // });
 
             //send the project name and directory to HomePage
-            ArrayList<Object> objects = new ArrayList<>();
-            objects.add(projectName);
-            objects.add(directory);
-            objects.add(null);
+        ArrayList<Object> objects = new ArrayList<>();
+        String projectName = null;
+        objects.add(projectName);
+        objects.add("tester");
             // แก้พาท
-            String packageStr1 = "views/";
-            FXRouter.when("home_tester", packageStr1 + "home_tester.fxml", "TestTools | " + projectName);
-            FXRouter.goTo("home_tester", objects);
-            FXRouter.popup("landing_openproject", objects);
-            // Close the current window
-            Node source = (Node) actionEvent.getSource();
-            Stage stage = (Stage) source.getScene().getWindow();
-            stage.close();
+        String packageStr1 = "views/";
+        FXRouter.when("home_tester", packageStr1 + "home_tester.fxml", "TestTools | " + projectName);
+        FXRouter.goTo("home_tester", objects);
+        FXRouter.popup("landing_openproject", objects,true);
+        // Close the current window
+        Node source = (Node) actionEvent.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
+    }
 
-        } else {
-            System.out.println("No file selected.");
-        }
 
-     }
     @FXML
     void onOpenfileManagerButton(ActionEvent actionEvent) throws IOException {
         // Open file chooser
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Project");
-
-        // Set extension filter
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TestTools files (*.csv)", "*.csv");
-        fileChooser.getExtensionFilters().add(extFilter);
-
-        // Show open file dialog
-        File file = fileChooser.showOpenDialog(null);
-        if (file != null) {
-            System.out.println("Opening file: " + file.getName());
-
-            // Get the project name from the file name
-            String projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
-
-            // Get the directory from the file path
-            String directory = file.getParent();
+//        FileChooser fileChooser = new FileChooser();
+//        fileChooser.setTitle("Open Project");
+//
+//        // Set extension filter
+//        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TestTools files (*.csv)", "*.csv");
+//        fileChooser.getExtensionFilters().add(extFilter);
+//
+//        // Show open file dialog
+//        File file = fileChooser.showOpenDialog(null);
+//        if (file != null) {
+//            System.out.println("Opening file: " + file.getName());
+//
+//            // Get the project name from the file name
+//            String projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
+//
+//            // Get the directory from the file path
+//            String directory = file.getParent();
 
             // load preferenceList
             // PreferenceList preferenceList = new PreferenceList();
@@ -130,24 +127,22 @@ public class LandingController {
 
             //send the project name and directory to HomePage
             ArrayList<Object> objects = new ArrayList<>();
+            String projectName = null;
             objects.add(projectName);
-            objects.add(directory);
-            objects.add(null);
+            objects.add("manager");
 //            FXRouter.setData3("Tester");
 
             // แก้พาท
             String packageStr1 = "views/";
             FXRouter.when("home_manager", packageStr1 + "home_manager.fxml", "TestTools | " + projectName);
             FXRouter.goTo("home_manager", objects);
-//            FXRouter.popup("landing_openproject", objects);
+            FXRouter.popup("landing_openproject", objects,true);
             // Close the current window
             Node source = (Node) actionEvent.getSource();
             Stage stage = (Stage) source.getScene().getWindow();
             stage.close();
 
-        } else {
-            System.out.println("No file selected.");
-        }
-
     }
+
+
 }

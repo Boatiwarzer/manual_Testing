@@ -1,8 +1,11 @@
 package ku.cs.testTools.Models.Manager;
 
+import ku.cs.testTools.Models.TestToolModels.TestCase;
+import ku.cs.testTools.Services.ManagerComparable;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 @Data
 public class ManagerList {
@@ -62,8 +65,10 @@ public class ManagerList {
             }
         }
     }
-    
 
 
-    
+    public void sort(Comparator<Manager> cmp) {
+        ManagerList.sort(cmp);
+    }
+
 }

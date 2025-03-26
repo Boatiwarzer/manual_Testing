@@ -91,7 +91,7 @@ public class TestCaseAddController {
 
     private ArrayList<String> word = new ArrayList<>();
     private String tcId;
-    private String projectName, directory;
+    private String projectName;
     private TestCaseList testCaseList = new TestCaseList();
     private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
     private TestCaseDetail selectedItem;
@@ -114,9 +114,8 @@ public class TestCaseAddController {
         if (FXRouter.getData() != null) {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
-            directory = (String) objects.get(1);
-            nameTester = (String) objects.get(2);
-            typeTC = (String) objects.get(3);
+            nameTester = (String) objects.get(1);
+            typeTC = (String) objects.get(2);
             onTableTestcase.isFocused();
             clearInfo();
             loadRepo();
@@ -125,10 +124,10 @@ public class TestCaseAddController {
             setButtonVisible();
             selectedTCD();
             selectedListView();
-            if (objects.get(4) != null){
-                testCase = (TestCase) objects.get(4);
-                testCaseDetailList = (TestCaseDetailList) objects.get(5);
-                type = (String) objects.get(6);
+            if (objects.get(3) != null){
+                testCase = (TestCase) objects.get(3);
+                testCaseDetailList = (TestCaseDetailList) objects.get(4);
+                type = (String) objects.get(5);
                 setDataTC();
             }else {
                 randomId();
@@ -174,7 +173,6 @@ public class TestCaseAddController {
         loadManagerStatus();
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(nameTester);
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");
@@ -197,37 +195,37 @@ public class TestCaseAddController {
 
     @FXML
     void handleOpenMenuItem(ActionEvent actionEvent) throws IOException {
-        // Open file chooser
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Project");
-
-        // Set extension filter
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
-        fileChooser.getExtensionFilters().add(extFilter);
-
-        // Show open file dialog
-        File file = fileChooser.showOpenDialog(null);
-        if (file != null) {
-            System.out.println("Opening file: " + file.getName());
-
-            // Get the project name from the file name
-            projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
-
-            // Get the directory from the file path
-            directory = file.getParent();
-
-            ArrayList<Object> objects = new ArrayList<>();
-            objects.add(projectName);
-            objects.add(directory);
-            objects.add(null);
-            // แก้พาท
-            String packageStr1 = "views/";
-            FXRouter.when("home_tester", packageStr1 + "home_tester.fxml", "TestTools | " + projectName);
-            FXRouter.goTo("home_tester", objects);
-            FXRouter.popup("landing_openproject", objects);
-        } else {
-            System.out.println("No file selected.");
-        }
+//        // Open file chooser
+//        FileChooser fileChooser = new FileChooser();
+//        fileChooser.setTitle("Open Project");
+//
+//        // Set extension filter
+//        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+//        fileChooser.getExtensionFilters().add(extFilter);
+//
+//        // Show open file dialog
+//        File file = fileChooser.showOpenDialog(null);
+//        if (file != null) {
+//            System.out.println("Opening file: " + file.getName());
+//
+//            // Get the project name from the file name
+//            projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
+//
+//            // Get the directory from the file path
+//            directory = file.getParent();
+//
+//            ArrayList<Object> objects = new ArrayList<>();
+//            objects.add(projectName);
+//            objects.add(directory);
+//            objects.add(null);
+//            // แก้พาท
+//            String packageStr1 = "views/";
+//            FXRouter.when("home_tester", packageStr1 + "home_tester.fxml", "TestTools | " + projectName);
+//            FXRouter.goTo("home_tester", objects);
+//            FXRouter.popup("landing_openproject", objects);
+//        } else {
+//            System.out.println("No file selected.");
+//        }
     }
 
     @FXML
@@ -649,7 +647,6 @@ public class TestCaseAddController {
     private void objects() {
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(nameTester);
         objects.add(typeTC);
         objects.add(testCase);
@@ -761,7 +758,6 @@ public class TestCaseAddController {
             // 🔹 เคลียร์ objects และเพิ่มค่าที่ต้องการ
             objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(nameTester);
             objects.add(testCase);
 
@@ -861,7 +857,6 @@ public class TestCaseAddController {
     private void objectsend() {
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(nameTester);
         objects.add(null);
     }

@@ -74,7 +74,7 @@ public class PopupInfoTestscriptController {
 
     @FXML
     private Label testIDLabel;
-    private String projectName, directory;
+    private String projectName;
     private TestScriptList testScriptList = new TestScriptList();
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
     private TestScript testScript;
@@ -103,9 +103,8 @@ public class PopupInfoTestscriptController {
             if (FXRouter.getData() != null) {
                 ArrayList<Object> objects = (ArrayList) FXRouter.getData();
                 projectName = (String) objects.get(0);
-                directory = (String) objects.get(1);
-                nameTester = (String) objects.get(2);
-                position = (UUID) objects.get(3);
+                nameTester = (String) objects.get(1);
+                position = (UUID) objects.get(2);
                 onTableTestscript.isFocused();
                 selectedTSD();
                 loadStatusButton();
@@ -113,11 +112,11 @@ public class PopupInfoTestscriptController {
                 setDate();
                 selectedComboBox();
                 setButtonVisible();
-                if (objects.get(4) != null){
-                    testScript = (TestScript) objects.get(4);
-                    testScriptDetailList = (TestScriptDetailList) objects.get(5);
-                    type = (String) objects.get(6);
-                    testScriptDetailListDelete = (TestScriptDetailList) objects.get(7);
+                if (objects.get(3) != null){
+                    testScript = (TestScript) objects.get(3);
+                    testScriptDetailList = (TestScriptDetailList) objects.get(4);
+                    type = (String) objects.get(5);
+                    testScriptDetailListDelete = (TestScriptDetailList) objects.get(6);
                 }else {
                     testScript = testScriptList.findByPositionId(position);
                     System.out.println(testScript);
@@ -630,7 +629,6 @@ public class PopupInfoTestscriptController {
             testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post,note,position);
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(nameTester);
             objects.add(position);
             objects.add(testScript);
@@ -655,7 +653,6 @@ public class PopupInfoTestscriptController {
         try {
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(nameTester);
             objects.add(null);
             FXRouter.goTo("test_flow", objects);
@@ -702,7 +699,6 @@ public class PopupInfoTestscriptController {
 
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(nameTester);
             FXRouter.goTo("test_flow", objects);
             Node source = (Node) event.getSource();
@@ -750,7 +746,6 @@ public class PopupInfoTestscriptController {
             testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, post,note,position);
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(nameTester);
             objects.add(position);
             objects.add(testScript);
@@ -835,7 +830,6 @@ public class PopupInfoTestscriptController {
         // ✅ ส่งค่าไปยังหน้า "test_flow"
         ArrayList<Object> objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(nameTester);
 
         try {

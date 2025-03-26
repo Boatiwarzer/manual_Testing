@@ -60,8 +60,6 @@ public class NewProjectController {
 
     }
 
-    private String directory;
-
     @FXML
     void onCancelButton(ActionEvent actionEvent) throws IOException {
         //แก้พาท
@@ -113,7 +111,6 @@ public class NewProjectController {
         //send the project name and directory to HomePage
         ArrayList<Object> objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(managerName);
         //แก้พาท
         String packageStr1 = "views/";
@@ -151,20 +148,20 @@ public class NewProjectController {
 
     @FXML
     void onSelectButton(ActionEvent event) {
-        System.out.println("Select button clicked.");
-        // Create directory chooser
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Select Directory");
-
-        // Show directory chooser
-        File file = directoryChooser.showDialog(null);
-        if (file != null) {
-            System.out.println("Selected directory: " + file.getAbsolutePath());
-            directory = file.getAbsolutePath();
-            onSelectButton.setText(directory);
-            } else {
-            System.out.println("No directory selected.");
-            }
+//        System.out.println("Select button clicked.");
+//        // Create directory chooser
+//        DirectoryChooser directoryChooser = new DirectoryChooser();
+//        directoryChooser.setTitle("Select Directory");
+//
+//        // Show directory chooser
+//        File file = directoryChooser.showDialog(null);
+//        if (file != null) {
+//            System.out.println("Selected directory: " + file.getAbsolutePath());
+//            directory = file.getAbsolutePath();
+//            onSelectButton.setText(directory);
+//            } else {
+//            System.out.println("No directory selected.");
+//            }
     }
 
     private void setWindowTitle(String projectName) {
@@ -246,10 +243,10 @@ public class NewProjectController {
         }
 
         // ตรวจสอบ Directory
-        if (directory == null) {
-            showAlert("กรุณาเลือก Location Path");
-            return false;
-        }
+//        if (directory == null) {
+//            showAlert("กรุณาเลือก Location Path");
+//            return false;
+//        }
 
         // ตรวจสอบ Tester
         if (testerVBox.getChildren().isEmpty()) {

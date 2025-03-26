@@ -52,7 +52,7 @@ public class TestResultController {
     @FXML
     private TableView<TestResultDetail> onTableTestresult;
 
-    private String projectName, directory, TestResultId; // directory, projectName
+    private String projectName, TestResultId; // directory, projectName
     private TestResult testResult = new TestResult();
     private TestResult selectedTestResult = new TestResult();
     private TestResultList testResultList = new TestResultList();
@@ -100,6 +100,7 @@ public class TestResultController {
     private ArrayList<Object> objects;
     private String nameTester;
     private TestResultDetailList testResultDetailListDelete = new TestResultDetailList();
+    private boolean check;
 
 
     @FXML
@@ -108,10 +109,9 @@ public class TestResultController {
         if (FXRouter.getData() != null) {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
-            directory = (String) objects.get(1);
-            nameTester = (String) objects.get(2);
-            if (objects.get(3) != null){
-                testResult = (TestResult) objects.get(3);
+            nameTester = (String) objects.get(1);
+            if (objects.get(2) != null){
+                testResult = (TestResult) objects.get(2);
             }
             System.out.println(nameTester+"1");
             clearInfo();
@@ -138,7 +138,7 @@ public class TestResultController {
 
         if (manager != null) {  // ตรวจสอบว่าพบ Manager หรือไม่
             String status = manager.getStatus();
-            boolean check = Boolean.parseBoolean(status);
+            check = Boolean.parseBoolean(status);
             onCreateButton.setVisible(check);
             onEditButton.setVisible(check);
             System.out.println("Manager Status: " + status);
@@ -173,7 +173,6 @@ public class TestResultController {
         loadManagerStatus();
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(nameTester);
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");
@@ -195,37 +194,37 @@ public class TestResultController {
     }
     @FXML
     void handleOpenMenuItem(ActionEvent actionEvent) throws IOException {
-        // Open file chooser
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Project");
-
-        // Set extension filter
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
-        fileChooser.getExtensionFilters().add(extFilter);
-
-        // Show open file dialog
-        File file = fileChooser.showOpenDialog(null);
-        if (file != null) {
-            System.out.println("Opening file: " + file.getName());
-
-            // Get the project name from the file name
-            projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
-
-            // Get the directory from the file path
-            directory = file.getParent();
-
-            ArrayList<Object> objects = new ArrayList<>();
-            objects.add(projectName);
-            objects.add(directory);
-            objects.add(null);
-            // แก้พาท
-            String packageStr1 = "views/";
-            FXRouter.when("home_tester", packageStr1 + "home_tester.fxml", "TestTools | " + projectName);
-            FXRouter.goTo("home_tester", objects);
-            FXRouter.popup("landing_openproject", objects);
-        } else {
-            System.out.println("No file selected.");
-        }
+//        // Open file chooser
+//        FileChooser fileChooser = new FileChooser();
+//        fileChooser.setTitle("Open Project");
+//
+//        // Set extension filter
+//        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+//        fileChooser.getExtensionFilters().add(extFilter);
+//
+//        // Show open file dialog
+//        File file = fileChooser.showOpenDialog(null);
+//        if (file != null) {
+//            System.out.println("Opening file: " + file.getName());
+//
+//            // Get the project name from the file name
+//            projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
+//
+//            // Get the directory from the file path
+//            directory = file.getParent();
+//
+//            ArrayList<Object> objects = new ArrayList<>();
+//            objects.add(projectName);
+//            objects.add(directory);
+//            objects.add(null);
+//            // แก้พาท
+//            String packageStr1 = "views/";
+//            FXRouter.when("home_tester", packageStr1 + "home_tester.fxml", "TestTools | " + projectName);
+//            FXRouter.goTo("home_tester", objects);
+//            FXRouter.popup("landing_openproject", objects);
+//        } else {
+//            System.out.println("No file selected.");
+//        }
     }
 
     @FXML
@@ -245,7 +244,6 @@ public class TestResultController {
     public void objects(){
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(nameTester);
         objects.add(null);
     }
@@ -367,33 +365,38 @@ public class TestResultController {
     }
 
     private void selected() {
-        if (testResult != null){
-            onSearchList.getSelectionModel().getSelectedItems();
-            onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue == null) {
-                    clearInfo();
-                    selectedTestResult = null;
-                } else {
-                    clearInfo();
-                    System.out.println("Selected TestResult ID: " + (newValue != null ? newValue.getIdTR() : "null"));
-                    onEditButton.setVisible(newValue.getIdTR() != null);
-                    onIRButton.setVisible(newValue.getIdTR() != null);
-                    selectedTestResult = newValue;
-                    showInfo(newValue);
-                    idTR = newValue.getIdTR();
-                }
-            });
-        } else {
-            onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue == null) {
-                    clearInfo();
-                    selectedTestResult = null;
-                } else {
-                    showInfo(newValue);
-                    selectedTestResult = newValue;
-                }
-            });
+        if (check){
+            if (testResult != null){
+                onSearchList.getSelectionModel().getSelectedItems();
+                onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                    if (newValue == null) {
+                        clearInfo();
+                        selectedTestResult = null;
+                    } else {
+                        clearInfo();
+                        System.out.println("Selected TestResult ID: " + (newValue != null ? newValue.getIdTR() : "null"));
+                        if (check){
+                            onEditButton.setVisible(newValue.getIdTR() != null);
+                            onIRButton.setVisible(newValue.getIdTR() != null);
+                        }
+                        selectedTestResult = newValue;
+                        showInfo(newValue);
+                        idTR = newValue.getIdTR();
+                    }
+                });
+            } else {
+                onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                    if (newValue == null) {
+                        clearInfo();
+                        selectedTestResult = null;
+                    } else {
+                        showInfo(newValue);
+                        selectedTestResult = newValue;
+                    }
+                });
+            }
         }
+
     }
 
     private void showInfo(TestResult testResult) {
@@ -701,7 +704,6 @@ public class TestResultController {
         try {
             objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(nameTester);
             objects.add("newTR");
             objects.add(null);
@@ -716,7 +718,6 @@ public class TestResultController {
         try {
             objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(nameTester);
             objects.add("editTR");
             objects.add(selectedTestResult);
@@ -959,7 +960,6 @@ public class TestResultController {
             // โหลด FXML ของ Popup
             objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(nameTester);
             objects.add(iRreportDetailList);
             objects.add(newIRreport);

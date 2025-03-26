@@ -36,7 +36,7 @@ public class PopupTestFlowAddTestscriptController {
     @FXML
     private Label testScriptNameLabel;
 
-    private String projectName, directory;
+    private String projectName;
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
     private TestScript testScript;
     private TestScriptDetail testScriptDetail = new TestScriptDetail();
@@ -58,21 +58,20 @@ public class PopupTestFlowAddTestscriptController {
         if (FXRouter.getData() != null) {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
-            directory = (String) objects.get(1);
-            nameTester = (String) objects.get(2);
-            position = (UUID) objects.get(3);
-            testScript = (TestScript) objects.get(4);
+            nameTester = (String) objects.get(1);
+            position = (UUID) objects.get(2);
+            testScript = (TestScript) objects.get(3);
             System.out.println(testScript);
-            testScriptDetailList = (TestScriptDetailList) objects.get(5);
+            testScriptDetailList = (TestScriptDetailList) objects.get(4);
             idTS = testScript.getIdTS();
-            testCase = (TestCase) objects.get(6);
-            type = (String) objects.get(7);
+            testCase = (TestCase) objects.get(5);
+            type = (String) objects.get(6);
             System.out.println(type);
             //selectedComboBox();
             System.out.println(testCase);
-            if (objects.get(8) != null && type.equals("edit")){
-                testScriptDetail = (TestScriptDetail) objects.get(8);
-                testScriptDetailListDelete = (TestScriptDetailList)  objects.get(9);
+            if (objects.get(7) != null && type.equals("edit")){
+                testScriptDetail = (TestScriptDetail) objects.get(7);
+                testScriptDetailListDelete = (TestScriptDetailList)  objects.get(8);
                 testScriptDetail = testScriptDetailList.findTSById(testScriptDetail.getIdTSD());
                 id = testScriptDetail.getIdTSD();
                 setTextEdit();
@@ -95,7 +94,6 @@ public class PopupTestFlowAddTestscriptController {
     void onCancelButton(ActionEvent event) {
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(nameTester);
         objects.add(null);
         clearInfo();
@@ -143,7 +141,6 @@ public class PopupTestFlowAddTestscriptController {
     private void objects() {
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(nameTester);
         objects.add(position);
         objects.add(testScript);

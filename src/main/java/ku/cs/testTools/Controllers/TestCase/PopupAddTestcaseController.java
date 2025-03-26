@@ -43,7 +43,7 @@ public class PopupAddTestcaseController {
     private String id;
     private String idTC;
     private String dateTCD;
-    private String projectName , directory;
+    private String projectName;
     private String type;
     private String typeTC;
     private ArrayList<Object> objects;
@@ -55,18 +55,17 @@ public class PopupAddTestcaseController {
         if (FXRouter.getData() != null) {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
-            directory = (String) objects.get(1);
-            name = (String) objects.get(2);
-            typeTC = (String) objects.get(3);
-            testCase = (TestCase) objects.get(4);
-            testCaseDetailList = (TestCaseDetailList) objects.get(5);
+            name = (String) objects.get(1);
+            typeTC = (String) objects.get(2);
+            testCase = (TestCase) objects.get(3);
+            testCaseDetailList = (TestCaseDetailList) objects.get(4);
             idTC = testCase.getIdTC();
-            type = (String) objects.get(6);
+            type = (String) objects.get(5);
             System.out.println(type);
             System.out.println(testCaseDetailList);
-            if (objects.get(7) != null && type.equals("edit")){
-                testCaseDetail = (TestCaseDetail) objects.get(7);
-                testCaseDetailListDelete = (TestCaseDetailList)  objects.get(8);
+            if (objects.get(6) != null && type.equals("edit")){
+                testCaseDetail = (TestCaseDetail) objects.get(6);
+                testCaseDetailListDelete = (TestCaseDetailList)  objects.get(7);
                 System.out.println(testCaseDetailListDelete);
                 testCaseDetail = testCaseDetailList.findTCById(testCaseDetail.getIdTCD());
                 id = testCaseDetail.getIdTCD();
@@ -101,7 +100,6 @@ public class PopupAddTestcaseController {
     private void objects() {
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(name);
         objects.add(typeTC);
         objects.add(testCase);

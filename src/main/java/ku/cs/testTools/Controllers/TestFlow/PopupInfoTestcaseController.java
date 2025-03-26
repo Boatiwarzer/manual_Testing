@@ -70,7 +70,7 @@ public class PopupInfoTestcaseController {
 
     @FXML
     private Label testIDLabel;
-    private String projectName, directory;
+    private String projectName;
     private TestCaseDetail selectedItem;
     private TestFlowPositionList testFlowPositionList;
     private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
@@ -96,7 +96,6 @@ public class PopupInfoTestcaseController {
         if (FXRouter.getData() != null) {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
-            directory = (String) objects.get(1);
             nameTester = (String) objects.get(2);
             position = (UUID) objects.get(3);
             onTableTestCase.isFocused();
@@ -539,7 +538,6 @@ public class PopupInfoTestcaseController {
             testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post,data[0]);
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(nameTester);
             objects.add(position);
             objects.add(testCase);
@@ -563,7 +561,6 @@ public class PopupInfoTestcaseController {
         try {
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(nameTester);
             objects.add(null);
             FXRouter.goTo("test_flow", objects);
@@ -615,7 +612,6 @@ public class PopupInfoTestcaseController {
             saveRepo();
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(nameTester);
             FXRouter.goTo("test_flow", objects);
             Node source = (Node) event.getSource();
@@ -670,7 +666,6 @@ public class PopupInfoTestcaseController {
             onEditListButton.setOnAction(event1 -> onTableTestCase.requestFocus());
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(nameTester);
             objects.add(position);
             objects.add(testCase);
@@ -747,7 +742,6 @@ public class PopupInfoTestcaseController {
 
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(nameTester);
 
             // ✅ Show success message

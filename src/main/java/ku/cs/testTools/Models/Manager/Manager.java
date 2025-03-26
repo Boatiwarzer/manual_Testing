@@ -68,4 +68,8 @@ public class Manager implements Comparable{
     public boolean isPN(String PN) {
         return this.projectName.equals(PN);
     }
+    @Override
+    public String toString() {
+        return "projectName='" + projectName + '\'';
+    }
 }
