@@ -2,11 +2,13 @@ package ku.cs.testTools.Controllers.Manager;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
@@ -42,7 +44,10 @@ public class TREditmanagerController {
 
     @FXML
     private TableView<TestResultDetail> onTableTestresult;
-
+    @FXML
+    private VBox projectList;
+    private TitledPane selectedTitledPane;
+    private String nameTester;
     @FXML
     private Label testDateLabel, testIDLabel;
     @FXML
@@ -111,6 +116,7 @@ public class TREditmanagerController {
                 selectedTRD();
                 selectedListView();
                 loadRepo();
+                selectedVbox();
                 //loadProject();
                 if (objects.get(4) != null){
                     testResult = (TestResult) objects.get(4);
@@ -138,7 +144,62 @@ public class TREditmanagerController {
         System.out.println(testResultDetailList);
     }
 
+    private void selectedVbox() {
+        for (Node node : projectList.getChildren()) {
+            if (node instanceof TitledPane titledPane) {
+                Node content = titledPane.getContent();
 
+                // เก็บค่าของ TitledPane ที่ถูกคลิก
+                titledPane.setOnMouseClicked(event -> {
+                    selectedTitledPane = titledPane;
+                });
+
+                if (content instanceof ListView<?> listView) {
+                    listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                        if (newValue instanceof String) { // ตรวจสอบว่าเป็น String
+                            String[] data = ((String) newValue).split("[:,()]");
+                            if (data.length > 0) { // ตรวจสอบว่ามีค่ามากพอ
+                                String value = data[0].trim();
+
+                                // แสดงค่าของ TitledPane และค่าที่เลือกใน ListView
+                                if (selectedTitledPane != null) {
+                                    System.out.println("TitledPane: " + selectedTitledPane.getText().trim());
+                                    System.out.println("Selected Value: " + value);
+                                    showInfo(selectedTitledPane.getText().trim() , value);
+                                }
+                            }
+                        } else {
+                            clearInfo();
+                        }
+                    });
+                }
+            }
+        }
+    }
+    private void showInfo(String projectNames,String testerName) {
+        nameTester = testerName; // ดึงชื่อ Tester ตรงๆ
+        this.projectName = projectNames;
+
+        System.out.println("Tester: " + nameTester);
+
+        // หาว่า Tester นี้อยู่ใน Project ไหน
+        for (Node node : projectList.getChildren()) {
+            if (node instanceof TitledPane titledPane) {
+                ListView<String> listView = (ListView<String>) titledPane.getContent();
+                if (listView.getItems().contains(testerName)) {
+                    projectName = titledPane.getText(); // ดึงชื่อ Project จากหัวข้อของ TitledPane
+                    System.out.println("Project: " + projectName);
+                    break;
+                }
+            }
+        }
+
+        // โหลดข้อมูล
+        loadData(projectName, nameTester);
+    }
+
+    private void loadData(String projectName, String nameTester) {
+    }
 
 
     private void loadRepo(){

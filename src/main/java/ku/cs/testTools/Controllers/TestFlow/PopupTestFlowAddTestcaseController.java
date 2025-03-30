@@ -47,7 +47,7 @@ public class PopupTestFlowAddTestcaseController {
     private String idTS;
     private String date;
     private UUID position;
-    private String projectName, directory;
+    private String projectName;
     private String type;
     private String nameTester;
     private ArrayList<Object> objects;
@@ -61,16 +61,15 @@ public class PopupTestFlowAddTestcaseController {
         if (FXRouter.getData() != null) {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
-            directory = (String) objects.get(1);
-            nameTester = (String) objects.get(2);
-            position = (UUID) objects.get(3);
-            testCase = (TestCase) objects.get(4);
-            testCaseDetailList = (TestCaseDetailList) objects.get(5);
-            type = (String) objects.get(6);
+            nameTester = (String) objects.get(1);
+            position = (UUID) objects.get(2);
+            testCase = (TestCase) objects.get(3);
+            testCaseDetailList = (TestCaseDetailList) objects.get(4);
+            type = (String) objects.get(5);
             idTC = testCase.getIdTC();
-            if (objects.get(7) != null && type.equals("edit")){
-                testCaseDetail = (TestCaseDetail) objects.get(7);
-                testCaseDetailListDelete = (TestCaseDetailList)  objects.get(8);
+            if (objects.get(6) != null && type.equals("edit")){
+                testCaseDetail = (TestCaseDetail) objects.get(6);
+                testCaseDetailListDelete = (TestCaseDetailList)  objects.get(7);
                 testCaseDetailList.findTCById(testCaseDetail.getIdTCD());
                 id = testCaseDetail.getIdTCD();
                 setTextEdit();
@@ -105,7 +104,6 @@ public class PopupTestFlowAddTestcaseController {
     void onCancelButton(ActionEvent event) {
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(nameTester);
         objects.add(position);
         objects.add(testCase);
@@ -135,7 +133,6 @@ public class PopupTestFlowAddTestcaseController {
             testCaseDetailList.addOrUpdateTestCase(testCaseDetail);
             objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(nameTester);
             objects.add(position);
             objects.add(testCase);

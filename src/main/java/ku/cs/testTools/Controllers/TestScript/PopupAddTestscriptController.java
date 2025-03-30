@@ -36,7 +36,7 @@ public class PopupAddTestscriptController {
     @FXML
     private Label testScriptNameLabel;
 
-    private String projectName, directory;
+    private String projectName;
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
     private TestScript testScript = new TestScript();
     private TestScriptDetail testScriptDetail = new TestScriptDetail();
@@ -55,20 +55,19 @@ public class PopupAddTestscriptController {
         if (FXRouter.getData() != null) {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
-            directory = (String) objects.get(1);
-            name = (String) objects.get(2);
-            typeTS = (String) objects.get(3);
-            testScript = (TestScript) objects.get(4);
+            name = (String) objects.get(1);
+            typeTS = (String) objects.get(2);
+            testScript = (TestScript) objects.get(3);
             System.out.println(testScript);
-            testScriptDetailList = (TestScriptDetailList) objects.get(5);
+            testScriptDetailList = (TestScriptDetailList) objects.get(4);
             idTS = testScript.getIdTS();
-            testCase = (TestCase) objects.get(6);
-            type = (String) objects.get(7);
+            testCase = (TestCase) objects.get(5);
+            type = (String) objects.get(6);
             System.out.println(type);
             //selectedComboBox();
-            if (objects.get(8) != null && type.equals("edit")){
-                testScriptDetail = (TestScriptDetail) objects.get(8);
-                testScriptDetailListDelete = (TestScriptDetailList)  objects.get(9);
+            if (objects.get(7) != null && type.equals("edit")){
+                testScriptDetail = (TestScriptDetail) objects.get(7);
+                testScriptDetailListDelete = (TestScriptDetailList)  objects.get(8);
                 System.out.println(testScriptDetailListDelete);
                 testScriptDetail = testScriptDetailList.findTSById(testScriptDetail.getIdTSD());
                 id = testScriptDetail.getIdTSD();
@@ -105,7 +104,6 @@ public class PopupAddTestscriptController {
     private void objects() {
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(name);
         objects.add(typeTS);
         objects.add(testScript);
@@ -117,7 +115,6 @@ public class PopupAddTestscriptController {
     private void objectsend() {
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(name);
         objects.add(null);
     }

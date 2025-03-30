@@ -6,6 +6,7 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 @Data
 public class IRreportList {
@@ -89,5 +90,19 @@ public class IRreportList {
     }
     public void sort(Comparator<IRreport> cmp) {
         Collections.sort(iRreportList, cmp);
+    }
+    public List<IRreport> findAllByIRreportId(String iRreportId, String projectName, String tester) {
+        List<IRreport> matchedIRreport = new ArrayList<>();
+
+        for (IRreport IRreport : iRreportList) {
+            if (IRreport.getIdIR().equals(iRreportId) &&  // ✅ ใช้ .equals()
+                    IRreport.getProjectName().trim().equalsIgnoreCase(projectName.trim()) &&
+                    IRreport.getTester().trim().equalsIgnoreCase(tester.trim())) {
+
+                matchedIRreport.add(IRreport);
+            }
+        }
+
+        return matchedIRreport;
     }
 }

@@ -87,7 +87,7 @@ public class TestCaseController {
     @FXML
     private MenuItem saveMenuItem;
     private ArrayList<String> word = new ArrayList<>();
-    private String projectName, directory;
+    private String projectName;
     private TestCaseList testCaseList = new TestCaseList();
     private ArrayList<Object> objects;
     private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
@@ -100,6 +100,7 @@ public class TestCaseController {
     private UseCaseList useCaseList = new UseCaseList();
     private String nameTester;
     private TestCaseDetailList testCaseDetailListDelete = new TestCaseDetailList();
+    private boolean check;
 
     @FXML
     void initialize() {
@@ -108,10 +109,9 @@ public class TestCaseController {
         if (FXRouter.getData() != null) {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
-            directory = (String) objects.get(1);
-            nameTester = (String) objects.get(2);
-            if (objects.get(3) != null) {
-                testCase = (TestCase) objects.get(3);
+            nameTester = (String) objects.get(1);
+            if (objects.get(2) != null) {
+                testCase = (TestCase) objects.get(2);
             }
             loadStatusButton();
             loadRepo();
@@ -132,7 +132,7 @@ public class TestCaseController {
 
         if (manager != null) {  // ตรวจสอบว่าพบ Manager หรือไม่
             String status = manager.getStatus();
-            boolean check = Boolean.parseBoolean(status);
+            check = Boolean.parseBoolean(status);
             //onCreateButton.setVisible(check);
             onEditButton.setVisible(check);
             System.out.println("Manager Status: " + status);
@@ -169,7 +169,6 @@ public class TestCaseController {
         loadManagerStatus();
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(nameTester);
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");
@@ -192,37 +191,37 @@ public class TestCaseController {
 
     @FXML
     void handleOpenMenuItem(ActionEvent actionEvent) throws IOException {
-        // Open file chooser
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Project");
-
-        // Set extension filter
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
-        fileChooser.getExtensionFilters().add(extFilter);
-
-        // Show open file dialog
-        File file = fileChooser.showOpenDialog(null);
-        if (file != null) {
-            System.out.println("Opening file: " + file.getName());
-
-            // Get the project name from the file name
-            projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
-
-            // Get the directory from the file path
-            directory = file.getParent();
-
-            ArrayList<Object> objects = new ArrayList<>();
-            objects.add(projectName);
-            objects.add(directory);
-            objects.add(null);
-            // แก้พาท
-            String packageStr1 = "views/";
-            FXRouter.when("home_tester", packageStr1 + "home_tester.fxml", "TestTools | " + projectName);
-            FXRouter.goTo("home_tester", objects);
-            FXRouter.popup("landing_openproject", objects);
-        } else {
-            System.out.println("No file selected.");
-        }
+//        // Open file chooser
+//        FileChooser fileChooser = new FileChooser();
+//        fileChooser.setTitle("Open Project");
+//
+//        // Set extension filter
+//        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+//        fileChooser.getExtensionFilters().add(extFilter);
+//
+//        // Show open file dialog
+//        File file = fileChooser.showOpenDialog(null);
+//        if (file != null) {
+//            System.out.println("Opening file: " + file.getName());
+//
+//            // Get the project name from the file name
+//            projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
+//
+//            // Get the directory from the file path
+//            directory = file.getParent();
+//
+//            ArrayList<Object> objects = new ArrayList<>();
+//            objects.add(projectName);
+//            objects.add(directory);
+//            objects.add(null);
+//            // แก้พาท
+//            String packageStr1 = "views/";
+//            FXRouter.when("home_tester", packageStr1 + "home_tester.fxml", "TestTools | " + projectName);
+//            FXRouter.goTo("home_tester", objects);
+//            FXRouter.popup("landing_openproject", objects);
+//        } else {
+//            System.out.println("No file selected.");
+//        }
     }
 
     @FXML
@@ -349,7 +348,6 @@ public class TestCaseController {
     public void objects() {
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(nameTester);
         objects.add(null);
     }
@@ -400,7 +398,9 @@ public class TestCaseController {
                     clearInfo();
                     selectedTestCase = null;
                 } else {
-                    onEditButton.setVisible(newValue.getIdTC() != null);
+                    if (check){
+                        onEditButton.setVisible(newValue.getIdTC() != null);
+                    }
                     showInfo(newValue);
                     selectedTestCase = newValue;
                 }
@@ -638,7 +638,6 @@ public class TestCaseController {
         try {
             objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(nameTester);
             objects.add("newTC");
             objects.add(null);
@@ -653,7 +652,6 @@ public class TestCaseController {
         try {
             objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(nameTester);
             objects.add("editTC");
             objects.add(selectedTestCase);

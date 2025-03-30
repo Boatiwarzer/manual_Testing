@@ -48,7 +48,7 @@
                         </TextField>
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0" spacing="20.0">
+                  <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0" spacing="20.0" visible="false">
                      <children>
                         <Label prefWidth="100.0" text="Location Path">
                            <font>

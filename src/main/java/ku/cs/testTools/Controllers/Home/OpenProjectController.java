@@ -3,15 +3,14 @@ package ku.cs.testTools.Controllers.Home;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
+import ku.cs.testTools.Models.Manager.Manager;
+import ku.cs.testTools.Models.Manager.ManagerList;
 import ku.cs.testTools.Models.Manager.Tester;
 import ku.cs.testTools.Models.Manager.TesterList;
-import ku.cs.testTools.Services.Repository.TesterRepository;
+import ku.cs.testTools.Services.ManagerComparable;
+import ku.cs.testTools.Services.Repository.*;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 
 import java.io.IOException;
@@ -27,24 +26,108 @@ public class OpenProjectController {
 
     @FXML
     private TextField onTesterField;
-
-    private String projectName, directory;
+    @FXML
+    private ListView<Manager> projectList;
+    @FXML
+    private Label testerLabel;
+    private String projectName;
     private ArrayList<Object> objects;
     private TesterList testerList;
     private Tester tester;
+    private ManagerList managerList;
+    private String type;
+    private String testerName;
+    private Manager manager;
+    private Manager selectedProject;
 
     @FXML
     void initialize() {
         if (FXRouter.getData() != null) {
+            loadRepo();
             objects = (ArrayList) FXRouter.getData();
+            // Load the project
             projectName = (String) objects.get(0);
-            directory = (String) objects.get(1);
+            type = (String) objects.get(1);
+        }
+        if (type.equals("manager")){
+            onTesterField.setVisible(false);
+            testerLabel.setVisible(false);
+        }
+        loadRepo();
+        loadListview(managerList);
+        selectedListView();
 
-            System.out.println("Project Name: " + projectName);
-            System.out.println("Directory: " + directory);
+
+    }
+
+    private void selectedListView() {
+        if (manager != null){
+            projectList.getSelectionModel().select(manager);
+            projectList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue == null) {
+                    selectedProject = null;
+                } else{
+                    selectedProject = newValue;
+                }
+            });
+
+        }else {
+            projectList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue == null) {
+                    selectedProject = null;
+                } else {
+                    selectedProject = newValue;
+                }
+            });
+
         }
     }
 
+    private void loadListview(ManagerList managerList) {
+        projectList.refresh();
+        if (managerList != null){
+            managerList.sort(new ManagerComparable());
+            for (Manager manager : managerList.getManagerList()) {
+                if (!manager.getIDManager().equals("null")){
+                    projectList.getItems().add(manager);
+
+                }
+            }
+        }
+    }
+
+    private void loadRepo(){
+        // สร้างออบเจ็กต์ของแต่ละ Repository
+        TestScriptRepository testScriptRepository = new TestScriptRepository();
+        TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
+        TestFlowPositionRepository testFlowPositionRepository = new TestFlowPositionRepository();
+        TestCaseRepository testCaseRepository = new TestCaseRepository();
+        TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
+        TestResultRepository testResultRepository = new TestResultRepository();
+        TestResultDetailRepository testResultDetailRepository = new TestResultDetailRepository();
+        IRReportRepository irReportRepository = new IRReportRepository();
+        IRDetailRepository irDetailRepository = new IRDetailRepository();
+        ConnectionRepository connectionRepository = new ConnectionRepository();
+        NoteRepository noteRepository = new NoteRepository();
+        TesterRepository testerRepository = new TesterRepository(); // เพิ่ม TesterRepository
+        ManagerRepository managerRepository = new ManagerRepository(); // เพิ่ม ManagerRepository
+        UseCaseRepository useCaseRepository = new UseCaseRepository();
+        UseCaseDetailRepository useCaseDetailRepository = new UseCaseDetailRepository();
+
+        
+
+        // โหลด TesterList
+        testerList = new TesterList();
+        for (Tester tester : testerRepository.getAllTesters()) {
+            testerList.addTester(tester);
+        }
+
+        // โหลด ManagerList
+        managerList = new ManagerList();
+        for (Manager manager : managerRepository.getAllManagers()) {
+            managerList.addManager(manager);
+        }
+    }
     @FXML
     void onCancelButton(ActionEvent actionEvent) {
         try {
@@ -59,27 +142,51 @@ public class OpenProjectController {
 
     @FXML
     void onConfirmButton(ActionEvent actionEvent) throws IOException {
-        String testerName = onTesterField.getText();
-        if (!handleSaveAction()) {
-            return;
+
+        if (type.equals("tester")){
+            testerName = onTesterField.getText();
+            if (!handleSaveAction()) {
+                return;
+            }
+            testerValidate(testerName);
+            if (!handleSaveActionProject()) {
+                return;
+            }
+            projectName = selectedProject.getProjectName().trim();
+            //send the project name and directory to HomePage
+            ArrayList<Object> objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(testerName);
+            //แก้พาท
+            String packageStr1 = "views/";
+            FXRouter.when("home_tester", packageStr1 + "home_tester.fxml","TestTools | " + projectName);
+            FXRouter.goTo("home_tester", objects);
+
+            // Close the current window
+            Node source = (Node) actionEvent.getSource();
+            Stage stage = (Stage) source.getScene().getWindow();
+            stage.close();
+        } else if (type.equals("manager")) {
+            if (!handleSaveActionProject()) {
+                return;
+            }
+            projectName = selectedProject.getProjectName().trim();
+            //send the project name and directory to HomePage
+            ArrayList<Object> objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(testerName);
+            //แก้พาท
+            String packageStr1 = "views/";
+            FXRouter.when("home_manager", packageStr1 + "home_manager.fxml","TestTools | " + projectName);
+            FXRouter.goTo("home_manager", objects);
+
+            // Close the current window
+            Node source = (Node) actionEvent.getSource();
+            Stage stage = (Stage) source.getScene().getWindow();
+            stage.close();
+
         }
 
-        testerValidate(testerName);
-
-        //send the project name and directory to HomePage
-        ArrayList<Object> objects = new ArrayList<>();
-        objects.add(projectName);
-        objects.add(directory);
-        objects.add(testerName);
-        //แก้พาท
-        String packageStr1 = "views/";
-        FXRouter.when("home_tester", packageStr1 + "home_tester.fxml","TestTools | " + projectName);
-        FXRouter.goTo("home_tester", objects);
-
-        // Close the current window
-        Node source = (Node) actionEvent.getSource();
-        Stage stage = (Stage) source.getScene().getWindow();
-        stage.close();
     }
 
 
@@ -121,6 +228,12 @@ public class OpenProjectController {
         }
         return true;
     }
-
+    boolean handleSaveActionProject() {
+        if (selectedProject == null ) {
+            showAlert("กรุณาเลือก Project");
+            return false;
+        }
+        return true;
+    }
 }
 

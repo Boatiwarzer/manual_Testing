@@ -29,7 +29,7 @@ public class LabelPageController {
     public AnchorPane anchorPane;
     private double width, height, layoutX, layoutY;
     private String type = "testScript";
-    private String projectName, directory;
+    private String projectName;
     private String editType;
     private int editID, subSystemID;
     private TestFlowPosition testFlowPosition = new TestFlowPosition();
@@ -52,13 +52,12 @@ public class LabelPageController {
         if (FXRouter.getData() != null) {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
-            directory = (String) objects.get(1);
-            name = (String) objects.get(2);
-            type = (String) objects.get(3);
-            width = (double) objects.get(4);
-            height = (double) objects.get(5);
-            layoutX = (double) objects.get(6);
-            layoutY = (double) objects.get(7);
+            name = (String) objects.get(1);
+            type = (String) objects.get(2);
+            width = (double) objects.get(3);
+            height = (double) objects.get(4);
+            layoutX = (double) objects.get(5);
+            layoutY = (double) objects.get(6);
             loadRepo();
             }
 
@@ -205,7 +204,6 @@ public class LabelPageController {
             // Send the label to the previous page
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(name);
             //objects.add(ID);
         if (type.equals("Rectangle-curve")){

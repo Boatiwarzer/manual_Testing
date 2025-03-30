@@ -49,7 +49,7 @@ public class IRTestresultController {
     private String irId;
     private String irdId;
     private String id;
-    private String projectName, directory;
+    private String projectName;
     private IRreport iRreport;
     private IRreportList iRreportList = new IRreportList();
     private IRreportDetail iRreportDetail = new IRreportDetail();
@@ -72,10 +72,9 @@ public class IRTestresultController {
         try {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
-            directory = (String) objects.get(1);
-            name = (String) objects.get(2);
-            iRreportDetailList = (IRreportDetailList) objects.get(3);
-            iRreport = (IRreport) objects.get(4);
+            name = (String) objects.get(1);
+            iRreportDetailList = (IRreportDetailList) objects.get(2);
+            iRreport = (IRreport) objects.get(3);
             loadRepo();
             // ตั้งค่า TableView
             setTableInfo(iRreportDetailList);

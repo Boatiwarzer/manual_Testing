@@ -103,16 +103,13 @@ public class TestFlowController {
 
     @FXML
     private ImageView rectangleImageVIew;
-
-
-
     @FXML
     private ImageView squareImageView;
     private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
     private double startX, startY;
     private TestScriptList testScriptList = new TestScriptList();
     private TestScriptDetailList testScriptDetailList;
-    private String projectName, directory;
+    private String projectName;
     private TestScript testScript = new TestScript();
     private TestCaseList testCaseList = new TestCaseList();
     private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
@@ -123,12 +120,9 @@ public class TestFlowController {
     private Rectangle border;
     private Rectangle[] anchors;
     private StackPane stackPane = new StackPane();
-    private Circle circle;
     private List<StackPane> stackPaneList = new ArrayList<>();
-    //private Map<Integer, StackPane> testScriptPaneMap; // Mapping positionID -> StackPane
     private Map<UUID, Point2D> testScriptPositionMap = new HashMap<>();
     private NoteList noteList;
-    private Note note;
     private String name;
     private boolean check = true;
     private UUID id;
@@ -141,8 +135,7 @@ public class TestFlowController {
         if (FXRouter.getData() != null){
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
-            directory = (String) objects.get(1);
-            name = (String) objects.get(2);
+            name = (String) objects.get(1);
 
             System.out.println(name);
             System.out.println(projectName);
@@ -292,7 +285,6 @@ public class TestFlowController {
         loadManagerStatus();
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(name);
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");
@@ -315,37 +307,37 @@ public class TestFlowController {
 
     @FXML
     void handleOpenMenuItem(ActionEvent actionEvent) throws IOException {
-        // Open file chooser
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Project");
-
-        // Set extension filter
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
-        fileChooser.getExtensionFilters().add(extFilter);
-
-        // Show open file dialog
-        File file = fileChooser.showOpenDialog(null);
-        if (file != null) {
-            System.out.println("Opening file: " + file.getName());
-
-            // Get the project name from the file name
-            projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
-
-            // Get the directory from the file path
-            directory = file.getParent();
-
-            ArrayList<Object> objects = new ArrayList<>();
-            objects.add(projectName);
-            objects.add(directory);
-            objects.add(null);
-            // แก้พาท
-            String packageStr1 = "views/";
-            FXRouter.when("home_tester", packageStr1 + "home_tester.fxml", "TestTools | " + projectName);
-            FXRouter.goTo("home_tester", objects);
-            FXRouter.popup("landing_openproject", objects);
-        } else {
-            System.out.println("No file selected.");
-        }
+//        // Open file chooser
+//        FileChooser fileChooser = new FileChooser();
+//        fileChooser.setTitle("Open Project");
+//
+//        // Set extension filter
+//        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+//        fileChooser.getExtensionFilters().add(extFilter);
+//
+//        // Show open file dialog
+//        File file = fileChooser.showOpenDialog(null);
+//        if (file != null) {
+//            System.out.println("Opening file: " + file.getName());
+//
+//            // Get the project name from the file name
+//            projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
+//
+//            // Get the directory from the file path
+//            directory = file.getParent();
+//
+//            ArrayList<Object> objects = new ArrayList<>();
+//            objects.add(projectName);
+//            objects.add(directory);
+//            objects.add(null);
+//            // แก้พาท
+//            String packageStr1 = "views/";
+//            FXRouter.when("home_tester", packageStr1 + "home_tester.fxml", "TestTools | " + projectName);
+//            FXRouter.goTo("home_tester", objects);
+//            FXRouter.popup("landing_openproject", objects);
+//        } else {
+//            System.out.println("No file selected.");
+//        }
     }
 
     @FXML
@@ -390,7 +382,6 @@ public class TestFlowController {
     public void objects(){
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(name);
         objects.add(null);
     }
@@ -801,7 +792,6 @@ public class TestFlowController {
     private void openTestCasePopup(UUID positionID) {
         ArrayList<Object> objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(name);
         objects.add(positionID);
         objects.add(null);
@@ -1430,7 +1420,6 @@ public class TestFlowController {
     private void openTestScriptPopup(UUID positionID) {
         ArrayList<Object> objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(name);
         objects.add(positionID);
         objects.add(null);
@@ -1939,7 +1928,6 @@ public class TestFlowController {
             if (event.getDragboard().getString().equals("Rectangle-curve")) {
                 ArrayList<Object> objects = new ArrayList<>();
                 objects.add(projectName);
-                objects.add(directory);
                 objects.add(name);
                 objects.add("Rectangle-curve");
                 objects.add(100.0);
@@ -1952,7 +1940,6 @@ public class TestFlowController {
                 //drawTestCase(75,75,event.getX()-75,event.getY()-75,"tc",1);
                 ArrayList<Object> objects = new ArrayList<>();
                 objects.add(projectName);
-                objects.add(directory);
                 objects.add(name);
                 objects.add("Rectangle");
                 objects.add(75.0);
@@ -1985,7 +1972,6 @@ public class TestFlowController {
             }else if (event.getDragboard().getString().equals("Kite")) {
                 ArrayList<Object> objects = new ArrayList<>();
                 objects.add(projectName);
-                objects.add(directory);
                 objects.add(name);
                 objects.add("Kite");
                 objects.add(75.0);

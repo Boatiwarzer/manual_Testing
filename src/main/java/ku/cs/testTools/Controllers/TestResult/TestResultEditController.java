@@ -62,7 +62,7 @@ public class TestResultEditController {
     private MenuItem saveMenuItem;
     private ArrayList<String> word = new ArrayList<>();
     private String trId;
-    private String projectName, directory;
+    private String projectName;
     private TestResultList testResultList = new TestResultList();
     //private ArrayList<Object> objects = (ArrayList) FXRouter.getData();
     private TestResultDetailList testResultDetailList = new TestResultDetailList();
@@ -100,19 +100,17 @@ public class TestResultEditController {
             if (FXRouter.getData() != null) {
                 objects = (ArrayList) FXRouter.getData();
                 projectName = (String) objects.get(0);
-                directory = (String) objects.get(1);
-                nameTester = (String) objects.get(2);
-                typeTR = (String) objects.get(3);
+                nameTester = (String) objects.get(1);
+                typeTR = (String) objects.get(2);
                 System.out.println(typeTR);
-                System.out.println(objects.get(3));
                 onTableTestresult.isFocused();
                 selectedTRD();
                 selectedListView();
                 loadRepo();
-                if (objects.get(4) != null){
-                    testResult = (TestResult) objects.get(4);
-                    testResultDetailList = (TestResultDetailList) objects.get(5);
-                    type = (String) objects.get(6);
+                if (objects.get(3) != null){
+                    testResult = (TestResult) objects.get(3);
+                    testResultDetailList = (TestResultDetailList) objects.get(4);
+                    type = (String) objects.get(5);
 //                    testResultDetailListDelete = (TestResultDetailList) objects.get(7);
 
                     System.out.println(type);
@@ -652,7 +650,6 @@ public class TestResultEditController {
     private void objects() {
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(nameTester);
         objects.add(typeTR);
         objects.add(testResult);
@@ -715,7 +712,6 @@ public class TestResultEditController {
         try {
             objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(nameTester);
             objects.add(null);
             FXRouter.goTo("test_case",objects);
@@ -729,7 +725,6 @@ public class TestResultEditController {
         try {
             objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(nameTester);
             objects.add(null);
             FXRouter.goTo("test_flow",objects);
@@ -743,7 +738,6 @@ public class TestResultEditController {
         try {
             objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(nameTester);
             objects.add(null);
             FXRouter.goTo("test_result",objects);
@@ -757,7 +751,6 @@ public class TestResultEditController {
         try {
             objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(nameTester);
             objects.add(null);
             FXRouter.goTo("test_script",objects);
@@ -771,7 +764,6 @@ public class TestResultEditController {
         try {
             objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(nameTester);
             objects.add(null);
             FXRouter.goTo("use_case",objects);
@@ -822,7 +814,7 @@ public class TestResultEditController {
                 }
             }
             saveRepo();
-            objects = new ArrayList<>(Arrays.asList(projectName, directory, nameTester, null));
+            objects = new ArrayList<>(Arrays.asList(projectName, nameTester, null));
             FXRouter.goTo("test_result", objects);
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -853,7 +845,6 @@ public class TestResultEditController {
             saveRepo();
             objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(nameTester);
             objects.add(testResult);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -899,7 +890,6 @@ public class TestResultEditController {
         try {
             objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(nameTester);
             objects.add(null);
             FXRouter.goTo("test_result",objects);
@@ -917,7 +907,6 @@ public class TestResultEditController {
         loadManagerStatus();
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(nameTester);
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");
@@ -940,37 +929,37 @@ public class TestResultEditController {
 
     @FXML
     void handleOpenMenuItem(ActionEvent actionEvent) throws IOException {
-        // Open file chooser
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Project");
-
-        // Set extension filter
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
-        fileChooser.getExtensionFilters().add(extFilter);
-
-        // Show open file dialog
-        File file = fileChooser.showOpenDialog(null);
-        if (file != null) {
-            System.out.println("Opening file: " + file.getName());
-
-            // Get the project name from the file name
-            projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
-
-            // Get the directory from the file path
-            directory = file.getParent();
-
-            ArrayList<Object> objects = new ArrayList<>();
-            objects.add(projectName);
-            objects.add(directory);
-            objects.add(null);
-            // แก้พาท
-            String packageStr1 = "views/";
-            FXRouter.when("home_tester", packageStr1 + "home_tester.fxml", "TestTools | " + projectName);
-            FXRouter.goTo("home_tester", objects);
-            FXRouter.popup("landing_openproject", objects);
-        } else {
-            System.out.println("No file selected.");
-        }
+//        // Open file chooser
+//        FileChooser fileChooser = new FileChooser();
+//        fileChooser.setTitle("Open Project");
+//
+//        // Set extension filter
+//        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+//        fileChooser.getExtensionFilters().add(extFilter);
+//
+//        // Show open file dialog
+//        File file = fileChooser.showOpenDialog(null);
+//        if (file != null) {
+//            System.out.println("Opening file: " + file.getName());
+//
+//            // Get the project name from the file name
+//            projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
+//
+//            // Get the directory from the file path
+//            directory = file.getParent();
+//
+//            ArrayList<Object> objects = new ArrayList<>();
+//            objects.add(projectName);
+//            objects.add(directory);
+//            objects.add(null);
+//            // แก้พาท
+//            String packageStr1 = "views/";
+//            FXRouter.when("home_tester", packageStr1 + "home_tester.fxml", "TestTools | " + projectName);
+//            FXRouter.goTo("home_tester", objects);
+//            FXRouter.popup("landing_openproject", objects);
+//        } else {
+//            System.out.println("No file selected.");
+//        }
     }
 
     @FXML

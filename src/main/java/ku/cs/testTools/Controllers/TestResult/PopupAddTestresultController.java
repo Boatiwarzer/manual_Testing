@@ -63,7 +63,7 @@ public class PopupAddTestresultController {
     private boolean isGenerated = false;
     private File selectedFile;
     private String savedImagePath;
-    private String projectName , directory;
+    private String projectName;
     private UseCaseList useCaseList = new UseCaseList();
     private UseCaseDetailList useCaseDetailList = new UseCaseDetailList();
     private TestScriptList testScriptList = new TestScriptList();
@@ -99,20 +99,19 @@ public class PopupAddTestresultController {
         if (FXRouter.getData() != null) {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
-            directory = (String) objects.get(1);
-            nameTester = (String) objects.get(2);;
-            typeTR = (String) objects.get(3);
-            testResult = (TestResult) objects.get(4);
-            testResultDetailList = (TestResultDetailList) objects.get(5);
+            nameTester = (String) objects.get(1);;
+            typeTR = (String) objects.get(2);
+            testResult = (TestResult) objects.get(3);
+            testResultDetailList = (TestResultDetailList) objects.get(4);
             idTR = testResult.getIdTR();
-            type = (String) objects.get(6);
+            type = (String) objects.get(5);
             System.out.println(nameTester);
             loadRepo();
             selectedComboBox();
             onTester.setText(nameTester);
-            if (objects.get(7) != null && type.equals("edit")) {
-                testResultDetail = (TestResultDetail) objects.get(7);
-                testResultDetailListDelete = (TestResultDetailList)  objects.get(8);
+            if (objects.get(6) != null && type.equals("edit")) {
+                testResultDetail = (TestResultDetail) objects.get(6);
+                testResultDetailListDelete = (TestResultDetailList)  objects.get(7);
                 testResultDetail = testResultDetailList.findTRDById(testResultDetail.getIdTRD());
                 id = testResultDetail.getIdTRD();
                 setTextEdit();
@@ -529,7 +528,6 @@ public class PopupAddTestresultController {
     private void objects() {
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(nameTester);
         objects.add(typeTR);
         objects.add(testResult);

@@ -60,7 +60,7 @@ public class TestResultAddController {
     private MenuItem saveMenuItem;
     private ArrayList<String> word = new ArrayList<>();
     private String trId;
-    private String projectName, directory;
+    private String projectName;
 
     private TestResultList testResultList = new TestResultList();
     //private ArrayList<Object> objects = (ArrayList) FXRouter.getData();
@@ -95,19 +95,18 @@ public class TestResultAddController {
         if (FXRouter.getData() != null) {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
-            directory = (String) objects.get(1);
-            name = (String) objects.get(2);
-            typeTR = (String) objects.get(3);
+            name = (String) objects.get(1);
+            typeTR = (String) objects.get(2);
             onTableTestresult.isFocused();
             clearInfo();
             loadRepo();
             setButtonVisible();
             selectedTRD();
             selectedListView();
-            if (objects.get(4) != null) {
-                testResult = (TestResult) objects.get(4);
-                testResultDetailList = (TestResultDetailList) objects.get(5);
-                type = (String) objects.get(6);
+            if (objects.get(3) != null) {
+                testResult = (TestResult) objects.get(3);
+                testResultDetailList = (TestResultDetailList) objects.get(4);
+                type = (String) objects.get(5);
                 setDataTR();
             } else {
                 randomId();
@@ -150,7 +149,6 @@ public class TestResultAddController {
         loadManagerStatus();
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(name);
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");
@@ -173,37 +171,37 @@ public class TestResultAddController {
 
     @FXML
     void handleOpenMenuItem(ActionEvent actionEvent) throws IOException {
-        // Open file chooser
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Project");
-
-        // Set extension filter
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
-        fileChooser.getExtensionFilters().add(extFilter);
-
-        // Show open file dialog
-        File file = fileChooser.showOpenDialog(null);
-        if (file != null) {
-            System.out.println("Opening file: " + file.getName());
-
-            // Get the project name from the file name
-            projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
-
-            // Get the directory from the file path
-            directory = file.getParent();
-
-            ArrayList<Object> objects = new ArrayList<>();
-            objects.add(projectName);
-            objects.add(directory);
-            objects.add(null);
-            // แก้พาท
-            String packageStr1 = "views/";
-            FXRouter.when("home_tester", packageStr1 + "home_tester.fxml", "TestTools | " + projectName);
-            FXRouter.goTo("home_tester", objects);
-            FXRouter.popup("landing_openproject", objects);
-        } else {
-            System.out.println("No file selected.");
-        }
+//        // Open file chooser
+//        FileChooser fileChooser = new FileChooser();
+//        fileChooser.setTitle("Open Project");
+//
+//        // Set extension filter
+//        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+//        fileChooser.getExtensionFilters().add(extFilter);
+//
+//        // Show open file dialog
+//        File file = fileChooser.showOpenDialog(null);
+//        if (file != null) {
+//            System.out.println("Opening file: " + file.getName());
+//
+//            // Get the project name from the file name
+//            projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
+//
+//            // Get the directory from the file path
+//            directory = file.getParent();
+//
+//            ArrayList<Object> objects = new ArrayList<>();
+//            objects.add(projectName);
+//            objects.add(directory);
+//            objects.add(null);
+//            // แก้พาท
+//            String packageStr1 = "views/";
+//            FXRouter.when("home_tester", packageStr1 + "home_tester.fxml", "TestTools | " + projectName);
+//            FXRouter.goTo("home_tester", objects);
+//            FXRouter.popup("landing_openproject", objects);
+//        } else {
+//            System.out.println("No file selected.");
+//        }
     }
 
     @FXML
@@ -738,7 +736,6 @@ public class TestResultAddController {
     private void objects() {
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(name);
         objects.add(typeTR);
         objects.add(testResult);
@@ -747,7 +744,6 @@ public class TestResultAddController {
     private void objectsSend() {
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(name);
         objects.add(null);
 
@@ -757,7 +753,7 @@ public class TestResultAddController {
         String nameTR = onTestNameField.getText();
         String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         String noteTR = onTestNoteField.getText();
-        testResult = new TestResult(idTR, nameTR, dateTR, noteTR);
+        testResult = new TestResult(idTR, nameTR, dateTR, noteTR,projectName, name);
     }
     @FXML
     void onAddButton(ActionEvent event) {
@@ -878,7 +874,7 @@ public class TestResultAddController {
             String nameTR = onTestNameField.getText();
             String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
             String noteTR = onTestNoteField.getText();
-            testResult = new TestResult(idTR, nameTR, dateTR, noteTR);
+            testResult = new TestResult(idTR, nameTR, dateTR, noteTR,projectName, name)       ;
 
             TestResultRepository testResultRepository = new TestResultRepository();
             TestResultDetailRepository testResultDetailRepository = new TestResultDetailRepository();
@@ -896,7 +892,6 @@ public class TestResultAddController {
             saveRepo();
             objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(name);
             objects.add(testResult);
 

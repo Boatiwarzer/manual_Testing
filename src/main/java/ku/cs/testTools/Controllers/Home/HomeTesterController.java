@@ -77,20 +77,22 @@ public class HomeTesterController {
             objects = (ArrayList) FXRouter.getData();
             // Load the project
             projectName = (String) objects.get(0);
-            directory = (String) objects.get(1);
-            name = (String) objects.get(2);
-            ManagerRepository managerRepository = new ManagerRepository();
-            Manager manager = managerRepository.getManagerByProjectName(projectName);
-            boolean check = Boolean.parseBoolean(manager.getStatus());
-            if (check){
-                loadRepo();
+            name = (String) objects.get(1);
 
+            if (projectName != null){
+                ManagerRepository managerRepository = new ManagerRepository();
+                Manager manager = managerRepository.getManagerByProjectName(projectName);
+                boolean check = Boolean.parseBoolean(manager.getStatus());
+                if (check){
+                    loadRepo();
+
+                }
             }
+
 
 
             System.out.println(name);
             System.out.println("Project Name: " + projectName);
-            System.out.println("Directory: " + directory);
         }
     }
     private void loadRepo(){
@@ -294,7 +296,6 @@ public class HomeTesterController {
         loadManagerStatus();
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(name);
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");
@@ -334,31 +335,30 @@ public class HomeTesterController {
 
     @FXML
     void handleOpenMenuItem(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-
-        // Configure the file chooser
-        fileChooser.setTitle("Open Project");
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
-        fileChooser.getExtensionFilters().add(extFilter);
-
-        // Show the file chooser
-        File file = fileChooser.showOpenDialog(null);
-        if (file != null) {
-            System.out.println("Opening: " + file.getName());
-            // Get the project name from the file name
-            projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
-
-            // Get the directory from the file path
-            directory = file.getParent();
-            //loadProject();
-        } else {
-            System.out.println("Open command cancelled");
-        }
+//        FileChooser fileChooser = new FileChooser();
+//
+//        // Configure the file chooser
+//        fileChooser.setTitle("Open Project");
+//        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+//        fileChooser.getExtensionFilters().add(extFilter);
+//
+//        // Show the file chooser
+//        File file = fileChooser.showOpenDialog(null);
+//        if (file != null) {
+//            System.out.println("Opening: " + file.getName());
+//            // Get the project name from the file name
+//            projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
+//
+//            // Get the directory from the file path
+//            directory = file.getParent();
+//            //loadProject();
+//        } else {
+//            System.out.println("Open command cancelled");
+//        }
     }
     public void objects(){
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(name);
         objects.add(null);
     }

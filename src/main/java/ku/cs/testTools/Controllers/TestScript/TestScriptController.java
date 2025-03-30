@@ -107,7 +107,7 @@ public class TestScriptController {
     private MenuBar homePageMenuBar;
     @FXML
     private MenuItem saveMenuItem;
-    private String projectName, directory;
+    private String projectName;
     private TestScriptList testScriptList = new TestScriptList();
     private TestScript testScript = new TestScript();
     private TestScript selectedTestScript = new TestScript();
@@ -123,6 +123,7 @@ public class TestScriptController {
     private String name;
     private TestScriptDetailList testScriptDetailListDelete = new TestScriptDetailList();
     private TestCase testcase;
+    private boolean check;
 
     @FXML
     void initialize() {
@@ -130,10 +131,9 @@ public class TestScriptController {
         if (FXRouter.getData() != null) {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
-            directory = (String) objects.get(1);
-            name = (String) objects.get(2);
-            if (objects.get(3) != null){
-                testScript = (TestScript) objects.get(3);
+            name = (String) objects.get(1);
+            if (objects.get(2) != null){
+                testScript = (TestScript) objects.get(2);
             }
             loadStatusButton();
             loadRepo();
@@ -163,7 +163,6 @@ public class TestScriptController {
     public void objects(){
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(name);
         objects.add(null);
     }
@@ -173,7 +172,7 @@ public class TestScriptController {
 
         if (manager != null) {  // ตรวจสอบว่าพบ Manager หรือไม่
             String status = manager.getStatus();
-            boolean check = Boolean.parseBoolean(status);
+            check = Boolean.parseBoolean(status);
             onCreateButton.setVisible(check);
             onEditButton.setVisible(check);
             System.out.println("Manager Status: " + status);
@@ -343,6 +342,7 @@ public class TestScriptController {
     }
 
     private void selected() {
+
         if (testScript != null){
             onSearchList.getSelectionModel().getSelectedItems();
             onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -350,7 +350,9 @@ public class TestScriptController {
                     clearInfo();
                     selectedTestScript = null;
                 } else{
-                    onEditButton.setVisible(newValue.getIdTS() != null);
+                    if (check){
+                        onEditButton.setVisible(newValue.getIdTS() != null);
+                    }
                     showInfo(newValue);
                     selectedTestScript = newValue;
                 }
@@ -587,7 +589,6 @@ public class TestScriptController {
         try {
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(name);
             objects.add("newTS");
             objects.add(null);
@@ -603,7 +604,6 @@ public class TestScriptController {
             System.out.println(testcase);
             ArrayList<Object>objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(name);
             objects.add("editTS");
             objects.add(selectedTestScript);
@@ -626,7 +626,6 @@ public class TestScriptController {
         loadManagerStatus();
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(name);
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");
@@ -649,37 +648,37 @@ public class TestScriptController {
 
     @FXML
     void handleOpenMenuItem(ActionEvent actionEvent) throws IOException {
-        // Open file chooser
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Project");
-
-        // Set extension filter
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
-        fileChooser.getExtensionFilters().add(extFilter);
-
-        // Show open file dialog
-        File file = fileChooser.showOpenDialog(null);
-        if (file != null) {
-            System.out.println("Opening file: " + file.getName());
-
-            // Get the project name from the file name
-            projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
-
-            // Get the directory from the file path
-            directory = file.getParent();
-
-            ArrayList<Object> objects = new ArrayList<>();
-            objects.add(projectName);
-            objects.add(directory);
-            objects.add(null);
-            // แก้พาท
-            String packageStr1 = "views/";
-            FXRouter.when("home_tester", packageStr1 + "home_tester.fxml", "TestTools | " + projectName);
-            FXRouter.goTo("home_tester", objects);
-            FXRouter.popup("landing_openproject", objects);
-        } else {
-            System.out.println("No file selected.");
-        }
+//        // Open file chooser
+//        FileChooser fileChooser = new FileChooser();
+//        fileChooser.setTitle("Open Project");
+//
+//        // Set extension filter
+//        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+//        fileChooser.getExtensionFilters().add(extFilter);
+//
+//        // Show open file dialog
+//        File file = fileChooser.showOpenDialog(null);
+//        if (file != null) {
+//            System.out.println("Opening file: " + file.getName());
+//
+//            // Get the project name from the file name
+//            projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
+//
+//            // Get the directory from the file path
+//            directory = file.getParent();
+//
+//            ArrayList<Object> objects = new ArrayList<>();
+//            objects.add(projectName);
+//            objects.add(directory);
+//            objects.add(null);
+//            // แก้พาท
+//            String packageStr1 = "views/";
+//            FXRouter.when("home_tester", packageStr1 + "home_tester.fxml", "TestTools | " + projectName);
+//            FXRouter.goTo("home_tester", objects);
+//            FXRouter.popup("landing_openproject", objects);
+//        } else {
+//            System.out.println("No file selected.");
+//        }
     }
 
     @FXML

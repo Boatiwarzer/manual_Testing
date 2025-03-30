@@ -36,8 +36,10 @@ public class IRreport {
     @Column(name = "tr_ir")
     private String trIR;
 
-//    @Column(name = "projectName")
-//    private String projectName;
+    @Column(name = "projectName", nullable = false, precision = 10)
+    private String projectName;
+    @Column(name = "tester", nullable = false, precision = 10)
+    private String tester;
 
     @Override
     public final boolean equals(Object o) {

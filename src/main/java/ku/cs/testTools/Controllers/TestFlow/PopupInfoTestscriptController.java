@@ -1,6 +1,8 @@
 package ku.cs.testTools.Controllers.TestFlow;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -72,12 +74,14 @@ public class PopupInfoTestscriptController {
 
     @FXML
     private Label testIDLabel;
-    private String projectName, directory;
+    private String projectName;
     private TestScriptList testScriptList = new TestScriptList();
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
     private TestScript testScript;
     private TestScriptDetail testScriptDetail;
     private UUID position;
+    private UUID newPosition;
+
     private String tsId;
     private TestScriptDetail selectedItem;
     private TestCaseList testCaseList = new TestCaseList();
@@ -90,6 +94,7 @@ public class PopupInfoTestscriptController {
     private String nameTester;
     private TestScriptDetailList testScriptDetailListDelete;
     private TestCase testcase;
+    private String tcId;
 
     @FXML
     void initialize() {
@@ -98,9 +103,8 @@ public class PopupInfoTestscriptController {
             if (FXRouter.getData() != null) {
                 ArrayList<Object> objects = (ArrayList) FXRouter.getData();
                 projectName = (String) objects.get(0);
-                directory = (String) objects.get(1);
-                nameTester = (String) objects.get(2);
-                position = (UUID) objects.get(3);
+                nameTester = (String) objects.get(1);
+                position = (UUID) objects.get(2);
                 onTableTestscript.isFocused();
                 selectedTSD();
                 loadStatusButton();
@@ -108,11 +112,11 @@ public class PopupInfoTestscriptController {
                 setDate();
                 selectedComboBox();
                 setButtonVisible();
-                if (objects.get(4) != null){
-                    testScript = (TestScript) objects.get(4);
-                    testScriptDetailList = (TestScriptDetailList) objects.get(5);
-                    type = (String) objects.get(6);
-                    testScriptDetailListDelete = (TestScriptDetailList) objects.get(7);
+                if (objects.get(3) != null){
+                    testScript = (TestScript) objects.get(3);
+                    testScriptDetailList = (TestScriptDetailList) objects.get(4);
+                    type = (String) objects.get(5);
+                    testScriptDetailListDelete = (TestScriptDetailList) objects.get(6);
                 }else {
                     testScript = testScriptList.findByPositionId(position);
                     System.out.println(testScript);
@@ -127,7 +131,9 @@ public class PopupInfoTestscriptController {
                 if (testScriptDetailList != null){
                     loadTable(testScriptDetailList);
                 }
-                onTestNameCombobox.setOnKeyReleased(event -> setTestcase());
+                onTestNameCombobox.valueProperty().addListener((obs, oldValue, newValue) -> setTestcase());
+                onUsecaseCombobox.valueProperty().addListener((obs, oldValue, newValue) -> setTestcase());
+                onTestcaseCombobox.valueProperty().addListener((obs, oldValue, newValue) -> setTestcase());
 
             }
             else{
@@ -145,18 +151,25 @@ public class PopupInfoTestscriptController {
 
     private void setTestcase() {
         onTestcaseCombobox.getItems().clear();
-        String[] name = onTestNameCombobox.getValue().split(":,");
+        String[] name = onTestNameCombobox.getValue().split(" : ");
         String usecase = onUsecaseCombobox.getValue();
         String description = infoDescriptLabel.getText();
         String preCon = infoPreconLabel.getText();
         String post = infoPostconLabel.getText();
         String tc = onTestcaseCombobox.getValue();
-        String[] data = tc.split(":");
-
+        String[] data = tc.split(" : ");
+        System.out.println(Arrays.toString(name));
         setDate();
-        testcase = testCaseList.findTCById(data[0]);
+        if (testcase == null){
+            testcase = testCaseList.findTCById(data[0]);
+        }
         if (testcase != null){
-            testcase = new TestCase(testcase.getIdTC(),name[1],testDateLabel.getText(),usecase,description,"-",testcase.getPosition(),preCon,post,testcase.getIdTC());
+            testcase = new TestCase(testcase.getIdTC(),name[1],testDateLabel.getText(),usecase,description,"-",testcase.getPosition(),preCon,post,onTestNameCombobox.getValue());
+            String tc_combobox = testcase.getIdTC() + " : " + testcase.getNameTC();
+            onTestcaseCombobox.setValue(tc_combobox);
+        }else{
+            randomId();
+            testcase = new TestCase(tcId,name[1],testDateLabel.getText(),usecase,description,"-",position,preCon,post,onTestNameCombobox.getValue());
             String tc_combobox = testcase.getIdTC() + " : " + testcase.getNameTC();
             onTestcaseCombobox.setValue(tc_combobox);
         }
@@ -408,6 +421,12 @@ public class PopupInfoTestscriptController {
     }
 
     private void randomId() {
+        int min = 1;
+        int upperbound = 999;
+        String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
+        newPosition = UUID.randomUUID();
+        //this.tsId = String.format("TS-%s", random1);
+        this.tcId = String.format("TC-%s", random1);
     }
 
     private void setTable() {
@@ -434,7 +453,7 @@ public class PopupInfoTestscriptController {
         });
 
         onTestcaseCombobox.setItems(FXCollections.observableArrayList("None"));
-        new AutoCompleteComboBoxListener<>(onTestcaseCombobox);
+        //new AutoCompleteComboBoxListener<>(onTestcaseCombobox);
         testCaseCombobox();
         onTestcaseCombobox.setOnAction(event -> {
             String selectedItem = onTestcaseCombobox.getSelectionModel().getSelectedItem();
@@ -610,7 +629,6 @@ public class PopupInfoTestscriptController {
             testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post,note,position);
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(nameTester);
             objects.add(position);
             objects.add(testScript);
@@ -635,7 +653,6 @@ public class PopupInfoTestscriptController {
         try {
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(nameTester);
             objects.add(null);
             FXRouter.goTo("test_flow", objects);
@@ -682,7 +699,6 @@ public class PopupInfoTestscriptController {
 
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(nameTester);
             FXRouter.goTo("test_flow", objects);
             Node source = (Node) event.getSource();
@@ -730,12 +746,11 @@ public class PopupInfoTestscriptController {
             testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, post,note,position);
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(nameTester);
             objects.add(position);
             objects.add(testScript);
             objects.add(testScriptDetailList);
-            objects.add(testCaseDetailList);
+            objects.add(testcase);
             objects.add("edit");
             objects.add(selectedItem);
             objects.add(testScriptDetailListDelete);
@@ -766,14 +781,15 @@ public class PopupInfoTestscriptController {
         String preCon = infoPreconLabel.getText();
         String note = onTestNoteField.getText();
         String post = infoPostconLabel.getText();
+        UUID newID = UUID.randomUUID();
 
         // Create a new TestScript object
-        testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, post, note, position);
+        testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, post, note, newID);
         testScriptList.addOrUpdateTestScript(testScript);
         TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(position);
-        if (testFlowPosition == null) {
-            testFlowPosition = new TestFlowPosition(); // ถ้ายังไม่มี สร้างใหม่
-        }
+        testFlowPosition.setPositionID(newID);
+        testFlowPositionList.removePositionByID(position);
+        testScriptList.deleteTestScriptByPositionID(position);
         testFlowPositionList.addPosition(testFlowPosition);
         TestScriptRepository testScriptRepository = new TestScriptRepository();
         TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
@@ -814,7 +830,6 @@ public class PopupInfoTestscriptController {
         // ✅ ส่งค่าไปยังหน้า "test_flow"
         ArrayList<Object> objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(nameTester);
 
         try {
