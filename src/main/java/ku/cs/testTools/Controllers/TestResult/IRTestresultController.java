@@ -1,5 +1,6 @@
 package ku.cs.testTools.Controllers.TestResult;
 
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -33,23 +34,32 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class IRTestresultController {
 
     @FXML
-    private Label IRIDLabel, IRNameLabel;
+    private Label IRIDLabel, testDateLabel;
 
     @FXML
-    private Button onCloseButton, onExportButton;
+    private Button onCloseButton, onExportButton, onEditListButton, onSubmitButton;
 
     @FXML
     private TableView<IRreportDetail> onTableIR;
+
+    @FXML
+    private TextField IRNameLabel, infoNoteLabel;
+
+    @FXML
+    private ComboBox<String> onSortCombobox;
 
     private String irId;
     private String irdId;
     private String id;
     private String projectName;
+    private ArrayList<Object> objects;
     private IRreport iRreport;
     private IRreportList iRreportList = new IRreportList();
     private IRreportDetail iRreportDetail = new IRreportDetail();
@@ -63,31 +73,45 @@ public class IRTestresultController {
     private TestScriptList testScriptList = new TestScriptList();
     private TestCaseList testCaseList;
     private TestCaseDetailList testCaseDetailList;
-    private String name;
+    private String nameTester;
+    private String typeIR;
+    private IRreportDetail selectedItem;
 
     @FXML
     void initialize() {
 //        clearInfo();
         setTable();
+        setButtonVisible();
+        setSort();
         try {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
-            name = (String) objects.get(1);
+            nameTester = (String) objects.get(1);
             iRreportDetailList = (IRreportDetailList) objects.get(2);
             iRreport = (IRreport) objects.get(3);
             loadRepo();
+            setDataIR();
+            selectedIRD();
+
             // ตั้งค่า TableView
             setTableInfo(iRreportDetailList);
 
             if (iRreport != null ) {
                 IRNameLabel.setText("Name : " + iRreport.getNameIR()); // แสดงชื่อ
                 IRIDLabel.setText(iRreport.getIdIR());    // แสดง ID
+                testDateLabel.setText(iRreport.getDateIR());
+                infoNoteLabel.setText(iRreport.getNoteIR());
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+    }
+
+    private void setSort() {
+        onSortCombobox.setItems(FXCollections.observableArrayList("All", "In Manager", "In Developer", "In Tester", "Withdraw", "Done"));
+        onSortCombobox.setValue("All");
     }
 
     private void loadRepo(){
@@ -257,6 +281,7 @@ public class IRTestresultController {
 
         ArrayList<StringConfiguration> configs = new ArrayList<>();
         configs.add(new StringConfiguration("title:IRD-ID."));
+        configs.add(new StringConfiguration("title:TRD-ID."));
         configs.add(new StringConfiguration("title:Test No."));
         configs.add(new StringConfiguration("title:Tester"));
         configs.add(new StringConfiguration("title:Test times"));
@@ -294,6 +319,7 @@ public class IRTestresultController {
         // Define column configurations
         ArrayList<StringConfiguration> configs = new ArrayList<>();
         configs.add(new StringConfiguration("title:IRD-ID.", "field:idIRD"));
+        configs.add(new StringConfiguration("title:TRD-ID.", "field:idTRD"));
         configs.add(new StringConfiguration("title:Test No.", "field:testNoIRD"));
         configs.add(new StringConfiguration("title:Tester", "field:testerIRD"));
         configs.add(new StringConfiguration("title:Test times", "field:retestIRD"));
@@ -313,7 +339,7 @@ public class IRTestresultController {
         for (StringConfiguration conf : configs) {
             TableColumn<IRreportDetail, String> col = new TableColumn<>(conf.get("title"));
             col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
-            if (index != 8 && index <= 13) {  // ถ้าเป็นคอลัมน์แรก
+            if (index != 9 && index <= 14) {  // ถ้าเป็นคอลัมน์แรก
                 col.setPrefWidth(120);
                 col.setMaxWidth(120);
                 col.setMinWidth(120); // ตั้งค่าขนาดคอลัมน์แรก
@@ -342,7 +368,7 @@ public class IRTestresultController {
                 });
             }
 
-            if (!conf.get("field").equals("imageTRD")) {
+            if (!conf.get("field").equals("imageIRD")) {
                 col.setCellFactory(column -> new TableCell<>() {
                     private final Text text = new Text();
                     @Override
@@ -422,15 +448,14 @@ public class IRTestresultController {
             onTableIR.getColumns().add(col);
         }
 
-        for (IRreportDetail iRreportDetail : iRreportDetailList.getIRreportDetailList()) {
-            if (iRreportDetail.getIdIR().trim().equals(iRreport.getIdIR().trim())){
-                onTableIR.getItems().add(iRreportDetail);
-            }
-        }
+//        for (IRreportDetail iRreportDetail : iRreportDetailList.getIRreportDetailList()) {
+//            if (iRreportDetail.getIdIR().trim().equals(iRreport.getIdIR().trim())){
+//                onTableIR.getItems().add(iRreportDetail);
+//            }
+//        }
+        onSortCombobox.setOnAction(event -> filterTable(iRreport));
 
-        // เพิ่มข้อมูลลงใน TableView
-//        ObservableList<IRreportDetail> observableList = FXCollections.observableArrayList(iRreportDetailList.getIRreportDetailList());
-//        onTableIR.setItems(observableList);
+        filterTable(iRreport);
     }
 
     @FXML
@@ -482,13 +507,13 @@ public class IRTestresultController {
 
         Row testerNameRow = sheet.createRow(currentRow++);
         Cell testerNameCell = testerNameRow.createCell(0);
-        testerNameCell.setCellValue("Tester Name: " + name);
+        testerNameCell.setCellValue("Tester Name: " + nameTester);
 
         // เพิ่มวันเวลา Export
         Row exportTimeRow = sheet.createRow(currentRow++);
         Cell exportTimeCell = exportTimeRow.createCell(0);
         LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         exportTimeCell.setCellValue("Export Date and Time: " + now.format(formatter));
 
         // เว้นแถวก่อนเริ่มหัวข้อข้อมูลตาราง
@@ -497,7 +522,7 @@ public class IRTestresultController {
         // สร้างหัวข้อคอลัมน์ (Header Row)
         Row headerRow = sheet.createRow(currentRow++);
         String[] columns = {
-                "IR ID", "Test No.", "Tester", "Test times", "TS ID", "TC ID", "Description", "Condition",
+                "IRD ID", "TRD ID", "Test No.", "Tester", "Test times", "TS ID", "TC ID", "Description", "Condition",
                 "Image", "Priority", "RCA", "Review By", "Status", "Remark"
         };
 
@@ -509,20 +534,21 @@ public class IRTestresultController {
         // เพิ่มข้อมูลจาก irReportDetails ในแต่ละแถว
         for (IRreportDetail detail : irReportDetails) {
             Row row = sheet.createRow(currentRow++);
-            row.createCell(0).setCellValue(detail.getIdIR());
-            row.createCell(1).setCellValue(detail.getTestNoIRD());
-            row.createCell(2).setCellValue(detail.getTesterIRD());
-            row.createCell(3).setCellValue(detail.getRetestIRD());
-            row.createCell(4).setCellValue(detail.getTsIdIRD());
-            row.createCell(5).setCellValue(detail.getTcIdIRD());
-            row.createCell(6).setCellValue(detail.getDescriptIRD());
-            row.createCell(7).setCellValue(detail.getConditionIRD());
-            row.createCell(8).setCellValue(detail.getImageIRD());
-            row.createCell(9).setCellValue(detail.getPriorityIRD());
-            row.createCell(10).setCellValue(detail.getRcaIRD());
-            row.createCell(11).setCellValue(detail.getManagerIRD());
-            row.createCell(12).setCellValue(detail.getStatusIRD());
-            row.createCell(13).setCellValue(detail.getRemarkIRD());
+            row.createCell(0).setCellValue(detail.getIdIRD());
+            row.createCell(1).setCellValue(detail.getIdTRD());
+            row.createCell(2).setCellValue(detail.getTestNoIRD());
+            row.createCell(3).setCellValue(detail.getTesterIRD());
+            row.createCell(4).setCellValue(detail.getRetestIRD());
+            row.createCell(5).setCellValue(detail.getTsIdIRD());
+            row.createCell(6).setCellValue(detail.getTcIdIRD());
+            row.createCell(7).setCellValue(detail.getDescriptIRD());
+            row.createCell(8).setCellValue(detail.getConditionIRD());
+            row.createCell(9).setCellValue(detail.getImageIRD());
+            row.createCell(10).setCellValue(detail.getPriorityIRD());
+            row.createCell(11).setCellValue(detail.getRcaIRD());
+            row.createCell(12).setCellValue(detail.getManagerIRD());
+            row.createCell(13).setCellValue(detail.getStatusIRD());
+            row.createCell(14).setCellValue(detail.getRemarkIRD());
         }
 
         // เขียนไฟล์ Excel ไปยังตำแหน่งที่ผู้ใช้เลือก
@@ -532,6 +558,10 @@ public class IRTestresultController {
 
         // ปิด Workbook หลังจากการบันทึกเสร็จ
         workbook.close();
+    }
+
+    private void setButtonVisible() {
+        onEditListButton.setVisible(false);
     }
 
     @FXML
@@ -546,6 +576,171 @@ public class IRTestresultController {
         // เรียกฟังก์ชัน saveAsExcel
         saveToExcel(stage, irReportDetails, csvFileName);
     }
+    @FXML
+    void onEditListButton(ActionEvent event)  {
+        try {
+            currentNewData();
+            objects();
+            objects.add(selectedItem);
+            if (selectedItem != null){
+                FXRouter.popup("popup_add_ir",objects,true);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+
+    @FXML
+    void onSortCombobox(ActionEvent event) {
+
+    }
+
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Warning");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait(); // รอให้ผู้ใช้กด OK ก่อนดำเนินการต่อ
+    }
+
+    boolean handleSaveAction() {
+        if (IRNameLabel.getText() == null || IRNameLabel.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอกข้อมูล Name");
+            return false;
+        }
+
+        return true;
+    }
+
+    @FXML
+    void onSubmitButton(ActionEvent event) {
+        if (!handleSaveAction()) {
+            return;
+        }
+        try {
+            currentNewData();
+            iRreportList.addOrUpdateIRreport(iRreport);
+            iRreportList.addOrUpdateIRreport(iRreport);
+            IRReportRepository iRReportRepository = new IRReportRepository();
+            IRDetailRepository iRDetailRepository = new IRDetailRepository();
+            for (IRreportDetail iRreportDetail : iRreportDetailList.getIRreportDetailList()){
+                iRDetailRepository.updateIRReportDetail(iRreportDetail);
+            }
+            iRReportRepository.updateIRReport(iRreport);
+            // Write data to respective files
+            //saveRepo();
+
+            objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(nameTester);
+            objects.add(iRreportDetailList);
+            objects.add(iRreport);
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Success");
+            alert.setHeaderText(null);
+            alert.setContentText("IR report saved successfully!");
+            alert.showAndWait();
+            FXRouter.popup("test_result_ir",objects,true);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void currentNewData() {
+        String idIR = irId;
+        String nameIR = IRNameLabel.getText();
+        String dateIR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        String noteIR = infoNoteLabel.getText();
+        String idTr = iRreport.getTrIR();
+//        String pn = iRreport.getProjectName();
+        iRreport = new IRreport(idIR, nameIR, dateIR, noteIR, idTr);
+    }
+    private void setDataIR() {
+        irId = iRreport.getIdIR();
+        IRIDLabel.setText(irId);
+        String name = iRreport.getNameIR();
+        IRNameLabel.setText(name);
+        String note = iRreport.getNoteIR();
+        infoNoteLabel.setText(note);
+        String dateTR = iRreport.getDateIR();
+        testDateLabel.setText(dateTR);
+    }
+    private void objects() {
+        objects = new ArrayList<>();
+        objects.add(projectName);
+        objects.add(nameTester);
+        objects.add(iRreportDetailList);
+        objects.add(iRreport);
+    }
+
+    void selectedIRD() {
+        onTableIR.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                selectedItem = null;
+            } else {
+                if (newValue.getIdTRD() != null && !newValue.getStatusIRD().equals("Done") && !newValue.getStatusIRD().equals("Withdraw")){
+                    onEditListButton.setVisible(true);
+                }else {
+                    onEditListButton.setVisible(false);
+                }
+                selectedItem = newValue;
+                System.out.println(selectedItem);
+            }
+        });
+        // Listener สำหรับ focusedProperty ของ TableView
+        onTableIR.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                if (!onEditListButton.isPressed()) {
+                    onTableIR.getSelectionModel().clearSelection(); // เคลียร์การเลือก
+                    onEditListButton.setVisible(false); // ซ่อนปุ่ม
+                }
+            }
+        });
+    }
+
+    @FXML
+    void onTestNoteField(ActionEvent event) {
+
+    }
+
+    private void filterTable(IRreport iRreport) {
+        String selectedFilter = onSortCombobox.getValue();
+
+        List<IRreportDetail> sortedList = iRreportDetailList.getIRreportDetailList().stream()
+                .filter(iRreportDetail ->
+                        iRreportDetail.getIdIR() != null &&
+                                iRreport.getIdIR() != null &&
+                                iRreportDetail.getIdIR().trim().equals(iRreport.getIdIR().trim())
+                ) // เช็ค Null ก่อนใช้ .trim()
+                .filter(iRreportDetail -> {
+                    if ("All".equals(selectedFilter) || selectedFilter == null) {
+                        return true;
+                    } else if ("In Manager".equals(selectedFilter)) {
+                        return "In Manager".equals(iRreportDetail.getStatusIRD());
+                    } else if ("In Developer".equals(selectedFilter)) {
+                        return "In Developer".equals(iRreportDetail.getStatusIRD());
+                    } else if ("In Tester".equals(selectedFilter)) {
+                        return "In Tester".equals(iRreportDetail.getStatusIRD());
+                    } else if ("Withdraw".equals(selectedFilter)) {
+                        return "Withdraw".equals(iRreportDetail.getStatusIRD());
+                    } else if ("Done".equals(selectedFilter)) {
+                        return "Done".equals(iRreportDetail.getStatusIRD());
+                    }
+                    return false;
+                })
+                .sorted(Comparator.comparingInt(iRreportDetail -> {
+                    try {
+                        return Integer.parseInt(iRreportDetail.getTestNoIRD().trim());
+                    } catch (NumberFormatException e) {
+                        return Integer.MAX_VALUE;
+                    }
+                }))
+                .collect(Collectors.toList());
+
+        onTableIR.getItems().setAll(sortedList);
+    }
 }
 

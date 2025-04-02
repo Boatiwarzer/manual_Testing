@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
 
 public class TRmanagerController {
     @FXML
-    private Label testIDLabel;
+    private Label testIDLabel, testDateLabel;
 
     @FXML
     private Hyperlink onClickTestflow, onClickTestresult, onClickUsecase, onClickIR;
@@ -117,10 +117,10 @@ public class TRmanagerController {
         if (FXRouter.getData() != null) {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
-            directory = (String) objects.get(1);
-            nameManager = (String) objects.get(2);
-            if (objects.get(3) != null){
-                testResult = (TestResult) objects.get(3);
+//            directory = (String) objects.get(1);
+            nameManager = (String) objects.get(1);
+            if (objects.get(2) != null){
+                testResult = (TestResult) objects.get(2);
             }
             clearInfo();
             loadRepo();
@@ -137,6 +137,12 @@ public class TRmanagerController {
             searchSet();
 
         }
+        setSort();
+    }
+
+    private void setSort() {
+        onSortCombobox.setItems(FXCollections.observableArrayList("All", "Approved", "Not approved", "Waiting"));
+        onSortCombobox.setValue("All");
     }
     private void loadList() {
         Map<String, Set<String>> projectTestersMap = new HashMap<>();
@@ -288,7 +294,8 @@ public class TRmanagerController {
                 testNameLabel.setText(testResultName);
                 String testResultNote = firstResult.getNoteTR();
                 infoNoteLabel.setText(testResultNote);
-                String dateTR = firstResult.getDateTR();
+                String dateTR = testResult.getDateTR();
+                testDateLabel.setText(dateTR);
                 setTableInfo(firstResult);
 
                 System.out.println("select " + testResultList.findTRById(testIDLabel.getText()));
@@ -617,6 +624,7 @@ public class TRmanagerController {
         String testResultNote = testResult.getNoteTR();
         infoNoteLabel.setText(testResultNote);
         String dateTR = testResult.getDateTR();
+        testDateLabel.setText(dateTR);
         setTableInfo(testResult);
 
         System.out.println("select " + testResultList.findTRById(testIDLabel.getText()));
@@ -630,6 +638,7 @@ public class TRmanagerController {
         String testResultNote = testResult.getNoteTR();
         infoNoteLabel.setText(testResultNote);
         String dateTR = testResult.getDateTR();
+        testDateLabel.setText(dateTR);
         setTableInfo(testResult);
 
         System.out.println("select " + testResultList.findTRById(testIDLabel.getText()));
@@ -705,10 +714,10 @@ public class TRmanagerController {
         configs.add(new StringConfiguration("title:Test No.", "field:testNo"));
         configs.add(new StringConfiguration("title:TS-ID.", "field:tsIdTRD"));
         configs.add(new StringConfiguration("title:TC-ID.", "field:tcIdTRD"));
-        configs.add(new StringConfiguration("title:Actor", "field:actorTRD"));
-        configs.add(new StringConfiguration("title:Description", "field:descriptTRD"));
-        configs.add(new StringConfiguration("title:Input Data", "field:inputdataTRD"));
-        configs.add(new StringConfiguration("title:Test Steps", "field:stepsTRD"));
+//        configs.add(new StringConfiguration("title:Actor", "field:actorTRD"));
+//        configs.add(new StringConfiguration("title:Description", "field:descriptTRD"));
+//        configs.add(new StringConfiguration("title:Input Data", "field:inputdataTRD"));
+//        configs.add(new StringConfiguration("title:Test Steps", "field:stepsTRD"));
         configs.add(new StringConfiguration("title:Expected Result", "field:expectedTRD"));
         configs.add(new StringConfiguration("title:Actual Result", "field:actualTRD"));
         configs.add(new StringConfiguration("title:Status", "field:statusTRD"));
@@ -725,7 +734,7 @@ public class TRmanagerController {
         for (StringConfiguration conf : configs) {
             TableColumn<TestResultDetail, String> col = new TableColumn<>(conf.get("title"));
             col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
-            if (index != 14 && index <= 17) {  // ถ้าเป็นคอลัมน์แรก
+            if (index != 10 && index <= 13) {  // ถ้าเป็นคอลัมน์แรก
                 col.setPrefWidth(120);
                 col.setMaxWidth(120);
                 col.setMinWidth(120); // ตั้งค่าขนาดคอลัมน์แรก
@@ -796,6 +805,33 @@ public class TRmanagerController {
                     }
                 });
             }
+            if (conf.get("field").equals("priorityTRD")) {
+                col.setCellFactory(column -> new TableCell<>() {
+                    private final Text text = new Text();
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            setGraphic(null);
+                        } else {
+                            text.setText(item);
+                            text.wrappingWidthProperty().bind(column.widthProperty().subtract(10)); // ตั้งค่าการห่อข้อความตามขนาดคอลัมน์
+                            if (item.equals("Low")) {
+                                text.setFill(javafx.scene.paint.Color.DARKGOLDENROD);
+                            } else if (item.equals("Medium")) {
+                                text.setFill(javafx.scene.paint.Color.ORANGE);
+                            } else if (item.equals("High")) {
+                                text.setFill(javafx.scene.paint.Color.RED);
+                            } else if (item.equals("Critical")) {
+                                text.setFill(javafx.scene.paint.Color.DARKRED);
+                            } else {
+                                text.setFill(Color.BLACK); // สีปกติสำหรับค่าอื่น ๆ
+                            }
+                            setGraphic(text); // แสดงผล Text Node
+                        }
+                    }
+                });
+            }
             // เพิ่มคอลัมน์แสดงภาพ
             if (conf.get("field").equals("imageTRD")) {
                 col.setCellFactory(column -> new TableCell<>() {
@@ -808,10 +844,12 @@ public class TRmanagerController {
                             setGraphic(null); // หากไม่มีข้อมูลให้เคลียร์กราฟิก
                         } else {
                             // แยก path จากข้อมูล
-                            String[] parts = item.split(" : ");
-                            String imagePath = parts.length > 1 ? parts[1] : ""; // ใช้ส่วนหลังจาก " : "
+                            String[] images = item.split(" \\| ");
+                            String firstImage = images[0]; // เอารายการแรก
+                            String[] parts = firstImage.split(" : ");
+                            String firstImagePath = parts.length > 1 ? parts[1] : "";
 
-                            File file = new File(imagePath);
+                            File file = new File(firstImagePath);
                             if (file.exists()) {
                                 Image image = new Image(file.toURI().toString());
                                 imageView.setImage(image);
@@ -836,11 +874,14 @@ public class TRmanagerController {
         onTableTestresult.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
         //Add items to the table
-        for (TestResultDetail testResultDetail : testResultDetailList.getTestResultDetailList()) {
-            if (testResultDetail.getIdTR().trim().equals(testResult.getIdTR().trim())){
-                onTableTestresult.getItems().add(testResultDetail);
-            }
-        }
+//        for (TestResultDetail testResultDetail : testResultDetailList.getTestResultDetailList()) {
+//            if (testResultDetail.getIdTR().trim().equals(testResult.getIdTR().trim())){
+//                onTableTestresult.getItems().add(testResultDetail);
+//            }
+//        }
+        onSortCombobox.setOnAction(event -> filterTable(testResult));
+
+        filterTable(testResult);
     }
 
     public void setTable() {
@@ -854,10 +895,10 @@ public class TRmanagerController {
         configs.add(new StringConfiguration("title:Test No."));
         configs.add(new StringConfiguration("title:TS-ID."));
         configs.add(new StringConfiguration("title:TC-ID."));
-        configs.add(new StringConfiguration("title:Actor"));
-        configs.add(new StringConfiguration("title:Description"));
-        configs.add(new StringConfiguration("title:Input Data"));
-        configs.add(new StringConfiguration("title:Test Steps"));
+//        configs.add(new StringConfiguration("title:Actor"));
+//        configs.add(new StringConfiguration("title:Description"));
+//        configs.add(new StringConfiguration("title:Input Data"));
+//        configs.add(new StringConfiguration("title:Test Steps"));
         configs.add(new StringConfiguration("title:Expected Result."));
         configs.add(new StringConfiguration("title:Actual Result."));
         configs.add(new StringConfiguration("title:Status"));
@@ -1000,7 +1041,7 @@ public class TRmanagerController {
         Row exportTimeRow = sheet.createRow(currentRow++);
         org.apache.poi.ss.usermodel.Cell exportTimeCell = exportTimeRow.createCell(0);
         LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         exportTimeCell.setCellValue("Export Date and Time: " + now.format(formatter));
 
         Row NameRow = sheet.createRow(currentRow++);
@@ -1087,5 +1128,45 @@ public class TRmanagerController {
             manager.setStatusTrue();
             managerRepository.updateManager(manager);
         }
+    }
+
+    @FXML
+    private ComboBox<String> onSortCombobox;
+
+    @FXML
+    void onSortCombobox (ActionEvent event) {
+
+    }
+    private void filterTable(TestResult testResult) {
+        String selectedFilter = onSortCombobox.getValue();
+
+        List<TestResultDetail> sortedList = testResultDetailList.getTestResultDetailList().stream()
+                .filter(testResultDetail ->
+                        testResultDetail.getIdTR() != null &&
+                                testResult.getIdTR() != null &&
+                                testResultDetail.getIdTR().trim().equals(testResult.getIdTR().trim())
+                ) // เช็ค Null ก่อนใช้ .trim()
+                .filter(testResultDetail -> {
+                    if ("All".equals(selectedFilter) || selectedFilter == null) {
+                        return true;
+                    } else if ("Approved".equals(selectedFilter)) {
+                        return "Approved".equals(testResultDetail.getApproveTRD());
+                    } else if ("Not approved".equals(selectedFilter)) {
+                        return "Not approved".equals(testResultDetail.getApproveTRD());
+                    } else if ("Waiting".equals(selectedFilter)) {
+                        return "Waiting".equals(testResultDetail.getApproveTRD());
+                    }
+                    return false;
+                })
+                .sorted(Comparator.comparingInt(testResultDetail -> {
+                    try {
+                        return Integer.parseInt(testResultDetail.getTestNo().trim());
+                    } catch (NumberFormatException e) {
+                        return Integer.MAX_VALUE;
+                    }
+                }))
+                .collect(Collectors.toList());
+
+        onTableTestresult.getItems().setAll(sortedList);
     }
 }

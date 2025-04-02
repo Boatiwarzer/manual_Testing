@@ -4,8 +4,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.Manager.Manager;
@@ -30,7 +38,7 @@ public class PopupIRmanager {
     private Button onConfirmButton, onCancelButton;
 
     @FXML
-    private Label onRetest, onTester, onTestscriptIDComboBox, onTestcaseIDComboBox, onTestNo, onManager, onImage, onCondition, onDescription;
+    private Label onRetest, onTester, onTestscriptIDComboBox, onTestcaseIDComboBox, onTestNo, onManager, onCondition, onDescription;
 
     @FXML
     private ComboBox<String> onPriorityComboBox;
@@ -43,6 +51,9 @@ public class PopupIRmanager {
 
     @FXML
     private TextField onRemark;
+
+    @FXML
+    private Hyperlink onImage;
 
     private IRreportList iRreportList = new IRreportList();
     private IRreportDetailList iRreportDetailList = new IRreportDetailList();
@@ -644,5 +655,83 @@ public class PopupIRmanager {
 //            onLogical.setSelected(false);
 //            onHandling.setSelected(false);
 //        }
+    }
+
+    @FXML
+    void onImage(ActionEvent event) {
+        Stage imageStage = new Stage();
+        imageStage.setTitle("Image Viewer");
+
+        // กำหนดขนาดหน้าต่าง
+        imageStage.setWidth(1200);
+        imageStage.setHeight(700);
+
+        // แยกข้อมูลรูปจาก onImage.getText()
+        String item = onImage.getText();
+        String[] imageParts = item.split(" \\| "); // แยกแต่ละรูปด้วย "|"
+
+        List<Image> images = new ArrayList<>();
+        for (String part : imageParts) {
+            String[] details = part.split(" : "); // แยก "ชื่อไฟล์ : path"
+            if (details.length > 1) {
+                String imagePath = details[1];
+                File file = new File(imagePath);
+                if (file.exists()) {
+                    images.add(new Image(file.toURI().toString()));
+                } else {
+                    System.out.println("Image not found: " + imagePath);
+                }
+            }
+        }
+
+        if (images.isEmpty()) {
+            System.out.println("No valid images found.");
+            return;
+        }
+
+        // สร้าง ImageView และตั้งค่าขนาด
+        ImageView imageView = new ImageView(images.get(0));
+        imageView.setFitWidth(1000);  // ลดขนาดให้เว้นที่ให้ปุ่ม
+        imageView.setFitHeight(600);
+        imageView.setPreserveRatio(true);
+
+        // ปุ่มเลื่อนรูป
+        Button prevButton = new Button("◀ Previous");
+        Button nextButton = new Button("Next ▶");
+
+        prevButton.setStyle("-fx-font-size: 14px; -fx-padding: 10px;");
+        nextButton.setStyle("-fx-font-size: 14px; -fx-padding: 10px;");
+
+        // ตำแหน่งปัจจุบันของรูปภาพ
+        final int[] currentIndex = {0};
+
+        prevButton.setOnAction(e -> {
+            if (currentIndex[0] > 0) {
+                currentIndex[0]--;
+                imageView.setImage(images.get(currentIndex[0]));
+            }
+        });
+
+        nextButton.setOnAction(e -> {
+            if (currentIndex[0] < images.size() - 1) {
+                currentIndex[0]++;
+                imageView.setImage(images.get(currentIndex[0]));
+            }
+        });
+
+        // จัด Layout ใหม่โดยใช้ BorderPane
+        HBox buttonBox = new HBox(30, prevButton, nextButton);
+        buttonBox.setAlignment(Pos.CENTER);
+        buttonBox.setPadding(new Insets(10));
+
+        BorderPane root = new BorderPane();
+        root.setCenter(imageView);
+        root.setBottom(buttonBox);
+
+        Scene scene = new Scene(root, 1200, 700);
+        imageStage.setScene(scene);
+
+        // แสดงหน้าต่างใหม่
+        imageStage.show();
     }
 }

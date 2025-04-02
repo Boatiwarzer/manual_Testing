@@ -1,5 +1,6 @@
 package ku.cs.testTools.Controllers.Manager;
 
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -142,6 +143,12 @@ public class IREditmanagerController {
             }
         }
         System.out.println(iRreportDetailList);
+        setSort();
+    }
+
+    private void setSort() {
+        onSortCombobox.setItems(FXCollections.observableArrayList("All", "In Manager", "In Developer", "In Tester", "Withdraw", "Done"));
+        onSortCombobox.setValue("All");
     }
     private void selectedVbox() {
         for (Node node : projectList.getChildren()) {
@@ -450,6 +457,8 @@ public class IREditmanagerController {
         onTestNameField.setText(name);
         String note = iRreport.getNoteIR();
         onTestNoteField.setText(note);
+        String dateTR = iRreport.getDateIR();
+        testDateLabel.setText(dateTR);
     }
 
     private void setButtonVisible() {
@@ -538,6 +547,7 @@ public class IREditmanagerController {
         ArrayList<StringConfiguration> configs = new ArrayList<>();
 
         configs.add(new StringConfiguration("title:IRD-ID.", "field:idIRD"));
+        configs.add(new StringConfiguration("title:TRD-ID.", "field:idTRD"));
         configs.add(new StringConfiguration("title:Test No.", "field:testNoIRD"));
         configs.add(new StringConfiguration("title:Tester", "field:testerIRD"));
         configs.add(new StringConfiguration("title:Test times", "field:retestIRD"));
@@ -557,7 +567,7 @@ public class IREditmanagerController {
         for (StringConfiguration conf : configs) {
             TableColumn<IRreportDetail, String> col = new TableColumn<>(conf.get("title"));
             col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
-            if (index != 8 && index <= 13) {  // ถ้าเป็นคอลัมน์แรก
+            if (index != 9 && index <= 14) {  // ถ้าเป็นคอลัมน์แรก
                 col.setPrefWidth(120);
                 col.setMaxWidth(120);
                 col.setMinWidth(120); // ตั้งค่าขนาดคอลัมน์แรก
@@ -586,7 +596,7 @@ public class IREditmanagerController {
                 });
             }
 
-            if (!conf.get("field").equals("imageTRD")) {
+            if (!conf.get("field").equals("imageIRD")) {
                 col.setCellFactory(column -> new TableCell<>() {
                     private final Text text = new Text();
                     @Override
@@ -668,11 +678,14 @@ public class IREditmanagerController {
         onTableIR.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
         //Add items to the table
-        for (IRreportDetail iRreportDetail : iRreportDetailList.getIRreportDetailList()) {
-            if (iRreportDetail.getIdIR().trim().equals(iRreport.getIdIR().trim())){
-                onTableIR.getItems().add(iRreportDetail);
-            }
-        }
+//        for (IRreportDetail iRreportDetail : iRreportDetailList.getIRreportDetailList()) {
+//            if (iRreportDetail.getIdIR().trim().equals(iRreport.getIdIR().trim())){
+//                onTableIR.getItems().add(iRreportDetail);
+//            }
+//        }
+        onSortCombobox.setOnAction(event -> filterTable(iRreport));
+
+        filterTable(iRreport);
     }
 
     public void setTable() {
@@ -684,6 +697,7 @@ public class IREditmanagerController {
 
         ArrayList<StringConfiguration> configs = new ArrayList<>();
         configs.add(new StringConfiguration("title:IRD-ID."));
+        configs.add(new StringConfiguration("title:TRD-ID."));
         configs.add(new StringConfiguration("title:Test No."));
         configs.add(new StringConfiguration("title:Tester"));
         configs.add(new StringConfiguration("title:Test times"));
@@ -743,7 +757,7 @@ public class IREditmanagerController {
             if (newValue == null) {
                 selectedItem = null;
             } else {
-                if (newValue.getIdTRD() != null){
+                if (newValue.getIdTRD() != null && !newValue.getStatusIRD().equals("Done") && !newValue.getStatusIRD().equals("Withdraw")){
                     onEditListButton.setVisible(true);
                 }else {
                     onEditListButton.setVisible(false);
@@ -769,7 +783,7 @@ public class IREditmanagerController {
     private void currentNewData() {
         String idIR = irId;
         String nameIR = onTestNameField.getText();
-        String dateIR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String dateIR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
         String noteIR = onTestNoteField.getText();
         String idTr = iRreport.getTrIR();
 //        String pn = iRreport.getProjectName();
@@ -1016,5 +1030,50 @@ public class IREditmanagerController {
 //            throw new RuntimeException(e);
 //        }
 
+    }
+
+    @FXML
+    private ComboBox<String> onSortCombobox;
+
+    @FXML
+    void onSortCombobox (ActionEvent event) {
+
+    }
+
+    private void filterTable(IRreport iRreport) {
+        String selectedFilter = onSortCombobox.getValue();
+
+        List<IRreportDetail> sortedList = iRreportDetailList.getIRreportDetailList().stream()
+                .filter(iRreportDetail ->
+                        iRreportDetail.getIdIR() != null &&
+                                iRreport.getIdIR() != null &&
+                                iRreportDetail.getIdIR().trim().equals(iRreport.getIdIR().trim())
+                ) // เช็ค Null ก่อนใช้ .trim()
+                .filter(iRreportDetail -> {
+                    if ("All".equals(selectedFilter) || selectedFilter == null) {
+                        return true;
+                    } else if ("In Manager".equals(selectedFilter)) {
+                        return "In Manager".equals(iRreportDetail.getStatusIRD());
+                    } else if ("In Developer".equals(selectedFilter)) {
+                        return "In Developer".equals(iRreportDetail.getStatusIRD());
+                    } else if ("In Tester".equals(selectedFilter)) {
+                        return "In Tester".equals(iRreportDetail.getStatusIRD());
+                    } else if ("Withdraw".equals(selectedFilter)) {
+                        return "Withdraw".equals(iRreportDetail.getStatusIRD());
+                    } else if ("Done".equals(selectedFilter)) {
+                        return "Done".equals(iRreportDetail.getStatusIRD());
+                    }
+                    return false;
+                })
+                .sorted(Comparator.comparingInt(iRreportDetail -> {
+                    try {
+                        return Integer.parseInt(iRreportDetail.getTestNoIRD().trim());
+                    } catch (NumberFormatException e) {
+                        return Integer.MAX_VALUE;
+                    }
+                }))
+                .collect(Collectors.toList());
+
+        onTableIR.getItems().setAll(sortedList);
     }
 }

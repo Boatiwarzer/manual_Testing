@@ -5,9 +5,18 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ku.cs.testTools.Services.Repository.*;
@@ -17,13 +26,17 @@ import ku.cs.testTools.Services.AutoCompleteComboBoxListener;
 
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.chrono.Chronology;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class PopupAddTestresultController {
 
@@ -36,7 +49,13 @@ public class PopupAddTestresultController {
     private Button onCancelButton, onConfirmButton, onUploadButton;
 
     @FXML
-    private Label onDate, onDescription, testResultIDLabel, testResultNameLabel, onExpected, onTester, onImage, onActor, onRetest;
+    private DatePicker onDate;
+
+    @FXML
+    private Hyperlink onImage;
+
+    @FXML
+    private Label onDescription, testResultIDLabel, testResultNameLabel, onExpected, onTester, onActor, onRetest;
 
     @FXML
     private ComboBox<String> onTestscriptIDComboBox;
@@ -112,7 +131,7 @@ public class PopupAddTestresultController {
             if (objects.get(6) != null && type.equals("edit")) {
                 testResultDetail = (TestResultDetail) objects.get(6);
                 testResultDetailListDelete = (TestResultDetailList)  objects.get(7);
-                testResultDetail = testResultDetailList.findTRDById(testResultDetail.getIdTRD());
+//                testResultDetail = testResultDetailList.findTRDById(testResultDetail.getIdTRD());
                 id = testResultDetail.getIdTRD();
                 setTextEdit();
             }else {
@@ -295,23 +314,24 @@ public class PopupAddTestresultController {
         onActual.setText(testResultDetail.getActualTRD());
         onStatusComboBox.getSelectionModel().select(testResultDetail.getStatusTRD());
         onPriorityComboBox.getSelectionModel().select(testResultDetail.getPriorityTRD());
-        onDate.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+//        onDate.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        onDate.setValue(LocalDate.parse(testResultDetail.getDateTRD()));
         onTester.setText(testResultDetail.getTesterTRD());
         onImage.setText(testResultDetail.getImageTRD());
         onRetest.setText(testResultDetail.getRetestTRD());
     }
 
-    private void setDateTRD() {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        LocalDateTime now = LocalDateTime.now();
-        this.date = now.format(dtf);
-        onDate.setText(date);
-    }
+//    private void setDateTRD() {
+//        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//        LocalDateTime now = LocalDateTime.now();
+//        this.date = now.format(dtf);
+//        onDate.setText(date);
+//    }
 
     @FXML
     void GenerateDate(KeyEvent event) {
         if (!isGenerated) {  // ถ้ายังไม่ได้ทำงานมาก่อน
-            setDateTRD();
+//            setDateTRD();
             isGenerated = true;  // ตั้งค่าว่าทำงานแล้ว
         }
     }
@@ -329,7 +349,7 @@ public class PopupAddTestresultController {
     private void clearInfo() {
         id = "";
         onTestNo.setText("");
-        onDate.setText("-");
+        onDate.setChronology(null);
         onDescription.setText("-");
         onActual.setText("");
         onTeststeps.setText("");
@@ -339,11 +359,11 @@ public class PopupAddTestresultController {
         onImage.setText("...");
 //        testResultIDLabel.setText("");
 //        testResultNameLabel.setText("");
-        onRetest.setText("-");
+        onRetest.setText("1");
     }
 
     private void setLabel() {
-        onDate.getStyleClass().add("custom-label");
+//        onDate.getStyleClass().add("custom-label");
         onDescription.getStyleClass().add("custom-label");
         onExpected.getStyleClass().add("custom-label");
         onTester.getStyleClass().add("custom-label");
@@ -359,40 +379,40 @@ public class PopupAddTestresultController {
         this.id = String.format("TRD-%s", random1);
     }
 
-    @FXML
-    void onUploadButton(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select an Image");
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg")
-        );
-
-        selectedFile = fileChooser.showOpenDialog(null);
-
-        if (selectedFile != null) {
-            String targetDirectory = getTargetDirectory();
-
-            try {
-                Path targetPath = Path.of(targetDirectory, selectedFile.getName());
-                Files.createDirectories(Path.of(targetDirectory)); // สร้างโฟลเดอร์หากยังไม่มี
-                Files.copy(selectedFile.toPath(), targetPath, StandardCopyOption.REPLACE_EXISTING);
-                savedImagePath = targetPath.toString();
-
-                onImage.setText(selectedFile.getName() + " : " + savedImagePath);
-            } catch (IOException e) {
-                e.printStackTrace();
-                onImage.setText("Error: " + e.getMessage());
-            }
-        }
-    }
-
-    // ฟังก์ชันแปลงไฟล์เป็น Base64
-//    private String encodeFileToBase64Binary(File file) throws IOException {
-//        try (FileInputStream fileInputStream = new FileInputStream(file)) {
-//            byte[] fileBytes = fileInputStream.readAllBytes();
-//            return Base64.getEncoder().encodeToString(fileBytes);
+//    @FXML
+//    void onUploadButton(ActionEvent event) {
+//        FileChooser fileChooser = new FileChooser();
+//        fileChooser.setTitle("Select an Image");
+//        fileChooser.getExtensionFilters().add(
+//                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg")
+//        );
+//
+//        selectedFile = fileChooser.showOpenDialog(null);
+//
+//        if (selectedFile != null) {
+//            String targetDirectory = getTargetDirectory();
+//
+//            try {
+//                Path targetPath = Path.of(targetDirectory, selectedFile.getName());
+//                Files.createDirectories(Path.of(targetDirectory)); // สร้างโฟลเดอร์หากยังไม่มี
+//                Files.copy(selectedFile.toPath(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+//                savedImagePath = targetPath.toString();
+//
+//                onImage.setText(selectedFile.getName() + " : " + savedImagePath);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                onImage.setText("Error: " + e.getMessage());
+//            }
 //        }
 //    }
+
+    // ฟังก์ชันแปลงไฟล์เป็น Base64
+    private String encodeFileToBase64Binary(File file) throws IOException {
+        try (FileInputStream fileInputStream = new FileInputStream(file)) {
+            byte[] fileBytes = fileInputStream.readAllBytes();
+            return Base64.getEncoder().encodeToString(fileBytes);
+        }
+    }
 
     private String getTargetDirectory() {
         String userHome = System.getProperty("user.home");
@@ -403,6 +423,102 @@ public class PopupAddTestresultController {
         } else {
             return userHome + "/Downloads/Image_ManaualTesttools";
         }
+    }
+
+    private List<File> selectedFiles = new ArrayList<>();
+    private static final int MAX_IMAGES = 5;
+
+    @FXML
+    void onUploadButton(ActionEvent event) {
+        List<String> options = new ArrayList<>();
+        options.add("Upload Image");
+        if (!selectedFiles.isEmpty()) {
+            options.add("Remove Last Image");
+            options.add("Clear All Images");
+        }
+
+        ChoiceDialog<String> dialog = new ChoiceDialog<>(options.get(0), options);
+        dialog.setTitle("Image Options");
+        dialog.setHeaderText("Choose an action:");
+
+        dialog.showAndWait().ifPresent(choice -> {
+            switch (choice) {
+                case "Upload Image":
+                    uploadImage();
+                    break;
+                case "Remove Last Image":
+                    removeLastImage();
+                    break;
+                case "Clear All Images":
+                    clearImages();
+                    break;
+            }
+        });
+    }
+
+    private void uploadImage() {
+        if (selectedFiles.size() >= MAX_IMAGES) {
+            showAlert("Upload Limit", "You can upload up to " + MAX_IMAGES + " images only.");
+            return;
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select an Image");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg"));
+
+        File file = fileChooser.showOpenDialog(null);
+        if (file != null) {
+            selectedFiles.add(file);
+            saveImages();
+            updateImageLabel();
+        }
+    }
+
+    private void saveImages() {
+        String targetDirectory = getTargetDirectory();
+
+        try {
+            Files.createDirectories(Path.of(targetDirectory));
+            for (File file : selectedFiles) {
+                Path targetPath = Path.of(targetDirectory, file.getName());
+                Files.copy(file.toPath(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+            }
+        } catch (IOException e) {
+            showAlert("Error", "Error saving images: " + e.getMessage());
+        }
+    }
+
+    private void updateImageLabel() {
+        if (selectedFiles.isEmpty()) {
+            onImage.setText("...");
+            return;
+        }
+
+        String imageText = selectedFiles.stream()
+                .map(file -> file.getName() + " : " + Path.of(getTargetDirectory(), file.getName()))
+                .collect(Collectors.joining(" | "));
+
+        onImage.setText(imageText);
+    }
+
+    private void removeLastImage() {
+        if (!selectedFiles.isEmpty()) {
+            selectedFiles.remove(selectedFiles.size() - 1);
+            updateImageLabel();
+        }
+    }
+
+    private void clearImages() {
+        selectedFiles.clear();
+        updateImageLabel();
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     private String getCSVFilePath() {
@@ -434,7 +550,7 @@ public class PopupAddTestresultController {
                     TestScript script = testScriptList.findTSById(tsId.trim()); // ค้นหา TestScript โดย ID
                     if (script != null) {
                         onDescription.setText(script.getDescriptionTS());
-                        onExpected.setText(script.getPostCon());// แสดงผลใน Label
+//                        onExpected.setText(script.getPostCon());// แสดงผลใน Label
                         String uc = script.getUseCase();
                         String[] partsUc = uc.split(" : "); // แยกข้อความตาม " : "
                         String ucId = partsUc[0]; // ดึงส่วนแรกออกมา
@@ -512,7 +628,6 @@ public class PopupAddTestresultController {
                 } else {
                     System.out.println("No test steps found for " + tsId);
                 }
-
             }
         });
 
@@ -548,14 +663,17 @@ public class PopupAddTestresultController {
     }
     @FXML
     void onCancelButton(ActionEvent event) {
-        try {
-            objects();
-            clearInfo();
-            route(event, objects);
-        } catch (IOException e) {
-            System.err.println("ไปที่หน้า home ไม่ได้");
-            System.err.println("ให้ตรวจสอบการกำหนด route");
-        }
+//        try {
+//            objects();
+//            clearInfo();
+//            route(event, objects);
+//        } catch (IOException e) {
+//            System.err.println("ไปที่หน้า home ไม่ได้");
+//            System.err.println("ให้ตรวจสอบการกำหนด route");
+//        }
+        Node source = (Node) event.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
     }
 
 
@@ -573,11 +691,12 @@ public class PopupAddTestresultController {
         System.out.println(result);
 
         String IdTC = onTestcaseIDComboBox.getValue();
-        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+//        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String date = String.valueOf(onDate.getValue());
         String descript = onDescription.getText();
         String actor = onActor.getText();
         String inputdata = onInputdataCombobox.getValue();
-        String teststeps = onTeststeps.getText();;
+        String teststeps = onTeststeps.getText();
         String expected = onExpected.getText();
         String actual = onActual.getText();
         String status = onStatusComboBox.getValue();
@@ -708,5 +827,121 @@ public class PopupAddTestresultController {
     void onTestcaseIDComboBox(ActionEvent event) {
 
     }
+
+    @FXML
+    void onImage(ActionEvent event) {
+        Stage imageStage = new Stage();
+        imageStage.setTitle("Image Viewer");
+
+        // กำหนดขนาดหน้าต่าง
+        imageStage.setWidth(1200);
+        imageStage.setHeight(700);
+
+        // แยกข้อมูลรูปจาก onImage.getText()
+        String item = onImage.getText();
+        String[] imageParts = item.split(" \\| "); // แยกแต่ละรูปด้วย "|"
+
+        List<Image> images = new ArrayList<>();
+        for (String part : imageParts) {
+            String[] details = part.split(" : "); // แยก "ชื่อไฟล์ : path"
+            if (details.length > 1) {
+                String imagePath = details[1];
+                File file = new File(imagePath);
+                if (file.exists()) {
+                    images.add(new Image(file.toURI().toString()));
+                } else {
+                    System.out.println("Image not found: " + imagePath);
+                }
+            }
+        }
+
+        if (images.isEmpty()) {
+            System.out.println("No valid images found.");
+            return;
+        }
+
+        // สร้าง ImageView และตั้งค่าขนาด
+        ImageView imageView = new ImageView(images.get(0));
+        imageView.setFitWidth(1000);  // ลดขนาดให้เว้นที่ให้ปุ่ม
+        imageView.setFitHeight(600);
+        imageView.setPreserveRatio(true);
+
+        // ปุ่มเลื่อนรูป
+        Button prevButton = new Button("◀ Previous");
+        Button nextButton = new Button("Next ▶");
+
+        prevButton.setStyle("-fx-font-size: 14px; -fx-padding: 10px;");
+        nextButton.setStyle("-fx-font-size: 14px; -fx-padding: 10px;");
+
+        // ตำแหน่งปัจจุบันของรูปภาพ
+        final int[] currentIndex = {0};
+
+        prevButton.setOnAction(e -> {
+            if (currentIndex[0] > 0) {
+                currentIndex[0]--;
+                imageView.setImage(images.get(currentIndex[0]));
+            }
+        });
+
+        nextButton.setOnAction(e -> {
+            if (currentIndex[0] < images.size() - 1) {
+                currentIndex[0]++;
+                imageView.setImage(images.get(currentIndex[0]));
+            }
+        });
+
+        // จัด Layout ใหม่โดยใช้ BorderPane
+        HBox buttonBox = new HBox(30, prevButton, nextButton);
+        buttonBox.setAlignment(Pos.CENTER);
+        buttonBox.setPadding(new Insets(10));
+
+        BorderPane root = new BorderPane();
+        root.setCenter(imageView);
+        root.setBottom(buttonBox);
+
+        Scene scene = new Scene(root, 1200, 700);
+        imageStage.setScene(scene);
+
+        // แสดงหน้าต่างใหม่
+        imageStage.show();
+    }
+
+//    @FXML
+//    void onImage(ActionEvent event) {
+//        Stage imageStage = new Stage();
+//        imageStage.setTitle("Image Viewer");
+//
+//        // กำหนดขนาดหน้าต่าง
+//        imageStage.setWidth(1200);
+//        imageStage.setHeight(675);
+//
+//        String item = onImage.getText();
+//        String[] parts = item.split(" : ");
+//        String imagePath = parts.length > 1 ? parts[1] : "";
+//
+//        // ตรวจสอบว่าไฟล์มีอยู่จริงหรือไม่
+//        File file = new File(imagePath);
+//        if (!file.exists()) {
+//            System.out.println("Image not found: " + imagePath);
+//            return;
+//        }
+//
+//        // โหลดรูปภาพ
+//        Image image = new Image(file.toURI().toString());
+//        ImageView imageView = new ImageView(image);
+//
+//        // ปรับขนาดรูปให้พอดีกับหน้าต่าง
+//        imageView.setFitWidth(1200);
+//        imageView.setFitHeight(675);
+//        imageView.setPreserveRatio(true);
+//
+//        // สร้าง Scene และเพิ่ม ImageView
+//        StackPane root = new StackPane(imageView);
+//        Scene scene = new Scene(root, 1200, 675);
+//        imageStage.setScene(scene);
+//
+//        // แสดงหน้าต่างใหม่
+//        imageStage.show();
+//    }
 
 }

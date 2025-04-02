@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 
 public class IRmanagerController {
     @FXML
-    private Label testIDLabel;
+    private Label testIDLabel, testDateLabel;
 
     @FXML
     private Hyperlink onClickTestflow, onClickTestresult, onClickUsecase, onClickIR;
@@ -112,10 +112,10 @@ public class IRmanagerController {
         if (FXRouter.getData() != null) {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
-            directory = (String) objects.get(1);
-            nameManager = (String) objects.get(2);
-            if (objects.get(3) != null){
-                iRreport = (IRreport) objects.get(3);
+//            directory = (String) objects.get(1);
+            nameManager = (String) objects.get(1);
+            if (objects.get(2) != null){
+                iRreport = (IRreport) objects.get(2);
             }
             clearInfo();
             loadRepo();
@@ -132,6 +132,12 @@ public class IRmanagerController {
             searchSet();
 
         }
+        setSort();
+    }
+
+    private void setSort() {
+        onSortCombobox.setItems(FXCollections.observableArrayList("All", "In Manager", "In Developer", "In Tester", "Withdraw", "Done"));
+        onSortCombobox.setValue("All");
     }
     private void loadList() {
         Map<String, Set<String>> projectTestersMap = new HashMap<>();
@@ -281,7 +287,8 @@ public class IRmanagerController {
                 testNameLabel.setText(iRreportName);
                 String iRreportNote = iRreport.getNoteIR();
                 infoNoteLabel.setText(iRreportNote);
-                String dateTR = iRreport.getDateIR();
+                String dateIR = iRreport.getDateIR();
+                testDateLabel.setText(dateIR);
                 setTableInfo(iRreport);
 
                 System.out.println("select " + iRreportList.findIRById(testIDLabel.getText()));
@@ -702,7 +709,8 @@ public class IRmanagerController {
         testNameLabel.setText(iRreportName);
         String iRreportNote = iRreport.getNoteIR();
         infoNoteLabel.setText(iRreportNote);
-        String dateTR = iRreport.getDateIR();
+        String dateIR = iRreport.getDateIR();
+        testDateLabel.setText(dateIR);
         setTableInfo(iRreport);
 
         System.out.println("select " + iRreportList.findIRById(testIDLabel.getText()));
@@ -777,6 +785,7 @@ public class IRmanagerController {
         ArrayList<StringConfiguration> configs = new ArrayList<>();
 
         configs.add(new StringConfiguration("title:IRD-ID.", "field:idIRD"));
+        configs.add(new StringConfiguration("title:TRD-ID.", "field:idTRD"));
         configs.add(new StringConfiguration("title:Test No.", "field:testNoIRD"));
         configs.add(new StringConfiguration("title:Tester", "field:testerIRD"));
         configs.add(new StringConfiguration("title:Test times", "field:retestIRD"));
@@ -796,7 +805,7 @@ public class IRmanagerController {
         for (StringConfiguration conf : configs) {
             TableColumn<IRreportDetail, String> col = new TableColumn<>(conf.get("title"));
             col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
-            if (index != 8 && index <= 13) {  // ถ้าเป็นคอลัมน์แรก
+            if (index != 9 && index <= 14) {  // ถ้าเป็นคอลัมน์แรก
                 col.setPrefWidth(120);
                 col.setMaxWidth(120);
                 col.setMinWidth(120); // ตั้งค่าขนาดคอลัมน์แรก
@@ -825,7 +834,7 @@ public class IRmanagerController {
                 });
             }
 
-            if (!conf.get("field").equals("imageTRD")) {
+            if (!conf.get("field").equals("imageIRD")) {
                 col.setCellFactory(column -> new TableCell<>() {
                     private final Text text = new Text();
                     @Override
@@ -906,11 +915,14 @@ public class IRmanagerController {
         onTableIR.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
         //Add items to the table
-        for (IRreportDetail iRreportDetail : iRreportDetailList.getIRreportDetailList()) {
-            if (iRreportDetail.getIdIR().trim().equals(iRreport.getIdIR().trim())){
-                onTableIR.getItems().add(iRreportDetail);
-            }
-        }
+//        for (IRreportDetail iRreportDetail : iRreportDetailList.getIRreportDetailList()) {
+//            if (iRreportDetail.getIdIR().trim().equals(iRreport.getIdIR().trim())){
+//                onTableIR.getItems().add(iRreportDetail);
+//            }
+//        }
+        onSortCombobox.setOnAction(event -> filterTable(iRreport));
+
+        filterTable(iRreport);
 
     }
 
@@ -921,6 +933,7 @@ public class IRmanagerController {
 
         ArrayList<StringConfiguration> configs = new ArrayList<>();
         configs.add(new StringConfiguration("title:IRD-ID."));
+        configs.add(new StringConfiguration("title:TRD-ID."));
         configs.add(new StringConfiguration("title:Test No."));
         configs.add(new StringConfiguration("title:Tester"));
         configs.add(new StringConfiguration("title:Test times"));
@@ -1069,7 +1082,7 @@ public class IRmanagerController {
         Row exportTimeRow = sheet.createRow(currentRow++);
         org.apache.poi.ss.usermodel.Cell exportTimeCell = exportTimeRow.createCell(0);
         LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         exportTimeCell.setCellValue("Export Date and Time: " + now.format(formatter));
 
         // เว้นแถวก่อนเริ่มหัวข้อข้อมูลตาราง
@@ -1078,7 +1091,7 @@ public class IRmanagerController {
         // สร้างหัวข้อคอลัมน์ (Header Row)
         Row headerRow = sheet.createRow(currentRow++);
         String[] columns = {
-                "IR ID", "Test No.", "Tester", "Test times", "TS ID", "TC ID", "Description", "Condition",
+                "IRD ID", "TRD ID", "Test No.", "Tester", "Test times", "TS ID", "TC ID", "Description", "Condition",
                 "Image", "Priority", "RCA", "Review By", "Status", "Remark"
         };
 
@@ -1090,20 +1103,21 @@ public class IRmanagerController {
         // เพิ่มข้อมูลจาก irReportDetails ในแต่ละแถว
         for (IRreportDetail detail : irReportDetails) {
             Row row = sheet.createRow(currentRow++);
-            row.createCell(0).setCellValue(detail.getIdIR());
-            row.createCell(1).setCellValue(detail.getTestNoIRD());
-            row.createCell(2).setCellValue(detail.getTesterIRD());
-            row.createCell(3).setCellValue(detail.getRetestIRD());
-            row.createCell(4).setCellValue(detail.getTsIdIRD());
-            row.createCell(5).setCellValue(detail.getTcIdIRD());
-            row.createCell(6).setCellValue(detail.getDescriptIRD());
-            row.createCell(7).setCellValue(detail.getConditionIRD());
-            row.createCell(8).setCellValue(detail.getImageIRD());
-            row.createCell(9).setCellValue(detail.getPriorityIRD());
-            row.createCell(10).setCellValue(detail.getRcaIRD());
-            row.createCell(11).setCellValue(detail.getManagerIRD());
-            row.createCell(12).setCellValue(detail.getStatusIRD());
-            row.createCell(13).setCellValue(detail.getRemarkIRD());
+            row.createCell(0).setCellValue(detail.getIdIRD());
+            row.createCell(1).setCellValue(detail.getIdTRD());
+            row.createCell(2).setCellValue(detail.getTestNoIRD());
+            row.createCell(3).setCellValue(detail.getTesterIRD());
+            row.createCell(4).setCellValue(detail.getRetestIRD());
+            row.createCell(5).setCellValue(detail.getTsIdIRD());
+            row.createCell(6).setCellValue(detail.getTcIdIRD());
+            row.createCell(7).setCellValue(detail.getDescriptIRD());
+            row.createCell(8).setCellValue(detail.getConditionIRD());
+            row.createCell(9).setCellValue(detail.getImageIRD());
+            row.createCell(10).setCellValue(detail.getPriorityIRD());
+            row.createCell(11).setCellValue(detail.getRcaIRD());
+            row.createCell(12).setCellValue(detail.getManagerIRD());
+            row.createCell(13).setCellValue(detail.getStatusIRD());
+            row.createCell(14).setCellValue(detail.getRemarkIRD());
         }
 
         // เขียนไฟล์ Excel ไปยังตำแหน่งที่ผู้ใช้เลือก
@@ -1126,5 +1140,49 @@ public class IRmanagerController {
 
         // เรียกฟังก์ชัน saveAsExcel
         saveToExcel(stage, irReportDetails, csvFileName);
+    }
+
+    @FXML
+    private ComboBox<String> onSortCombobox;
+
+    @FXML
+    void onSortCombobox (ActionEvent event) {
+
+    }
+    private void filterTable(IRreport iRreport) {
+        String selectedFilter = onSortCombobox.getValue();
+
+        List<IRreportDetail> sortedList = iRreportDetailList.getIRreportDetailList().stream()
+                .filter(iRreportDetail ->
+                        iRreportDetail.getIdIR() != null &&
+                                iRreport.getIdIR() != null &&
+                                iRreportDetail.getIdIR().trim().equals(iRreport.getIdIR().trim())
+                ) // เช็ค Null ก่อนใช้ .trim()
+                .filter(iRreportDetail -> {
+                    if ("All".equals(selectedFilter) || selectedFilter == null) {
+                        return true;
+                    } else if ("In Manager".equals(selectedFilter)) {
+                        return "In Manager".equals(iRreportDetail.getStatusIRD());
+                    } else if ("In Developer".equals(selectedFilter)) {
+                        return "In Developer".equals(iRreportDetail.getStatusIRD());
+                    } else if ("In Tester".equals(selectedFilter)) {
+                        return "In Tester".equals(iRreportDetail.getStatusIRD());
+                    } else if ("Withdraw".equals(selectedFilter)) {
+                        return "Withdraw".equals(iRreportDetail.getStatusIRD());
+                    } else if ("Done".equals(selectedFilter)) {
+                        return "Done".equals(iRreportDetail.getStatusIRD());
+                    }
+                    return false;
+                })
+                .sorted(Comparator.comparingInt(iRreportDetail -> {
+                    try {
+                        return Integer.parseInt(iRreportDetail.getTestNoIRD().trim());
+                    } catch (NumberFormatException e) {
+                        return Integer.MAX_VALUE;
+                    }
+                }))
+                .collect(Collectors.toList());
+
+        onTableIR.getItems().setAll(sortedList);
     }
 }

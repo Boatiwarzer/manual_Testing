@@ -145,7 +145,7 @@
                   </TitledPane>
                   <ScrollPane>
                      <content>
-                        <VBox fx:id="projectList" prefHeight="256.0" prefWidth="266.0" />
+                        <VBox fx:id="projectList" prefHeight="255.0" prefWidth="260.0" />
                      </content>
                   </ScrollPane>
                </children>
