@@ -573,7 +573,7 @@ public class TestScriptEditController {
     }
 
     public void setDate(){
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime now = LocalDateTime.now();
         String dates = now.format(dtf);
         testDateLabel.setText(dates);

@@ -10,38 +10,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="339e8b6d-7c1d-4583-b039-ece96beb9415" name="Changes" comment="merge">
-      <change afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestResult/PopupIREdit.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/views/popup_add_ir.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Manager/IREditmanagerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Manager/IREditmanagerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Manager/IRmanagerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Manager/IRmanagerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Manager/PopupIRmanager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Manager/PopupIRmanager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Manager/PopupTREdit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Manager/PopupTREdit.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Manager/TREditmanagerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Manager/TREditmanagerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Manager/TRmanagerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Manager/TRmanagerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestCase/PopupAddTestcaseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestCase/PopupAddTestcaseController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestCase/TestCaseAddController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestCase/TestCaseAddController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestCase/TestCaseEditController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestCase/TestCaseEditController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestResult/IRTestresultController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestResult/IRTestresultController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestResult/PopupAddTestresultController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestResult/PopupAddTestresultController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestResult/TestResultAddController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestResult/TestResultAddController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestResult/TestResultController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestResult/TestResultController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestResult/TestResultEditController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestResult/TestResultEditController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/PopupAddTestscriptController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/PopupAddTestscriptController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/TestScriptAddController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/TestScriptAddController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/TestScriptEditController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/TestScriptEditController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/UseCase/UseCaseAddController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/UseCase/UseCaseAddController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/UseCase/UseCaseEditController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/UseCase/UseCaseEditController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/IRreport.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/TestToolModels/IRreport.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Services/Repository/IRReportRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Services/Repository/IRReportRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/style/Themes/nord-light.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/style/Themes/nord-light.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/ir_edit_manager.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/ir_edit_manager.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/ir_manager.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/ir_manager.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/popup_add_ir_manager.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/popup_add_ir_manager.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/popup_add_testresult.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/popup_add_testresult.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/popup_add_testresult_manager.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/popup_add_testresult_manager.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_flow_manager.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_flow_manager.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_result.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_result.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_result_add.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_result_add.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_result_edit.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_result_edit.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_result_edit_manager.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_result_edit_manager.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_result_ir.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_result_ir.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_result_manager.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_result_manager.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/views/test_flow.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/test_flow.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -185,7 +169,7 @@
       <workItem from="1742818197311" duration="1015000" />
       <workItem from="1742959867467" duration="1323000" />
       <workItem from="1743494023204" duration="11860000" />
-      <workItem from="1743518182278" duration="35515000" />
+      <workItem from="1743518182278" duration="39402000" />
     </task>
     <task id="LOCAL-00001" summary="mergh">
       <option name="closed" value="true" />

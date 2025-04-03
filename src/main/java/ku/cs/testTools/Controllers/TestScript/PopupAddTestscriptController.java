@@ -187,7 +187,7 @@ public class PopupAddTestscriptController {
     }
 
     private void setDateTSD() {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime now = LocalDateTime.now();
         this.date = now.format(dtf);
     }

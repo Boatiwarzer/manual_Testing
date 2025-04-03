@@ -652,7 +652,7 @@ public class IRTestresultController {
     private void currentNewData() {
         String idIR = irId;
         String nameIR = IRNameLabel.getText();
-        String dateIR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        String dateIR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String noteIR = infoNoteLabel.getText();
         String idTr = iRreport.getTrIR();
 //        String pn = iRreport.getProjectName();

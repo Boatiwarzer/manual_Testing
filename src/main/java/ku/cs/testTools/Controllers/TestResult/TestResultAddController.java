@@ -789,7 +789,7 @@ public class TestResultAddController {
     private void currentNewData() {
         String idTR = trId;
         String nameTR = onTestNameField.getText();
-        String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String noteTR = onTestNoteField.getText();
         testResult = new TestResult(idTR, nameTR, dateTR, noteTR,projectName, name);
     }
@@ -910,7 +910,7 @@ public class TestResultAddController {
         try {
             String idTR = trId;
             String nameTR = onTestNameField.getText();
-            String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             String noteTR = onTestNoteField.getText();
             testResult = new TestResult(idTR, nameTR, dateTR, noteTR,projectName, name)       ;
 

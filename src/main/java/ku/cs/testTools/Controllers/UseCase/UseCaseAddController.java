@@ -532,7 +532,7 @@ public class UseCaseAddController {
             String ucPreCon = onPreConArea.getText();
             String ucPostCon = onPostConArea.getText();
             String ucNote = onTestNoteArea.getText();
-            String ucDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            String ucDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
             if (useCaseList.isUseCaseIDExist(ucId)) {
                 showAlert("Use case ID already exists.");

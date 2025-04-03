@@ -332,7 +332,7 @@ public class PopupTREdit {
         onActual.setText(testResultDetail.getActualTRD());
         onStatusComboBox.getSelectionModel().select(testResultDetail.getStatusTRD());
         onPriorityComboBox.getSelectionModel().select(testResultDetail.getPriorityTRD());
-        onDate.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        onDate.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         onTester.setText(testResultDetail.getTesterTRD());
         onImage.setText(testResultDetail.getImageTRD());
         onRetest.setText(testResultDetail.getRetestTRD());
@@ -348,7 +348,7 @@ public class PopupTREdit {
     }
 
     private void setDateTRD() {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime now = LocalDateTime.now();
         this.date = now.format(dtf);
         onDate.setText(date);
