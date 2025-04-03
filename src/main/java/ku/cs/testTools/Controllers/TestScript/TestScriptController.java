@@ -180,7 +180,7 @@ public class TestScriptController {
             System.out.println("No Manager found for project: " + projectName);
         }
     }
-    private void loadRepo(){
+    private void loadRepo() {
         // สร้างออบเจ็กต์ของแต่ละ Repository
         TestScriptRepository testScriptRepository = new TestScriptRepository();
         TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
@@ -193,55 +193,54 @@ public class TestScriptController {
         IRDetailRepository irDetailRepository = new IRDetailRepository();
         ConnectionRepository connectionRepository = new ConnectionRepository();
         NoteRepository noteRepository = new NoteRepository();
-        TesterRepository testerRepository = new TesterRepository(); // เพิ่ม TesterRepository
-        ManagerRepository managerRepository = new ManagerRepository(); // เพิ่ม ManagerRepository
+        TesterRepository testerRepository = new TesterRepository();
+        ManagerRepository managerRepository = new ManagerRepository();
         UseCaseRepository useCaseRepository = new UseCaseRepository();
         UseCaseDetailRepository useCaseDetailRepository = new UseCaseDetailRepository();
 
+        // โหลด UseCaseList ตาม projectName
         useCaseList = new UseCaseList();
-        for (UseCase usecase : useCaseRepository.getAllUseCases()){
-            useCaseList.addUseCase(usecase);
+        for (UseCase usecase : useCaseRepository.getAllUseCases()) {
+            if (usecase.getProjectName().equals(projectName)) {
+                useCaseList.addUseCase(usecase);
+            }
         }
 
-        // โหลด TestScriptList
-        testScriptList = new TestScriptList();
-        for (TestScript script : testScriptRepository.getAllTestScripts()) {
-            testScriptList.addTestScript(script);
-        }
-
-        // โหลด TestScriptDetailList
+        // โหลด TestScriptDetailList ตาม projectName
         testScriptDetailList = new TestScriptDetailList();
         for (TestScriptDetail detail : testScriptDetailRepository.getAllTestScriptDetail()) {
             testScriptDetailList.addTestScriptDetail(detail);
         }
 
-        // โหลด TestFlowPositionList
+        // โหลด TestFlowPositionList ตาม projectName
         testFlowPositionList = new TestFlowPositionList();
         for (TestFlowPosition position : testFlowPositionRepository.getAllTestFlowPositions()) {
-            testFlowPositionList.addPosition(position);
+            if (position.getProjectName().equals(projectName)) {
+                testFlowPositionList.addPosition(position);
+            }
         }
 
-        // โหลด TestCaseList
+        // โหลด TestCaseList ตาม projectName
         testCaseList = new TestCaseList();
         for (TestCase testCase : testCaseRepository.getAllTestCases()) {
-            testCaseList.addTestCase(testCase);
+            if (testCase.getProjectName().equals(projectName)) {
+                testCaseList.addTestCase(testCase);
+            }
         }
 
-        // โหลด TestCaseDetailList
+        // โหลด TestCaseDetailList ตาม projectName
         testCaseDetailList = new TestCaseDetailList();
         for (TestCaseDetail detail : testCaseDetailRepository.getAllTestCaseDetails()) {
             testCaseDetailList.addTestCaseDetail(detail);
         }
 
-        // โหลด TestResultList
-
-        // โหลด ConnectionList
+        // โหลด ConnectionList ตาม projectName
         connectionList = new ConnectionList();
         for (Connection connection : connectionRepository.getAllConnections()) {
-            connectionList.addConnection(connection);
+            if (connection.getProjectName().equals(projectName)) {
+                connectionList.addConnection(connection);
+            }
         }
-
-        // โหลด NoteList
     }
     private void saveRepo() {
         // สร้างออบเจ็กต์ของแต่ละ Repository

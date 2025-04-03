@@ -143,7 +143,7 @@ public class TestResultEditController {
         onSortCombobox.setValue("All");
     }
 
-    private void loadRepo(){
+    private void loadRepo() {
         // สร้างออบเจ็กต์ของแต่ละ Repository
         TestScriptRepository testScriptRepository = new TestScriptRepository();
         TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
@@ -156,37 +156,48 @@ public class TestResultEditController {
         IRDetailRepository irDetailRepository = new IRDetailRepository();
         ConnectionRepository connectionRepository = new ConnectionRepository();
         NoteRepository noteRepository = new NoteRepository();
-        TesterRepository testerRepository = new TesterRepository(); // เพิ่ม TesterRepository
-        ManagerRepository managerRepository = new ManagerRepository(); // เพิ่ม ManagerRepository
+        TesterRepository testerRepository = new TesterRepository();
+        ManagerRepository managerRepository = new ManagerRepository();
         UseCaseRepository useCaseRepository = new UseCaseRepository();
         UseCaseDetailRepository useCaseDetailRepository = new UseCaseDetailRepository();
 
+        // โหลด UseCaseList
         useCaseList = new UseCaseList();
-        for (UseCase usecase : useCaseRepository.getAllUseCases()){
-            useCaseList.addUseCase(usecase);
+        for (UseCase usecase : useCaseRepository.getAllUseCases()) {
+            if (projectName.equals(usecase.getProjectName())) {
+                useCaseList.addUseCase(usecase);
+            }
         }
+
         // โหลด TestScriptList
         testScriptList = new TestScriptList();
         for (TestScript script : testScriptRepository.getAllTestScripts()) {
-            testScriptList.addTestScript(script);
+            if (projectName.equals(script.getProjectName())) {
+                testScriptList.addTestScript(script);
+            }
         }
 
         // โหลด TestScriptDetailList
         testScriptDetailList = new TestScriptDetailList();
         for (TestScriptDetail detail : testScriptDetailRepository.getAllTestScriptDetail()) {
             testScriptDetailList.addTestScriptDetail(detail);
+
         }
 
         // โหลด TestFlowPositionList
         testFlowPositionList = new TestFlowPositionList();
         for (TestFlowPosition position : testFlowPositionRepository.getAllTestFlowPositions()) {
-            testFlowPositionList.addPosition(position);
+            if (projectName.equals(position.getProjectName())) {
+                testFlowPositionList.addPosition(position);
+            }
         }
 
         // โหลด TestCaseList
         testCaseList = new TestCaseList();
         for (TestCase testCase : testCaseRepository.getAllTestCases()) {
-            testCaseList.addTestCase(testCase);
+            if (projectName.equals(testCase.getProjectName())) {
+                testCaseList.addTestCase(testCase);
+            }
         }
 
         // โหลด TestCaseDetailList
@@ -198,7 +209,9 @@ public class TestResultEditController {
         // โหลด TestResultList
         testResultList = new TestResultList();
         for (TestResult result : testResultRepository.getAllTestResults()) {
-            testResultList.addTestResult(result);
+            if (projectName.equals(result.getProjectName())) {
+                testResultList.addTestResult(result);
+            }
         }
 
         // โหลด TestResultDetailList
@@ -210,23 +223,25 @@ public class TestResultEditController {
         // โหลด IRReportList
         iRreportList = new IRreportList();
         for (IRreport report : irReportRepository.getAllIRReports()) {
-            iRreportList.addOrUpdateIRreport(report);
+            if (projectName.equals(report.getProjectName())) {
+                iRreportList.addOrUpdateIRreport(report);
+            }
         }
 
         // โหลด IRDetailList
         iRreportDetailList = new IRreportDetailList();
         for (IRreportDetail detail : irDetailRepository.getAllIRReportDetIL()) {
             iRreportDetailList.addOrUpdateIRreportDetail(detail);
+
         }
 
         // โหลด ConnectionList
         connectionList = new ConnectionList();
         for (Connection connection : connectionRepository.getAllConnections()) {
-            connectionList.addConnection(connection);
+            if (projectName.equals(connection.getProjectName())) {
+                connectionList.addConnection(connection);
+            }
         }
-
-        // โหลด NoteList
-
     }
     private void saveRepo() {
         // สร้างออบเจ็กต์ของแต่ละ Repository
