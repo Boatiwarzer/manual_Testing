@@ -124,7 +124,7 @@ public class TestScriptEditController {
     private ConnectionList connectionList;
     private ArrayList <String> word = new ArrayList<>();
     private String type;
-    private TestScriptDetailList testScriptDetailListTemp;
+    private TestScriptDetailList testScriptDetailListTemp = new TestScriptDetailList();
     private TestScriptDetailList testScriptDetailListDelete = new TestScriptDetailList();
     private String typeTS;
     private ArrayList<Object> objects;
@@ -199,7 +199,12 @@ public class TestScriptEditController {
                 useCaseList.addUseCase(usecase);
             }
         }
-
+        testScriptList = new TestScriptList();
+        for (TestScript testscript : testScriptRepository.getAllTestScripts()) {
+            if (testscript.getProjectName().equals(projectName)) {
+                testScriptList.addTestScript(testscript);
+            }
+        }
         // โหลด TestScriptDetailList ตาม projectName
         testScriptDetailList = new TestScriptDetailList();
         for (TestScriptDetail detail : testScriptDetailRepository.getAllTestScriptDetail()) {

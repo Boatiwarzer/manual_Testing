@@ -127,10 +127,9 @@ public class TRmanagerController {
             //loadProject();
             setTable();
             //selectedVbox();
-            loadListView(testResultList);
-            //selected();
             loadList();
             handleSelection();
+            selected();
             for (TestResult testResult : testResultList.getTestResultList()) {
                 word.add(testResult.getNameTR());
             }
@@ -285,21 +284,22 @@ public class TRmanagerController {
         testResultList.getTestResultList().forEach(testResult -> {
             List<TestResult> testResults = testResultList.findAllByTestResultId(
                     testResult.getIdTR(), projectNameLower, nameTesterLower);
-
-            if (!testResults.isEmpty()) {
-                TestResult firstResult = testResults.get(0);
-                String testResultId = firstResult.getIdTR();
-                testIDLabel.setText(testResultId);
-                String testResultName = firstResult.getNameTR();
-                testNameLabel.setText(testResultName);
-                String testResultNote = firstResult.getNoteTR();
-                infoNoteLabel.setText(testResultNote);
-                String dateTR = testResult.getDateTR();
-                testDateLabel.setText(dateTR);
-                setTableInfo(firstResult);
-
-                System.out.println("select " + testResultList.findTRById(testIDLabel.getText()));
-            }
+            loadListView(testResults);
+            selected();
+//            if (!testResults.isEmpty()) {
+//                TestResult firstResult = testResults.get(0);
+//                String testResultId = firstResult.getIdTR();
+//                testIDLabel.setText(testResultId);
+//                String testResultName = firstResult.getNameTR();
+//                testNameLabel.setText(testResultName);
+//                String testResultNote = firstResult.getNoteTR();
+//                infoNoteLabel.setText(testResultNote);
+//                String dateTR = testResult.getDateTR();
+//                testDateLabel.setText(dateTR);
+//                setTableInfo(firstResult);
+//
+//                System.out.println("select " + testResultList.findTRById(testIDLabel.getText()));
+//            }
         });
     }
 
@@ -644,7 +644,7 @@ public class TRmanagerController {
         System.out.println("select " + testResultList.findTRById(testIDLabel.getText()));
 
     }
-    private void loadListView(TestResultList testResultList) {
+    private void loadListView(List<TestResult> testResults) {
         onEditButton.setVisible(false);
         onExportButton.setVisible(false);
         onSearchList.refresh(); // รีเฟรช ListView

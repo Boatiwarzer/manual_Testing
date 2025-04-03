@@ -96,8 +96,8 @@ public class PopupInfoTestcaseController {
         if (FXRouter.getData() != null) {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
-            nameTester = (String) objects.get(2);
-            position = (UUID) objects.get(3);
+            nameTester = (String) objects.get(1);
+            position = (UUID) objects.get(2);
             onTableTestCase.isFocused();
             selectedTCD();
             loadStatusButton();
@@ -105,11 +105,11 @@ public class PopupInfoTestcaseController {
             setDate();
             selectedComboBox();
             setButtonVisible();
-            if (objects.get(4) != null){
-                testCase = (TestCase) objects.get(4);
-                testCaseDetailList = (TestCaseDetailList) objects.get(5);
-                type = (String) objects.get(6);
-                testCaseDetailListDelete = (TestCaseDetailList) objects.get(7);
+            if (objects.get(3) != null){
+                testCase = (TestCase) objects.get(3);
+                testCaseDetailList = (TestCaseDetailList) objects.get(4);
+                type = (String) objects.get(5);
+                testCaseDetailListDelete = (TestCaseDetailList) objects.get(6);
             }else {
                 testCase = testCaseList.findByPositionId(position);
             }
