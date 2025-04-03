@@ -15,6 +15,8 @@ import ku.cs.testTools.Services.fxrouter.FXRouter;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class OpenProjectController {
 
@@ -131,7 +133,11 @@ public class OpenProjectController {
     @FXML
     void onCancelButton(ActionEvent actionEvent) {
         try {
-            FXRouter.popup("landing_page_tester");
+            if (type.equals("tester")){
+                FXRouter.popup("landing_page_tester");
+            } else if (type.equals("manager")){
+                FXRouter.popup("landing_page_manager");
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -148,7 +154,7 @@ public class OpenProjectController {
             if (!handleSaveAction()) {
                 return;
             }
-            testerValidate(testerName);
+            testerValidate(testerName, selectedProject.getProjectName().trim());
             if (!handleSaveActionProject()) {
                 return;
             }
@@ -190,20 +196,24 @@ public class OpenProjectController {
     }
 
 
-    private void testerValidate(String testerName) {
+    private void testerValidate(String testerName, String projectName) {
         TesterRepository testerRepository = new TesterRepository();
 
-        // โหลด tester ทั้งหมดเข้า testerList
-        ArrayList<Tester> testerList = new ArrayList<>(testerRepository.getAllTesters());
-        System.out.println(testerList);
-        // ตรวจสอบว่า testerName มีอยู่ใน testerList หรือไม่
-        boolean exists = testerList.stream().anyMatch(tester -> tester.getNameTester().equals(testerName));
+        List<Tester> allTesters = testerRepository.getAllTesters();
+
+        List<Tester> testersInProject = allTesters.stream()
+                .filter(tester -> tester.getProjectName().equals(projectName)) // เช็คว่า projectName ตรงกัน
+                .collect(Collectors.toList());
+
+        System.out.println("Testers in " + projectName + ": " + testersInProject);
+
+        boolean exists = testersInProject.stream()
+                .anyMatch(tester -> tester.getNameTester().equals(testerName));
 
         if (!exists) {
-            showAlert(onTesterField.getText() + " ชื่อนี้ไม่อนุญาตให้เข้าถึง " + projectName);
+            showAlert(testerName + " ชื่อนี้ไม่อนุญาตให้เข้าถึง " + projectName);
             throw new IllegalArgumentException("Tester name not allowed.");
         }
-
     }
 
 

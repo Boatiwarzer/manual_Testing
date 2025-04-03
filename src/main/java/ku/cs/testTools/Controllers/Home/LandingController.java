@@ -80,7 +80,7 @@ public class LandingController {
             // แก้พาท
         String packageStr1 = "views/";
         FXRouter.when("home_tester", packageStr1 + "home_tester.fxml", "TestTools | " + projectName);
-        FXRouter.goTo("home_tester", objects);
+//        FXRouter.goTo("home_tester", objects);
         FXRouter.popup("landing_openproject", objects,true);
         // Close the current window
         Node source = (Node) actionEvent.getSource();
@@ -135,7 +135,7 @@ public class LandingController {
             // แก้พาท
             String packageStr1 = "views/";
             FXRouter.when("home_manager", packageStr1 + "home_manager.fxml", "TestTools | " + projectName);
-            FXRouter.goTo("home_manager", objects);
+//            FXRouter.goTo("home_manager", objects);
             FXRouter.popup("landing_openproject", objects,true);
             // Close the current window
             Node source = (Node) actionEvent.getSource();

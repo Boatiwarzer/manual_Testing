@@ -534,23 +534,25 @@ public class UseCaseEditController {
                     ucPreCon,
                     ucPostCon,
                     ucNote.isEmpty() ? "-" : ucNote,
-                    ucDate
+                    ucDate,
+                    projectName,
+                    nameTester
             );
-            newUseCase.setProjectName(projectName);
-            newUseCase.setTester(nameTester);
+//            newUseCase.setProjectName(projectName);
+//            newUseCase.setTester(nameTester);
             useCaseList.addUseCase(newUseCase);
-
             useCaseDetailList.clearUseCaseDetail(ucId);
+
             System.out.println(useCaseDetailListDelete.getUseCaseDetailList());
             UseCaseDetailRepository useCaseDetailRepository = new UseCaseDetailRepository();
-            List<UseCaseDetail> matchedUseCases = new ArrayList<>();
-            for (UseCaseDetail useCaseDetail : useCaseDetailListDelete.getUseCaseDetailList()){
-                if (useCaseDetail.getUseCaseID().equals(ucId)) {
-                    matchedUseCases.add(useCaseDetail);
-                }
-            }
-            for (UseCaseDetail useCaseDetail1 : matchedUseCases){
+            List<UseCaseDetail> matchedCases = useCaseDetailRepository.getAllUseCaseDetails().stream()
+                    .filter(usecase -> usecase.getUseCaseID().equals(ucId))
+                    .collect(Collectors.toList());
+
+            for (UseCaseDetail useCaseDetail1 : matchedCases){
+                System.out.println("delete match   " + matchedCases);
                 useCaseDetailRepository.deleteUseCaseDetail(useCaseDetail1.getId());
+                System.out.println("uuid delete   " + useCaseDetail1.getId());
             }
 
             // Get the text from the textAreas in the actorActionVBox and write them to the useCaseDetailList
@@ -585,7 +587,7 @@ public class UseCaseEditController {
 //            for (UseCaseDetail useCaseDetail1 : useCaseDetailList.getUseCaseDetailList()){
 //                useCaseDetailRepository.updateUseCaseDetail(useCaseDetail1);
 //            }
-            UseCaseRepository useCaseRepository = new UseCaseRepository();
+
 //            UseCaseDetailRepository useCaseDetailRepository = new UseCaseDetailRepository();
 //            for (UseCaseDetail useCaseDetail1 : useCaseDetailList.getUseCaseDetailList()){
 //                useCaseDetailRepository.saveOrUpdateUseCaseDetail(useCaseDetail1);
@@ -593,7 +595,9 @@ public class UseCaseEditController {
 //            for (UseCaseDetail useCaseDetail1 : useCaseDetailListDelete.getUseCaseDetailList()){
 //                useCaseDetailRepository.deleteUseCaseDetail(useCaseDetail1.getUseCaseID());
 //            }
+            UseCaseRepository useCaseRepository = new UseCaseRepository();
             useCaseRepository.updateUseCase(newUseCase);
+//            System.out.println("newUseCase   " + newUseCase);
             saveRepo();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Success");
@@ -712,14 +716,14 @@ public class UseCaseEditController {
                     UseCaseRepository useCaseRepository = new UseCaseRepository();
                     UseCaseDetailRepository useCaseDetailRepository = new UseCaseDetailRepository();
                     useCaseRepository.deleteUseCase(ucId);
-                    List<UseCaseDetail> matchedUseCases = new ArrayList<>();
-                    for (UseCaseDetail useCaseDetail : useCaseDetailListDelete.getUseCaseDetailList()){
-                        if (useCaseDetail.getUseCaseID().equals(ucId)) {
-                            matchedUseCases.add(useCaseDetail);
-                        }
-                    }
-                    for (UseCaseDetail useCaseDetail1 : matchedUseCases){
+                    List<UseCaseDetail> matchedCases = useCaseDetailRepository.getAllUseCaseDetails().stream()
+                            .filter(usecase -> usecase.getUseCaseID().equals(ucId))
+                            .collect(Collectors.toList());
+
+                    for (UseCaseDetail useCaseDetail1 : matchedCases){
+                        System.out.println("delete match   " + matchedCases);
                         useCaseDetailRepository.deleteUseCaseDetail(useCaseDetail1.getId());
+                        System.out.println("uuid delete   " + useCaseDetail1.getId());
                     }
                     saveRepo();
                     FXRouter.goTo("use_case");
