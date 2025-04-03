@@ -143,8 +143,10 @@ public class UseCaseAddController {
         UseCaseDetailRepository useCaseDetailRepository = new UseCaseDetailRepository();
 
         useCaseList = new UseCaseList();
-        for (UseCase usecase : useCaseRepository.getAllUseCases()){
-            useCaseList.addUseCase(usecase);
+        for (UseCase usecase : useCaseRepository.getAllUseCases()) {
+            if (usecase.getProjectName().equals(projectName)) {
+                useCaseList.addUseCase(usecase);
+            }
         }
         useCaseDetailList = new UseCaseDetailList();
         for (UseCaseDetail useCaseDetail : useCaseDetailRepository.getAllUseCaseDetails()){
@@ -155,19 +157,11 @@ public class UseCaseAddController {
         // โหลด TestFlowPositionList
         testFlowPositionList = new TestFlowPositionList();
         for (TestFlowPosition position : testFlowPositionRepository.getAllTestFlowPositions()) {
-            testFlowPositionList.addPosition(position);
+            if (position.getProjectName().equals(projectName)) {
+                testFlowPositionList.addPosition(position);
+            }
         }
 
-        // โหลด TestCaseList
-
-
-        // โหลด ConnectionList
-        connectionList = new ConnectionList();
-        for (Connection connection : connectionRepository.getAllConnections()) {
-            connectionList.addConnection(connection);
-        }
-
-        // โหลด NoteList
 
     }
     private void saveRepo() {

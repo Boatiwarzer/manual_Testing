@@ -127,7 +127,7 @@ public class TRmanagerController {
             //loadProject();
             setTable();
             //selectedVbox();
-            //loadListView(testResultList);
+            loadListView(testResultList);
             //selected();
             loadList();
             handleSelection();

@@ -4,6 +4,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -112,9 +113,10 @@
                               </TitledPane>
                               <ScrollPane prefWidth="240.0">
                                  <content>
-                                    <VBox fx:id="projectList" prefHeight="530.0" prefWidth="230.0" />
+                                    <VBox fx:id="projectList" prefHeight="258.0" prefWidth="230.0" />
                                  </content>
                               </ScrollPane>
+                              <ListView fx:id="onSearchList" prefHeight="200.0" prefWidth="200.0" />
                            </children>
                         </VBox>
                      </children>

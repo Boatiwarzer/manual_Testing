@@ -211,7 +211,7 @@ public class LabelPageController {
             randomId();
             testFlowPosition = new TestFlowPosition(id,width,height,layoutX,layoutY,0,"testscript",projectName,name);
             testFlowPositionList.addPosition(testFlowPosition);
-            testScript = new TestScript(objectID,label,"-","-","-","-","-","-","-",testFlowPosition.getPositionID());
+            testScript = new TestScript(objectID,label,"-","-","-","-","-","-","-",testFlowPosition.getPositionID(),projectName,name);
             testScriptList.addOrUpdateTestScript(testScript);
             TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
             testFlowRepository.saveOrUpdateTestFlowPosition(testFlowPosition);
@@ -222,7 +222,7 @@ public class LabelPageController {
             randomId();
             testFlowPosition = new TestFlowPosition(id,width,height,layoutX,layoutY,0,"testcase",projectName,name);
             testFlowPositionList.addPosition(testFlowPosition);
-            testCase = new TestCase(objectID,label,"-","-","-","-",testFlowPosition.getPositionID(),"-","-","-");
+            testCase = new TestCase(objectID,label,"-","-","-","-",testFlowPosition.getPositionID(),"-","-","-",projectName,name);
             testCaseList.addOrUpdateTestCase(testCase);
             TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
             testFlowRepository.saveOrUpdateTestFlowPosition(testFlowPosition);
