@@ -205,10 +205,10 @@ public class TestScriptAddController {
         }
 
         // โหลด TestScriptDetailList
-        testScriptDetailList = new TestScriptDetailList();
-        for (TestScriptDetail detail : testScriptDetailRepository.getAllTestScriptDetail()) {
-            testScriptDetailList.addTestScriptDetail(detail);
-        }
+//        testScriptDetailList = new TestScriptDetailList();
+//        for (TestScriptDetail detail : testScriptDetailRepository.getAllTestScriptDetail()) {
+//            testScriptDetailList.addTestScriptDetail(detail);
+//        }
 
         // โหลด TestFlowPositionList
         testFlowPositionList = new TestFlowPositionList();

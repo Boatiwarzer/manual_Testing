@@ -284,10 +284,10 @@ public class TestResultAddController {
         }
 
         // โหลด TestResultDetailList
-        testResultDetailList = new TestResultDetailList();
-        for (TestResultDetail detail : testResultDetailRepository.getAllTestResultDetails()) {
-            testResultDetailList.addTestResultDetail(detail);
-        }
+//        testResultDetailList = new TestResultDetailList();
+//        for (TestResultDetail detail : testResultDetailRepository.getAllTestResultDetails()) {
+//            testResultDetailList.addTestResultDetail(detail);
+//        }
 
         // โหลด IRReportList
         iRreportList = new IRreportList();
