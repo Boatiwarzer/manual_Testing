@@ -158,7 +158,7 @@ public class PopupAddTestcaseController {
     }
 
     private void setDateTCD() {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime now = LocalDateTime.now();
         dateTCD = now.format(dtf);
     }

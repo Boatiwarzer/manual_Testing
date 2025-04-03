@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -104,20 +105,6 @@
                   </Label>
                </children>
             </HBox>
-            <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
-               <children>
-                  <Label prefHeight="30.0" prefWidth="120.0" text="Input Data">
-                     <font>
-                        <Font size="16.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="onInputdata" accessibleRole="TEXT_AREA" alignment="TOP_LEFT" editable="false" onAction="#onInputdata" onKeyTyped="#GenerateDate" prefHeight="30.0" prefWidth="450.0">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </TextField>
-               </children>
-            </HBox>
             <HBox alignment="TOP_CENTER" prefHeight="60.0" prefWidth="200.0" spacing="30.0">
                <children>
                   <Label prefHeight="30.0" prefWidth="120.0" text="Test Steps">
@@ -130,6 +117,20 @@
                         <Font size="14.0" />
                      </font>
                   </TextArea>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <Label prefHeight="30.0" prefWidth="120.0" text="Input Data">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="onInputdata" accessibleRole="TEXT_AREA" alignment="TOP_LEFT" editable="false" onAction="#onInputdata" onKeyTyped="#GenerateDate" prefHeight="30.0" prefWidth="450.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
                </children>
             </HBox>
             <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
@@ -203,11 +204,11 @@
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <Label fx:id="onImage" prefHeight="30.0" prefWidth="450.0" text="Label" wrapText="true">
+                  <Hyperlink fx:id="onImage" onAction="#onImage" prefHeight="30.0" prefWidth="450.0" text="...">
                      <font>
                         <Font size="14.0" />
                      </font>
-                  </Label>
+                  </Hyperlink>
                </children>
             </HBox>
             <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">

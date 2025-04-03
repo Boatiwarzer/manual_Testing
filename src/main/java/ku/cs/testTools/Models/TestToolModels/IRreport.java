@@ -78,7 +78,7 @@ public class IRreport {
 
     public String setDateIR() {
         LocalDateTime dateTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         this.dateIR = dateTime.format(formatter);
         return dateIR;
     }

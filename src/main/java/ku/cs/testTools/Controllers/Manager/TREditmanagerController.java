@@ -1,5 +1,6 @@
 package ku.cs.testTools.Controllers.Manager;
 
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -9,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
@@ -142,8 +144,13 @@ public class TREditmanagerController {
             }
         }
         System.out.println(testResultDetailList);
+        setSort();
     }
 
+    private void setSort() {
+        onSortCombobox.setItems(FXCollections.observableArrayList("All", "Approved", "Not approved", "Waiting"));
+        onSortCombobox.setValue("All");
+    }
     private void selectedVbox() {
         for (Node node : projectList.getChildren()) {
             if (node instanceof TitledPane titledPane) {
@@ -405,6 +412,8 @@ public class TREditmanagerController {
         onTestNameField.setText(name);
         String note = testResult.getNoteTR();
         onTestNoteField.setText(note);
+        String dateTR = testResult.getDateTR();
+        testDateLabel.setText(dateTR);
     }
 
     private void setButtonVisible() {
@@ -499,10 +508,10 @@ public class TREditmanagerController {
         configs.add(new StringConfiguration("title:Test No.", "field:testNo"));
         configs.add(new StringConfiguration("title:TS-ID.", "field:tsIdTRD"));
         configs.add(new StringConfiguration("title:TC-ID.", "field:tcIdTRD"));
-        configs.add(new StringConfiguration("title:Actor", "field:actorTRD"));
-        configs.add(new StringConfiguration("title:Description", "field:descriptTRD"));
-        configs.add(new StringConfiguration("title:Input Data", "field:inputdataTRD"));
-        configs.add(new StringConfiguration("title:Test Steps", "field:stepsTRD"));
+//        configs.add(new StringConfiguration("title:Actor", "field:actorTRD"));
+//        configs.add(new StringConfiguration("title:Description", "field:descriptTRD"));
+//        configs.add(new StringConfiguration("title:Input Data", "field:inputdataTRD"));
+//        configs.add(new StringConfiguration("title:Test Steps", "field:stepsTRD"));
         configs.add(new StringConfiguration("title:Expected Result.", "field:expectedTRD"));
         configs.add(new StringConfiguration("title:Actual Result.", "field:actualTRD"));
         configs.add(new StringConfiguration("title:Status", "field:statusTRD"));
@@ -519,7 +528,7 @@ public class TREditmanagerController {
         for (StringConfiguration conf : configs) {
             TableColumn<TestResultDetail, String> col = new TableColumn<>(conf.get("title"));
             col.setCellValueFactory(new PropertyValueFactory<>(conf.get("field")));
-            if (index != 14 && index <= 17) {  // ถ้าเป็นคอลัมน์แรก
+            if (index != 10 && index <= 13) {  // ถ้าเป็นคอลัมน์แรก
                 col.setPrefWidth(120);
                 col.setMaxWidth(120);
                 col.setMinWidth(120); // ตั้งค่าขนาดคอลัมน์แรก
@@ -590,7 +599,33 @@ public class TREditmanagerController {
                     }
                 });
             }
-
+            if (conf.get("field").equals("priorityTRD")) {
+                col.setCellFactory(column -> new TableCell<>() {
+                    private final Text text = new Text();
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            setGraphic(null);
+                        } else {
+                            text.setText(item);
+                            text.wrappingWidthProperty().bind(column.widthProperty().subtract(10)); // ตั้งค่าการห่อข้อความตามขนาดคอลัมน์
+                            if (item.equals("Low")) {
+                                text.setFill(javafx.scene.paint.Color.DARKGOLDENROD);
+                            } else if (item.equals("Medium")) {
+                                text.setFill(javafx.scene.paint.Color.ORANGE);
+                            } else if (item.equals("High")) {
+                                text.setFill(javafx.scene.paint.Color.RED);
+                            } else if (item.equals("Critical")) {
+                                text.setFill(javafx.scene.paint.Color.DARKRED);
+                            } else {
+                                text.setFill(Color.BLACK); // สีปกติสำหรับค่าอื่น ๆ
+                            }
+                            setGraphic(text); // แสดงผล Text Node
+                        }
+                    }
+                });
+            }
             // เพิ่มคอลัมน์แสดงภาพ
             if (conf.get("field").equals("imageTRD")) {
                 col.setCellFactory(column -> new TableCell<>() {
@@ -603,10 +638,12 @@ public class TREditmanagerController {
                             setGraphic(null); // หากไม่มีข้อมูลให้เคลียร์กราฟิก
                         } else {
                             // แยก path จากข้อมูล
-                            String[] parts = item.split(" : ");
-                            String imagePath = parts.length > 1 ? parts[1] : ""; // ใช้ส่วนหลังจาก " : "
+                            String[] images = item.split(" \\| ");
+                            String firstImage = images[0]; // เอารายการแรก
+                            String[] parts = firstImage.split(" : ");
+                            String firstImagePath = parts.length > 1 ? parts[1] : "";
 
-                            File file = new File(imagePath);
+                            File file = new File(firstImagePath);
                             if (file.exists()) {
                                 Image image = new Image(file.toURI().toString());
                                 imageView.setImage(image);
@@ -632,11 +669,14 @@ public class TREditmanagerController {
         onTableTestresult.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
         //Add items to the table
-        for (TestResultDetail testResultDetail : testResultDetailList.getTestResultDetailList()) {
-            if (testResultDetail.getIdTR().trim().equals(testResult.getIdTR().trim())){
-                onTableTestresult.getItems().add(testResultDetail);
-            }
-        }
+//        for (TestResultDetail testResultDetail : testResultDetailList.getTestResultDetailList()) {
+//            if (testResultDetail.getIdTR().trim().equals(testResult.getIdTR().trim())){
+//                onTableTestresult.getItems().add(testResultDetail);
+//            }
+//        }
+        onSortCombobox.setOnAction(event -> filterTable(testResult));
+
+        filterTable(testResult);
     }
 
     public void setTable() {
@@ -651,10 +691,10 @@ public class TREditmanagerController {
         configs.add(new StringConfiguration("title:Test No."));
         configs.add(new StringConfiguration("title:TS-ID."));
         configs.add(new StringConfiguration("title:TC-ID."));
-        configs.add(new StringConfiguration("title:Actor"));
-        configs.add(new StringConfiguration("title:Description"));
-        configs.add(new StringConfiguration("title:Input Data"));
-        configs.add(new StringConfiguration("title:Test Steps"));
+//        configs.add(new StringConfiguration("title:Actor"));
+//        configs.add(new StringConfiguration("title:Description"));
+//        configs.add(new StringConfiguration("title:Input Data"));
+//        configs.add(new StringConfiguration("title:Test Steps"));
         configs.add(new StringConfiguration("title:Expected Result."));
         configs.add(new StringConfiguration("title:Actual Result."));
         configs.add(new StringConfiguration("title:Status"));
@@ -713,7 +753,7 @@ public class TREditmanagerController {
             if (newValue == null) {
                 selectedItem = null;
             } else {
-                if (newValue.getIdTRD() != null){
+                if (newValue.getIdTRD() != null && !newValue.getApproveTRD().equals("Approved")){
                     onEditListButton.setVisible(true);
                 }else {
                     onEditListButton.setVisible(false);
@@ -739,7 +779,7 @@ public class TREditmanagerController {
     private void currentNewData() {
         String idTR = trId;
         String nameTR = onTestNameField.getText();
-        String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String noteTR = onTestNoteField.getText();
 //        String pn = testResult.getProjectName();
         testResult = new TestResult(idTR, nameTR, dateTR, noteTR,projectName, name);
@@ -979,4 +1019,44 @@ public class TREditmanagerController {
 
     }
 
+    @FXML
+    private ComboBox<String> onSortCombobox;
+
+    @FXML
+    void onSortCombobox (ActionEvent event) {
+
+    }
+
+    private void filterTable(TestResult testResult) {
+        String selectedFilter = onSortCombobox.getValue();
+
+        List<TestResultDetail> sortedList = testResultDetailList.getTestResultDetailList().stream()
+                .filter(testResultDetail ->
+                        testResultDetail.getIdTR() != null &&
+                                testResult.getIdTR() != null &&
+                                testResultDetail.getIdTR().trim().equals(testResult.getIdTR().trim())
+                ) // เช็ค Null ก่อนใช้ .trim()
+                .filter(testResultDetail -> {
+                    if ("All".equals(selectedFilter) || selectedFilter == null) {
+                        return true;
+                    } else if ("Approved".equals(selectedFilter)) {
+                        return "Approved".equals(testResultDetail.getApproveTRD());
+                    } else if ("Not approved".equals(selectedFilter)) {
+                        return "Not approved".equals(testResultDetail.getApproveTRD());
+                    } else if ("Waiting".equals(selectedFilter)) {
+                        return "Waiting".equals(testResultDetail.getApproveTRD());
+                    }
+                    return false;
+                })
+                .sorted(Comparator.comparingInt(testResultDetail -> {
+                    try {
+                        return Integer.parseInt(testResultDetail.getTestNo().trim());
+                    } catch (NumberFormatException e) {
+                        return Integer.MAX_VALUE;
+                    }
+                }))
+                .collect(Collectors.toList());
+
+        onTableTestresult.getItems().setAll(sortedList);
+    }
 }

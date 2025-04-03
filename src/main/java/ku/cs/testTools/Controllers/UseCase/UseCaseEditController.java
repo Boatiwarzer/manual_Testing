@@ -521,7 +521,7 @@ public class UseCaseEditController {
             String ucPreCon = onPreConArea.getText();
             String ucPostCon = onPostConArea.getText();
             String ucNote = onTestNoteArea.getText();
-            String ucDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            String ucDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             System.out.println("submit "+ucId);
             System.out.println("find "+useCaseList.findByUseCaseId(ucId));
 

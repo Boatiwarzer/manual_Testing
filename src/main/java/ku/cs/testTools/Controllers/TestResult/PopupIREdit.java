@@ -1,4 +1,4 @@
-package ku.cs.testTools.Controllers.Manager;
+package ku.cs.testTools.Controllers.TestResult;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,61 +11,63 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Models.Manager.ManagerList;
 import ku.cs.testTools.Models.Manager.Tester;
 import ku.cs.testTools.Models.Manager.TesterList;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.Repository.*;
+import ku.cs.testTools.Services.fxrouter.FXRouter;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class PopupTREdit {
-    @FXML
-    private TextField onInputdata, onRemark;
-    @FXML
-    private TextArea onTeststeps, onActual;
+public class PopupIREdit {
 
     @FXML
-    private Button onCancelButton, onConfirmButton;
+    private Button onConfirmButton, onCancelButton, onUploadButton;
 
     @FXML
-    private Label onRetest, onTestcaseIDComboBox, onTestscriptIDComboBox, onTestNo, onDate, onDescription,  onExpected, onTester, onActor;
-
-    @FXML
-    private ComboBox<String> onStatusComboBox;
+    private Label onRetest, onTester, onTestscriptIDComboBox, onTestcaseIDComboBox, onTestNo, onManager, onRCA;
 
     @FXML
     private ComboBox<String> onPriorityComboBox;
 
     @FXML
-    private CheckBox onNotapproveCheck, onApproveCheck;
+    private ComboBox<String> onStatusComboBox;
+
+    @FXML
+    private TextArea onCondition, onDescription;
+
+    @FXML
+    private TextField onRemark;
 
     @FXML
     private Hyperlink onImage;
 
-    private TestResultList testResultList = new TestResultList();
-    private TestResultDetailList testResultDetailList = new TestResultDetailList();
-    private TestResult testResult = new TestResult();
-    private TestResultDetail testResultDetail = new TestResultDetail();
+    private IRreportList iRreportList = new IRreportList();
+    private IRreportDetailList iRreportDetailList = new IRreportDetailList();
+    private IRreport iRreport = new IRreport();
+    private IRreportDetail iRreportDetail = new IRreportDetail();
     private String id;
-    private String idTR;
+    private String idIR;
+    private String idTrd;
     private String date;
     private boolean isGenerated = false;
     private File selectedFile;
     private String savedImagePath;
-    private String projectName , directory, name;
+    private String projectName , directory;
     private UseCaseList useCaseList = new UseCaseList();
     private UseCaseDetailList useCaseDetailList = new UseCaseDetailList();
     private TestScriptList testScriptList = new TestScriptList();
@@ -76,44 +78,45 @@ public class PopupTREdit {
     private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
     private TestCase testCase = new TestCase();
     private TestCaseDetail testCaseDetail = new TestCaseDetail();
-    private ObservableList<TestResult> imageItems = FXCollections.observableArrayList();
+    private ObservableList<IRreport> imageItems = FXCollections.observableArrayList();
     private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
     private TestScriptDetailList testScriptDetailListTemp = new TestScriptDetailList();
     private ConnectionList connectionList = new ConnectionList();
-    private TestResultDetailList testResultDetailListTemp;
+    private IRreportDetailList iRreportDetailListTemp;
     private ArrayList<Object> objects;
-    private IRreport iRreport;
-    private IRreportList iRreportList = new IRreportList();
-    private IRreportDetail iRreportDetail = new IRreportDetail();
-    private IRreportDetailList iRreportDetailList = new IRreportDetailList();
+    private TestResult testResult;
+    private TestResultList testResultList = new TestResultList();
+    private TestResultDetail testResultDetail = new TestResultDetail();
+    private TestResultDetailList testResultDetailList = new TestResultDetailList();
     private String type;
-    private String typeTR;
+    private String typeIR;
     private IRreportList irReportList;
     private IRreportDetailList irDetailList;
     private NoteList noteList;
     private TesterList testerList;
     private ManagerList managerList;
+    private String nameTester;
+
     @FXML
     void initialize() {
         setStatus();
         setPriority();
         clearInfo();
         if (FXRouter.getData() != null) {
+            setLabel();
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
-            directory = (String) objects.get(1);
-            name = (String) objects.get(2);
-            typeTR = (String) objects.get(3);
-            testResult = (TestResult) objects.get(4);
-            testResultDetailList = (TestResultDetailList) objects.get(5);
-            idTR = testResult.getIdTR();
-            type = (String) objects.get(6);
+            nameTester = (String) objects.get(1);
+            iRreportDetailList = (IRreportDetailList) objects.get(2);
+            iRreport = (IRreport) objects.get(3);
+
+            idIR = iRreport.getIdIR();
+            IRreportDetail trd = iRreportDetailList.findIRDByirId(idIR);
             loadRepo();
-            setLabel();
-            if (objects.get(7) != null && type.equals("edit")) {
-                testResultDetail = (TestResultDetail) objects.get(7);
-                testResultDetail = testResultDetailList.findTRDById(testResultDetail.getIdTRD());
-                id = testResultDetail.getIdTRD();
+            if (objects.get(4) != null) {
+                iRreportDetail = (IRreportDetail) objects.get(4);
+                iRreportDetail = iRreportDetailList.findIRDById(iRreportDetail.getIdIRD());
+                id = iRreportDetail.getIdIRD();
                 setTextEdit();
             }else {
                 randomId();
@@ -313,57 +316,40 @@ public class PopupTREdit {
             managerRepository.updateManager(manager);
         }
     }
-//    private void setData() {
-//        testResultNameLabel.setText(testResult.getNameTR());
-//        testResultIDLabel.setText(testResult.getIdTR());
-//    }
+
+    private void setLabel() {
+        onTester.getStyleClass().add("custom-label");
+        onTestscriptIDComboBox.getStyleClass().add("custom-label");
+        onTestcaseIDComboBox.getStyleClass().add("custom-label");
+        onTestNo.getStyleClass().add("custom-label");
+        onManager.getStyleClass().add("custom-label");
+        onImage.getStyleClass().add("custom-label");
+        onRetest.getStyleClass().add("custom-label");
+        onRCA.getStyleClass().add("custom-label");
+    }
+
 
     private void setTextEdit() {
-//        testResultNameLabel.setText(testResult.getNameTR());
-//        testResultIDLabel.setText(testResult.getIdTR());
-        onTestNo.setText(testResultDetail.getTestNo());
-        onTestscriptIDComboBox.setText(testResultDetail.getTsIdTRD());
-        onTestcaseIDComboBox.setText(testResultDetail.getTcIdTRD());
-        onDescription.setText(testResultDetail.getDescriptTRD());
-        onActor.setText(testResultDetail.getActorTRD());
-        onInputdata.setText(testResultDetail.getInputdataTRD().replace("|", ", "));
-        onTeststeps.setText(testResultDetail.getStepsTRD().replace("|", "\n"));
-        onExpected.setText(testResultDetail.getExpectedTRD());
-        onActual.setText(testResultDetail.getActualTRD());
-        onStatusComboBox.getSelectionModel().select(testResultDetail.getStatusTRD());
-        onPriorityComboBox.getSelectionModel().select(testResultDetail.getPriorityTRD());
-        onDate.setText(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        onTester.setText(testResultDetail.getTesterTRD());
-        onImage.setText(testResultDetail.getImageTRD());
-        onRetest.setText(testResultDetail.getRetestTRD());
-        if(testResultDetail.getApproveTRD().equals("Approved")){
-            onApproveCheck.setSelected(true);
-        } else if (testResultDetail.getApproveTRD().equals("Not approved")){
-            onNotapproveCheck.setSelected(true);
-        } else {
-            onApproveCheck.setSelected(false);
-            onNotapproveCheck.setSelected(false);
-        }
-        onRemark.setText(testResultDetail.getRemarkTRD());
+        onTestNo.setText(iRreportDetail.getTestNoIRD());
+        onTester.setText(iRreportDetail.getTesterIRD());
+        onTestscriptIDComboBox.setText(iRreportDetail.getTsIdIRD());
+        onTestcaseIDComboBox.setText(iRreportDetail.getTcIdIRD());
+        onDescription.setText(iRreportDetail.getDescriptIRD());
+        onCondition.setText(iRreportDetail.getConditionIRD());
+        onImage.setText(iRreportDetail.getImageIRD());
+        onManager.setText(iRreportDetail.getManagerIRD());
+        onRetest.setText(iRreportDetail.getRetestIRD());
+        onStatusComboBox.getSelectionModel().select(iRreportDetail.getStatusIRD());
+        onPriorityComboBox.getSelectionModel().select(iRreportDetail.getPriorityIRD());
+        onRemark.setText(iRreportDetail.getRemarkIRD());
+
+        String selectedRCA = iRreportDetail.getRcaIRD().replace("|", ",");
+        onRCA.setText(selectedRCA);
     }
 
-    private void setDateTRD() {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDateTime now = LocalDateTime.now();
-        this.date = now.format(dtf);
-        onDate.setText(date);
-    }
-
-    @FXML
-    void GenerateDate(KeyEvent event) {
-        if (!isGenerated) {  // ถ้ายังไม่ได้ทำงานมาก่อน
-            setDateTRD();
-            isGenerated = true;  // ตั้งค่าว่าทำงานแล้ว
-        }
-    }
 
     private void setStatus() {
-        onStatusComboBox.setItems(FXCollections.observableArrayList("None", "Pass", "Fail", "Withdraw"));
+        onStatusComboBox.setItems(FXCollections.observableArrayList( "In Manager", "In Tester", "In Developer", "Done", "Withdraw"));
         onStatusComboBox.setValue("None");
     }
 
@@ -371,75 +357,48 @@ public class PopupTREdit {
         onPriorityComboBox.setItems(FXCollections.observableArrayList("None", "Low", "Medium", "High", "Critical"));
         onPriorityComboBox.setValue("None");
     }
-    private void setLabel() {
-        onTestcaseIDComboBox.getStyleClass().add("custom-label");
-        onTestscriptIDComboBox.getStyleClass().add("custom-label");
-        onTestNo.getStyleClass().add("custom-label");
-        onDate.getStyleClass().add("custom-label");
-        onDescription.getStyleClass().add("custom-label");
-        onExpected.getStyleClass().add("custom-label");
-        onTester.getStyleClass().add("custom-label");
-        onImage.getStyleClass().add("custom-label");
-        onActor.getStyleClass().add("custom-label");
-        onRetest.getStyleClass().add("custom-label");
-    }
 
     private void clearInfo() {
-        id = "";
         onTestNo.setText("-");
-        onDate.setText("-");
-        onDescription.setText("-");
-        onActual.setText("");
-        onTeststeps.setText("");
-        onExpected.setText("-");
-        onActor.setText("-");
         onTester.setText("-");
-        onImage.setText("...");
-        onTestcaseIDComboBox.setText("-");
         onTestscriptIDComboBox.setText("-");
-        onApproveCheck.setSelected(false);
-        onNotapproveCheck.setSelected(false);
+        onTestcaseIDComboBox.setText("-");
+        onDescription.setText("-");
+        onCondition.setText("-");
+        onImage.setText("...");
+        onManager.setText("-");
+        onStatusComboBox.getSelectionModel().select(iRreportDetail.getStatusIRD());
+        onPriorityComboBox.getSelectionModel().select(iRreportDetail.getPriorityIRD());
         onRemark.setText("");
-        onRetest.setText("-");
+        onRCA.setText("");
     }
 
     public void randomId() {
         int min = 1;
         int upperbound = 999;
         String random1 = String.valueOf((int) Math.floor(Math.random() * (upperbound - min + 1) + min));
-        this.id = String.format("TRD-%s", random1);
+        this.id = String.format("IRD-%s", random1);
     }
 
     private void objects() {
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
-        objects.add(name);
-        objects.add(typeTR);
-        objects.add(testResult);
-        objects.add(testResultDetailList);
-        objects.add(type);
+        objects.add(nameTester);
+        objects.add(iRreportDetailList);
+        objects.add(iRreport);
     }
-    private void route(ActionEvent event, ArrayList<Object> objects) throws IOException {
-        if (typeTR.equals("editTR")){
-            FXRouter.goTo("test_result_edit_manager", objects);
-        }
-        Node source = (Node) event.getSource();
-        Stage stage = (Stage) source.getScene().getWindow();
-        stage.close();
-    }
+
     @FXML
     void onCancelButton(ActionEvent event) {
         try {
             objects();
             clearInfo();
-            route(event, objects);
+            FXRouter.popup("test_result_ir", objects);
         } catch (IOException e) {
             System.err.println("ไปที่หน้า home ไม่ได้");
             System.err.println("ให้ตรวจสอบการกำหนด route");
         }
     }
-
 
     @FXML
     void onConfirmButton(ActionEvent event) {
@@ -448,35 +407,28 @@ public class PopupTREdit {
         }
 
         String TrNo = onTestNo.getText();
+        String tester = onTester.getText();
         String IdTS = onTestscriptIDComboBox.getText();
         String IdTC = onTestcaseIDComboBox.getText();
-        String date = onDate.getText();
         String descript = onDescription.getText();
-        String actor = onActor.getText();
-        String inputdata = onInputdata.getText();
-        String teststeps = onTeststeps.getText();;
-        String expected = onExpected.getText();
-        String actual = onActual.getText();
-        String status = onStatusComboBox.getValue();
-        String priority = onPriorityComboBox.getValue();
-        String tester = onTester.getText();
+        String condition = onCondition.getText();
         String image = onImage.getText();
         String retest = onRetest.getText();
-        String approve = "Waiting";
-        if (onApproveCheck.isSelected()){
-            approve = "Approved";
-        } else if (onNotapproveCheck.isSelected()){
-            approve = "Not Approved";
-        }
+        String manager = nameTester;
+        String status = onStatusComboBox.getValue();
+        String priority = onPriorityComboBox.getValue();
         String remark = onRemark.getText();
+        IRreportDetail idTRD = iRreportDetailList.findTRDByIrd(id);
+        String trd = idTRD.getIdTRD();
+        String rca = onRCA.getText().replace(",", "|");
 
-        testResultDetail = new TestResultDetail(id, TrNo, IdTS, IdTC, actor, descript, inputdata, teststeps, expected, actual, status, priority, date, tester, image, retest, approve, remark, idTR);
-        testResultDetailList.addOrUpdateTestResultDetail(testResultDetail);
+        iRreportDetail = new IRreportDetail(id, TrNo, tester, IdTS, IdTC, descript, condition, image, retest, priority, rca, manager, status, remark, idIR, trd);
+        iRreportDetailList.addOrUpdateIRreportDetail(iRreportDetail);
 
         try {
             objects();
             clearInfo();
-            route(event, objects);
+            FXRouter.popup("test_result_ir", objects);
         } catch (IOException e) {
             System.err.println("ไปที่หน้า home ไม่ได้");
             System.err.println("ให้ตรวจสอบการกำหนด route");
@@ -486,6 +438,15 @@ public class PopupTREdit {
 
     @FXML
     boolean handleSaveAction() {
+        if (onDescription.getText() == null || onDescription.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอก Description");
+            return false;
+        }
+
+        if (onCondition.getText() == null || onCondition.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอก Condition");
+            return false;
+        }
 
         if (onStatusComboBox.getValue() == null || onStatusComboBox.getValue().trim().isEmpty()) {
             showAlert("กรุณาเลือก Status");
@@ -494,11 +455,6 @@ public class PopupTREdit {
 
         if (onPriorityComboBox.getValue() == null || onPriorityComboBox.getValue().trim().isEmpty()) {
             showAlert("กรุณาเลือก Priority");
-            return false;
-        }
-
-        if (!onApproveCheck.isSelected() && !onNotapproveCheck.isSelected()) {
-            showAlert("กรุณาเลือก Approval");
             return false;
         }
 
@@ -525,28 +481,149 @@ public class PopupTREdit {
     }
 
     @FXML
-    void onInputdata(ActionEvent event) {
-
-    }
-
-    @FXML
     void onRemark(ActionEvent event) {
 
     }
 
     @FXML
-    void handleApprove (ActionEvent event) {
-        if(onApproveCheck.isSelected()){
-            onApproveCheck.setSelected(true);
-            onNotapproveCheck.setSelected(false);
-        } else if (onNotapproveCheck.isSelected()){
-            onApproveCheck.setSelected(false);
-            onNotapproveCheck.setSelected(true);
+    void handleRCA (ActionEvent event) {
+
+    }
+
+//    @FXML
+//    void onUploadButton(ActionEvent event) {
+//        FileChooser fileChooser = new FileChooser();
+//        fileChooser.setTitle("Select an Image");
+//        fileChooser.getExtensionFilters().add(
+//                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg")
+//        );
+//
+//        selectedFile = fileChooser.showOpenDialog(null);
+//
+//        if (selectedFile != null) {
+//            String targetDirectory = getTargetDirectory();
+//
+//            try {
+//                Path targetPath = Path.of(targetDirectory, selectedFile.getName());
+//                Files.createDirectories(Path.of(targetDirectory)); // สร้างโฟลเดอร์หากยังไม่มี
+//                Files.copy(selectedFile.toPath(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+//                savedImagePath = targetPath.toString();
+//
+//                onImage.setText(selectedFile.getName() + " : " + savedImagePath);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                onImage.setText("Error: " + e.getMessage());
+//            }
+//        }
+//    }
+//
+    private String getTargetDirectory() {
+        String userHome = System.getProperty("user.home");
+        String osName = System.getProperty("os.name").toLowerCase();
+
+        if (osName.contains("win")) {
+            return userHome + "\\Pictures\\Image_ManaualTesttools";
         } else {
-            onApproveCheck.setSelected(false);
-            onNotapproveCheck.setSelected(false);
+            return userHome + "/Downloads/Image_ManaualTesttools";
         }
     }
+
+    private List<File> selectedFiles = new ArrayList<>();
+    private static final int MAX_IMAGES = 5;
+
+    @FXML
+    void onUploadButton(ActionEvent event) {
+        List<String> options = new ArrayList<>();
+        options.add("Upload Image");
+        if (!selectedFiles.isEmpty()) {
+            options.add("Remove Last Image");
+            options.add("Clear All Images");
+        }
+
+        ChoiceDialog<String> dialog = new ChoiceDialog<>(options.get(0), options);
+        dialog.setTitle("Image Options");
+        dialog.setHeaderText("Choose an action:");
+
+        dialog.showAndWait().ifPresent(choice -> {
+            switch (choice) {
+                case "Upload Image":
+                    uploadImage();
+                    break;
+                case "Remove Last Image":
+                    removeLastImage();
+                    break;
+                case "Clear All Images":
+                    clearImages();
+                    break;
+            }
+        });
+    }
+
+    private void uploadImage() {
+        if (selectedFiles.size() >= MAX_IMAGES) {
+            showAlert("Upload Limit", "You can upload up to " + MAX_IMAGES + " images only.");
+            return;
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select an Image");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg"));
+
+        File file = fileChooser.showOpenDialog(null);
+        if (file != null) {
+            selectedFiles.add(file);
+            saveImages();
+            updateImageLabel();
+        }
+    }
+
+    private void saveImages() {
+        String targetDirectory = getTargetDirectory();
+
+        try {
+            Files.createDirectories(Path.of(targetDirectory));
+            for (File file : selectedFiles) {
+                Path targetPath = Path.of(targetDirectory, file.getName());
+                Files.copy(file.toPath(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+            }
+        } catch (IOException e) {
+            showAlert("Error", "Error saving images: " + e.getMessage());
+        }
+    }
+
+    private void updateImageLabel() {
+        if (selectedFiles.isEmpty()) {
+            onImage.setText("...");
+            return;
+        }
+
+        String imageText = selectedFiles.stream()
+                .map(file -> file.getName() + " : " + Path.of(getTargetDirectory(), file.getName()))
+                .collect(Collectors.joining(" | "));
+
+        onImage.setText(imageText);
+    }
+
+    private void removeLastImage() {
+        if (!selectedFiles.isEmpty()) {
+            selectedFiles.remove(selectedFiles.size() - 1);
+            updateImageLabel();
+        }
+    }
+
+    private void clearImages() {
+        selectedFiles.clear();
+        updateImageLabel();
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
     @FXML
     void onImage(ActionEvent event) {
         Stage imageStage = new Stage();
