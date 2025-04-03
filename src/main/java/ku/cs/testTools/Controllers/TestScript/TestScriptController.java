@@ -205,7 +205,12 @@ public class TestScriptController {
                 useCaseList.addUseCase(usecase);
             }
         }
-
+        testScriptList = new TestScriptList();
+        for (TestScript testscript : testScriptRepository.getAllTestScripts()) {
+            if (testscript.getProjectName().equals(projectName)) {
+                testScriptList.addTestScript(testscript);
+            }
+        }
         // โหลด TestScriptDetailList ตาม projectName
         testScriptDetailList = new TestScriptDetailList();
         for (TestScriptDetail detail : testScriptDetailRepository.getAllTestScriptDetail()) {

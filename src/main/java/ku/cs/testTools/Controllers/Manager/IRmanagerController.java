@@ -112,7 +112,6 @@ public class IRmanagerController {
         if (FXRouter.getData() != null) {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
-//            directory = (String) objects.get(1);
             nameManager = (String) objects.get(1);
             if (objects.get(2) != null){
                 iRreport = (IRreport) objects.get(2);
@@ -123,7 +122,7 @@ public class IRmanagerController {
             //loadProject();
             setTable();
 //            loadListView(iRreportList);
-//            selected();
+            selected();
             loadList();
             handleSelection();
             for (IRreport iRreport : iRreportList.getIRreportList()) {
@@ -279,21 +278,22 @@ public class IRmanagerController {
         iRreportList.getIRreportList().forEach(iRreport -> {
             List<IRreport> iRreports = iRreportList.findAllByIRreportId(
                     iRreport.getTrIR(), projectNameLower, nameTesterLower);
-
-            if (!iRreports.isEmpty()) {
-                IRreportId = iRreport.getIdIR();
-                testIDLabel.setText(IRreportId);
-                String iRreportName = iRreport.getNameIR();
-                testNameLabel.setText(iRreportName);
-                String iRreportNote = iRreport.getNoteIR();
-                infoNoteLabel.setText(iRreportNote);
-                String dateIR = iRreport.getDateIR();
-                testDateLabel.setText(dateIR);
-                setTableInfo(iRreport);
-
-                System.out.println("select " + iRreportList.findIRById(testIDLabel.getText()));
-
-            }
+            loadListView(iRreports);
+            selected();
+//            if (!iRreports.isEmpty()) {
+//                IRreportId = iRreport.getIdIR();
+//                testIDLabel.setText(IRreportId);
+//                String iRreportName = iRreport.getNameIR();
+//                testNameLabel.setText(iRreportName);
+//                String iRreportNote = iRreport.getNoteIR();
+//                infoNoteLabel.setText(iRreportNote);
+//                String dateIR = iRreport.getDateIR();
+//                testDateLabel.setText(dateIR);
+//                setTableInfo(iRreport);
+//
+//                System.out.println("select " + iRreportList.findIRById(testIDLabel.getText()));
+//
+//            }
         });
     }
     private void loadRepo(){
@@ -716,7 +716,7 @@ public class IRmanagerController {
         System.out.println("select " + iRreportList.findIRById(testIDLabel.getText()));
 
     }
-    private void loadListView(IRreportList iRreportList) {
+    private void loadListView(List<IRreport> iRreports) {
         onEditButton.setVisible(false);
         onExportButton.setVisible(false);
         onSearchList.refresh();
@@ -734,10 +734,10 @@ public class IRmanagerController {
         for (Manager manager : managers) {
             managerList.addManager(manager);
 
-            if (iRreportList != null) {
-                iRreportList.sort(new IRreportComparable());
+            if (iRreports != null) {
+                iRreports.sort(new IRreportComparable());
 
-                for (IRreport iRreport : iRreportList.getIRreportList()) {
+                for (IRreport iRreport : iRreports) {
                     if (!"null".equals(iRreport.getDateIR()) && !"true".equals(manager.getStatus())) {
                         onSearchList.getItems().add(iRreport);
                     }
@@ -745,7 +745,7 @@ public class IRmanagerController {
             }
         }
 
-        if (iRreportList == null) {
+        if (iRreports == null) {
             setTable();
             clearInfo();
         }

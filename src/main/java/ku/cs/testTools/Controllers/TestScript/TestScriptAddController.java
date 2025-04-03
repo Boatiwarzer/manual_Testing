@@ -201,10 +201,12 @@ public class TestScriptAddController {
             }
         }
 
-        // โหลด TestScriptDetailList ตาม projectName
-        testScriptDetailList = new TestScriptDetailList();
-        for (TestScriptDetail detail : testScriptDetailRepository.getAllTestScriptDetail()) {
-            testScriptDetailList.addTestScriptDetail(detail);
+        // โหลด TestScriptList ตาม projectName
+        testScriptList = new TestScriptList();
+        for (TestScript testscript : testScriptRepository.getAllTestScripts()) {
+            if (testscript.getProjectName().equals(projectName)) {
+                testScriptList.addTestScript(testscript);
+            }
         }
 
         // โหลด TestFlowPositionList ตาม projectName
