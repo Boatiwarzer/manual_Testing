@@ -8,18 +8,13 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
 import ku.cs.testTools.Models.Manager.Manager;
-import ku.cs.testTools.Models.Manager.ManagerList;
-import ku.cs.testTools.Models.Manager.Tester;
-import ku.cs.testTools.Models.Manager.TesterList;
 import ku.cs.testTools.Services.Repository.*;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
 import org.controlsfx.control.textfield.TextFields;
 
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -95,7 +90,7 @@ public class TestCaseAddController {
     private TestCaseList testCaseList = new TestCaseList();
     private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
     private TestCaseDetail selectedItem;
-    private TestCase testCase;
+    private TestCase testcase;
     private TestCase selectedTestCase;
     private UseCaseList useCaseList;
     private UUID position = UUID.randomUUID();
@@ -125,7 +120,7 @@ public class TestCaseAddController {
             selectedTCD();
             selectedListView();
             if (objects.get(3) != null){
-                testCase = (TestCase) objects.get(3);
+                testcase = (TestCase) objects.get(3);
                 testCaseDetailList = (TestCaseDetailList) objects.get(4);
                 type = (String) objects.get(5);
                 setDataTC();
@@ -442,27 +437,27 @@ public class TestCaseAddController {
     }
 
     private void setDataTC() {
-        tcId = testCase.getIdTC();
+        tcId = testcase.getIdTC();
         testIDLabel.setText(tcId);
-        String name = testCase.getNameTC();
+        String name = testcase.getNameTC();
         onTestNameField.setText(name);
-        String date = testCase.getDateTC();
+        String date = testcase.getDateTC();
         testDateLabel.setText(date);
-        String useCase = testCase.getUseCase();
+        String useCase = testcase.getUseCase();
         onUsecaseCombobox.getSelectionModel().select(useCase);
-        String description = testCase.getDescriptionTC();
+        String description = testcase.getDescriptionTC();
         infoDescriptField.setText(description);
-        String note = testCase.getNote();
+        String note = testcase.getNote();
         onTestNoteField.setText(note);
-        String preCon = testCase.getPreCon();
+        String preCon = testcase.getPreCon();
         infoPreconField.setText(preCon);
-        String post = testCase.getPostCon();
+        String post = testcase.getPostCon();
         infoPostconField.setText(post);
     }
 
     private void selectedListView() {
-        if (testCase != null){
-            onSearchList.getSelectionModel().select(testCase);
+        if (testcase != null){
+            onSearchList.getSelectionModel().select(testcase);
             onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue == null) {
                     selectedTestCase = null;
@@ -627,7 +622,7 @@ public class TestCaseAddController {
 
 
         // Create a new TestCase object
-        testCase = new TestCase(idTC, name, date, useCase, description, note, position, preCon, post,"-");
+        testcase = new TestCase(idTC, name, date, useCase, description, note, position, preCon, post,"-");
     }
     private void currentNewDataForSubmit() {
         // Retrieve the values from the fields
@@ -641,7 +636,9 @@ public class TestCaseAddController {
         String post = infoPostconField.getText();
         String idts = onTestscriptCombobox.getValue();
         // Create a new TestCase object
-        testCase = new TestCase(idTC, name, date, useCase, description, note, position, preCon, post,idts);
+        testcase = new TestCase(idTC, name, date, useCase, description, note, position, preCon, post,idts);
+        testcase.setProjectName(projectName);
+        testcase.setTester(nameTester);
     }
 
     private void objects() {
@@ -649,7 +646,7 @@ public class TestCaseAddController {
         objects.add(projectName);
         objects.add(nameTester);
         objects.add(typeTC);
-        objects.add(testCase);
+        objects.add(testcase);
         objects.add(testCaseDetailList);
         //objects.add(type);
     }
@@ -734,12 +731,12 @@ public class TestCaseAddController {
             TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
 
             // 🔹 ตรวจสอบว่ามี testCase หรือไม่
-            if (testCase == null) {
+            if (testcase == null) {
                 throw new IllegalArgumentException("Error: testCase เป็น null");
             }
 
             // 🔹 บันทึก testCase ก่อน เพื่อให้มี ID
-            testCaseRepository.saveOrUpdateTestCase(testCase);
+            testCaseRepository.saveOrUpdateTestCase(testcase);
 
             // 🔹 กำหนด testCase ให้กับทุก testCaseDetail และบันทึก
             for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()) {
@@ -752,14 +749,14 @@ public class TestCaseAddController {
                 testCaseDetailList.addTestCaseDetail(testCaseDetail);
             }
 
-            testCaseList.addOrUpdateTestCase(testCase);
+            testCaseList.addOrUpdateTestCase(testcase);
             saveRepo();
 
             // 🔹 เคลียร์ objects และเพิ่มค่าที่ต้องการ
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(nameTester);
-            objects.add(testCase);
+            objects.add(testcase);
 
             // 🔹 แจ้งเตือนว่าบันทึกข้อมูลสำเร็จ
             Alert alert = new Alert(Alert.AlertType.INFORMATION);

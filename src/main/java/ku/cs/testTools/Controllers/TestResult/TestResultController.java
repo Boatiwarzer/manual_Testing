@@ -758,6 +758,8 @@ public class TestResultController {
                 System.out.println(idIR);
                 iRreportList.clearIR(idIR);
                 IRreport newIR = new IRreport(idIR, nameIR, dateIR, noteIR, idTR);
+                newIR.setProjectName(projectName);
+                newIR.setTester(nameTester);
                 iRreportList.addIR(newIR);
                 newIRreport = newIR;
 
@@ -909,6 +911,8 @@ public class TestResultController {
                 String dateIR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                 System.out.println(idIR);
                 iRreport = new IRreport(idIR, nameIR, dateIR, noteIR, idTR);
+                iRreport.setProjectName(projectName);
+                iRreport.setTester(nameTester);
                 iRreportList.addOrUpdateIRreport(iRreport);
                 newIRreport = iRreport;
                 IRReportRepository irReportRepository = new IRReportRepository();

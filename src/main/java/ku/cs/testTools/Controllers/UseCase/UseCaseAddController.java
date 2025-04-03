@@ -548,7 +548,8 @@ public class UseCaseAddController {
                     ucNote.isEmpty() ? "-" : ucNote,
                     ucDate
             );
-
+            newUseCase.setProjectName(projectName);
+            newUseCase.setTester(nameTester);
             useCaseList.addUseCase(newUseCase);
 
 //        useCaseDetailList.clearUseCaseDetail(ucId);

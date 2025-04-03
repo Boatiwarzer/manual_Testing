@@ -8,19 +8,14 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ku.cs.testTools.Models.Manager.Manager;
-import ku.cs.testTools.Models.Manager.ManagerList;
-import ku.cs.testTools.Models.Manager.Tester;
-import ku.cs.testTools.Models.Manager.TesterList;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
 import ku.cs.testTools.Services.Repository.*;
 import org.controlsfx.control.textfield.TextFields;
 
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -100,7 +95,7 @@ public class TestCaseEditController {
     private ArrayList<Object> objects;
     private TestCaseDetailList testCaseDetailList = new TestCaseDetailList();
     private TestCaseDetail selectedItem;
-    private TestCase testCase;
+    private TestCase testcase;
     private TestCase selectedTestCase;
     private UseCaseList useCaseList;
     private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
@@ -131,7 +126,7 @@ public class TestCaseEditController {
             selectedTCD();
             selectedListView();
             if (objects.get(3) != null){
-                testCase = (TestCase) objects.get(3);
+                testcase = (TestCase) objects.get(3);
                 testCaseDetailList = (TestCaseDetailList) objects.get(4);
                 type = (String) objects.get(5);
                 testCaseDetailListDelete = (TestCaseDetailList) objects.get(6);
@@ -341,29 +336,29 @@ public class TestCaseEditController {
     }
 
     private void setDataTC() {
-        tcId = testCase.getIdTC();
+        tcId = testcase.getIdTC();
         testIDLabel.setText(tcId);
-        String name = testCase.getNameTC();
+        String name = testcase.getNameTC();
         onTestNameField.setText(name);
-        String date = testCase.getDateTC();
+        String date = testcase.getDateTC();
         testDateLabel.setText(date);
-        String useCase = testCase.getUseCase();
+        String useCase = testcase.getUseCase();
         onUsecaseCombobox.getSelectionModel().select(useCase);
-        String description = testCase.getDescriptionTC();
+        String description = testcase.getDescriptionTC();
         infoDescriptField.setText(description);
-        String note = testCase.getNote();
+        String note = testcase.getNote();
         onTestNoteField.setText(note);
-        String preCon = testCase.getPreCon();
+        String preCon = testcase.getPreCon();
         infoPreconField.setText(preCon);
-        String post = testCase.getPostCon();
+        String post = testcase.getPostCon();
         infoPostconField.setText(post);
-        String idTs = testCase.getIdTS();
+        String idTs = testcase.getIdTS();
         onTestscriptCombobox.setValue(idTs);
     }
 
     private void selectedListView() {
-        if (testCase != null){
-            onSearchList.getSelectionModel().select(testCase);
+        if (testcase != null){
+            onSearchList.getSelectionModel().select(testcase);
             onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue == null) {
                     selectedTestCase = null;
@@ -445,7 +440,7 @@ public class TestCaseEditController {
 
         //Add items to the table
         for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()) {
-            if (testCase.getIdTC().trim().equals(testCaseDetail.getIdTC().trim())){
+            if (testcase.getIdTC().trim().equals(testCaseDetail.getIdTC().trim())){
                 onTableTestcase.getItems().add(testCaseDetail);
             }
         }
@@ -527,8 +522,9 @@ public class TestCaseEditController {
         String post = infoPostconField.getText();
         String idTS = onTestscriptCombobox.getValue();
 
-        testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post,idTS);
-
+        testcase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post,idTS);
+        testcase.setProjectName(projectName);
+        testcase.setTester(nameTester);
     }
     private void currentNewDataForSubmit(){
         String name = onTestNameField.getText();
@@ -541,10 +537,12 @@ public class TestCaseEditController {
         String post = infoPostconField.getText();
         String idTS = onTestscriptCombobox.getValue();
 
-        testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post,idTS);
-        if (testFlowPositionList.findByPositionId(testCase.getPosition()) != null) {
-            testFlowPosition = testFlowPositionList.findByPositionId(testCase.getPosition());
-            testCase.setPosition(testFlowPosition.getPositionID());
+        testcase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post,idTS);
+        testcase.setProjectName(projectName);
+        testcase.setTester(nameTester);
+        if (testFlowPositionList.findByPositionId(testcase.getPosition()) != null) {
+            testFlowPosition = testFlowPositionList.findByPositionId(testcase.getPosition());
+            testcase.setPosition(testFlowPosition.getPositionID());
         }
 
     }
@@ -553,7 +551,7 @@ public class TestCaseEditController {
         objects.add(projectName);
         objects.add(nameTester);
         objects.add(typeTC);
-        objects.add(testCase);
+        objects.add(testcase);
         objects.add(testCaseDetailList);
         //objects.add(type);
     }
@@ -629,21 +627,21 @@ public class TestCaseEditController {
                 // Delete all test case details related to this test case
                 List<TestCaseDetail> testCaseDetails = testCaseDetailRepository.getAllTestCaseDetails();
                 for (TestCaseDetail testCaseDetail : testCaseDetails) {
-                    if (testCaseDetail.getIdTC().equals(testCase.getIdTC())) {
+                    if (testCaseDetail.getIdTC().equals(testcase.getIdTC())) {
                         testCaseDetailRepository.deleteTestCaseDetail(testCaseDetail.getIdTCD());
                     }
                 }
 
                 // Delete test case
-                testCaseRepository.deleteTestCase(testCase.getIdTC());
+                testCaseRepository.deleteTestCase(testcase.getIdTC());
 
                 // Remove from local lists
-                testCaseList.deleteTestCase(testCase);
-                testCaseDetailList.deleteTestCaseDetailByTestScriptID(testCase.getIdTC());
-                testFlowPositionList.removePositionByID(testCase.getPosition());
+                testCaseList.deleteTestCase(testcase);
+                testCaseDetailList.deleteTestCaseDetailByTestScriptID(testcase.getIdTC());
+                testFlowPositionList.removePositionByID(testcase.getPosition());
 
                 // Delete test flow position
-                testFlowRepository.deleteTestFlowPosition(testCase.getPosition());
+                testFlowRepository.deleteTestFlowPosition(testcase.getPosition());
 
                 // Save project state
                 saveRepo();
@@ -672,7 +670,7 @@ public class TestCaseEditController {
             currentNewDataForSubmit();
             TestCaseRepository testCaseRepository = new TestCaseRepository();
             TestCaseDetailRepository testCaseDetailRepository = new TestCaseDetailRepository();
-            testCaseRepository.saveOrUpdateTestCase(testCase);
+            testCaseRepository.saveOrUpdateTestCase(testcase);
             for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()) {
                 testCaseDetailRepository.updateTestCaseDetail(testCaseDetail);
             }
@@ -688,14 +686,14 @@ public class TestCaseEditController {
                 testFlowPositionList.addPosition(testFlowPosition);
 
             }
-            testCaseList.addOrUpdateTestCase(testCase);
+            testCaseList.addOrUpdateTestCase(testcase);
             saveRepo();
 
             // 🔹 เคลียร์ objects และเพิ่มค่าที่ต้องการ
             objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(nameTester);
-            objects.add(testCase);
+            objects.add(testcase);
 
             // 🔹 แจ้งเตือนว่าบันทึกข้อมูลสำเร็จ
             Alert alert = new Alert(Alert.AlertType.INFORMATION);

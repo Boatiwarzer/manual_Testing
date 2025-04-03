@@ -62,6 +62,16 @@ public class IRreport {
         this.trIR = trIR;
     }
 
+    public IRreport(String idIR, String nameIR, String dateIR, String noteIR, String trIR, String projectName, String tester) {
+        this.idIR = idIR;
+        this.nameIR = nameIR;
+        this.dateIR = dateIR;
+        this.NoteIR = noteIR;
+        this.trIR = trIR;
+        this.projectName = projectName;
+        this.tester = tester;
+    }
+
     public boolean isId(String idIR) {
         return this.idIR.equals(idIR);
     }

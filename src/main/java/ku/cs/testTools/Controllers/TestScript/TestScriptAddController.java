@@ -8,11 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
 import ku.cs.testTools.Models.Manager.Manager;
-import ku.cs.testTools.Models.Manager.ManagerList;
-import ku.cs.testTools.Models.Manager.Tester;
-import ku.cs.testTools.Models.Manager.TesterList;
 import ku.cs.testTools.Services.Repository.*;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
@@ -20,7 +16,6 @@ import ku.cs.testTools.Services.*;
 
 import org.controlsfx.control.textfield.TextFields;
 
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -110,7 +105,7 @@ public class TestScriptAddController {
     private String type = "new";
     private String typeTS = "new";
     private ArrayList<Object> objects;
-    private String name;
+    private String nameTester;
     private TestCase testcase = new TestCase();
     private String tcId;
 
@@ -120,7 +115,7 @@ public class TestScriptAddController {
         if (FXRouter.getData() != null) {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
-            name = (String) objects.get(1);
+            nameTester = (String) objects.get(1);
             typeTS = (String) objects.get(2);
             onTableTestscript.isFocused();
             clearInfo();
@@ -552,6 +547,9 @@ public class TestScriptAddController {
 
         // Only create the TestScript object after all fields are validated
         testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, post, note, position);
+        testScript.setProjectName(projectName);
+        testScript.setTester(nameTester);
+
     }
     private void currentNewDataForSubmit() {
         // Retrieve the values from the fields
@@ -568,6 +566,10 @@ public class TestScriptAddController {
         // Only create the TestScript object after all fields are validated
         testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, post, note, position);
         testcase = new TestCase(testcase.getIdTC(),name,date,useCase,description,"-",positionTC,preCon,post,idTS + " : " + name);
+        testScript.setProjectName(projectName);
+        testScript.setTester(nameTester);
+        testcase.setProjectName(projectName);
+        testcase.setTester(nameTester);
 
         String[] data = tc.split(":");
         System.out.println(tc);
@@ -577,7 +579,7 @@ public class TestScriptAddController {
     private void objects() {
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(name);
+        objects.add(nameTester);
         objects.add(typeTS);
         objects.add(testScript);
         objects.add(testScriptDetailList);
@@ -586,7 +588,7 @@ public class TestScriptAddController {
     private void objectsend() {
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(name);
+        objects.add(nameTester);
         objects.add(null);
     }
 
@@ -669,7 +671,7 @@ public class TestScriptAddController {
 
             objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(name);
+            objects.add(nameTester);
             objects.add(testScript);
             // Show success message
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -860,7 +862,7 @@ public class TestScriptAddController {
         loadManagerStatus();
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(name);
+        objects.add(nameTester);
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");
         alert.setHeaderText(null);

@@ -774,6 +774,8 @@ public class IREditmanagerController {
         String idTr = iRreport.getTrIR();
 //        String pn = iRreport.getProjectName();
         iRreport = new IRreport(idIR, nameIR, dateIR, noteIR, idTr);
+        iRreport.setProjectName(projectName);
+        iRreport.setTester(nameTester);
     }
     private void objects() {
         objects = new ArrayList<>();
@@ -847,7 +849,6 @@ public class IREditmanagerController {
         }
         try {
             currentNewData();
-            iRreportList.addOrUpdateIRreport(iRreport);
             iRreportList.addOrUpdateIRreport(iRreport);
             IRReportRepository iRReportRepository = new IRReportRepository();
             IRDetailRepository iRDetailRepository = new IRDetailRepository();

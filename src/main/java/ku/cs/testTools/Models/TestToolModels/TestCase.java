@@ -48,7 +48,10 @@ public class TestCase {
     private String postCon;
     @Column(name = "id_ts")
     private String idTS;
-
+    @Column(name = "projectName", nullable = false, precision = 10)
+    private String projectName;
+    @Column(name = "tester", nullable = false, precision = 10)
+    private String tester;
     public TestCase(String idTC, String nameTC, String dateTC, String useCase, String descriptionTC, String note, UUID position, String preCon, String postCon, String idTS) {
         this.idTC = idTC;
         this.nameTC = nameTC;
@@ -62,7 +65,20 @@ public class TestCase {
         this.idTS = idTS;
     }
 
-
+    public TestCase(String idTC, String nameTC, String dateTC, String useCase, String descriptionTC, String note, UUID position, String preCon, String postCon, String idTS, String projectName, String tester) {
+        this.idTC = idTC;
+        this.nameTC = nameTC;
+        this.dateTC = dateTC;
+        this.useCase = useCase;
+        this.descriptionTC = descriptionTC;
+        this.note = note;
+        this.position = position;
+        this.preCon = preCon;
+        this.postCon = postCon;
+        this.idTS = idTS;
+        this.projectName = projectName;
+        this.tester = tester;
+    }
 
     @Override
     public final boolean equals(Object o) {

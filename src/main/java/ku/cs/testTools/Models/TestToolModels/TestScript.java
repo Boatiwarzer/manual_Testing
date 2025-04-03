@@ -50,10 +50,10 @@ public class TestScript {
     @Column(name = "position_ts") // Maps to `position` in the database
     private UUID position;
 
-//    @Column(name = "idtsdlist") // Maps to `idtsdlist` in the database
-//    private String idTSDList;
-//    @OneToMany(mappedBy = "testScript")
-//    private List<TestScriptDetail> testScriptDetailList;
+    @Column(name = "projectName", nullable = false, precision = 10)
+    private String projectName;
+    @Column(name = "tester", nullable = false, precision = 10)
+    private String tester;
     private boolean markedForDeletion = false; // ฟิลด์สำหรับระบุสถานะว่าต้องการลบหรือไม่
 
     public TestScript(String idTS, String nameTS, String dateTS, String useCase, String descriptionTS, String testCase, String preCon, String postCon, String freeText, UUID position) {
@@ -69,6 +69,20 @@ public class TestScript {
         this.position = position;
     }
 
+    public TestScript(String idTS, String nameTS, String dateTS, String useCase, String descriptionTS, String testCase, String preCon, String postCon, String freeText, UUID position, String projectName, String tester) {
+        this.idTS = idTS;
+        this.nameTS = nameTS;
+        this.dateTS = dateTS;
+        this.useCase = useCase;
+        this.descriptionTS = descriptionTS;
+        this.testCase = testCase;
+        this.preCon = preCon;
+        this.postCon = postCon;
+        this.freeText = freeText;
+        this.position = position;
+        this.projectName = projectName;
+        this.tester = tester;
+    }
 
     @Override
     public final boolean equals(Object o) {

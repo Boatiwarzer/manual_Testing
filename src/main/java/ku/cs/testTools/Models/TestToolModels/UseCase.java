@@ -38,7 +38,10 @@ public class UseCase {
 
     @Column(name = "date_uc", columnDefinition = "DATETIME")
     private String date;
-
+    @Column(name = "projectName", nullable = false, precision = 10)
+    private String projectName;
+    @Column(name = "tester", nullable = false, precision = 10)
+    private String tester;
     // Default Constructor
     public UseCase() {}
 
@@ -52,6 +55,19 @@ public class UseCase {
         this.postCondition = postCondition;
         this.note = note;
         this.date = date;
+    }
+
+    public UseCase(String useCaseID, String useCaseName, String actor, String description, String preCondition, String postCondition, String note, String date, String projectName, String tester) {
+        this.useCaseID = useCaseID;
+        this.useCaseName = useCaseName;
+        this.actor = actor;
+        this.description = description;
+        this.preCondition = preCondition;
+        this.postCondition = postCondition;
+        this.note = note;
+        this.date = date;
+        this.projectName = projectName;
+        this.tester = tester;
     }
 
     // Automatically sets the date before the entity is persisted

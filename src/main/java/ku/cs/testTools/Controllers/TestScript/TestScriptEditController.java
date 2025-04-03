@@ -9,19 +9,14 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ku.cs.testTools.Models.Manager.Manager;
-import ku.cs.testTools.Models.Manager.ManagerList;
-import ku.cs.testTools.Models.Manager.Tester;
-import ku.cs.testTools.Models.Manager.TesterList;
 import ku.cs.testTools.Services.Repository.*;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
 import org.controlsfx.control.textfield.TextFields;
 
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -135,7 +130,7 @@ public class TestScriptEditController {
     private ArrayList<Object> objects;
     private String nameTester;
     private TestFlowPosition testFlowPosition;
-    private TestCase testCase;
+    private TestCase testcase;
     private TestFlowPosition testFlowPositionTC;
 
     @FXML
@@ -157,7 +152,7 @@ public class TestScriptEditController {
             if (objects.get(3) != null){
                 testScript = (TestScript) objects.get(3);
                 testScriptDetailList = (TestScriptDetailList) objects.get(4);
-                testCase = (TestCase) objects.get(5);
+                testcase = (TestCase) objects.get(5);
                 type = (String) objects.get(6);
                 testScriptDetailListDelete = (TestScriptDetailList) objects.get(7);
 
@@ -312,9 +307,9 @@ public class TestScriptEditController {
 
         setDate();
         //testcase = testCaseList.findTCById(data[0]);
-        if (testCase != null){
-            testCase = new TestCase(testCase.getIdTC(),name,testDateLabel.getText(),usecase,description,"-", testCase.getPosition(),preCon,post, testCase.getIdTC());
-            String tc_combobox = testCase.getIdTC() + " : " + testCase.getNameTC();
+        if (testcase != null){
+            testcase = new TestCase(testcase.getIdTC(),name,testDateLabel.getText(),usecase,description,"-", testcase.getPosition(),preCon,post, testcase.getIdTC());
+            String tc_combobox = testcase.getIdTC() + " : " + testcase.getNameTC();
             onTestcaseCombobox.setValue(tc_combobox);
         }
     }
@@ -632,8 +627,11 @@ public class TestScriptEditController {
         String post = infoPostconLabel.getText();
 
         testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post,note,position);
-        testCase = new TestCase(testCase.getIdTC(),name,testDateLabel.getText(),useCase,description,"-", testCase.getPosition(),preCon,post, testCase.getIdTS());
-
+        testcase = new TestCase(testcase.getIdTC(),name,testDateLabel.getText(),useCase,description,"-", testcase.getPosition(),preCon,post, testcase.getIdTS());
+        testcase.setProjectName(projectName);
+        testcase.setTester(nameTester);
+        testScript.setProjectName(projectName);
+        testScript.setTester(nameTester);
     }
     private void currentNewDataForSubmit(){
         String name = onTestNameField.getText();
@@ -647,15 +645,18 @@ public class TestScriptEditController {
         String post = infoPostconLabel.getText();
 
         testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post,note,position);
-        testCase = new TestCase(testCase.getIdTC(),name,testDateLabel.getText(),useCase,description,"-", testCase.getPosition(),preCon,post, testCase.getIdTC());
-
+        testcase = new TestCase(testcase.getIdTC(),name,testDateLabel.getText(),useCase,description,"-", testcase.getPosition(),preCon,post, testcase.getIdTC());
+        testScript.setProjectName(projectName);
+        testScript.setTester(nameTester);
+        testcase.setProjectName(projectName);
+        testcase.setTester(nameTester);
         if (testFlowPositionList.findByPositionId(testScript.getPosition()) != null) {
             testFlowPosition = testFlowPositionList.findByPositionId(testScript.getPosition());
             testScript.setPosition(testFlowPosition.getPositionID());
         }
-        if (testFlowPositionList.findByPositionId(testCase.getPosition()) != null) {
-            testFlowPositionTC = testFlowPositionList.findByPositionId(testCase.getPosition());
-            testCase.setPosition(testFlowPosition.getPositionID());
+        if (testFlowPositionList.findByPositionId(testcase.getPosition()) != null) {
+            testFlowPositionTC = testFlowPositionList.findByPositionId(testcase.getPosition());
+            testcase.setPosition(testFlowPosition.getPositionID());
         }
     }
     @FXML
@@ -669,7 +670,7 @@ public class TestScriptEditController {
             objects.add(typeTS);
             objects.add(testScript);
             objects.add(testScriptDetailList);
-            objects.add(testCase);
+            objects.add(testcase);
             objects.add("new");
             objects.add(null);
             objects.add(testScriptDetailListDelete);
@@ -694,7 +695,7 @@ public class TestScriptEditController {
             objects.add(typeTS);
             objects.add(testScript);
             objects.add(testScriptDetailList);
-            objects.add(testCase);
+            objects.add(testcase);
             objects.add("edit");
             objects.add(selectedItem);
             objects.add(testScriptDetailListDelete);
@@ -735,7 +736,7 @@ public class TestScriptEditController {
         currentNewDataForSubmit();
         // Add or update test script
         testScriptList.addTestScript(testScript);
-        testCaseList.addOrUpdateTestCase(testCase);
+        testCaseList.addOrUpdateTestCase(testcase);
 
 
         // Write data to respective files
@@ -761,7 +762,7 @@ public class TestScriptEditController {
 
         }
         testScriptRepository.updateTestScript(testScript);
-        testCaseRepository.saveOrUpdateTestCase(testCase);
+        testCaseRepository.saveOrUpdateTestCase(testcase);
 
         objects = new ArrayList<>();
         objects.add(projectName);
