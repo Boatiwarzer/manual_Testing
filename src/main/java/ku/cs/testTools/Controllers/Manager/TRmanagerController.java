@@ -973,7 +973,6 @@ public class TRmanagerController {
         try {
             objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(nameManager);
             objects.add("editTR");
             objects.add(selectedTestResult);

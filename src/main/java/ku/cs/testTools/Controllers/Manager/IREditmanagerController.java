@@ -70,7 +70,7 @@ public class IREditmanagerController {
     private String nameTester;
     private ArrayList<String> word = new ArrayList<>();
     private String irId;
-    private String projectName, directory;
+    private String projectName;
     private IRreportList iRreportList = new IRreportList();
     //private ArrayList<Object> objects = (ArrayList) FXRouter.getData();
     private IRreportDetailList iRreportDetailList = new IRreportDetailList();
@@ -110,20 +110,18 @@ public class IREditmanagerController {
             if (FXRouter.getData() != null) {
                 objects = (ArrayList) FXRouter.getData();
                 projectName = (String) objects.get(0);
-                directory = (String) objects.get(1);
-                nameManager = (String) objects.get(2);
-                typeIR = (String) objects.get(3);
+                nameManager = (String) objects.get(1);
+                typeIR = (String) objects.get(2);
                 System.out.println(typeIR);
-                System.out.println(objects.get(4));
                 onTableIR.isFocused();
                 selectedIRD();
                 selectedListView();
                 loadRepo();
                 selectedVbox();
-                if (objects.get(4) != null){
-                    iRreport = (IRreport) objects.get(4);
-                    iRreportDetailList = (IRreportDetailList) objects.get(5);
-                    type = (String) objects.get(6);
+                if (objects.get(3) != null){
+                    iRreport = (IRreport) objects.get(3);
+                    iRreportDetailList = (IRreportDetailList) objects.get(4);
+                    type = (String) objects.get(5);
                     System.out.println(type);
                 }
                 setDataIR();
@@ -794,7 +792,6 @@ public class IREditmanagerController {
     private void objects() {
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(nameManager);
         objects.add(typeIR);
         objects.add(iRreport);
@@ -875,7 +872,6 @@ public class IREditmanagerController {
 
             objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(nameManager);
             objects.add(iRreport);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -921,7 +917,7 @@ public class IREditmanagerController {
         try {
             objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
+
             objects.add(nameManager);
             objects.add(null);
             FXRouter.goTo("ir_manager",objects);
@@ -954,7 +950,6 @@ public class IREditmanagerController {
         loadManagerStatus();
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(nameManager);
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");
@@ -981,38 +976,38 @@ public class IREditmanagerController {
 
     @FXML
     void handleOpenMenuItem(ActionEvent actionEvent) throws IOException {
-        // Open file chooser
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Project");
-
-        // Set extension filter
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
-        fileChooser.getExtensionFilters().add(extFilter);
-
-        // Show open file dialog
-        File file = fileChooser.showOpenDialog(null);
-        if (file != null) {
-            System.out.println("Opening file: " + file.getName());
-
-            // Get the project name from the file name
-            projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
-
-            // Get the directory from the file path
-            directory = file.getParent();
-            saveRepo();
-            //send the project name and directory to HomePage
-            ArrayList<Object> objects = new ArrayList<>();
-            objects.add(projectName);
-            objects.add(directory);
-            objects.add(null);
-
-            // แก้พาท
-            String packageStr1 = "views/";
-            FXRouter.when("home_manager", packageStr1 + "home_manager.fxml", "TestTools | " + projectName);
-            FXRouter.goTo("home_manager", objects);
-        } else {
-            System.out.println("No file selected.");
-        }
+//        // Open file chooser
+//        FileChooser fileChooser = new FileChooser();
+//        fileChooser.setTitle("Open Project");
+//
+//        // Set extension filter
+//        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+//        fileChooser.getExtensionFilters().add(extFilter);
+//
+//        // Show open file dialog
+//        File file = fileChooser.showOpenDialog(null);
+//        if (file != null) {
+//            System.out.println("Opening file: " + file.getName());
+//
+//            // Get the project name from the file name
+//            projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
+//
+//            // Get the directory from the file path
+//            directory = file.getParent();
+//            saveRepo();
+//            //send the project name and directory to HomePage
+//            ArrayList<Object> objects = new ArrayList<>();
+//            objects.add(projectName);
+//
+//            objects.add(null);
+//
+//            // แก้พาท
+//            String packageStr1 = "views/";
+//            FXRouter.when("home_manager", packageStr1 + "home_manager.fxml", "TestTools | " + projectName);
+//            FXRouter.goTo("home_manager", objects);
+//        } else {
+//            System.out.println("No file selected.");
+//        }
     }
 
     public void handleExportMenuItem(ActionEvent actionEvent) {

@@ -56,7 +56,7 @@ public class TestResultList {
             TestResult existing = testResultList.get(i);
             if (existing.isId(testResult.getIdTR())) {
                 // Remove the item from the list
-                existing.setMarkedForDeletion(true);
+                //existing.setMarkedForDeletion(true);
                 testResultList.remove(i);
                 break; // Exit after removing the first match
             }

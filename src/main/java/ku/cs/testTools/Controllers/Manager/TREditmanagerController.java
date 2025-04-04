@@ -70,7 +70,7 @@ public class TREditmanagerController {
     private MenuItem saveMenuItem;
     private ArrayList<String> word = new ArrayList<>();
     private String trId;
-    private String projectName, directory, name;
+    private String projectName, name;
     private TestResultList testResultList = new TestResultList();
     //private ArrayList<Object> objects = (ArrayList) FXRouter.getData();
     private TestResultDetailList testResultDetailList = new TestResultDetailList();
@@ -109,22 +109,19 @@ public class TREditmanagerController {
             if (FXRouter.getData() != null) {
                 objects = (ArrayList) FXRouter.getData();
                 projectName = (String) objects.get(0);
-                directory = (String) objects.get(1);
-                name = (String) objects.get(2);
-                System.out.println(objects.get(2));
-                typeTR = (String) objects.get(3);
+                name = (String) objects.get(1);
+                typeTR = (String) objects.get(2);
                 System.out.println(typeTR);
-                System.out.println(objects.get(4));
                 onTableTestresult.isFocused();
                 selectedTRD();
                 selectedListView();
                 loadRepo();
                 selectedVbox();
                 //loadProject();
-                if (objects.get(4) != null){
-                    testResult = (TestResult) objects.get(4);
-                    testResultDetailList = (TestResultDetailList) objects.get(5);
-                    type = (String) objects.get(6);
+                if (objects.get(3) != null){
+                    testResult = (TestResult) objects.get(3);
+                    testResultDetailList = (TestResultDetailList) objects.get(4);
+                    type = (String) objects.get(5);
                     System.out.println(type);
 
                 }
@@ -783,12 +780,13 @@ public class TREditmanagerController {
         String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String noteTR = onTestNoteField.getText();
 //        String pn = testResult.getProjectName();
-        testResult = new TestResult(idTR, nameTR, dateTR, noteTR, projectName, name);
+        testResult = testResultList.findTRById(trId);
+        testResultList.addOrUpdateTestResult(testResult);
+
     }
     private void objects() {
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(name);
         objects.add(typeTR);
         objects.add(testResult);
@@ -815,7 +813,6 @@ public class TREditmanagerController {
         try {
             objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(name);
             objects.add(null);
             FXRouter.goTo("ir_manager",objects);
@@ -829,7 +826,6 @@ public class TREditmanagerController {
         try {
             objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(name);
             objects.add(null);
             FXRouter.goTo("test_flow_manager",objects);
@@ -843,7 +839,6 @@ public class TREditmanagerController {
         try {
             objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(name);
             objects.add(null);
             FXRouter.goTo("test_result_manager",objects);
@@ -871,14 +866,14 @@ public class TREditmanagerController {
             currentNewData();
 //            objects.add("edit");
 //            objects.add(selectedItem);
-            loadRepo();
-            testResultList.addOrUpdateTestResult(testResult);
+            //loadRepo();
             TestResultRepository testResultRepository = new TestResultRepository();
             TestResultDetailRepository testResultDetailRepository = new TestResultDetailRepository();
             for (TestResultDetail testResultDetail : testResultDetailList.getTestResultDetailList()){
                 testResultDetailRepository.updateTestResultDetail(testResultDetail);
             }
-            testResultRepository.updateTestResult(testResult);
+            System.out.println(testResult);
+            testResultRepository.saveOrUpdateTestResult(testResult);
 
 //            testResultList.addOrUpdateTestResult(testResult);
 //            TestResultRepository testResultRepository = new TestResultRepository();
@@ -888,7 +883,6 @@ public class TREditmanagerController {
 
             objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(name);
             objects.add(testResult);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -934,7 +928,6 @@ public class TREditmanagerController {
         try {
             objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(name);
             objects.add(null);
             FXRouter.goTo("test_result_manager",objects);
@@ -970,38 +963,38 @@ public class TREditmanagerController {
 
     @FXML
     void handleOpenMenuItem(ActionEvent actionEvent) throws IOException {
-        // Open file chooser
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Project");
-
-        // Set extension filter
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
-        fileChooser.getExtensionFilters().add(extFilter);
-
-        // Show open file dialog
-        File file = fileChooser.showOpenDialog(null);
-        if (file != null) {
-            System.out.println("Opening file: " + file.getName());
-
-            // Get the project name from the file name
-            projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
-
-            // Get the directory from the file path
-            directory = file.getParent();
-            loadRepo();
-            //send the project name and directory to HomePage
-            ArrayList<Object> objects = new ArrayList<>();
-            objects.add(projectName);
-            objects.add(directory);
-            objects.add(null);
-
-            // แก้พาท
-            String packageStr1 = "views/";
-            FXRouter.when("home_manager", packageStr1 + "home_manager.fxml", "TestTools | " + projectName);
-            FXRouter.goTo("home_manager", objects);
-        } else {
-            System.out.println("No file selected.");
-        }
+//        // Open file chooser
+//        FileChooser fileChooser = new FileChooser();
+//        fileChooser.setTitle("Open Project");
+//
+//        // Set extension filter
+//        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+//        fileChooser.getExtensionFilters().add(extFilter);
+//
+//        // Show open file dialog
+//        File file = fileChooser.showOpenDialog(null);
+//        if (file != null) {
+//            System.out.println("Opening file: " + file.getName());
+//
+//            // Get the project name from the file name
+//            projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
+//
+//            // Get the directory from the file path
+//            directory = file.getParent();
+//            loadRepo();
+//            //send the project name and directory to HomePage
+//            ArrayList<Object> objects = new ArrayList<>();
+//            objects.add(projectName);
+//            objects.add(directory);
+//            objects.add(null);
+//
+//            // แก้พาท
+//            String packageStr1 = "views/";
+//            FXRouter.when("home_manager", packageStr1 + "home_manager.fxml", "TestTools | " + projectName);
+//            FXRouter.goTo("home_manager", objects);
+//        } else {
+//            System.out.println("No file selected.");
+//        }
     }
     public void handleExportMenuItem(ActionEvent actionEvent) {
         boolean noteAdded = false;
