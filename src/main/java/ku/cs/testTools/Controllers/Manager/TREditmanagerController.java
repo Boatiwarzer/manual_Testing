@@ -844,7 +844,8 @@ public class TREditmanagerController {
             objects.add(projectName);
             objects.add(directory);
             objects.add(name);
-            objects.add(null);            FXRouter.goTo("test_result_manager",objects);
+            objects.add(null);
+            FXRouter.goTo("test_result_manager",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

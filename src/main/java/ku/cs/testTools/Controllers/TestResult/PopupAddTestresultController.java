@@ -192,18 +192,6 @@ public class PopupAddTestresultController {
             testCaseDetailList.addTestCaseDetail(detail);
         }
 
-        // โหลด TestResultList
-        testResultList = new TestResultList();
-        for (TestResult result : testResultRepository.getAllTestResults()) {
-            testResultList.addTestResult(result);
-        }
-
-        // โหลด TestResultDetailList
-        testResultDetailList = new TestResultDetailList();
-        for (TestResultDetail detail : testResultDetailRepository.getAllTestResultDetails()) {
-            testResultDetailList.addTestResultDetail(detail);
-        }
-
         // โหลด IRReportList
         iRreportList = new IRreportList();
         for (IRreport report : irReportRepository.getAllIRReports()) {

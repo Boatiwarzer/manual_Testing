@@ -311,7 +311,7 @@ public class TestScriptEditController {
         setDate();
         //testcase = testCaseList.findTCById(data[0]);
         if (testcase != null){
-            testcase = new TestCase(testcase.getIdTC(),name,testDateLabel.getText(),usecase,description,"-", testcase.getPosition(),preCon,post, testcase.getIdTC());
+            testcase = new TestCase(testcase.getIdTC(),name,testDateLabel.getText(),usecase,description,"-", testcase.getPosition(),preCon,post, testcase.getIdTC(),projectName,nameTester);
             String tc_combobox = testcase.getIdTC() + " : " + testcase.getNameTC();
             onTestcaseCombobox.setValue(tc_combobox);
         }
@@ -630,7 +630,7 @@ public class TestScriptEditController {
         String post = infoPostconLabel.getText();
 
         testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post,note,position);
-        testcase = new TestCase(testcase.getIdTC(),name,testDateLabel.getText(),useCase,description,"-", testcase.getPosition(),preCon,post, testcase.getIdTS());
+        testcase = new TestCase(testcase.getIdTC(),name,testDateLabel.getText(),useCase,description,"-", testcase.getPosition(),preCon,post, testcase.getIdTS(),projectName,nameTester);
         testcase.setProjectName(projectName);
         testcase.setTester(nameTester);
         testScript.setProjectName(projectName);
@@ -648,7 +648,7 @@ public class TestScriptEditController {
         String post = infoPostconLabel.getText();
 
         testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post,note,position);
-        testcase = new TestCase(testcase.getIdTC(),name,testDateLabel.getText(),useCase,description,"-", testcase.getPosition(),preCon,post, testcase.getIdTC());
+        testcase = new TestCase(testcase.getIdTC(),name,testDateLabel.getText(),useCase,description,"-", testcase.getPosition(),preCon,post, testcase.getIdTC(),projectName,nameTester);
         testScript.setProjectName(projectName);
         testScript.setTester(nameTester);
         testcase.setProjectName(projectName);

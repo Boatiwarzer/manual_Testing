@@ -107,12 +107,12 @@ public class PopupIREdit {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             nameTester = (String) objects.get(1);
-            iRreportDetailList = (IRreportDetailList) objects.get(2);
-            iRreport = (IRreport) objects.get(3);
+            iRreport = (IRreport) objects.get(2);
+            iRreportDetailList = (IRreportDetailList) objects.get(3);
 
             idIR = iRreport.getIdIR();
             IRreportDetail trd = iRreportDetailList.findIRDByirId(idIR);
-            loadRepo();
+            //loadRepo();
             if (objects.get(4) != null) {
                 iRreportDetail = (IRreportDetail) objects.get(4);
                 iRreportDetail = iRreportDetailList.findIRDById(iRreportDetail.getIdIRD());
@@ -384,8 +384,9 @@ public class PopupIREdit {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(nameTester);
-        objects.add(iRreportDetailList);
         objects.add(iRreport);
+        objects.add(iRreportDetailList);
+
     }
 
     @FXML

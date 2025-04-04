@@ -91,18 +91,24 @@ public class IRreportList {
     public void sort(Comparator<IRreport> cmp) {
         Collections.sort(iRreportList, cmp);
     }
-    public List<IRreport> findAllByIRreportId(String iRreportId, String projectName, String tester) {
-        List<IRreport> matchedIRreport = new ArrayList<>();
+    public void findAllByIRreportId(String projectName, String tester) {
+        IRreportList matchedIRreport = new IRreportList(); // เพื่อเก็บผลลัพธ์ที่ตรงกับเงื่อนไข
 
+        // วนลูปผ่าน iRreportList เพื่อหาผลลัพธ์ที่ตรงกับเงื่อนไข
         for (IRreport IRreport : iRreportList) {
-            if (IRreport.getIdIR().equals(iRreportId) &&  // ✅ ใช้ .equals()
-                    IRreport.getProjectName().trim().equalsIgnoreCase(projectName.trim()) &&
-                    IRreport.getTester().trim().equalsIgnoreCase(tester.trim())) {
+            // ตรวจสอบให้แน่ใจว่าไม่เป็น null ก่อนที่จะทำการเปรียบเทียบ
+            boolean projectMatches = IRreport.getProjectName() != null && IRreport.getProjectName().trim().equalsIgnoreCase(projectName.trim());
+            boolean testerMatches = IRreport.getTester() != null && IRreport.getTester().trim().equalsIgnoreCase(tester.trim());
 
-                matchedIRreport.add(IRreport);
+            // ถ้าทุกเงื่อนไขตรงกันก็ให้เพิ่ม IRreport ไปยัง matchedIRreport
+            if (projectMatches && testerMatches) {
+                matchedIRreport.addIRreport(IRreport);
             }
         }
 
-        return matchedIRreport;
+        // อัปเดต iRreportList ด้วยผลลัพธ์ที่ตรงกับเงื่อนไข
+        iRreportList = matchedIRreport.getIRreportList();  // ถ้าต้องการแทนที่ iRreportList ด้วยผลลัพธ์ที่กรองแล้ว
+        // หรือถ้าคุณไม่ต้องการแทนที่ iRreportList ก็สามารถจัดการแยกต่างหากได้
     }
+
 }

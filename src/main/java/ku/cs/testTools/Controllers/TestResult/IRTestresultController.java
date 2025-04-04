@@ -87,11 +87,11 @@ public class IRTestresultController {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             nameTester = (String) objects.get(1);
-            iRreportDetailList = (IRreportDetailList) objects.get(2);
-            iRreport = (IRreport) objects.get(3);
+            iRreport = (IRreport) objects.get(2);
             loadRepo();
             setDataIR();
             selectedIRD();
+            iRreportDetailList = (IRreportDetailList) objects.get(3);
 
             // ตั้งค่า TableView
             setTableInfo(iRreportDetailList);
