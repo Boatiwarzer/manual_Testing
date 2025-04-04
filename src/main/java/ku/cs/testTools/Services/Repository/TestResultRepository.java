@@ -2,36 +2,34 @@ package ku.cs.testTools.Services.Repository;
 
 import jakarta.persistence.*;
 import ku.cs.testTools.Models.TestToolModels.TestResult;
+import ku.cs.testTools.Services.JpaUtil;
 
 import java.util.List;
 
 public class TestResultRepository {
     private final EntityManager entityManager;
-    private final EntityManagerFactory emf;
 
     // Constructor to inject EntityManager
-
     public TestResultRepository() {
-        this.emf = Persistence.createEntityManagerFactory("test_db");
-        this.entityManager = this.emf.createEntityManager();
+        this.entityManager = JpaUtil.getEntityManager();
     }
 
-    public TestResultRepository(String pu) {
-        this.emf = Persistence.createEntityManagerFactory(pu);
-        this.entityManager = this.emf.createEntityManager();    }
+
 
     // Create a new TestScript
     public void saveOrUpdateTestResult(TestResult testResult) {
+        EntityTransaction transaction = entityManager.getTransaction();
+
         try {
-            entityManager.getTransaction().begin();
+            transaction.begin();
             entityManager.merge(testResult);
-            entityManager.getTransaction().commit();
-        }catch (RuntimeException e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
+            transaction.commit();
+        } catch (RuntimeException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
             }
             throw e;
-        }
+            }
 
     }
     public void findById(String id){
@@ -54,13 +52,15 @@ public class TestResultRepository {
 
     // Update an existing TestScript
     public void updateTestResult(TestResult testResult) {
+        EntityTransaction transaction = entityManager.getTransaction();
+
         try {
-            entityManager.getTransaction().begin();
-            entityManager.merge(testResult);  // Use merge for updating existing entities
-            entityManager.getTransaction().commit();
-        }catch (RuntimeException e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
+            transaction.begin();
+            entityManager.merge(testResult);
+            transaction.commit();
+        } catch (RuntimeException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
             }
             throw e;
         }

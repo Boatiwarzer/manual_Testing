@@ -81,7 +81,7 @@
                <children>
                   <AnchorPane prefHeight="700.0" prefWidth="270.0">
                      <children>
-                        <Button fx:id="onEditButton" layoutX="145.0" layoutY="15.0" mnemonicParsing="false" onAction="#onEditButton" prefHeight="30.0" prefWidth="110.0" style="-fx-background-color: #98aeca;" text="Edit">
+                        <Button fx:id="onEditButton" layoutX="145.0" layoutY="15.0" mnemonicParsing="false" onAction="#onEditButton" prefHeight="30.0" prefWidth="110.0" style="-fx-background-color: #98aeca;" text="Edit" visible="false">
                            <font>
                               <Font size="14.0" />
                            </font>

@@ -19,7 +19,7 @@ public class TestResultDetailRepository {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
-            entityManager.persist(testResultDetail);
+            entityManager.merge(testResultDetail);
             transaction.commit();
         } catch (RuntimeException e) {
             if (transaction.isActive()) {

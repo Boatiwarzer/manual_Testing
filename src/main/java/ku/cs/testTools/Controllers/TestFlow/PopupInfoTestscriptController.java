@@ -626,7 +626,7 @@ public class PopupInfoTestscriptController {
         String post = infoPostconLabel.getText();
         try {
 
-            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post,note,position);
+            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post,note,position,projectName,nameTester);
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(nameTester);
@@ -743,7 +743,7 @@ public class PopupInfoTestscriptController {
             String note = onTestNoteField.getText();
             String post = infoPostconLabel.getText();
 
-            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, post,note,position);
+            testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, post,note,position,projectName,nameTester);
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(nameTester);
@@ -784,7 +784,7 @@ public class PopupInfoTestscriptController {
         UUID newID = UUID.randomUUID();
 
         // Create a new TestScript object
-        testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, post, note, newID);
+        testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, post, note, position,projectName,nameTester);
         testScriptList.addOrUpdateTestScript(testScript);
         TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(position);
         testFlowPosition.setPositionID(newID);

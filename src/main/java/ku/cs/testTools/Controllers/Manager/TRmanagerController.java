@@ -110,6 +110,7 @@ public class TRmanagerController {
     private NoteList noteList;
     private TesterList testerList;
     private ManagerList managerList;
+    private boolean check = false;
 
     @FXML
     void initialize() {
@@ -117,7 +118,6 @@ public class TRmanagerController {
         if (FXRouter.getData() != null) {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
-//            directory = (String) objects.get(1);
             nameManager = (String) objects.get(1);
             if (objects.get(2) != null){
                 testResult = (TestResult) objects.get(2);
@@ -277,31 +277,28 @@ public class TRmanagerController {
             return;
         }
 
-        // แปลงค่าให้เป็นตัวพิมพ์เล็กทั้งหมดเพื่อให้เปรียบเทียบได้แบบ case-insensitive
+        // Convert to lowercase for case-insensitive comparison
         String projectNameLower = projectName.toLowerCase();
         String nameTesterLower = nameTester.toLowerCase();
 
-        testResultList.getTestResultList().forEach(testResult -> {
-            List<TestResult> testResults = testResultList.findAllByTestResultId(
-                    testResult.getIdTR(), projectNameLower, nameTesterLower);
-            loadListView(testResults);
-            selected();
-//            if (!testResults.isEmpty()) {
-//                TestResult firstResult = testResults.get(0);
-//                String testResultId = firstResult.getIdTR();
-//                testIDLabel.setText(testResultId);
-//                String testResultName = firstResult.getNameTR();
-//                testNameLabel.setText(testResultName);
-//                String testResultNote = firstResult.getNoteTR();
-//                infoNoteLabel.setText(testResultNote);
-//                String dateTR = testResult.getDateTR();
-//                testDateLabel.setText(dateTR);
-//                setTableInfo(firstResult);
-//
-//                System.out.println("select " + testResultList.findTRById(testIDLabel.getText()));
-//            }
-        });
+        System.out.println(testResultList);
+        // Optional: If you want to load the test results directly for specific conditions, you can uncomment this part:
+        testResultList.findAllByTestResultId(projectNameLower, nameTesterLower);
+        loadListView(testResultList);
+        selected();
+        //     showSelectedInfo();  // If you want to handle selection on load
+        //     if (!testResults.isEmpty()) {
+        //         TestResult firstResult = testResults.get(0);
+        //         testIDLabel.setText(firstResult.getIdTR());
+        //         testNameLabel.setText(firstResult.getNameTR());
+        //         infoNoteLabel.setText(firstResult.getNoteTR());
+        //         testDateLabel.setText(firstResult.getDateTR());
+        //         setTableInfo(firstResult);
+        //         System.out.println("select " + testResultList.findTRById(testIDLabel.getText()));
+        //     }
+         //});
     }
+
 
     public void handleExportMenuItem(ActionEvent actionEvent) {
         boolean noteAdded = false;
@@ -589,7 +586,6 @@ public class TRmanagerController {
 
     private void selected() {
         if (testResult != null){
-            onSearchList.getSelectionModel().getSelectedItems();
             onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue == null) {
                     clearInfo();
@@ -597,9 +593,17 @@ public class TRmanagerController {
                 } else {
                     clearInfo();
                     System.out.println("Selected TestResult ID: " + (newValue != null ? newValue.getIdTR() : "null"));
+
+                    // Show and hide buttons based on the selection
                     onEditButton.setVisible(newValue.getIdTR() != null);
                     onExportButton.setVisible(newValue.getIdTR() != null);
+
                     selectedTestResult = newValue;
+                    System.out.println(selectedTestResult);
+                    // Find and load the test results based on selected values
+//                    testResultList.findAllByTestResultId(selectedTestResult.getIdTR(), projectNameLower, nameTesterLower);
+//                    loadListView(testResultList);
+                    System.out.println(testResultList);
                     showInfo(newValue);
                 }
             });
@@ -610,6 +614,8 @@ public class TRmanagerController {
                     selectedTestResult = null;
                 } else {
                     showInfo(newValue);
+//                    testResultList.findAllByTestResultId(selectedTestResult.getIdTR(), projectNameLower, nameTesterLower);
+//                    loadListView(testResultList);
                     selectedTestResult = newValue;
                 }
             });
@@ -644,7 +650,7 @@ public class TRmanagerController {
         System.out.println("select " + testResultList.findTRById(testIDLabel.getText()));
 
     }
-    private void loadListView(List<TestResult> testResults) {
+    private void loadListView(TestResultList testResultList) {
         onEditButton.setVisible(false);
         onExportButton.setVisible(false);
         onSearchList.refresh(); // รีเฟรช ListView
@@ -967,7 +973,6 @@ public class TRmanagerController {
         try {
             objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(nameManager);
             objects.add("editTR");
             objects.add(selectedTestResult);

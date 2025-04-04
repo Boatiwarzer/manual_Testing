@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Data
 public class TestResultList {
@@ -55,7 +56,7 @@ public class TestResultList {
             TestResult existing = testResultList.get(i);
             if (existing.isId(testResult.getIdTR())) {
                 // Remove the item from the list
-                existing.setMarkedForDeletion(true);
+                //existing.setMarkedForDeletion(true);
                 testResultList.remove(i);
                 break; // Exit after removing the first match
             }
@@ -64,20 +65,28 @@ public class TestResultList {
     public void sort(Comparator<TestResult> cmp) {
         Collections.sort(testResultList, cmp);
     }
-    public List<TestResult> findAllByTestResultId(String testResultId, String projectName, String tester) {
-        List<TestResult> matchedTestResult = new ArrayList<>();
+    public void findAllByTestResultId(String projectName, String tester) {
+        TestResultList result = new TestResultList(); // เพื่อเก็บผลลัพธ์ที่ค้นพบ
 
-        for (TestResult testResult : testResultList) {
-            if (testResult.getIdTR().equals(testResultId) &&  // ✅ ใช้ .equals()
-                    testResult.getProjectName().trim().equalsIgnoreCase(projectName.trim()) &&
-                    testResult.getTester().trim().equalsIgnoreCase(tester.trim())) {
+        // วนลูปผ่านรายการ testResultList
+        for (TestResult tr : testResultList) {
+            // ตรวจสอบให้แน่ใจว่าไม่เป็นค่า null และเปรียบเทียบข้อมูลได้
+            boolean projectMatches = tr.getProjectName() != null && tr.getProjectName().trim().equalsIgnoreCase(projectName.trim());
+            boolean testerMatches = tr.getTester() != null && tr.getTester().trim().equalsIgnoreCase(tester.trim());
 
-                matchedTestResult.add(testResult);
+            // ถ้าทุกเงื่อนไขตรงกัน ก็เพิ่มผลลัพธ์ลงใน result
+            if (projectMatches && testerMatches) {
+                result.addTestResult(tr);
             }
         }
 
-        return matchedTestResult;
+        // ถ้าต้องการอัปเดต testResultList ด้วยผลลัพธ์ที่กรองแล้ว
+        testResultList = result.getTestResultList();  // ถ้าต้องการเปลี่ยน testResultList
+        // ถ้าไม่อยากเปลี่ยน testResultList ให้คืนค่าผลลัพธ์หรือจัดการผลลัพธ์แยกออกไป
     }
+
+
+
 //    @Override
 //    public String toString() {
 //        return "TestResultList{" +

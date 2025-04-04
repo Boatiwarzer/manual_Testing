@@ -57,7 +57,7 @@ public class IRmanagerController {
     private VBox projectList;
     private TitledPane selectedTitledPane;
     private String nameTester;
-    private String projectName, directory, IRreportId; // directory, projectName
+    private String projectName, IRreportId; // directory, projectName
     private IRreport iRreport = new IRreport();
     private IRreport selectedIRreport = new IRreport();
     private IRreportList iRreportList = new IRreportList();
@@ -105,6 +105,7 @@ public class IRmanagerController {
     private TesterList testerList;
     private ManagerList managerList;
     private String nameManager;
+    private boolean check = false;
 
     @FXML
     void initialize() {
@@ -122,7 +123,6 @@ public class IRmanagerController {
             //loadProject();
             setTable();
 //            loadListView(iRreportList);
-            selected();
             loadList();
             handleSelection();
             for (IRreport iRreport : iRreportList.getIRreportList()) {
@@ -133,7 +133,19 @@ public class IRmanagerController {
         }
         setSort();
     }
+    private void loadStatusButton() {
+        ManagerRepository managerRepository = new ManagerRepository();
+        Manager manager = managerRepository.getManagerByProjectName(projectName);
 
+        if (manager != null) {  // ตรวจสอบว่าพบ Manager หรือไม่
+            String status = manager.getStatus();
+            check = Boolean.parseBoolean(status);
+            onEditButton.setVisible(check);
+            System.out.println("Manager Status: " + status);
+        } else {
+            System.out.println("No Manager found for project: " + projectName);
+        }
+    }
     private void setSort() {
         onSortCombobox.setItems(FXCollections.observableArrayList("All", "In Manager", "In Developer", "In Tester", "Withdraw", "Done"));
         onSortCombobox.setValue("All");
@@ -274,12 +286,9 @@ public class IRmanagerController {
         // แปลงค่าให้เป็นตัวพิมพ์เล็กทั้งหมดเพื่อให้เปรียบเทียบได้แบบ case-insensitive
         String projectNameLower = projectName.toLowerCase();
         String nameTesterLower = nameTester.toLowerCase();
-
-        iRreportList.getIRreportList().forEach(iRreport -> {
-            List<IRreport> iRreports = iRreportList.findAllByIRreportId(
-                    iRreport.getTrIR(), projectNameLower, nameTesterLower);
-            loadListView(iRreports);
-            selected();
+        iRreportList.findAllByIRreportId(projectNameLower, nameTesterLower);
+        loadListView(iRreportList);
+        selected();
 //            if (!iRreports.isEmpty()) {
 //                IRreportId = iRreport.getIdIR();
 //                testIDLabel.setText(IRreportId);
@@ -294,7 +303,7 @@ public class IRmanagerController {
 //                System.out.println("select " + iRreportList.findIRById(testIDLabel.getText()));
 //
 //            }
-        });
+        //});
     }
     private void loadRepo(){
         // สร้างออบเจ็กต์ของแต่ละ Repository
@@ -493,7 +502,6 @@ public class IRmanagerController {
         loadManagerStatus();
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(nameManager);
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");
@@ -539,43 +547,42 @@ public class IRmanagerController {
 
     @FXML
     void handleOpenMenuItem(ActionEvent actionEvent) throws IOException {
-        // Open file chooser
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Project");
-
-        // Set extension filter
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
-        fileChooser.getExtensionFilters().add(extFilter);
-
-        // Show open file dialog
-        File file = fileChooser.showOpenDialog(null);
-        if (file != null) {
-            System.out.println("Opening file: " + file.getName());
-
-            // Get the project name from the file name
-            projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
-
-            // Get the directory from the file path
-            directory = file.getParent();
-            loadRepo();
-            //send the project name and directory to HomePage
-            ArrayList<Object> objects = new ArrayList<>();
-            objects.add(projectName);
-            objects.add(directory);
-            objects.add(null);
-
-            // แก้พาท
-            String packageStr1 = "views/";
-            FXRouter.when("home_manager", packageStr1 + "home_manager.fxml", "TestTools | " + projectName);
-            FXRouter.goTo("home_manager", objects);
-        } else {
-            System.out.println("No file selected.");
-        }
+//        // Open file chooser
+//        FileChooser fileChooser = new FileChooser();
+//        fileChooser.setTitle("Open Project");
+//
+//        // Set extension filter
+//        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+//        fileChooser.getExtensionFilters().add(extFilter);
+//
+//        // Show open file dialog
+//        File file = fileChooser.showOpenDialog(null);
+//        if (file != null) {
+//            System.out.println("Opening file: " + file.getName());
+//
+//            // Get the project name from the file name
+//            projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
+//
+//            // Get the directory from the file path
+//            directory = file.getParent();
+//            loadRepo();
+//            //send the project name and directory to HomePage
+//            ArrayList<Object> objects = new ArrayList<>();
+//            objects.add(projectName);
+//            objects.add(directory);
+//            objects.add(null);
+//
+//            // แก้พาท
+//            String packageStr1 = "views/";
+//            FXRouter.when("home_manager", packageStr1 + "home_manager.fxml", "TestTools | " + projectName);
+//            FXRouter.goTo("home_manager", objects);
+//        } else {
+//            System.out.println("No file selected.");
+//        }
     }
     public void objects(){
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(nameManager);
         objects.add(null);
     }
@@ -716,7 +723,7 @@ public class IRmanagerController {
         System.out.println("select " + iRreportList.findIRById(testIDLabel.getText()));
 
     }
-    private void loadListView(List<IRreport> iRreports) {
+    private void loadListView(IRreportList iRreportList) {
         onEditButton.setVisible(false);
         onExportButton.setVisible(false);
         onSearchList.refresh();
@@ -734,10 +741,10 @@ public class IRmanagerController {
         for (Manager manager : managers) {
             managerList.addManager(manager);
 
-            if (iRreports != null) {
-                iRreports.sort(new IRreportComparable());
+            if (iRreportList != null) {
+                iRreportList.sort(new IRreportComparable());
 
-                for (IRreport iRreport : iRreports) {
+                for (IRreport iRreport : iRreportList.getIRreportList()) {
                     if (!"null".equals(iRreport.getDateIR()) && !"true".equals(manager.getStatus())) {
                         onSearchList.getItems().add(iRreport);
                     }
@@ -745,7 +752,7 @@ public class IRmanagerController {
             }
         }
 
-        if (iRreports == null) {
+        if (iRreportList == null) {
             setTable();
             clearInfo();
         }
@@ -1007,7 +1014,6 @@ public class IRmanagerController {
         try {
             objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(directory);
             objects.add(nameManager);
             objects.add("editIR");
             objects.add(selectedIRreport);

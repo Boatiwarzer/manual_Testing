@@ -34,17 +34,8 @@ public class TestResult {
     @Column(name = "tester", nullable = false, precision = 10)
     private String tester;
 
-    @Column(name = "markedForDeletion")  // Add the Column annotation
-    private boolean markedForDeletion = false;
 
-    public TestResult(String idTR, String nameTR, String dateTR, String noteTR) {
-        this.idTR = idTR;
-        this.nameTR = nameTR;
-        this.dateTR = dateTR;
-//        this.noteTR = noteTR;
-        this.noteTR = "-";
-//        this.projectName = projectName;
-    }
+
 
     public TestResult(String idTR, String nameTR, String dateTR, String noteTR, String projectName, String tester) {
         this.idTR = idTR;
