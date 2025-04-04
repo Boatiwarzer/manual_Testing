@@ -114,7 +114,7 @@ public class PopupIRmanager {
             IRreportDetail trd = iRreportDetailList.findIRDByirId(idIR);
             System.out.println(idIR + " " + idTrd);
             type = (String) objects.get(6);
-            loadRepo();
+            //loadRepo();
             if (objects.get(7) != null && type.equals("edit")) {
                 iRreportDetail = (IRreportDetail) objects.get(7);
                 iRreportDetail = iRreportDetailList.findIRDById(iRreportDetail.getIdIRD());
