@@ -107,10 +107,15 @@
                               </TitledPane>
                               <ScrollPane prefWidth="240.0">
                                  <content>
-                                    <VBox fx:id="projectList" prefHeight="254.0" prefWidth="230.0" />
+                                    <VBox fx:id="projectList" prefHeight="280.0" prefWidth="235.0" />
                                  </content>
                               </ScrollPane>
-                              <ListView fx:id="onSearchList" prefHeight="200.0" prefWidth="200.0" />
+                              <Label alignment="BOTTOM_LEFT" prefHeight="30.0" text="IR Report List">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <ListView fx:id="onSearchList" prefHeight="215.0" prefWidth="200.0" />
                            </children>
                         </VBox>
                      </children>

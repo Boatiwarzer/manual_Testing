@@ -531,14 +531,23 @@ public class TestScriptEditController {
         }
 
         //Add items to the table
-        for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()) {
-            if (testScriptDetail.getIdTS().trim().equals(testScript.getIdTS().trim())){
-                onTableTestscript.getItems().add(testScriptDetail);
-            }
+//        for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()) {
+//            if (testScriptDetail.getIdTS().trim().equals(testScript.getIdTS().trim())){
+//                onTableTestscript.getItems().add(testScriptDetail);
+//            }
+//        }
+        List<TestScriptDetail> sortedList = testScriptDetailList.getTestScriptDetailList().stream()
+                .filter(testScriptDetail -> testScriptDetail.getIdTS().trim().equals(testScript.getIdTS().trim()))
+                .sorted(Comparator.comparingInt(testScriptDetail -> {
+                    try {
+                        return Integer.parseInt(testScriptDetail.getTestNo().trim());
+                    } catch (NumberFormatException e) {
+                        return Integer.MAX_VALUE; // ถ้าแปลงไม่ได้ ให้ค่ามากสุดเพื่อไปอยู่ท้าย
+                    }
+                }))
+                .collect(Collectors.toList());
 
-        }
-        //ObservableList<TestScriptDetail> data = FXCollections.observableArrayList(testScriptDetailList.getTestScriptDetailList());
-        //onTableTestscript.getItems().addAll(data);
+        onTableTestscript.getItems().addAll(sortedList);
     }
 
     public void setTable() {
@@ -648,7 +657,7 @@ public class TestScriptEditController {
         String post = infoPostconLabel.getText();
 
         testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post,note,position);
-        testcase = new TestCase(testcase.getIdTC(),name,testDateLabel.getText(),useCase,description,"-", testcase.getPosition(),preCon,post, testcase.getIdTC());
+        testcase = new TestCase(testcase.getIdTC(),name,testDateLabel.getText(),useCase,description,"-", testcase.getPosition(),preCon,post, testcase.getIdTS());
         testScript.setProjectName(projectName);
         testScript.setTester(nameTester);
         testcase.setProjectName(projectName);

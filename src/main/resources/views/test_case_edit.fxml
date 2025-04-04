@@ -123,7 +123,7 @@
                                           <Font size="18.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="onTestNameField" prefHeight="30.0" prefWidth="360.0">
+                                    <TextField fx:id="onTestNameField" editable="false" prefHeight="30.0" prefWidth="360.0">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
@@ -163,7 +163,7 @@
                                           <Font size="18.0" />
                                        </font>
                                     </Label>
-                                    <ComboBox fx:id="onTestscriptCombobox" prefHeight="30.0" prefWidth="360.0">
+                                    <ComboBox fx:id="onTestscriptCombobox" disable="true" prefHeight="30.0" prefWidth="360.0">
                                        <cursor>
                                           <Cursor fx:constant="TEXT" />
                                        </cursor>

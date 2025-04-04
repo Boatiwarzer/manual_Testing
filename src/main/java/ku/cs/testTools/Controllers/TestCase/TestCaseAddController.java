@@ -562,9 +562,21 @@ public class TestCaseAddController {
         }
 
         //Add items to the table
-        for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()) {
-            onTableTestcase.getItems().add(testCaseDetail);
-        }
+//        for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()) {
+//            onTableTestcase.getItems().add(testCaseDetail);
+//        }
+        List<TestCaseDetail> sortedList = testCaseDetailList.getTestCaseDetailList().stream()
+                .filter(testCaseDetail -> testCaseDetail.getIdTC().trim().equals(testcase.getIdTC().trim()))
+                .sorted(Comparator.comparingInt(testCaseDetail -> {
+                    try {
+                        return Integer.parseInt(testCaseDetail.getTestNo().trim());
+                    } catch (NumberFormatException e) {
+                        return Integer.MAX_VALUE; // ถ้าแปลงไม่ได้ ให้ค่ามากสุดเพื่อไปอยู่ท้าย
+                    }
+                }))
+                .collect(Collectors.toList());
+
+        onTableTestcase.getItems().addAll(sortedList);
 
     }
 

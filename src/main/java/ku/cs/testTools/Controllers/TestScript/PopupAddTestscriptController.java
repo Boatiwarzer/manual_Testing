@@ -91,14 +91,17 @@ public class PopupAddTestscriptController {
 
     @FXML
     void onCancelButton(ActionEvent event) {
-        try {
-            objects();
-            clearInfo();
-            route(event, objects);
-        } catch (IOException e) {
-            System.err.println("ไปที่หน้า home ไม่ได้");
-            System.err.println("ให้ตรวจสอบการกำหนด route");
-        }
+//        try {
+//            objects();
+//            clearInfo();
+//            route(event, objects);
+//        } catch (IOException e) {
+//            System.err.println("ไปที่หน้า home ไม่ได้");
+//            System.err.println("ให้ตรวจสอบการกำหนด route");
+//        }
+        Node source = (Node) event.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
     }
 
     private void objects() {

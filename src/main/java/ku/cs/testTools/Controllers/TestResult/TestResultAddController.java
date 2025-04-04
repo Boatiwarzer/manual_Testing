@@ -109,6 +109,7 @@ public class TestResultAddController {
                 testResult = (TestResult) objects.get(3);
                 testResultDetailList = (TestResultDetailList) objects.get(4);
                 type = (String) objects.get(5);
+//                testResultDetailListDelete = (TestResultDetailList) objects.get(6);
                 setDataTR();
             } else {
                 randomId();
@@ -126,7 +127,7 @@ public class TestResultAddController {
     }
 
     private void setSort() {
-        onSortCombobox.setItems(FXCollections.observableArrayList("All", "Approved", "Not approved", "Waiting"));
+        onSortCombobox.setItems(FXCollections.observableArrayList("All", "Approved", "Not Approved", "Waiting"));
         onSortCombobox.setValue("All");
     }
     public void handleExportMenuItem(ActionEvent actionEvent) {
@@ -922,7 +923,7 @@ public class TestResultAddController {
             String nameTR = onTestNameField.getText();
             String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             String noteTR = onTestNoteField.getText();
-            testResult = new TestResult(idTR, nameTR, dateTR, noteTR,projectName, name)       ;
+            testResult = new TestResult(idTR, nameTR, dateTR, noteTR, projectName, name)       ;
 
             TestResultRepository testResultRepository = new TestResultRepository();
             TestResultDetailRepository testResultDetailRepository = new TestResultDetailRepository();

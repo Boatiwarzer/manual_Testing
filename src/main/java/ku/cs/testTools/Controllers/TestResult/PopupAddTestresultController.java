@@ -19,6 +19,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import ku.cs.testTools.Models.Manager.Tester;
 import ku.cs.testTools.Services.Repository.*;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
@@ -591,11 +592,18 @@ public class PopupAddTestresultController {
                 }
                 for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()){
 
-                    System.out.println(tsId);
-                    TestCase ts = testCaseList.findTCByIdTS(selectedId);
-                    System.out.println(ts);
+                    System.out.println(tsId + " tsId");
+//                    TestCaseRepository testCaseRepository = new TestCaseRepository();
+//
+//                    List<TestCase> allTestCases = testCaseRepository.getAllTestCases();
+//
+//                    List<TestCase> testCaseInProject = allTestCases.stream()
+//                            .filter(tester -> tester.getProjectName().equals(projectName)) // เช็คว่า projectName ตรงกัน
+//                            .collect(Collectors.toList());
+                    TestCase ts = testCaseList.findTCByIdTS(tsId);
+                    System.out.println(ts + " ts");
                     String tc = ts.getIdTC();
-                    System.out.println(tc);
+                    System.out.println(tc + " tc");
                     String[] partsTc = tc.split(" : "); // แยกข้อความตาม " : "
                     String id = partsTc[0].trim();
                     if (testCaseDetail.getIdTC().equals(id)) {
@@ -737,7 +745,7 @@ public class PopupAddTestresultController {
 
         try {
             objects();
-            clearInfo();
+//            clearInfo();
             route(event, objects);
             FXRouter.setData3(nameTester);
         } catch (IOException e) {

@@ -64,6 +64,8 @@ public class IRTestresultController {
     private IRreportList iRreportList = new IRreportList();
     private IRreportDetail iRreportDetail = new IRreportDetail();
     private IRreportDetailList iRreportDetailList = new IRreportDetailList();
+    private IRreportDetailList iRreportDetailListDelete;
+    private IRreportDetailList iRreportDetailListTemp = new IRreportDetailList();
     private TestResultList testResultList = new TestResultList();
     private TestResultDetailList testResultDetailList = new TestResultDetailList();
     private TestScriptDetailList testScriptDetailList = new TestScriptDetailList();
@@ -83,30 +85,38 @@ public class IRTestresultController {
         setTable();
         setButtonVisible();
         setSort();
-        try {
+        if (FXRouter.getData() != null) {
             ArrayList<Object> objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             nameTester = (String) objects.get(1);
-            iRreportDetailList = (IRreportDetailList) objects.get(2);
-            iRreport = (IRreport) objects.get(3);
-            loadRepo();
-            setDataIR();
+            onTableIR.isFocused();
+
             selectedIRD();
+            loadRepo();
+
+            if (objects.get(3) != null) {
+                iRreportDetailList = (IRreportDetailList) objects.get(2);
+                iRreport = (IRreport) objects.get(3);
+//                iRreportDetailListDelete = (IRreportDetailList) objects.get(4);
+            } else {
+                System.out.println(iRreport);
+            }
+            setDataIR();
+
+//            for (IRreportDetail iRreportDetail : iRreportDetailListTemp.getIRreportDetailList()) {
+//                iRreportDetailList.addOrUpdateIRreportDetail(iRreportDetail);
+//            }
 
             // ตั้งค่า TableView
             setTableInfo(iRreportDetailList);
 
-            if (iRreport != null ) {
-                IRNameLabel.setText("Name : " + iRreport.getNameIR()); // แสดงชื่อ
+            if (iRreport != null) {
+                IRNameLabel.setText(iRreport.getNameIR()); // แสดงชื่อ
                 IRIDLabel.setText(iRreport.getIdIR());    // แสดง ID
                 testDateLabel.setText(iRreport.getDateIR());
                 infoNoteLabel.setText(iRreport.getNoteIR());
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-
     }
 
     private void setSort() {
@@ -185,9 +195,9 @@ public class IRTestresultController {
         }
 
         // โหลด IRDetailList
-        iRreportDetailList = new IRreportDetailList();
+        iRreportDetailListTemp = new IRreportDetailList();
         for (IRreportDetail detail : irDetailRepository.getAllIRReportDetIL()) {
-            iRreportDetailList.addOrUpdateIRreportDetail(detail);
+            iRreportDetailListTemp.addOrUpdateIRreportDetail(detail);
         }
 
         // โหลด ConnectionList
@@ -422,10 +432,12 @@ public class IRTestresultController {
                             setGraphic(null); // หากไม่มีข้อมูลให้เคลียร์กราฟิก
                         } else {
                             // แยก path จากข้อมูล
-                            String[] parts = item.split(" : ");
-                            String imagePath = parts.length > 1 ? parts[1] : ""; // ใช้ส่วนหลังจาก " : "
+                            String[] images = item.split(" \\| ");
+                            String firstImage = images[0]; // เอารายการแรก
+                            String[] parts = firstImage.split(" : ");
+                            String firstImagePath = parts.length > 1 ? parts[1] : "";
 
-                            File file = new File(imagePath);
+                            File file = new File(firstImagePath);
                             if (file.exists()) {
                                 Image image = new Image(file.toURI().toString());
                                 imageView.setImage(image);
@@ -434,7 +446,7 @@ public class IRTestresultController {
                                 imageView.setPreserveRatio(true); // รักษาสัดส่วนภาพ
                                 setGraphic(imageView); // แสดงผลในเซลล์
                             } else {
-                                setGraphic(null); // path ไม่ถูกต้อง ให้เว้นว่าง
+                                setGraphic(null); // หาก path ไม่ถูกต้อง ให้เว้นว่าง
                             }
                         }
                     }
@@ -581,8 +593,11 @@ public class IRTestresultController {
         try {
             currentNewData();
             objects();
-            objects.add(selectedItem);
+//            objects.add(selectedItem);
             if (selectedItem != null){
+                Node source = (Node) event.getSource();
+                Stage stage = (Stage) source.getScene().getWindow();
+                stage.close();
                 FXRouter.popup("popup_add_ir",objects,true);
             }
         } catch (IOException e) {
@@ -642,7 +657,10 @@ public class IRTestresultController {
             alert.setHeaderText(null);
             alert.setContentText("IR report saved successfully!");
             alert.showAndWait();
-            FXRouter.popup("test_result_ir",objects,true);
+            FXRouter.popup("test_result_ir",objects);
+            Node source = (Node) event.getSource();
+            Stage stage = (Stage) source.getScene().getWindow();
+            stage.close();
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -656,7 +674,7 @@ public class IRTestresultController {
         String noteIR = infoNoteLabel.getText();
         String idTr = iRreport.getTrIR();
 //        String pn = iRreport.getProjectName();
-        iRreport = new IRreport(idIR, nameIR, dateIR, noteIR, idTr);
+        iRreport = new IRreport(idIR, nameIR, dateIR, noteIR, idTr, projectName, nameTester);
     }
     private void setDataIR() {
         irId = iRreport.getIdIR();
@@ -674,6 +692,7 @@ public class IRTestresultController {
         objects.add(nameTester);
         objects.add(iRreportDetailList);
         objects.add(iRreport);
+        objects.add(selectedItem);
     }
 
     void selectedIRD() {
