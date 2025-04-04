@@ -110,7 +110,6 @@ public class TRmanagerController {
     private NoteList noteList;
     private TesterList testerList;
     private ManagerList managerList;
-    private boolean check = false;
 
     @FXML
     void initialize() {
@@ -146,9 +145,9 @@ public class TRmanagerController {
     private void loadList() {
         Map<String, Set<String>> projectTestersMap = new HashMap<>();
 
-        testFlowPositionList.getPositionList().forEach(testFlowPosition -> {
-            String projectName = testFlowPosition.getProjectName();
-            String tester = testFlowPosition.getTester() + "(Tester)"; // ต่อท้าย "(Tester)"
+        testResultList.getTestResultList().forEach(testResult -> {
+            String projectName = testResult.getProjectName();
+            String tester = testResult.getTester() + "(Tester)"; // ต่อท้าย "(Tester)"
 
             // จัดกลุ่ม Tester ตาม Project Name
             projectTestersMap.computeIfAbsent(projectName, k -> new HashSet<>()).add(tester);

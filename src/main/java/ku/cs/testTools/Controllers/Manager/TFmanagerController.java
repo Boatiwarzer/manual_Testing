@@ -100,8 +100,7 @@ public class TFmanagerController {
         if (FXRouter.getData() != null){
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
-            directory = (String) objects.get(1);
-            nameManager = (String) objects.get(2);
+            nameManager = (String) objects.get(1);
         }
         loadProject();
         loadList();
@@ -481,7 +480,6 @@ public class TFmanagerController {
         loadManagerStatus();
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(nameManager);
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");

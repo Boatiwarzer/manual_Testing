@@ -72,6 +72,7 @@ public class UseCaseController {
     private TestFlowPositionList testFlowPositionList = new TestFlowPositionList();
     private ConnectionList connectionList = new ConnectionList();
     private String nameTester;
+    private boolean check;
 
     @FXML
     void initialize() {
@@ -113,7 +114,7 @@ public class UseCaseController {
 
         if (manager != null) {  // ตรวจสอบว่าพบ Manager หรือไม่
             String status = manager.getStatus();
-            boolean check = Boolean.parseBoolean(status);
+            check = Boolean.parseBoolean(status);
             onCreateButton.setVisible(check);
             onEditButton.setVisible(check);
             System.out.println("Manager Status: " + status);
@@ -257,7 +258,10 @@ public class UseCaseController {
             } else {
                 clearInfo();
                 System.out.println("Selected UseCase ID: " + (newValue != null ? newValue.getUseCaseID() : "null"));
-                onEditButton.setVisible(newValue.getUseCaseID() != null);
+                if (check){
+                    onEditButton.setVisible(newValue.getUseCaseID() != null);
+
+                }
                 showInfo(newValue);
                 selectedUseCase = newValue;
             }
