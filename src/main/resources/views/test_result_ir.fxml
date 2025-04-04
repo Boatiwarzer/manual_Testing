@@ -67,7 +67,7 @@
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="infoNoteLabel" editable="false" onAction="#onTestNoteField" prefHeight="30.0" prefWidth="780.0">
+                  <TextField fx:id="infoNoteLabel" onAction="#onTestNoteField" prefHeight="30.0" prefWidth="780.0">
                      <font>
                         <Font size="14.0" />
                      </font>

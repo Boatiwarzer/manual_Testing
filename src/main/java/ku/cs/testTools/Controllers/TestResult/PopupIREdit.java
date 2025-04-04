@@ -92,6 +92,7 @@ public class PopupIREdit {
     private String typeIR;
     private IRreportList irReportList;
     private IRreportDetailList irDetailList;
+    private IRreportDetailList iRreportDetailListDelete;
     private NoteList noteList;
     private TesterList testerList;
     private ManagerList managerList;
@@ -107,16 +108,18 @@ public class PopupIREdit {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             nameTester = (String) objects.get(1);
-            iRreport = (IRreport) objects.get(2);
-            iRreportDetailList = (IRreportDetailList) objects.get(3);
+            iRreportDetailList = (IRreportDetailList) objects.get(2);
+            iRreport = (IRreport) objects.get(3);
 
             idIR = iRreport.getIdIR();
             IRreportDetail trd = iRreportDetailList.findIRDByirId(idIR);
-            //loadRepo();
+//            loadRepo();
             if (objects.get(4) != null) {
                 iRreportDetail = (IRreportDetail) objects.get(4);
+//                iRreportDetailListDelete = (IRreportDetailList) objects.get(5);
                 iRreportDetail = iRreportDetailList.findIRDById(iRreportDetail.getIdIRD());
                 id = iRreportDetail.getIdIRD();
+                System.out.println(id);
                 setTextEdit();
             }else {
                 randomId();
@@ -384,20 +387,22 @@ public class PopupIREdit {
         objects = new ArrayList<>();
         objects.add(projectName);
         objects.add(nameTester);
-        objects.add(iRreport);
         objects.add(iRreportDetailList);
-
+        objects.add(iRreport);
+        objects.add(iRreportDetailListDelete);
     }
 
     @FXML
     void onCancelButton(ActionEvent event) {
         try {
             objects();
-            clearInfo();
             FXRouter.popup("test_result_ir", objects);
-        } catch (IOException e) {
-            System.err.println("ไปที่หน้า home ไม่ได้");
-            System.err.println("ให้ตรวจสอบการกำหนด route");
+            Node source = (Node) event.getSource();
+            Stage stage = (Stage) source.getScene().getWindow();
+            stage.close();
+            event.consume();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -407,34 +412,42 @@ public class PopupIREdit {
             return; // ถ้าข้อมูลไม่ครบ หยุดการทำงานทันที
         }
 
-        String TrNo = onTestNo.getText();
-        String tester = onTester.getText();
-        String IdTS = onTestscriptIDComboBox.getText();
-        String IdTC = onTestcaseIDComboBox.getText();
-        String descript = onDescription.getText();
-        String condition = onCondition.getText();
-        String image = onImage.getText();
-        String retest = onRetest.getText();
-        String manager = nameTester;
-        String status = onStatusComboBox.getValue();
-        String priority = onPriorityComboBox.getValue();
-        String remark = onRemark.getText();
-        IRreportDetail idTRD = iRreportDetailList.findTRDByIrd(id);
-        String trd = idTRD.getIdTRD();
-        String rca = onRCA.getText().replace(",", "|");
-
-        iRreportDetail = new IRreportDetail(id, TrNo, tester, IdTS, IdTC, descript, condition, image, retest, priority, rca, manager, status, remark, idIR, trd);
-        iRreportDetailList.addOrUpdateIRreportDetail(iRreportDetail);
-
         try {
-            objects();
-            clearInfo();
-            FXRouter.popup("test_result_ir", objects);
-        } catch (IOException e) {
-            System.err.println("ไปที่หน้า home ไม่ได้");
-            System.err.println("ให้ตรวจสอบการกำหนด route");
+            String TrNo = onTestNo.getText();
+            String tester = onTester.getText();
+            String IdTS = onTestscriptIDComboBox.getText();
+            String IdTC = onTestcaseIDComboBox.getText();
+            String descript = onDescription.getText();
+            String condition = onCondition.getText();
+            String image = onImage.getText();
+            String retest = onRetest.getText();
+            String manager = nameTester;
+            String status = onStatusComboBox.getValue();
+            String priority = onPriorityComboBox.getValue();
+            String remark = onRemark.getText();
+            IRreportDetail idTRD = iRreportDetailList.findTRDByIrd(id);
+            String trd = idTRD.getIdTRD();
+            String rca = onRCA.getText().replace(",", "|");
+
+            iRreportDetail = new IRreportDetail(id, TrNo, tester, IdTS, IdTC, descript, condition, image, retest, priority, rca, manager, status, remark, idIR, trd);
+            iRreportDetailList.addOrUpdateIRreportDetail(iRreportDetail);
+
+//            objects();
+            objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(nameTester);
+            objects.add(iRreportDetailList);
+            objects.add(iRreport);
+
+            FXRouter.newPopup("test_result_ir", objects, true);
+            Node source = (Node) event.getSource();
+            Stage stage = (Stage) source.getScene().getWindow();
+            stage.close();
+            System.out.println("confirm popup   " + iRreportDetailList);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        isGenerated = false;
+//        isGenerated = false;
     }
 
     @FXML

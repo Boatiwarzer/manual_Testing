@@ -93,7 +93,7 @@
                 </Menu>
             </menus>
           </MenuBar>
-            <HBox alignment="BOTTOM_CENTER" prefHeight="35.0" prefWidth="1360.0" spacing="150.0">
+            <HBox alignment="BOTTOM_CENTER" prefHeight="40.0" prefWidth="1386.0" spacing="150.0">
                <children>
                   <Hyperlink fx:id="onClickTestflow" onAction="#onClickTestflow" text="Test Flow">
                      <font>
@@ -145,7 +145,7 @@
                   </TitledPane>
                   <ScrollPane>
                      <content>
-                        <VBox fx:id="projectList" prefHeight="255.0" prefWidth="260.0" />
+                        <VBox fx:id="projectList" prefHeight="255.0" prefWidth="255.0" />
                      </content>
                   </ScrollPane>
                </children>

@@ -111,6 +111,7 @@ public class TREditmanagerController {
                 projectName = (String) objects.get(0);
                 directory = (String) objects.get(1);
                 name = (String) objects.get(2);
+                System.out.println(objects.get(2));
                 typeTR = (String) objects.get(3);
                 System.out.println(typeTR);
                 System.out.println(objects.get(4));
@@ -148,7 +149,7 @@ public class TREditmanagerController {
     }
 
     private void setSort() {
-        onSortCombobox.setItems(FXCollections.observableArrayList("All", "Approved", "Not approved", "Waiting"));
+        onSortCombobox.setItems(FXCollections.observableArrayList("All", "Approved", "Not Approved", "Waiting"));
         onSortCombobox.setValue("All");
     }
     private void selectedVbox() {
@@ -782,7 +783,7 @@ public class TREditmanagerController {
         String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String noteTR = onTestNoteField.getText();
 //        String pn = testResult.getProjectName();
-        testResult = new TestResult(idTR, nameTR, dateTR, noteTR,projectName, name);
+        testResult = new TestResult(idTR, nameTR, dateTR, noteTR, projectName, name);
     }
     private void objects() {
         objects = new ArrayList<>();

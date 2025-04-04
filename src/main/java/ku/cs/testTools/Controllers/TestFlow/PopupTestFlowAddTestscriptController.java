@@ -156,7 +156,7 @@ public class PopupTestFlowAddTestscriptController {
         try {
             currentNewData();
             objects();
-            FXRouter.newPopup("popup_info_testscript",objects,true);
+            FXRouter.newPopup("popup_info_testscript", objects,true);
             Node source = (Node) event.getSource();
             Stage stage = (Stage) source.getScene().getWindow();
             stage.close();
@@ -168,7 +168,7 @@ public class PopupTestFlowAddTestscriptController {
     }
 
     private void setDateTSD() {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime now = LocalDateTime.now();
         this.date = now.format(dtf);
     }

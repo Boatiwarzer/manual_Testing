@@ -179,7 +179,7 @@ public class PopupTestFlowAddTestcaseController {
         alert.showAndWait(); // รอให้ผู้ใช้กด OK ก่อนดำเนินการต่อ
     }
         private void setDateTCD() {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime now = LocalDateTime.now();
         dateTCD = now.format(dtf);
     }

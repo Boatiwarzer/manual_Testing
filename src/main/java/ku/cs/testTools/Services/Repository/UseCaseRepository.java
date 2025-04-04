@@ -50,14 +50,14 @@ public class UseCaseRepository {
 
     // Update an existing UseCase
     public void updateUseCase(UseCase useCase) {
-        EntityTransaction transaction = entityManager.getTransaction();
+//        EntityTransaction transaction = entityManager.getTransaction();
         try {
-            transaction.begin();
+            entityManager.getTransaction().begin();
             entityManager.merge(useCase); // Use merge for updating existing entities
-            transaction.commit();
+            entityManager.getTransaction().commit();
         } catch (RuntimeException e) {
-            if (transaction.isActive()) {
-                transaction.rollback();
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
             }
             throw e;
         }

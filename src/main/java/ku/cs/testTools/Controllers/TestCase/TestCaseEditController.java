@@ -443,11 +443,23 @@ public class TestCaseEditController {
         }
 
         //Add items to the table
-        for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()) {
-            if (testcase.getIdTC().trim().equals(testCaseDetail.getIdTC().trim())){
-                onTableTestcase.getItems().add(testCaseDetail);
-            }
-        }
+//        for (TestCaseDetail testCaseDetail : testCaseDetailList.getTestCaseDetailList()) {
+//            if (testcase.getIdTC().trim().equals(testCaseDetail.getIdTC().trim())){
+//                onTableTestcase.getItems().add(testCaseDetail);
+//            }
+//        }
+        List<TestCaseDetail> sortedList = testCaseDetailList.getTestCaseDetailList().stream()
+                .filter(testCaseDetail -> testCaseDetail.getIdTC().trim().equals(testcase.getIdTC().trim()))
+                .sorted(Comparator.comparingInt(testCaseDetail -> {
+                    try {
+                        return Integer.parseInt(testCaseDetail.getTestNo().trim());
+                    } catch (NumberFormatException e) {
+                        return Integer.MAX_VALUE; // ถ้าแปลงไม่ได้ ให้ค่ามากสุดเพื่อไปอยู่ท้าย
+                    }
+                }))
+                .collect(Collectors.toList());
+
+        onTableTestcase.getItems().addAll(sortedList);
 
     }
 
@@ -604,6 +616,7 @@ public class TestCaseEditController {
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
                 testCaseDetailListDelete.addTestCaseDetail(selectedItem);
+                testCaseDetailList.deleteTestCase(selectedItem);
                 testCaseDetailList.deleteTestCase(selectedItem);
                 onTableTestcase.getItems().clear();
                 loadTable(testCaseDetailList);

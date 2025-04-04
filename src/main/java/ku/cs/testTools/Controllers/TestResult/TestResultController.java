@@ -146,7 +146,7 @@ public class TestResultController {
     }
 
     private void setSort() {
-        onSortCombobox.setItems(FXCollections.observableArrayList("All", "Approved", "Not approved", "Waiting"));
+        onSortCombobox.setItems(FXCollections.observableArrayList("All", "Approved", "Not Approved", "Waiting"));
         onSortCombobox.setValue("All");
     }
 
