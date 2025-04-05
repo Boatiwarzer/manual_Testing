@@ -70,7 +70,7 @@
               <Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
                 <items>
                     <MenuItem fx:id="submitMenuItem" mnemonicParsing="false" onAction="#handleSubmitMenuItem" text="Submit" />
-                  <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" onAction="#handleSaveMenuItem" text="Save" />
+<!--                  <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" onAction="#handleSaveMenuItem" text="Save" />-->
                   <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#handleOpenMenuItem" text="Open…" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                         <Menu fx:id="exportMenu" mnemonicParsing="false" text="Export">
