@@ -78,7 +78,7 @@ public class UseCaseAddController {
     @FXML
     private MenuItem saveMenuItem;
     private String projectName, useCaseId, ucd; // directory, projectName
-    private UUID id;
+    private String id;
     private UseCase useCase;
     private UseCase selectedUseCase;
     private UseCaseDetail selectedItem;
@@ -500,18 +500,18 @@ public class UseCaseAddController {
         onSearchList.getItems().addAll(searchList(onSearchField.getText(),useCaseList.getUseCaseList()));
     }
 
-    private void randomUUID() {
-        UUID i = UUID.randomUUID();
-        this.id = i;
-    }
-
-//    public void randomId(){
-//        int min = 1;
-//        int upperbound = 999;
-//        String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
-//        this.ucd = String.format("UCD-%s", random1);
-//
+//    private void randomUUID() {
+//        UUID i = UUID.randomUUID();
+//        this.id = i;
 //    }
+
+    public void randomId(){
+        int min = 1;
+        int upperbound = 999;
+        String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
+        this.ucd = String.format("UCD-%s", random1);
+
+    }
 
     @FXML
     void onSubmitButton(ActionEvent event) {
@@ -554,7 +554,7 @@ public class UseCaseAddController {
                 HBox hBox = (HBox) node;
                 TextArea textArea = (TextArea) hBox.getChildren().get(0);
                 if (!textArea.getText().isEmpty()) {
-                    randomUUID();
+                    randomId();
                     UseCaseDetail useCaseDetail = new UseCaseDetail(id, ucId, "actor", actorNumber, textArea.getText());
                     useCaseDetailList.addUseCaseDetail(useCaseDetail);
                     useCaseDetailRepository.saveOrUpdateUseCaseDetail(useCaseDetail);
@@ -568,7 +568,7 @@ public class UseCaseAddController {
                 HBox hBox = (HBox) node;
                 TextArea textArea = (TextArea) hBox.getChildren().get(0);
                 if (!textArea.getText().isEmpty()) {
-                    randomUUID();
+                    randomId();
                     UseCaseDetail useCaseDetail = new UseCaseDetail(id, ucId, "system", systemNumber, textArea.getText());
                     useCaseDetailList.addUseCaseDetail(useCaseDetail);
                     useCaseDetailRepository.saveOrUpdateUseCaseDetail(useCaseDetail);

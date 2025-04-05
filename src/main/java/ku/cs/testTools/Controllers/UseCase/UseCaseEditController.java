@@ -75,7 +75,7 @@ public class UseCaseEditController {
     private MenuItem saveMenuItem;
     private UseCase selectedUseCase;
     private String projectName, useCaseId; // directory, projectName
-    private UUID id;
+    private String id;
     private UseCase useCase;
     private UseCaseDetail selectedItem;
     private UseCaseList useCaseList = new UseCaseList();
@@ -287,50 +287,51 @@ public class UseCaseEditController {
         onPostConArea.setText(useCasePostCon);
         String useCaseNote = useCase.getNote();
         onTestNoteArea.setText(useCaseNote);
-        String date = useCase.getDate();
 
-        for (UseCaseDetail useCaseDetail : useCaseDetailList.getUseCaseDetailList()) {
-            if (useCaseDetail.getUseCaseID().equals(testIDLabel.getText())) {
+        // ✅ เคลียร์ข้อมูลเก่าก่อนเพิ่มข้อมูลใหม่
+        actorActionVBox.getChildren().clear();
+        systemActionVBox.getChildren().clear();
+
+        // ✅ เรียงข้อมูลตาม number_ucd
+        List<UseCaseDetail> sortedDetails = useCaseDetailList.getUseCaseDetailList()
+                .stream()
+                .filter(d -> d.getUseCaseID().equals(testIDLabel.getText())) // คัดเฉพาะ UseCase ที่ต้องการ
+                .sorted(Comparator.comparingInt(UseCaseDetail::getNumber)) // เรียงตาม number_ucd
+                .collect(Collectors.toList());
+
+        // ✅ แสดงข้อมูลตามลำดับที่ถูกต้อง
+        for (UseCaseDetail useCaseDetail : sortedDetails) {
+            HBox hBox = new HBox();
+            TextArea textArea = new TextArea();
+            textArea.setMinSize(480, 50);
+            textArea.setMaxSize(480, 50);
+            textArea.setStyle("-fx-font-size: 14px;");
+            textArea.setWrapText(true);
+            textArea.setText(useCaseDetail.getDetail());
+
+            // ปุ่มลบข้อมูล
+            Button deleteButton = new Button("-");
+            deleteButton.setPrefHeight(30);
+            deleteButton.setPrefWidth(28);
+            deleteButton.setOnAction(event -> {
                 if (useCaseDetail.getAction().equals("actor")) {
-                    HBox hBox = new HBox();
-                    TextArea textArea = new TextArea();
-                    textArea.setMinSize(480, 50);
-                    textArea.setMaxSize(480, 50);
-                    textArea.setStyle("-fx-font-size: 14px;");
-                    textArea.setWrapText(true);
-//                    textArea.setEditable(false);
-                    Button deleteButton = new Button("-");
-                    deleteButton.setPrefHeight(30);
-                    deleteButton.setPrefWidth(28);
-                    deleteButton.setOnAction(event -> {
-                        actorActionVBox.getChildren().remove(hBox);
-                    });
-                    textArea.setText(useCaseDetail.getDetail());
-                    hBox.getChildren().add(textArea);
-                    hBox.getChildren().add(deleteButton);
-                    actorActionVBox.getChildren().add(hBox);
+                    actorActionVBox.getChildren().remove(hBox);
                 } else if (useCaseDetail.getAction().equals("system")) {
-                    HBox hBox = new HBox();
-                    TextArea textArea = new TextArea();
-                    textArea.setMinSize(480, 50);
-                    textArea.setMaxSize(480, 50);
-                    textArea.setStyle("-fx-font-size: 14px;");
-                    textArea.setWrapText(true);
-//                    textArea.setEditable(false);
-                    Button deleteButton = new Button("-");
-                    deleteButton.setPrefHeight(30);
-                    deleteButton.setPrefWidth(28);
-                    deleteButton.setOnAction(event -> {
-                        systemActionVBox.getChildren().remove(hBox);
-                    });
-                    textArea.setText(useCaseDetail.getDetail());
-                    hBox.getChildren().add(textArea);
-                    hBox.getChildren().add(deleteButton);
-                    systemActionVBox.getChildren().add(hBox);
+                    systemActionVBox.getChildren().remove(hBox);
                 }
+            });
+
+            hBox.getChildren().add(textArea);
+            hBox.getChildren().add(deleteButton);
+
+            if (useCaseDetail.getAction().equals("actor")) {
+                actorActionVBox.getChildren().add(hBox);
+            } else if (useCaseDetail.getAction().equals("system")) {
+                systemActionVBox.getChildren().add(hBox);
             }
         }
     }
+
     private void selectedComboBox(){
         preConListComboBox.getItems().clear();
         preConListComboBox.setItems(FXCollections.observableArrayList("None"));
@@ -493,11 +494,17 @@ public class UseCaseEditController {
         systemActionVBox.getChildren().add(hBox);
     }
 
-    private void randomUUID() {
-        UUID i = UUID.randomUUID();
-        this.id = i;
-    }
+//    private void randomUUID() {
+//        UUID i = UUID.randomUUID();
+//        this.id = i;
+//    }
+public void randomId(){
+    int min = 1;
+    int upperbound = 999;
+    String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
+    this.id = String.format("UCD-%s", random1);
 
+}
     @FXML
     void onSubmitButton(ActionEvent event) {
         if (!handleSaveAction()) {
@@ -551,7 +558,7 @@ public class UseCaseEditController {
                 HBox hBox = (HBox) node;
                 TextArea textArea = (TextArea) hBox.getChildren().get(0);
                 if (!textArea.getText().isEmpty()) {
-                    randomUUID();
+                    randomId();
                     UseCaseDetail useCaseDetail = new UseCaseDetail(id, ucId, "actor", actorNumber, textArea.getText());
                     useCaseDetailList.addUseCaseDetail(useCaseDetail);
                     useCaseDetailRepository.saveOrUpdateUseCaseDetail(useCaseDetail);
@@ -565,7 +572,7 @@ public class UseCaseEditController {
                 HBox hBox = (HBox) node;
                 TextArea textArea = (TextArea) hBox.getChildren().get(0);
                 if (!textArea.getText().isEmpty()) {
-                    randomUUID();
+                    randomId();
                     UseCaseDetail useCaseDetail = new UseCaseDetail(id, ucId, "system", systemNumber, textArea.getText());
                     useCaseDetailList.addUseCaseDetail(useCaseDetail);
                     useCaseDetailRepository.saveOrUpdateUseCaseDetail(useCaseDetail);

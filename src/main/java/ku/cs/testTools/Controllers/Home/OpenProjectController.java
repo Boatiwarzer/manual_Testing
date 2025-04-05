@@ -154,10 +154,10 @@ public class OpenProjectController {
             if (!handleSaveAction()) {
                 return;
             }
-            testerValidate(testerName, selectedProject.getProjectName().trim());
             if (!handleSaveActionProject()) {
                 return;
             }
+            testerValidate(testerName, selectedProject.getProjectName().trim());
             projectName = selectedProject.getProjectName().trim();
             //send the project name and directory to HomePage
             ArrayList<Object> objects = new ArrayList<>();

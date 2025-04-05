@@ -73,7 +73,7 @@ public class UseCaseDetailRepository {
     }
 
     // Delete a UseCaseDetail by ID
-    public void deleteUseCaseDetail(UUID idUCD) {
+    public void deleteUseCaseDetail(String idUCD) {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
