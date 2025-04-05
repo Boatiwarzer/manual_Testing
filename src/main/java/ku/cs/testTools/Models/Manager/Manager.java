@@ -70,6 +70,6 @@ public class Manager implements Comparable{
     }
     @Override
     public String toString() {
-        return "projectName='" + projectName + '\'';
+        return "Manager : " + nameManager + " " +  "ProjectName : " + projectName + '\'';
     }
 }
