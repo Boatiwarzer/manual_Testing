@@ -813,7 +813,10 @@ public class IREditmanagerController {
     @FXML
     void onClickIR(ActionEvent event) {
         try {
-            objects();
+            objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(nameManager);
+            objects.add(null);
             FXRouter.goTo("ir_manager",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -823,8 +826,10 @@ public class IREditmanagerController {
     @FXML
     void onClickTestflow(ActionEvent event) {
         try {
-            objects();
-            FXRouter.goTo("test_flow_manager",objects);
+            objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(nameManager);
+            objects.add(null);            FXRouter.goTo("test_flow_manager",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -833,8 +838,10 @@ public class IREditmanagerController {
     @FXML
     void onClickTestresult(ActionEvent event) {
         try {
-            objects();
-            FXRouter.goTo("test_result_manager",objects);
+            objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add(nameManager);
+            objects.add(null);            FXRouter.goTo("test_result_manager",objects);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
