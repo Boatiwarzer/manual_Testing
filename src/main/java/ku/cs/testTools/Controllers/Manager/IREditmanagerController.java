@@ -94,8 +94,6 @@ public class IREditmanagerController {
     private String typeIR;
     private String type;
     private TestScriptList testScriptList;
-    private IRreportList irReportList;
-    private IRreportDetailList irDetailList;
     private NoteList noteList;
     private TesterList testerList;
     private ManagerList managerList;
@@ -263,15 +261,15 @@ public class IREditmanagerController {
         }
 
         // โหลด IRReportList
-        irReportList = new IRreportList();
+        iRreportList = new IRreportList();
         for (IRreport report : irReportRepository.getAllIRReports()) {
-            irReportList.addOrUpdateIRreport(report);
+            iRreportList.addOrUpdateIRreport(report);
         }
 
         // โหลด IRDetailList
-        irDetailList = new IRreportDetailList();
+        iRreportDetailList = new IRreportDetailList();
         for (IRreportDetail detail : irDetailRepository.getAllIRReportDetIL()) {
-            irDetailList.addOrUpdateIRreportDetail(detail);
+            iRreportDetailList.addOrUpdateIRreportDetail(detail);
         }
 
         // โหลด ConnectionList
@@ -350,12 +348,12 @@ public class IREditmanagerController {
         }
 
         // บันทึกข้อมูล IRReportList
-        for (IRreport report : irReportList.getIRreportList()) {
+        for (IRreport report : iRreportList.getIRreportList()) {
             irReportRepository.updateIRReport(report);
         }
 
         // บันทึกข้อมูล IRDetailList
-        for (IRreportDetail detail : irDetailList.getIRreportDetailList()) {
+        for (IRreportDetail detail : iRreportDetailList.getIRreportDetailList()) {
             irDetailRepository.updateIRReportDetail(detail);
         }
 
@@ -785,9 +783,9 @@ public class IREditmanagerController {
         String noteIR = onTestNoteField.getText();
         String idTr = iRreport.getTrIR();
 //        String pn = iRreport.getProjectName();
-        iRreport = new IRreport(idIR, nameIR, dateIR, noteIR, idTr);
-        iRreport.setProjectName(projectName);
-        iRreport.setTester(nameTester);
+        iRreport = iRreportList.findIRById(irId);
+        System.out.println(iRreport);
+        iRreportList.addIRreport(iRreport);
     }
     private void objects() {
         objects = new ArrayList<>();

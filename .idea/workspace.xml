@@ -11,6 +11,8 @@
   <component name="ChangeListManager">
     <list default="true" id="339e8b6d-7c1d-4583-b039-ece96beb9415" name="Changes" comment="merge">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Manager/IREditmanagerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Manager/IREditmanagerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Manager/TREditmanagerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Manager/TREditmanagerController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/Manager/Manager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Models/Manager/Manager.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -168,6 +170,8 @@
       <workItem from="1743821671875" duration="2656000" />
       <workItem from="1743832334356" duration="657000" />
       <workItem from="1743835461208" duration="3600000" />
+      <workItem from="1743841207575" duration="620000" />
+      <workItem from="1743852998149" duration="631000" />
     </task>
     <task id="LOCAL-00001" summary="mergh">
       <option name="closed" value="true" />

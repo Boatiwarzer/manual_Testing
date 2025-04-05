@@ -775,10 +775,10 @@ public class TREditmanagerController {
         });
     }
     private void currentNewData() {
-        String idTR = trId;
-        String nameTR = onTestNameField.getText();
-        String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        String noteTR = onTestNoteField.getText();
+//        String idTR = trId;
+//        String nameTR = onTestNameField.getText();
+//        String dateTR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+//        String noteTR = onTestNoteField.getText();
 //        String pn = testResult.getProjectName();
         testResult = testResultList.findTRById(trId);
         testResultList.addOrUpdateTestResult(testResult);

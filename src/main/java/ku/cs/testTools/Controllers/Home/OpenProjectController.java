@@ -177,10 +177,11 @@ public class OpenProjectController {
                 return;
             }
             projectName = selectedProject.getProjectName().trim();
+            String nameManager = selectedProject.getNameManager().trim();
             //send the project name and directory to HomePage
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
-            objects.add(testerName);
+            objects.add(nameManager);
             //แก้พาท
             String packageStr1 = "views/";
             FXRouter.when("home_manager", packageStr1 + "home_manager.fxml","TestTools | " + projectName);
