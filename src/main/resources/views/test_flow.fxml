@@ -161,12 +161,12 @@
                               </ImageView>
                               <ImageView fx:id="arrowImageView" fitHeight="65.0" fitWidth="100.0" layoutX="130.0" layoutY="205.0" onDragDetected="#arrowDefected" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../images/directional.png" />
+                                    <Image url="@../icon/directional.png" />
                                  </image>
                               </ImageView>
                               <ImageView fx:id="lineImageView" fitHeight="65.0" fitWidth="100.0" layoutX="30.0" layoutY="300.0" onDragDetected="#lineDefected" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../images/line.png" />
+                                    <Image url="@../icon/line.png" />
                                  </image>
                               </ImageView>
                            </children></AnchorPane>
