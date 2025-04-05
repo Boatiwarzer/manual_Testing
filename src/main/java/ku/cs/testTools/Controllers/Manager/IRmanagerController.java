@@ -125,6 +125,7 @@ public class IRmanagerController {
 //            loadListView(iRreportList);
             loadList();
             handleSelection();
+            selected();
             for (IRreport iRreport : iRreportList.getIRreportList()) {
                 word.add(iRreport.getNameIR());
             }
@@ -153,9 +154,9 @@ public class IRmanagerController {
     private void loadList() {
         Map<String, Set<String>> projectTestersMap = new HashMap<>();
 
-        testFlowPositionList.getPositionList().forEach(testFlowPosition -> {
-            String projectName = testFlowPosition.getProjectName();
-            String tester = testFlowPosition.getTester() + "(Tester)"; // ต่อท้าย "(Tester)"
+        iRreportList.getIRreportList().forEach(iRreport -> {
+            String projectName = iRreport.getProjectName();
+            String tester = iRreport.getTester() + "(Tester)"; // ต่อท้าย "(Tester)"
 
             // จัดกลุ่ม Tester ตาม Project Name
             projectTestersMap.computeIfAbsent(projectName, k -> new HashSet<>()).add(tester);

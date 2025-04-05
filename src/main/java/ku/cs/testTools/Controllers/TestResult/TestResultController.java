@@ -399,7 +399,7 @@ public class TestResultController {
     }
 
     private void selected() {
-        if (check){
+
             if (testResult != null){
                 onSearchList.getSelectionModel().getSelectedItems();
                 onSearchList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -426,10 +426,14 @@ public class TestResultController {
                     } else {
                         showInfo(newValue);
                         selectedTestResult = newValue;
+                        if (check){
+                            onEditButton.setVisible(newValue.getIdTR() != null);
+                            onIRButton.setVisible(newValue.getIdTR() != null);
+                        }
                     }
                 });
             }
-        }
+
 
     }
 

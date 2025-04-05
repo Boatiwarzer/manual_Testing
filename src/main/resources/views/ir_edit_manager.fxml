@@ -30,6 +30,7 @@
                <menus>
                   <Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
                      <items>
+                        <MenuItem fx:id="handleSubmitMenuItem" mnemonicParsing="false" onAction="#handleSubmitMenuItem" text="Submit" />
                         <MenuItem fx:id="newMenuItem" mnemonicParsing="false" onAction="#handleNewMenuItem" text="New" />
                         <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" onAction="#handleSaveMenuItem" text="Save" />
                         <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#handleOpenMenuItem" text="Open…" />
