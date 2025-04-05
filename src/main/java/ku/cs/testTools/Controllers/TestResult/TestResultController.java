@@ -817,6 +817,13 @@ public class TestResultController {
     @FXML
     void onIRButton(ActionEvent event) {
         try {
+            // if have IdTR / update IR {
+            //    case failed
+            //    if have IdTRD / update IRD {
+            //        if testtime != old / create IRD
+            //        } else testtime = old / update IRD
+            //    } else dont have IdTRD / create IRD
+            // } else dont have IdTR / create IR
 //        String idTR = testIDLabel.getText();
             if (iRreportList.isIdTRExist(idTR)) {
                 System.out.println("ID " + idTR + " already exists in the file.");
@@ -824,7 +831,7 @@ public class TestResultController {
                 String idIR = ir.getIdIR();
                 String nameIR = ir.getNameIR();
                 String noteIR = ir.getNoteIR();
-                String dateIR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                String dateIR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 System.out.println(idIR);
                 iRreportList.clearIR(idIR);
                 IRreport newIR = new IRreport(idIR, nameIR, dateIR, noteIR, idTR);
@@ -850,51 +857,51 @@ public class TestResultController {
                     String testtime = detail.getRetestTRD();
                     System.out.println("idtrd " + idTrd);
                     if (iRreportDetailList.isIdTRDExist(idTrd)) {
-                        List<IRreportDetail> List = iRreportDetailList.getIRreportDetailList();
-                        List<IRreportDetail> irdList = iRreportDetailList.findAllTRDinIRById(idTrd.trim());
-                        int maxRetestIRD = irdList.stream()
-                                .mapToInt(ird -> Integer.parseInt(ird.getRetestIRD())) // แปลง String เป็น int
-                                .max()
-                                .orElse(0); // ถ้าไม่มีค่าให้ใช้ 0
-                        // กรองเฉพาะรายการที่มี retestIRD เท่ากับค่ามากที่สุด
-                        List<IRreportDetail> maxRetest = irdList.stream()
-                                .filter(ird -> Integer.parseInt(ird.getRetestIRD()) == maxRetestIRD)
-                                .collect(Collectors.toList());
-                        System.out.println("List ที่มี retestIRD มากที่สุด:");
-                        for (IRreportDetail detailmax : maxRetest) {
-                            System.out.println(detailmax);
-                        }
-                        counter = List.size() + 1;
-                        System.out.println("size "+irdList.size());
-                        System.out.println("counter "+counter);
-                        for (IRreportDetail irddetail : maxRetest) {
-                            irdID = irddetail.getIdIRD();
-                            if (!testtime.equals(irddetail.getRetestIRD())) {
-                                randomIdIRD();
-                                irdID = irdId;
-                                String testNo = String.format("%d", counter);
-                                counter++;
-                                String testerIRD = detail.getTesterTRD();
-                                String tsIdIRD = detail.getTsIdTRD();
-                                String tcIdIRD = detail.getTcIdTRD();
-                                System.out.println("tsId " + tsIdIRD);
-                                String[] parts = tsIdIRD.split(" : "); // แยกข้อความตาม " : "
-                                String tsId = parts[0];
-                                TestScript script = testScriptList.findTSById(tsId.trim());
-//                                String descriptIRD = script.getDescriptionTS();
-                                String descriptIRD = "";
-                                String conditionIRD = "";
-                                String imageIRD = "...";
-                                String retestIRD = detail.getRetestTRD();
-                                String priorityIRD = detail.getPriorityTRD();
-                                String rcaIRD = "";
-                                String managerIRD = "";
-                                String statusIRD = "In Manager";
-                                String remarkIRD = "";
-
-                                IRreportDetail newIRDetail = new IRreportDetail(irdID, testNo, testerIRD, tsIdIRD, tcIdIRD, descriptIRD, conditionIRD, imageIRD, retestIRD, priorityIRD, rcaIRD, managerIRD, statusIRD, remarkIRD, idIR, idTrd);
-                                iRreportDetailList.addIRreportDetail(newIRDetail);
-                            } else {
+//                        List<IRreportDetail> List = iRreportDetailList.getIRreportDetailList();
+//                        List<IRreportDetail> irdList = iRreportDetailList.findAllTRDinIRById(idTrd.trim());
+//                        int maxRetestIRD = irdList.stream()
+//                                .mapToInt(ird -> Integer.parseInt(ird.getRetestIRD())) // แปลง String เป็น int
+//                                .max()
+//                                .orElse(0); // ถ้าไม่มีค่าให้ใช้ 0
+//                        // กรองเฉพาะรายการที่มี retestIRD เท่ากับค่ามากที่สุด
+//                        List<IRreportDetail> maxRetest = irdList.stream()
+//                                .filter(ird -> Integer.parseInt(ird.getRetestIRD()) == maxRetestIRD)
+//                                .collect(Collectors.toList());
+//                        System.out.println("List ที่มี retestIRD มากที่สุด:");
+//                        for (IRreportDetail detailmax : maxRetest) {
+//                            System.out.println(detailmax);
+//                        }
+//                        counter = List.size() + 1;
+//                        System.out.println("size "+irdList.size());
+//                        System.out.println("counter "+counter);
+//                        for (IRreportDetail irddetail : maxRetest) {
+//                            irdID = irddetail.getIdIRD();
+//                            if (!testtime.equals(irddetail.getRetestIRD())) {
+//                                randomIdIRD();
+//                                irdID = irdId;
+//                                String testNo = String.format("%d", counter);
+//                                counter++;
+//                                String testerIRD = detail.getTesterTRD();
+//                                String tsIdIRD = detail.getTsIdTRD();
+//                                String tcIdIRD = detail.getTcIdTRD();
+//                                System.out.println("tsId " + tsIdIRD);
+//                                String[] parts = tsIdIRD.split(" : "); // แยกข้อความตาม " : "
+//                                String tsId = parts[0];
+//                                TestScript script = testScriptList.findTSById(tsId.trim());
+////                                String descriptIRD = script.getDescriptionTS();
+//                                String descriptIRD = "";
+//                                String conditionIRD = "";
+//                                String imageIRD = "...";
+//                                String retestIRD = detail.getRetestTRD();
+//                                String priorityIRD = detail.getPriorityTRD();
+//                                String rcaIRD = "";
+//                                String managerIRD = "";
+//                                String statusIRD = "In Manager";
+//                                String remarkIRD = "";
+//
+//                                IRreportDetail newIRDetail = new IRreportDetail(irdID, testNo, testerIRD, tsIdIRD, tcIdIRD, descriptIRD, conditionIRD, imageIRD, retestIRD, priorityIRD, rcaIRD, managerIRD, statusIRD, remarkIRD, idIR, idTrd);
+//                                iRreportDetailList.addIRreportDetail(newIRDetail);
+//                            } else {
                                 IRreportDetail id = iRreportDetailList.findIRDByTRD(idTrd);
                                 String testNo = id.getTestNoIRD();
                                 String idIRD = id.getIdIRD();
@@ -914,8 +921,6 @@ public class TestResultController {
                                 iRreportDetailList.clearIRDetail(idIRD);
                                 IRreportDetail newIRDetail = new IRreportDetail(idIRD, testNo, testerIRD, tsIdIRD, tcIdIRD, descriptIRD, conditionIRD, imageIRD, retestIRD, priorityIRD, rcaIRD, managerIRD, statusIRD, remarkIRD, idIR, idTrd);
                                 iRreportDetailList.addIRreportDetail(newIRDetail);
-                            }
-                        }
                     } else {
                         List<IRreportDetail> irdList = iRreportDetailList.findAllTRDinIRById(idTrd.trim());
                         randomIdIRD();
@@ -972,7 +977,7 @@ public class TestResultController {
                 String idIR = irId;
                 String nameIR = testNameLabel.getText();
                 String noteIR = "";
-                String dateIR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+                String dateIR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 System.out.println(idIR);
                 iRreport = new IRreport(idIR, nameIR, dateIR, noteIR, idTR);
                 iRreport.setProjectName(projectName);
