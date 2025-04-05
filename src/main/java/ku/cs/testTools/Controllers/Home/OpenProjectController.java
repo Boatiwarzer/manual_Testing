@@ -150,7 +150,7 @@ public class OpenProjectController {
     void onConfirmButton(ActionEvent actionEvent) throws IOException {
 
         if (type.equals("tester")){
-            testerName = onTesterField.getText();
+            testerName = onTesterField.getText().toLowerCase();
             if (!handleSaveAction()) {
                 return;
             }
@@ -209,7 +209,7 @@ public class OpenProjectController {
         System.out.println("Testers in " + projectName + ": " + testersInProject);
 
         boolean exists = testersInProject.stream()
-                .anyMatch(tester -> tester.getNameTester().equals(testerName));
+                .anyMatch(tester -> tester.getNameTester().toLowerCase().equals(testerName));
 
         if (!exists) {
             showAlert(testerName + " ชื่อนี้ไม่อนุญาตให้เข้าถึง " + projectName);

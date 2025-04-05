@@ -555,7 +555,7 @@ public class UseCaseAddController {
                 TextArea textArea = (TextArea) hBox.getChildren().get(0);
                 if (!textArea.getText().isEmpty()) {
                     randomId();
-                    UseCaseDetail useCaseDetail = new UseCaseDetail(id, ucId, "actor", actorNumber, textArea.getText());
+                    UseCaseDetail useCaseDetail = new UseCaseDetail(ucd, ucId, "actor", actorNumber, textArea.getText());
                     useCaseDetailList.addUseCaseDetail(useCaseDetail);
                     useCaseDetailRepository.saveOrUpdateUseCaseDetail(useCaseDetail);
                     actorNumber++;
@@ -569,7 +569,7 @@ public class UseCaseAddController {
                 TextArea textArea = (TextArea) hBox.getChildren().get(0);
                 if (!textArea.getText().isEmpty()) {
                     randomId();
-                    UseCaseDetail useCaseDetail = new UseCaseDetail(id, ucId, "system", systemNumber, textArea.getText());
+                    UseCaseDetail useCaseDetail = new UseCaseDetail(ucd, ucId, "system", systemNumber, textArea.getText());
                     useCaseDetailList.addUseCaseDetail(useCaseDetail);
                     useCaseDetailRepository.saveOrUpdateUseCaseDetail(useCaseDetail);
                     systemNumber++;
