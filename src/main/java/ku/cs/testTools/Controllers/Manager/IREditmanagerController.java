@@ -108,7 +108,6 @@ public class IREditmanagerController {
                 objects = (ArrayList) FXRouter.getData();
                 projectName = (String) objects.get(0);
                 nameManager = (String) objects.get(1);
-                System.out.println("nameManager: " + nameManager);
                 typeIR = (String) objects.get(2);
                 System.out.println(typeIR);
                 onTableIR.isFocused();
@@ -778,7 +777,7 @@ public class IREditmanagerController {
         });
     }
     private void currentNewData() {
-//        String idIR = testIDLabel.getText();
+        String idIR = irId;
         String nameIR = onTestNameField.getText();
         String dateIR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String noteIR = onTestNoteField.getText();
