@@ -55,11 +55,14 @@ public class HomeManagerController {
         if (FXRouter.getData() != null) {
             loadRepo();
             objects = (ArrayList) FXRouter.getData();
+            projectName = (String) objects.get(0);
+            name = (String) objects.get(1);
             // Load the project
             if (projectName != null) {
-                projectName = (String) objects.get(0);
-                ManagerRepository managerRepository = new ManagerRepository();
-                name = managerRepository.findManagerByProjectName(projectName);
+
+
+//                ManagerRepository managerRepository = new ManagerRepository();
+//                name = managerRepository.findManagerByProjectName(projectName);
 
 
                 System.out.println(name);
