@@ -14,8 +14,8 @@ import java.util.UUID;
 @NamedQuery(name = "find usecasedetail by id", query = "Select t from UseCaseDetail t where t.useCaseID = :id")
 public class UseCaseDetail {
     @Id
-    @Column
-    private UUID id;
+    @Column(name = "id_ucd", nullable = false, unique = true)
+    private String id;
 
     @Column(name = "idUC", nullable = false)
     private String useCaseID;
@@ -30,7 +30,7 @@ public class UseCaseDetail {
     private String detail;
 
 
-    public UseCaseDetail(UUID id, String useCaseID, String action, int number, String detail) {
+    public UseCaseDetail(String id, String useCaseID, String action, int number, String detail) {
         this.id = id;
         this.useCaseID = useCaseID;
         this.action = action;

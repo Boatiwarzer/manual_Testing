@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -283,41 +284,40 @@ public class UseCaseController {
         infoPostConLabel.setText(useCasePostCon);
         String useCaseNote = useCase.getNote();
         infoNoteLabel.setText(useCaseNote);
-        String date = useCase.getDate();
 
-//        useCase = useCaseList.findByUseCaseId(testIDLabel.getText());
         System.out.println("select " + useCaseList.findByUseCaseId(testIDLabel.getText()));
-//        System.out.println("all detail " + useCaseDetailList.getUseCaseDetailList());
 
-        for (UseCaseDetail useCaseDetail : useCaseDetailList.getUseCaseDetailList()) {
-//            System.out.println("all id detail " + useCaseDetail.getUseCaseID());
-            if (useCaseDetail.getUseCaseID().equals(testIDLabel.getText())) {
-                if (useCaseDetail.getAction().equals("actor")) {
-                    HBox hBox = new HBox();
-                    TextArea textArea = new TextArea();
-                    textArea.setMinSize(505, 50);
-                    textArea.setMaxSize(505, 50);
-                    textArea.setStyle("-fx-font-size: 14px;");
-                    textArea.setWrapText(true);
-                    textArea.setEditable(false);
-                    textArea.setText(useCaseDetail.getDetail());
-                    hBox.getChildren().add(textArea);
-                    actorActionVBox.getChildren().add(hBox);
-                } else if (useCaseDetail.getAction().equals("system")) {
-                    HBox hBox = new HBox();
-                    TextArea textArea = new TextArea();
-                    textArea.setMinSize(505, 50);
-                    textArea.setMaxSize(505, 50);
-                    textArea.setStyle("-fx-font-size: 14px;");
-                    textArea.setWrapText(true);
-                    textArea.setEditable(false);
-                    textArea.setText(useCaseDetail.getDetail());
-                    hBox.getChildren().add(textArea);
-                    systemActionVBox.getChildren().add(hBox);
-                }
+        // ✅ เรียงลำดับก่อนนำไปใช้
+        List<UseCaseDetail> sortedDetails = useCaseDetailList.getUseCaseDetailList()
+                .stream()
+                .filter(d -> d.getUseCaseID().equals(testIDLabel.getText())) // คัดเฉพาะ UseCase ที่ต้องการ
+                .sorted(Comparator.comparingInt(UseCaseDetail::getNumber)) // เรียงตาม number_ucd
+                .collect(Collectors.toList());
+
+        // ✅ เคลียร์ข้อมูลเก่าออกก่อนแสดงผลใหม่ (ป้องกันการซ้อนทับของข้อมูลเดิม)
+        actorActionVBox.getChildren().clear();
+        systemActionVBox.getChildren().clear();
+
+        // ✅ แสดงข้อมูลตามลำดับที่ถูกต้อง
+        for (UseCaseDetail useCaseDetail : sortedDetails) {
+            HBox hBox = new HBox();
+            TextArea textArea = new TextArea();
+            textArea.setMinSize(505, 50);
+            textArea.setMaxSize(505, 50);
+            textArea.setStyle("-fx-font-size: 14px;");
+            textArea.setWrapText(true);
+            textArea.setEditable(false);
+            textArea.setText(useCaseDetail.getDetail());
+            hBox.getChildren().add(textArea);
+
+            if (useCaseDetail.getAction().equals("actor")) {
+                actorActionVBox.getChildren().add(hBox);
+            } else if (useCaseDetail.getAction().equals("system")) {
+                systemActionVBox.getChildren().add(hBox);
             }
         }
     }
+
 
     private void loadListView(UseCaseList useCaseList) {
         onEditButton.setVisible(false);
@@ -522,18 +522,16 @@ public class UseCaseController {
 //            // Get the directory from the file path
 //            directory = file.getParent();
 //
-//            ArrayList<Object> objects = new ArrayList<>();
-//            objects.add(projectName);
-//            objects.add(directory);
-//            objects.add(null);
-//            // แก้พาท
-//            String packageStr1 = "views/";
-//            FXRouter.when("home_tester", packageStr1 + "home_tester.fxml", "TestTools | " + projectName);
-//            FXRouter.goTo("home_tester", objects);
-//            FXRouter.popup("landing_openproject", objects);
-//        } else {
-//            System.out.println("No file selected.");
-//        }
+            ArrayList<Object> objects = new ArrayList<>();
+            objects.add(projectName);
+            objects.add("tester");
+            objects.add(null);
+            // แก้พาท
+            String packageStr1 = "views/";
+            FXRouter.when("home_tester", packageStr1 + "home_tester.fxml", "TestTools | " + projectName);
+            FXRouter.goTo("home_tester", objects);
+            FXRouter.popup("landing_openproject", objects);
+
     }
 
     @FXML
