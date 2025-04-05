@@ -92,7 +92,7 @@ public class PopupInfoTestscriptController {
     private ConnectionList connectionList;
     private String type = "new";
     private String nameTester;
-    private TestScriptDetailList testScriptDetailListDelete;
+    private TestScriptDetailList testScriptDetailListDelete = new TestScriptDetailList();
     private TestCase testcase;
     private String tcId;
 

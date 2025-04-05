@@ -543,7 +543,6 @@ public class TFmanagerController {
     public void objects(){
         objects = new ArrayList<>();
         objects.add(projectName);
-        objects.add(directory);
         objects.add(nameManager);
         objects.add(null);
     }
