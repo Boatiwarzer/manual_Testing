@@ -119,10 +119,7 @@ public class IRmanagerController {
             }
             clearInfo();
             loadRepo();
-            //selectedVbox();
-            //loadProject();
             setTable();
-//            loadListView(iRreportList);
             loadList();
             handleSelection();
             selected();
@@ -372,7 +369,7 @@ public class IRmanagerController {
 
         // โหลด IRDetailList
         iRreportDetailList = new IRreportDetailList();
-        for (IRreportDetail detail : irDetailRepository.getAllIRReportDetIL()) {
+        for (IRreportDetail detail : irDetailRepository.getAllIRReportDetail()) {
             iRreportDetailList.addOrUpdateIRreportDetail(detail);
         }
 
@@ -851,7 +848,8 @@ public class IRmanagerController {
                         if (empty || item == null) {
                             setGraphic(null);
                         } else {
-                            text.setText(item.replace("#$#","\n").replace("%$%",", "));
+                            text.setText(item.replace("#$#","\n").replace("%$%",", ")
+                                    .replace("|",", "));
                             text.wrappingWidthProperty().bind(column.widthProperty().subtract(10)); // ตั้งค่าการห่อข้อความตามขนาดคอลัมน์
                             setGraphic(text); // แสดงผล Text Node
                         }

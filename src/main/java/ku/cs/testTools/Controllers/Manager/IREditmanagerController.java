@@ -12,7 +12,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Models.Manager.ManagerList;
@@ -94,8 +93,6 @@ public class IREditmanagerController {
     private String typeIR;
     private String type;
     private TestScriptList testScriptList;
-    private IRreportList irReportList;
-    private IRreportDetailList irDetailList;
     private NoteList noteList;
     private TesterList testerList;
     private ManagerList managerList;
@@ -111,6 +108,7 @@ public class IREditmanagerController {
                 objects = (ArrayList) FXRouter.getData();
                 projectName = (String) objects.get(0);
                 nameManager = (String) objects.get(1);
+                System.out.println("nameManager: " + nameManager);
                 typeIR = (String) objects.get(2);
                 System.out.println(typeIR);
                 onTableIR.isFocused();
@@ -263,15 +261,15 @@ public class IREditmanagerController {
         }
 
         // โหลด IRReportList
-        irReportList = new IRreportList();
+        iRreportList = new IRreportList();
         for (IRreport report : irReportRepository.getAllIRReports()) {
-            irReportList.addOrUpdateIRreport(report);
+            iRreportList.addOrUpdateIRreport(report);
         }
 
         // โหลด IRDetailList
-        irDetailList = new IRreportDetailList();
-        for (IRreportDetail detail : irDetailRepository.getAllIRReportDetIL()) {
-            irDetailList.addOrUpdateIRreportDetail(detail);
+        iRreportDetailList = new IRreportDetailList();
+        for (IRreportDetail detail : irDetailRepository.getAllIRReportDetail()) {
+            iRreportDetailList.addOrUpdateIRreportDetail(detail);
         }
 
         // โหลด ConnectionList
@@ -350,12 +348,12 @@ public class IREditmanagerController {
         }
 
         // บันทึกข้อมูล IRReportList
-        for (IRreport report : irReportList.getIRreportList()) {
+        for (IRreport report : iRreportList.getIRreportList()) {
             irReportRepository.updateIRReport(report);
         }
 
         // บันทึกข้อมูล IRDetailList
-        for (IRreportDetail detail : irDetailList.getIRreportDetailList()) {
+        for (IRreportDetail detail : iRreportDetailList.getIRreportDetailList()) {
             irDetailRepository.updateIRReportDetail(detail);
         }
 
@@ -603,7 +601,8 @@ public class IREditmanagerController {
                         if (empty || item == null) {
                             setGraphic(null);
                         } else {
-                            text.setText(item.replace("#$#","\n").replace("%$%",", "));
+                            text.setText(item.replace("#$#","\n").replace("%$%",", ")
+                                    .replace("|",", "));
                             text.wrappingWidthProperty().bind(column.widthProperty().subtract(10)); // ตั้งค่าการห่อข้อความตามขนาดคอลัมน์
                             setGraphic(text); // แสดงผล Text Node
                         }
@@ -779,15 +778,14 @@ public class IREditmanagerController {
         });
     }
     private void currentNewData() {
-        String idIR = irId;
+//        String idIR = testIDLabel.getText();
         String nameIR = onTestNameField.getText();
         String dateIR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String noteIR = onTestNoteField.getText();
         String idTr = iRreport.getTrIR();
 //        String pn = iRreport.getProjectName();
-        iRreport = new IRreport(idIR, nameIR, dateIR, noteIR, idTr);
-        iRreport.setProjectName(projectName);
-        iRreport.setTester(nameTester);
+        iRreport = iRreportList.findIRById(irId);
+        iRreportList.addOrUpdateIRreport(iRreport);
     }
     private void objects() {
         objects = new ArrayList<>();

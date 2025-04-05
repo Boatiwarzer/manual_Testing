@@ -179,7 +179,7 @@ public class TFmanagerController {
 
         // โหลด IRDetailList
         irDetailList = new IRreportDetailList();
-        for (IRreportDetail detail : irDetailRepository.getAllIRReportDetIL()) {
+        for (IRreportDetail detail : irDetailRepository.getAllIRReportDetail()) {
             irDetailList.addOrUpdateIRreportDetail(detail);
         }
 

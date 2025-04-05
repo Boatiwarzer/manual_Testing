@@ -14,7 +14,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.Manager.Manager;
@@ -196,7 +195,7 @@ public class PopupTREdit {
 
         // โหลด IRDetailList
         irDetailList = new IRreportDetailList();
-        for (IRreportDetail detail : irDetailRepository.getAllIRReportDetIL()) {
+        for (IRreportDetail detail : irDetailRepository.getAllIRReportDetail()) {
             irDetailList.addOrUpdateIRreportDetail(detail);
         }
 

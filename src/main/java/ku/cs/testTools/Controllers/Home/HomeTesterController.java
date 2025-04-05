@@ -2,10 +2,7 @@ package ku.cs.testTools.Controllers.Home;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Models.Manager.ManagerList;
@@ -14,7 +11,6 @@ import ku.cs.testTools.Models.Manager.TesterList;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.Repository.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -171,7 +167,7 @@ public class HomeTesterController {
 
         // โหลด IRDetailList
         irDetailList = new IRreportDetailList();
-        for (IRreportDetail detail : irDetailRepository.getAllIRReportDetIL()) {
+        for (IRreportDetail detail : irDetailRepository.getAllIRReportDetail()) {
             irDetailList.addOrUpdateIRreportDetail(detail);
         }
 

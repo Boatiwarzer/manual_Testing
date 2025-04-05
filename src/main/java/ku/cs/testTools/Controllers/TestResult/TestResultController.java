@@ -4,7 +4,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -13,11 +12,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import javafx.stage.Window;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Models.Manager.ManagerList;
-import ku.cs.testTools.Models.Manager.Tester;
 import ku.cs.testTools.Models.Manager.TesterList;
 import ku.cs.testTools.Services.Repository.*;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
@@ -146,7 +143,7 @@ public class TestResultController {
     }
 
     private void setSort() {
-        onSortCombobox.setItems(FXCollections.observableArrayList("All", "Approved", "Not Approved", "Waiting", "Retset"));
+        onSortCombobox.setItems(FXCollections.observableArrayList("All", "Approved", "Not Approved", "Waiting", "Retest"));
         onSortCombobox.setValue("All");
     }
 
@@ -352,9 +349,8 @@ public class TestResultController {
 
         // โหลด IRDetailList
         iRreportDetailList = new IRreportDetailList();
-        for (IRreportDetail detail : irDetailRepository.getAllIRReportDetIL()) {
+        for (IRreportDetail detail : irDetailRepository.getAllIRReportDetail()) {
             iRreportDetailList.addOrUpdateIRreportDetail(detail);
-
         }
 
         // โหลด ConnectionList
@@ -922,10 +918,17 @@ public class TestResultController {
                                 IRreportDetail newIRDetail = new IRreportDetail(idIRD, testNo, testerIRD, tsIdIRD, tcIdIRD, descriptIRD, conditionIRD, imageIRD, retestIRD, priorityIRD, rcaIRD, managerIRD, statusIRD, remarkIRD, idIR, idTrd);
                                 iRreportDetailList.addIRreportDetail(newIRDetail);
                     } else {
-                        List<IRreportDetail> irdList = iRreportDetailList.findAllTRDinIRById(idTrd.trim());
+                        IRDetailRepository service = new IRDetailRepository();
+                        iRreportDetailList = new IRreportDetailList();
+                        List<IRreportDetail> irdList = service.getAllIRReportDetail();
+                        for (IRreportDetail ird : irdList) {
+                            iRreportDetailList.addOrUpdateIRreportDetail(ird);
+                        }
+                        int size = irdList.size();
+                        System.out.println("size   " + size);
                         randomIdIRD();
                         irdID = irdId;
-                        counter = irdList.size() + 1;
+                        counter = size + 1;
                         String testNo = String.format("%d", counter);
                         String testerIRD = detail.getTesterTRD();
                         String tsIdIRD = detail.getTsIdTRD();
@@ -1252,10 +1255,12 @@ public class TestResultController {
                         return true;
                     } else if ("Approved".equals(selectedFilter)) {
                         return "Approved".equals(testResultDetail.getApproveTRD());
-                    } else if ("Not approved".equals(selectedFilter)) {
-                        return "Not approved".equals(testResultDetail.getApproveTRD());
+                    } else if ("Not Approved".equals(selectedFilter)) {
+                        return "Not Approved".equals(testResultDetail.getApproveTRD());
                     } else if ("Waiting".equals(selectedFilter)) {
                         return "Waiting".equals(testResultDetail.getApproveTRD());
+                    } else if ("Retest".equals(selectedFilter)) {
+                        return "Retest".equals(testResultDetail.getApproveTRD());
                     }
                     return false;
                 })

@@ -12,10 +12,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import ku.cs.testTools.Models.Manager.Manager;
-import ku.cs.testTools.Models.Manager.ManagerList;
-import ku.cs.testTools.Models.Manager.Tester;
-import ku.cs.testTools.Models.Manager.TesterList;
 import ku.cs.testTools.Services.Repository.*;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
@@ -196,7 +192,7 @@ public class IRTestresultController {
 
         // โหลด IRDetailList
         iRreportDetailListTemp = new IRreportDetailList();
-        for (IRreportDetail detail : irDetailRepository.getAllIRReportDetIL()) {
+        for (IRreportDetail detail : irDetailRepository.getAllIRReportDetail()) {
             iRreportDetailListTemp.addOrUpdateIRreportDetail(detail);
         }
 
@@ -387,7 +383,8 @@ public class IRTestresultController {
                         if (empty || item == null) {
                             setGraphic(null);
                         } else {
-                            text.setText(item.replace("#$#","\n").replace("%$%",", "));
+                            text.setText(item.replace("#$#","\n").replace("%$%",", ")
+                                    .replace("|",", "));
                             text.wrappingWidthProperty().bind(column.widthProperty().subtract(10)); // ตั้งค่าการห่อข้อความตามขนาดคอลัมน์
                             setGraphic(text); // แสดงผล Text Node
                         }

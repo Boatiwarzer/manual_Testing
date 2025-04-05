@@ -11,7 +11,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
@@ -19,10 +18,10 @@ import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
 import ku.cs.testTools.Services.Repository.*;
 import org.controlsfx.control.textfield.TextFields;
-import org.hibernate.type.internal.UserTypeJavaTypeWrapper;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -72,6 +71,7 @@ public class TestResultEditController {
     private TestResultDetailList testResultDetailList = new TestResultDetailList();
     private TestResultDetailList testResultDetailListTemp = new TestResultDetailList();
     private TestResultDetail selectedItem;
+    private TestResultDetail restestItem = new TestResultDetail();
     private TestResult testResult;
     private TestResult selectedTestResult;
     private static int idCounter = 1; // Counter for sequential IDs
@@ -141,7 +141,7 @@ public class TestResultEditController {
     }
 
     private void setSort() {
-        onSortCombobox.setItems(FXCollections.observableArrayList("All", "Approved", "Not Approved", "Waiting", "Retset"));
+        onSortCombobox.setItems(FXCollections.observableArrayList("All", "Approved", "Not Approved", "Waiting", "Retest"));
         onSortCombobox.setValue("All");
     }
 
@@ -232,7 +232,7 @@ public class TestResultEditController {
 
         // โหลด IRDetailList
         iRreportDetailList = new IRreportDetailList();
-        for (IRreportDetail detail : irDetailRepository.getAllIRReportDetIL()) {
+        for (IRreportDetail detail : irDetailRepository.getAllIRReportDetail()) {
             iRreportDetailList.addOrUpdateIRreportDetail(detail);
 
         }
@@ -678,14 +678,24 @@ public class TestResultEditController {
             if (newValue == null) {
                 selectedItem = null;
             } else {
-                if (newValue.getIdTRD() != null && !newValue.getApproveTRD().equals("Approved") && !newValue.getApproveTRD().equals("Not Approved")){
-                    onEditListButton.setVisible(true);
-                    onDeleteListButton.setVisible(true);
-                    onRetestButton.setVisible(true);
-                }else {
+                if (newValue.getIdTRD() != null && newValue.getApproveTRD().equals("Approved")) {
                     onEditListButton.setVisible(false);
                     onDeleteListButton.setVisible(false);
                     onRetestButton.setVisible(false);
+                } else if (newValue.getIdTRD() != null && newValue.getApproveTRD().equals("Not Approved")) {
+                    onEditListButton.setVisible(true);
+                    onDeleteListButton.setVisible(true);
+                    onEditListButton.setDisable(true);
+                    onDeleteListButton.setDisable(true);
+                    onRetestButton.setVisible(true);
+                    onRetestButton.setDisable(false);
+                } else {
+                    onEditListButton.setVisible(true);
+                    onDeleteListButton.setVisible(true);
+                    onEditListButton.setDisable(false);
+                    onDeleteListButton.setDisable(false);
+                    onRetestButton.setVisible(true);
+                    onRetestButton.setDisable(true);
                 }
                 selectedItem = newValue;
                 System.out.println(selectedItem);
@@ -697,11 +707,12 @@ public class TestResultEditController {
         onTableTestresult.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) { // เมื่อ TableView สูญเสีย focus
                 // เช็คว่า focus มาจากปุ่มที่กดหรือไม่
-                if (!onEditListButton.isPressed() && !onDeleteListButton.isPressed()) {
+                if (!onEditListButton.isPressed() && !onDeleteListButton.isPressed() && !onRetestButton.isPressed()) {
                     onTableTestresult.getSelectionModel().clearSelection(); // เคลียร์การเลือก
                     //selectedItem = null; // อาจจะรีเซ็ต selectedItem
-                    onEditListButton.setVisible(false); // ซ่อนปุ่ม
-                    onDeleteListButton.setVisible(false); // ซ่อนปุ่ม
+                    onEditListButton.setVisible(false);
+                    onDeleteListButton.setVisible(false);
+                    onRetestButton.setVisible(false);
                 }
             }
         });
@@ -1081,10 +1092,12 @@ public class TestResultEditController {
                         return true;
                     } else if ("Approved".equals(selectedFilter)) {
                         return "Approved".equals(testResultDetail.getApproveTRD());
-                    } else if ("Not approved".equals(selectedFilter)) {
-                        return "Not approved".equals(testResultDetail.getApproveTRD());
+                    } else if ("Not Approved".equals(selectedFilter)) {
+                        return "Not Approved".equals(testResultDetail.getApproveTRD());
                     } else if ("Waiting".equals(selectedFilter)) {
                         return "Waiting".equals(testResultDetail.getApproveTRD());
+                    } else if ("Retest".equals(selectedFilter)) {
+                        return "Retest".equals(testResultDetail.getApproveTRD());
                     }
                     return false;
                 })
@@ -1104,15 +1117,39 @@ public class TestResultEditController {
     void onRetestButton(ActionEvent event) {
         try {
             currentNewData();
+//            restestItem = selectedItem;
+//            randomIdTRD();
+//            restestItem.setIdTRD(trdId);
+            restestItem.setTestNo("");
+            restestItem.setTsIdTRD(selectedItem.getTsIdTRD());
+            restestItem.setTcIdTRD(selectedItem.getTcIdTRD());
+            restestItem.setDescriptTRD(selectedItem.getDescriptTRD());
+            restestItem.setActorTRD(selectedItem.getActorTRD());
+            restestItem.setInputdataTRD(selectedItem.getInputdataTRD());
+            restestItem.setStepsTRD(selectedItem.getStepsTRD());
+            restestItem.setExpectedTRD(selectedItem.getExpectedTRD());
+            restestItem.setApproveTRD("Retest");
+            restestItem.setRetestTRD(String.valueOf(Integer.parseInt(selectedItem.getRetestTRD()) + 1));
+            restestItem.setActualTRD("");
+            restestItem.setStatusTRD("None");
+            restestItem.setPriorityTRD("None");
+            restestItem.setDateTRD(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            restestItem.setImageTRD("...");
+            restestItem.setTesterTRD(selectedItem.getTesterTRD());
+            restestItem.setRemarkTRD(selectedItem.getRemarkTRD());
+//            for (TestResultDetail testResultDetail : testResultDetailListTemp.getTestResultDetailList()) {
+//                testResultDetailList.addOrUpdateTestResultDetail(testResultDetail);
+//            }
+//            List<TestResultDetail> trd = testResultDetailList.getTestResultDetailList();
+//            List<TestResultDetail> notapproved = trd.stream()
+//                    .filter(notapprove -> notapprove.getStatusTRD().equals("Not Approved"))
+//                    .collect(Collectors.toList());
             objects();
-            objects.add("edit");
-            randomIdTRD();
-            selectedItem.setIdTRD(trdId);
-            selectedItem.setStatusTRD("Retest");
-            objects.add(selectedItem);
+            objects.add("retest");
+            objects.add(restestItem);
             objects.add(testResultDetailListDelete);
-            if (selectedItem != null){
-                FXRouter.popup("popup_add_testresult",objects,true);
+            if (restestItem != null){
+                FXRouter.popup("popup_add_testresult",objects);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

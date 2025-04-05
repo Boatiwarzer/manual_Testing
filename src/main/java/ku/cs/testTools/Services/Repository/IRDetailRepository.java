@@ -1,7 +1,6 @@
 package ku.cs.testTools.Services.Repository;
 
 import jakarta.persistence.*;
-import ku.cs.testTools.Models.TestToolModels.IRreport;
 import ku.cs.testTools.Models.TestToolModels.IRreportDetail;
 import ku.cs.testTools.Services.JpaUtil;
 
@@ -37,10 +36,17 @@ public class IRDetailRepository {
     }
 
     // Retrieve all TestScripts
-    public List<IRreportDetail> getAllIRReportDetIL() {
+    public List<IRreportDetail> getAllIRReportDetail() {
         String query = "SELECT t FROM IRreportDetail t";
         TypedQuery<IRreportDetail> typedQuery = entityManager.createQuery(query, IRreportDetail.class);
         return typedQuery.getResultList();
+    }
+
+    public int getSize() {
+        String query = "SELECT COUNT(t) FROM IRreport t";
+        return entityManager.createQuery(query, Long.class)
+                .getSingleResult()
+                .intValue();
     }
 
     // Retrieve a TestScript by ID

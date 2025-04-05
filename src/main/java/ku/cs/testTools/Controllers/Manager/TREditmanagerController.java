@@ -12,7 +12,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Models.Manager.ManagerList;
@@ -146,7 +145,7 @@ public class TREditmanagerController {
     }
 
     private void setSort() {
-        onSortCombobox.setItems(FXCollections.observableArrayList("All", "Approved", "Not Approved", "Waiting", "Retset"));
+        onSortCombobox.setItems(FXCollections.observableArrayList("All", "Approved", "Not Approved", "Waiting", "Retest"));
         onSortCombobox.setValue("All");
     }
     private void selectedVbox() {
@@ -273,7 +272,7 @@ public class TREditmanagerController {
 
         // โหลด IRDetailList
         irDetailList = new IRreportDetailList();
-        for (IRreportDetail detail : irDetailRepository.getAllIRReportDetIL()) {
+        for (IRreportDetail detail : irDetailRepository.getAllIRReportDetail()) {
             irDetailList.addOrUpdateIRreportDetail(detail);
         }
 
@@ -782,7 +781,6 @@ public class TREditmanagerController {
 //        String pn = testResult.getProjectName();
         testResult = testResultList.findTRById(trId);
         testResultList.addOrUpdateTestResult(testResult);
-
     }
     private void objects() {
         objects = new ArrayList<>();
@@ -1059,10 +1057,12 @@ public class TREditmanagerController {
                         return true;
                     } else if ("Approved".equals(selectedFilter)) {
                         return "Approved".equals(testResultDetail.getApproveTRD());
-                    } else if ("Not approved".equals(selectedFilter)) {
-                        return "Not approved".equals(testResultDetail.getApproveTRD());
+                    } else if ("Not Approved".equals(selectedFilter)) {
+                        return "Not Approved".equals(testResultDetail.getApproveTRD());
                     } else if ("Waiting".equals(selectedFilter)) {
                         return "Waiting".equals(testResultDetail.getApproveTRD());
+                    } else if ("Retest".equals(selectedFilter)) {
+                        return "Retest".equals(testResultDetail.getApproveTRD());
                     }
                     return false;
                 })

@@ -15,11 +15,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import ku.cs.testTools.Models.Manager.Tester;
 import ku.cs.testTools.Services.Repository.*;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
@@ -33,16 +30,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.chrono.Chronology;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class PopupAddTestresultController {
 
     @FXML
-    private TextField onTestNo;
+    private TextField onTestNo, onRetest;
     @FXML
     private TextArea onTeststeps, onActual;
 
@@ -56,7 +50,7 @@ public class PopupAddTestresultController {
     private Hyperlink onImage;
 
     @FXML
-    private Label onDescription, testResultIDLabel, testResultNameLabel, onExpected, onTester, onActor, onRetest;
+    private Label onDescription, testResultIDLabel, testResultNameLabel, onExpected, onTester, onActor;
 
     @FXML
     private ComboBox<String> onTestscriptIDComboBox;
@@ -135,7 +129,14 @@ public class PopupAddTestresultController {
 //                testResultDetail = testResultDetailList.findTRDById(testResultDetail.getIdTRD());
                 id = testResultDetail.getIdTRD();
                 setTextEdit();
-            }else {
+            } else if (objects.get(6) != null && type.equals("retest")) {
+                testResultDetail = (TestResultDetail) objects.get(6);
+                testResultDetailListDelete = (TestResultDetailList)  objects.get(7);
+                randomId();
+//                String retest = String.valueOf(Integer.parseInt(testResultDetail.getRetestTRD()) + 1);
+//                testResultDetail.setRetestTRD(retest);
+                setTextEdit();
+            } else {
                 randomId();
             }
 
@@ -201,7 +202,7 @@ public class PopupAddTestresultController {
 
         // โหลด IRDetailList
         iRreportDetailList = new IRreportDetailList();
-        for (IRreportDetail detail : irDetailRepository.getAllIRReportDetIL()) {
+        for (IRreportDetail detail : irDetailRepository.getAllIRReportDetail()) {
             iRreportDetailList.addOrUpdateIRreportDetail(detail);
         }
 
@@ -588,7 +589,7 @@ public class PopupAddTestresultController {
 //                    List<TestCase> testCaseInProject = allTestCases.stream()
 //                            .filter(tester -> tester.getProjectName().equals(projectName)) // เช็คว่า projectName ตรงกัน
 //                            .collect(Collectors.toList());
-                    TestCase ts = testCaseList.findTCByIdTS(tsId);
+                    TestCase ts = testCaseList.findTCByIdTS(selectedId);
                     System.out.println(ts + " ts");
                     String tc = ts.getIdTC();
                     System.out.println(tc + " tc");
@@ -752,6 +753,15 @@ public class PopupAddTestresultController {
             return false;
         }
 
+        if (onRetest.getText() == null || onTestNo.getText().trim().isEmpty()) {
+            showAlert("กรุณากรอกข้อมูล Test times");
+            return false;
+        } else if (!onTestNo.getText().matches("\\d+")) {
+            showAlert("กรุณากรอกตัวเลขเท่านั้น");
+            return false;
+        }
+
+
         if (onTestscriptIDComboBox.getValue() == null || onTestscriptIDComboBox.getValue().trim().isEmpty() || onTestscriptIDComboBox.getValue().equals("None")) {
             showAlert("กรุณาเลือก Test Script ID");
             return false;
@@ -784,6 +794,11 @@ public class PopupAddTestresultController {
 
         if (onPriorityComboBox.getValue() == null || onPriorityComboBox.getValue().trim().isEmpty()) {
             showAlert("กรุณาเลือก Priority");
+            return false;
+        }
+
+        if (onDate.getValue() == null) {
+            showAlert("กรุณาเลือก Date");
             return false;
         }
 

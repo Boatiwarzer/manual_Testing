@@ -13,7 +13,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.Manager.Manager;
@@ -106,8 +105,9 @@ public class PopupIRmanager {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             nameManager = (String) objects.get(1);
+            System.out.println("nameManager: " + nameManager);
             typeIR = (String) objects.get(2);
-            iRreport = (IRreport) objects.get(3);
+            iRreport = (IRreport) objects.get(3);;
             iRreportDetailList = (IRreportDetailList) objects.get(4);
             idIR = iRreport.getIdIR();
             IRreportDetail trd = iRreportDetailList.findIRDByirId(idIR);
@@ -201,7 +201,7 @@ public class PopupIRmanager {
 
         // โหลด IRDetailList
         irDetailList = new IRreportDetailList();
-        for (IRreportDetail detail : irDetailRepository.getAllIRReportDetIL()) {
+        for (IRreportDetail detail : irDetailRepository.getAllIRReportDetail()) {
             irDetailList.addOrUpdateIRreportDetail(detail);
         }
 
