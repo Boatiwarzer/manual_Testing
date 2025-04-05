@@ -633,7 +633,7 @@ public class IRTestresultController {
         try {
             currentNewData();
             iRreportList.addOrUpdateIRreport(iRreport);
-            iRreportList.addOrUpdateIRreport(iRreport);
+//            iRreportList.addOrUpdateIRreport(iRreport);
             IRReportRepository iRReportRepository = new IRReportRepository();
             IRDetailRepository iRDetailRepository = new IRDetailRepository();
             for (IRreportDetail iRreportDetail : iRreportDetailList.getIRreportDetailList()){
