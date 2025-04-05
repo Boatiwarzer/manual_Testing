@@ -18,6 +18,7 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Models.Manager.ManagerList;
@@ -504,27 +505,39 @@ public class TFmanagerController {
     }
 
     @FXML
-    void handleOpenMenuItem(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
+    void handleOpenMenuItem(ActionEvent actionEvent) throws IOException{
+//        FileChooser fileChooser = new FileChooser();
+//
+//        // Configure the file chooser
+//        fileChooser.setTitle("Open Project");
+//        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+//        fileChooser.getExtensionFilters().add(extFilter);
+//
+//        // Show the file chooser
+//        File file = fileChooser.showOpenDialog(null);
+//        if (file != null) {
+//            System.out.println("Opening: " + file.getName());
+//            // Get the project name from the file name
+//            projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
+//
+//            // Get the directory from the file path
+//            directory = file.getParent();
+//            loadProject();
+//        } else {
+//            System.out.println("Open command cancelled");
+//        }
+        ArrayList<Object> objects = new ArrayList<>();
+        String projectName = null;
+        objects.add(projectName);
+        objects.add("manager");
 
-        // Configure the file chooser
-        fileChooser.setTitle("Open Project");
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
-        fileChooser.getExtensionFilters().add(extFilter);
-
-        // Show the file chooser
-        File file = fileChooser.showOpenDialog(null);
-        if (file != null) {
-            System.out.println("Opening: " + file.getName());
-            // Get the project name from the file name
-            projectName = file.getName().substring(0, file.getName().lastIndexOf("."));
-
-            // Get the directory from the file path
-            directory = file.getParent();
-            loadProject();
-        } else {
-            System.out.println("Open command cancelled");
-        }
+        String packageStr1 = "views/";
+        FXRouter.when("home_manager", packageStr1 + "home_manager.fxml", "TestTools | " + projectName);
+        FXRouter.popup("landing_openproject", objects,true);
+        // Close the current window
+        Node source = (Node) actionEvent.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
     }
 
     public void objects(){

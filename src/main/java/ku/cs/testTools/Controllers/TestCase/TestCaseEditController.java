@@ -911,6 +911,18 @@ public class TestCaseEditController {
 //        } else {
 //            System.out.println("No file selected.");
 //        }
+        ArrayList<Object> objects = new ArrayList<>();
+        String projectName = null;
+        objects.add(projectName);
+        objects.add("tester");
+
+        String packageStr1 = "views/";
+        FXRouter.when("home_tester", packageStr1 + "home_tester.fxml", "TestTools | " + projectName);
+        FXRouter.popup("landing_openproject", objects,true);
+        // Close the current window
+        Node source = (Node) actionEvent.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
     }
 
     @FXML

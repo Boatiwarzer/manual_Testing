@@ -578,6 +578,18 @@ public class IRmanagerController {
 //        } else {
 //            System.out.println("No file selected.");
 //        }
+        ArrayList<Object> objects = new ArrayList<>();
+        String projectName = null;
+        objects.add(projectName);
+        objects.add("manager");
+
+        String packageStr1 = "views/";
+        FXRouter.when("home_manager", packageStr1 + "home_manager.fxml", "TestTools | " + projectName);
+        FXRouter.popup("landing_openproject", objects,true);
+        // Close the current window
+        Node source = (Node) actionEvent.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
     }
     public void objects(){
         objects = new ArrayList<>();

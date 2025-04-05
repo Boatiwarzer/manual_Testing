@@ -23,6 +23,7 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
@@ -338,6 +339,18 @@ public class TestFlowController {
 //        } else {
 //            System.out.println("No file selected.");
 //        }
+        ArrayList<Object> objects = new ArrayList<>();
+        String projectName = null;
+        objects.add(projectName);
+        objects.add("tester");
+
+        String packageStr1 = "views/";
+        FXRouter.when("home_tester", packageStr1 + "home_tester.fxml", "TestTools | " + projectName);
+        FXRouter.popup("landing_openproject", objects,true);
+        // Close the current window
+        Node source = (Node) actionEvent.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
     }
 
     @FXML

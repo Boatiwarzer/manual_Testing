@@ -305,7 +305,7 @@ public class HomeTesterController {
     private void loadManagerStatus() {
         ManagerRepository managerRepository = new ManagerRepository();
         for (Manager manager : managerRepository.getAllManagers()){
-            manager.setStatusTrue();
+            manager.setStatusFalse();
             managerRepository.updateManager(manager);
         }
     }

@@ -2,10 +2,12 @@ package ku.cs.testTools.Controllers.UseCase;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import ku.cs.testTools.Models.Manager.Manager;
 import ku.cs.testTools.Services.Repository.ManagerRepository;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
@@ -522,15 +524,18 @@ public class UseCaseController {
 //            // Get the directory from the file path
 //            directory = file.getParent();
 //
-            ArrayList<Object> objects = new ArrayList<>();
-            objects.add(projectName);
-            objects.add("tester");
-            objects.add(null);
-            // แก้พาท
-            String packageStr1 = "views/";
-            FXRouter.when("home_tester", packageStr1 + "home_tester.fxml", "TestTools | " + projectName);
-            FXRouter.goTo("home_tester", objects);
-            FXRouter.popup("landing_openproject", objects);
+        ArrayList<Object> objects = new ArrayList<>();
+        String projectName = null;
+        objects.add(projectName);
+        objects.add("tester");
+
+        String packageStr1 = "views/";
+        FXRouter.when("home_tester", packageStr1 + "home_tester.fxml", "TestTools | " + projectName);
+        FXRouter.popup("landing_openproject", objects,true);
+        // Close the current window
+        Node source = (Node) actionEvent.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
 
     }
 
