@@ -19,6 +19,7 @@ import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.*;
 import ku.cs.testTools.Services.Repository.*;
 import org.controlsfx.control.textfield.TextFields;
+import org.hibernate.type.internal.UserTypeJavaTypeWrapper;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
 public class TestResultEditController {
 
     @FXML
-    private Button onAddButton, onEditListButton, onDeleteButton, onDeleteListButton, onSearchButton, onSubmitButton, onCancelButton;
+    private Button onAddButton, onEditListButton, onDeleteButton, onDeleteListButton, onSearchButton, onSubmitButton, onCancelButton, onRetestButton;
 
     @FXML
     private Hyperlink onClickTestcase, onClickTestflow, onClickTestresult, onClickTestscript, onClickUsecase;
@@ -64,6 +65,7 @@ public class TestResultEditController {
     private MenuItem saveMenuItem;
     private ArrayList<String> word = new ArrayList<>();
     private String trId;
+    private String trdId;
     private String projectName;
     private TestResultList testResultList = new TestResultList();
     //private ArrayList<Object> objects = (ArrayList) FXRouter.getData();
@@ -139,7 +141,7 @@ public class TestResultEditController {
     }
 
     private void setSort() {
-        onSortCombobox.setItems(FXCollections.observableArrayList("All", "Approved", "Not Approved", "Waiting"));
+        onSortCombobox.setItems(FXCollections.observableArrayList("All", "Approved", "Not Approved", "Waiting", "Retset"));
         onSortCombobox.setValue("All");
     }
 
@@ -354,6 +356,7 @@ public class TestResultEditController {
     private void setButtonVisible() {
         onEditListButton.setVisible(false);
         onDeleteListButton.setVisible(false);
+        onRetestButton.setVisible(false);
     }
 
     private void clearInfo() {
@@ -641,7 +644,12 @@ public class TestResultEditController {
         int upperbound = 999;
         String random1 = String.valueOf((int)Math.floor(Math.random() * (upperbound - min + 1) + min));
         this.trId = String.format("TR-%s", random1);
-
+    }
+    public void randomIdTRD() {
+        int min = 1;
+        int upperbound = 999;
+        String random1 = String.valueOf((int) Math.floor(Math.random() * (upperbound - min + 1) + min));
+        this.trdId = String.format("TRD-%s", random1);
     }
     public void generateSequentialId() {
         // Loop until we find an unused ID
@@ -670,12 +678,14 @@ public class TestResultEditController {
             if (newValue == null) {
                 selectedItem = null;
             } else {
-                if (newValue.getIdTRD() != null && !newValue.getApproveTRD().equals("Approved")){
+                if (newValue.getIdTRD() != null && !newValue.getApproveTRD().equals("Approved") && !newValue.getApproveTRD().equals("Not Approved")){
                     onEditListButton.setVisible(true);
                     onDeleteListButton.setVisible(true);
+                    onRetestButton.setVisible(true);
                 }else {
                     onEditListButton.setVisible(false);
                     onDeleteListButton.setVisible(false);
+                    onRetestButton.setVisible(false);
                 }
                 selectedItem = newValue;
                 System.out.println(selectedItem);
@@ -1088,6 +1098,25 @@ public class TestResultEditController {
                 .collect(Collectors.toList());
 
         onTableTestresult.getItems().setAll(sortedList);
+    }
+
+    @FXML
+    void onRetestButton(ActionEvent event) {
+        try {
+            currentNewData();
+            objects();
+            objects.add("edit");
+            randomIdTRD();
+            selectedItem.setIdTRD(trdId);
+            selectedItem.setStatusTRD("Retest");
+            objects.add(selectedItem);
+            objects.add(testResultDetailListDelete);
+            if (selectedItem != null){
+                FXRouter.popup("popup_add_testresult",objects,true);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 

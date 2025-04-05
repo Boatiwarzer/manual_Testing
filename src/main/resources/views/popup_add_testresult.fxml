@@ -42,11 +42,11 @@
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <Label fx:id="onRetest" prefHeight="30.0" prefWidth="135.0" text="Label" wrapText="true">
+                  <TextField fx:id="onRetest" alignment="TOP_LEFT" onKeyTyped="#GenerateDate" prefHeight="30.0" prefWidth="135.0">
                      <font>
                         <Font size="14.0" />
                      </font>
-                  </Label>
+                  </TextField>
                </children>
             </HBox>
             <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">
@@ -172,7 +172,7 @@
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <DatePicker fx:id="onDate" prefHeight="30.0" prefWidth="450.0" />
+                  <DatePicker fx:id="onDate" editable="false" prefHeight="30.0" prefWidth="450.0" />
                </children>
             </HBox>
             <HBox alignment="TOP_CENTER" prefHeight="30.0" prefWidth="200.0" spacing="30.0">

@@ -146,7 +146,7 @@ public class TREditmanagerController {
     }
 
     private void setSort() {
-        onSortCombobox.setItems(FXCollections.observableArrayList("All", "Approved", "Not Approved", "Waiting"));
+        onSortCombobox.setItems(FXCollections.observableArrayList("All", "Approved", "Not Approved", "Waiting", "Retset"));
         onSortCombobox.setValue("All");
     }
     private void selectedVbox() {
@@ -751,7 +751,7 @@ public class TREditmanagerController {
             if (newValue == null) {
                 selectedItem = null;
             } else {
-                if (newValue.getIdTRD() != null && !newValue.getApproveTRD().equals("Approved")){
+                if (newValue.getIdTRD() != null && !newValue.getApproveTRD().equals("Approved") && !newValue.getApproveTRD().equals("Not Approved")){
                     onEditListButton.setVisible(true);
                 }else {
                     onEditListButton.setVisible(false);

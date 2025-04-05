@@ -127,7 +127,7 @@ public class TestResultAddController {
     }
 
     private void setSort() {
-        onSortCombobox.setItems(FXCollections.observableArrayList("All", "Approved", "Not Approved", "Waiting"));
+        onSortCombobox.setItems(FXCollections.observableArrayList("All", "Approved", "Not Approved", "Waiting", "Retset"));
         onSortCombobox.setValue("All");
     }
     public void handleExportMenuItem(ActionEvent actionEvent) {
