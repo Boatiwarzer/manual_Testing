@@ -114,6 +114,7 @@ public class IRmanagerController {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
             nameManager = (String) objects.get(1);
+            System.out.println(nameManager);
             if (objects.get(2) != null){
                 iRreport = (IRreport) objects.get(2);
             }
