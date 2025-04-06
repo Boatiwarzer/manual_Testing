@@ -110,7 +110,6 @@ public class PopupAddTestresultController {
         setPriority();
         setLabel();
         clearInfo();
-        selectBox();
         if (FXRouter.getData() != null) {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
@@ -130,6 +129,7 @@ public class PopupAddTestresultController {
 //                testResultDetail = testResultDetailList.findTRDById(testResultDetail.getIdTRD());
                 id = testResultDetail.getIdTRD();
                 setTextEdit();
+                selectBox();
             } else if (objects.get(6) != null && type.equals("retest")) {
                 testResultDetail = (TestResultDetail) objects.get(6);
                 testResultDetailListDelete = (TestResultDetailList)  objects.get(7);
@@ -137,6 +137,7 @@ public class PopupAddTestresultController {
 //                String retest = String.valueOf(Integer.parseInt(testResultDetail.getRetestTRD()) + 1);
 //                testResultDetail.setRetestTRD(retest);
                 setTextEdit();
+                selectBox();
             } else {
                 randomId();
             }
@@ -751,9 +752,9 @@ public class PopupAddTestresultController {
 //        TestResultDetail trd = testResultDetailList.findTRDById(id);
 //        System.out.println("id  " + id);
 //        System.out.println("trd  " + trd);
-//
-//        onPriorityComboBox.setDisable(!trd.getStatusTRD().equals("Fail"));
-        onPriorityComboBox.setDisable(true);
+
+        onPriorityComboBox.setDisable(!onStatusComboBox.getValue().equals("Fail"));
+//        onPriorityComboBox.setDisable(true);
 
         // ตั้ง listener ให้ comboBox1
         onStatusComboBox.setOnAction(event -> {

@@ -143,7 +143,8 @@ public class IREditmanagerController {
     }
 
     private void setSort() {
-        onSortCombobox.setItems(FXCollections.observableArrayList("All", "In Manager", "In Developer", "In Tester", "Withdraw", "Done"));
+        onSortCombobox.setItems(FXCollections.observableArrayList("All", "In Manager", "In Developer", "In Tester",
+                "Withdraw", "Done", "Low", "Medium", "High", "Critical"));
         onSortCombobox.setValue("All");
     }
     private void selectedVbox() {
@@ -1081,6 +1082,14 @@ public class IREditmanagerController {
                         return "Withdraw".equals(iRreportDetail.getStatusIRD());
                     } else if ("Done".equals(selectedFilter)) {
                         return "Done".equals(iRreportDetail.getStatusIRD());
+                    } else if ("Low".equals(selectedFilter)) {
+                        return "Low".equals(iRreportDetail.getPriorityIRD());
+                    } else if ("Medium".equals(selectedFilter)) {
+                        return "Medium".equals(iRreportDetail.getPriorityIRD());
+                    } else if ("High".equals(selectedFilter)) {
+                        return "High".equals(iRreportDetail.getPriorityIRD());
+                    } else if ("Critical".equals(selectedFilter)) {
+                        return "Critical".equals(iRreportDetail.getPriorityIRD());
                     }
                     return false;
                 })

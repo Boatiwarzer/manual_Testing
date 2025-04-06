@@ -113,6 +113,7 @@ public class PopupTREdit {
                 testResultDetail = testResultDetailList.findTRDById(testResultDetail.getIdTRD());
                 id = testResultDetail.getIdTRD();
                 setTextEdit();
+                selectBox();
             }else {
                 randomId();
             }
@@ -380,6 +381,27 @@ public class PopupTREdit {
         onImage.getStyleClass().add("custom-label");
         onActor.getStyleClass().add("custom-label");
         onRetest.getStyleClass().add("custom-label");
+    }
+
+    void selectBox(){
+
+        onPriorityComboBox.setDisable(!onStatusComboBox.getValue().equals("Fail"));
+//        onPriorityComboBox.setDisable(true);
+
+        // ตั้ง listener ให้ comboBox1
+        onStatusComboBox.setOnAction(event -> {
+            String selectedValue = onStatusComboBox.getValue();
+
+            if ("Pass".equalsIgnoreCase(selectedValue)) {
+                onPriorityComboBox.setDisable(true); // ปิดการใช้งาน
+                onPriorityComboBox.setValue("None");
+            } else if ("Fail".equalsIgnoreCase(selectedValue)) {
+                onPriorityComboBox.setDisable(false); // เปิดให้ใช้งาน
+            } else {
+                onPriorityComboBox.setDisable(true); // กรณีอื่น ๆ ปิดไว้ก่อน
+                onPriorityComboBox.setValue("None");
+            }
+        });
     }
 
     private void clearInfo() {

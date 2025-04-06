@@ -148,7 +148,8 @@ public class IRmanagerController {
         }
     }
     private void setSort() {
-        onSortCombobox.setItems(FXCollections.observableArrayList("All", "In Manager", "In Developer", "In Tester", "Withdraw", "Done"));
+        onSortCombobox.setItems(FXCollections.observableArrayList("All", "In Manager", "In Developer", "In Tester",
+                "Withdraw", "Done", "Low", "Medium", "High", "Critical"));
         onSortCombobox.setValue("All");
     }
     private void loadList() {
@@ -1250,30 +1251,39 @@ public class IRmanagerController {
 
             Drawing<?> drawing = sheet.createDrawingPatriarch();
 
-            // **ใส่ข้อมูล testResultDetail**
             for (String[] detail : details) {
                 Row row = sheet.createRow(currentRow++);
                 row.setHeightInPoints(40);
 
-                for (int i = 0; i < columns.length; i++) {
+                String[] arrangedDetail = new String[] {
+                        detail[0],  // IRD ID (id)
+                        detail[15], // TRD ID (trd)
+                        detail[1],  // Test No. (TrNo)
+                        detail[2],  // Tester
+                        detail[8],  // Test times (retest)
+                        detail[3],  // TS ID
+                        detail[4],  // TC ID
+                        detail[5],  // Description
+                        detail[6],  // Condition
+                        detail[7],  // Image
+                        detail[9],  // Priority
+                        detail[10], // RCA
+                        detail[11], // Review By (manager)
+                        detail[12], // Status
+                        detail[13]  // Remark
+                };
+
+                for (int i = 0; i < arrangedDetail.length; i++) {
                     Cell cell = row.createCell(i);
-                    if (i < detail.length) {
-                        cell.setCellValue(detail[i]);
-                    } else {
-                        cell.setCellValue("");
-                    }
+                    cell.setCellValue(arrangedDetail[i] != null ? arrangedDetail[i] : "");
                     cell.setCellStyle(contentStyle);
                 }
 
-                // **ใส่รูปภาพใน column "Image"**
                 int imageColumnIndex = 9;
-                if (detail.length > imageColumnIndex && detail[imageColumnIndex] != null && !detail[imageColumnIndex].isEmpty()) {
-                    String imagePaths = detail[imageColumnIndex];
-//                    String[] parts = imagePaths.split(" : ");
-//                    String imagePath = parts.length > 1 ? parts[1] : "";
-
+                if (arrangedDetail[imageColumnIndex] != null && !arrangedDetail[imageColumnIndex].isEmpty()) {
+                    String imagePaths = arrangedDetail[imageColumnIndex];
                     String[] images = imagePaths.split(" \\| ");
-                    String firstImage = images[0]; // เอารายการแรก
+                    String firstImage = images[0];
                     String[] parts = firstImage.split(" : ");
                     String firstImagePath = parts.length > 1 ? parts[1] : "";
 
@@ -1296,13 +1306,13 @@ public class IRmanagerController {
                             picture.resize(1);
                         } catch (IOException e) {
                             System.err.println("ไม่สามารถโหลดรูปภาพ: " + firstImagePath);
-                            row.createCell(imageColumnIndex).setCellValue("...");
+                            row.getCell(imageColumnIndex).setCellValue("...");
                         }
                     } else {
-                        row.createCell(imageColumnIndex).setCellValue("...");
+                        row.getCell(imageColumnIndex).setCellValue("...");
                     }
                 } else {
-                    row.createCell(imageColumnIndex).setCellValue("...");
+                    row.getCell(imageColumnIndex).setCellValue("...");
                 }
             }
             currentRow += 1;
@@ -1363,6 +1373,14 @@ public class IRmanagerController {
                         return "Withdraw".equals(iRreportDetail.getStatusIRD());
                     } else if ("Done".equals(selectedFilter)) {
                         return "Done".equals(iRreportDetail.getStatusIRD());
+                    } else if ("Low".equals(selectedFilter)) {
+                        return "Low".equals(iRreportDetail.getPriorityIRD());
+                    } else if ("Medium".equals(selectedFilter)) {
+                        return "Medium".equals(iRreportDetail.getPriorityIRD());
+                    } else if ("High".equals(selectedFilter)) {
+                        return "High".equals(iRreportDetail.getPriorityIRD());
+                    } else if ("Critical".equals(selectedFilter)) {
+                        return "Critical".equals(iRreportDetail.getPriorityIRD());
                     }
                     return false;
                 })
