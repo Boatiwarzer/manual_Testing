@@ -536,7 +536,7 @@ public class PopupInfoTestcaseController {
 
     @FXML
     void onAddButton(ActionEvent event) {
-        String[] data = onTestNameCombobox.getValue().split(":");
+        String[] data = onTestscriptCombobox.getValue().split(":");
         String name = data[1].trim();
         String idTC = tsId;
         String date = testDateLabel.getText();
@@ -547,7 +547,7 @@ public class PopupInfoTestcaseController {
         String post = infoPostconLabel.getText();
         try {
 
-            testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post,data[0],projectName,nameTester);
+            testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post,onTestscriptCombobox.getValue(),projectName,nameTester);
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);
             objects.add(nameTester);
@@ -674,7 +674,7 @@ public class PopupInfoTestcaseController {
             String note = onTestNoteField.getText();
             String post = infoPostconLabel.getText();
 
-            testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post,data[0],projectName,nameTester);
+            testCase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post,onTestscriptCombobox.getValue(),projectName,nameTester);
             onEditListButton.setOnAction(event1 -> onTableTestCase.requestFocus());
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(projectName);

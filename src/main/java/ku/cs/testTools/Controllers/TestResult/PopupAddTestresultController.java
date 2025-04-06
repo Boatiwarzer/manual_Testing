@@ -634,8 +634,10 @@ public class PopupAddTestresultController {
 
     private void IdTSCombobox() {
         for (TestScript testScript : testScriptList.getTestScriptList()){
-            String IdTS_combobox = testScript.getIdTS()+ " : " + testScript.getNameTS();
-            onTestscriptIDComboBox.getItems().add(IdTS_combobox);
+            if (testScript.getProjectName().equals(projectName)){
+                String IdTS_combobox = testScript.getIdTS()+ " : " + testScript.getNameTS();
+                onTestscriptIDComboBox.getItems().add(IdTS_combobox);
+            }
         }
     }
     private void objects() {
