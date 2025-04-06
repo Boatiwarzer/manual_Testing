@@ -103,4 +103,25 @@ public class IRreportDetail {
     public boolean isTrd(String id) {
         return this.idTRD.equals(id);
     }
+
+    public String[] toArray() {
+        return new String[]{
+                this.getIdIRD(),
+                this.getTestNoIRD(),
+                this.getTesterIRD(),
+                this.getTsIdIRD(),
+                this.getTcIdIRD(),
+                this.getDescriptIRD(),
+                this.getConditionIRD(),
+                this.getImageIRD(),
+                this.getRetestIRD(),
+                this.getPriorityIRD(),
+                this.getRcaIRD(),
+                this.getManagerIRD(),
+                this.getStatusIRD(),
+                this.getRemarkIRD(),
+                this.getIdIR(),
+                this.getIdTRD()
+        };
+    }
 }

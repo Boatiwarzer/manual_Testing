@@ -1186,14 +1186,19 @@ public class TestResultController {
                 }
 
                 // **ใส่รูปภาพใน column "Image"**
-                int imageColumnIndex = 14;
+                int imageColumnIndex = 10;
                 if (detail.length > imageColumnIndex && detail[imageColumnIndex] != null && !detail[imageColumnIndex].isEmpty()) {
                     String imagePaths = detail[imageColumnIndex];
-                    String[] parts = imagePaths.split(" : ");
-                    String imagePath = parts.length > 1 ? parts[1] : "";
+//                    String[] parts = imagePaths.split(" : ");
+//                    String imagePath = parts.length > 1 ? parts[1] : "";
 
-                    if (Files.exists(Paths.get(imagePath))) {
-                        try (InputStream is = new FileInputStream(imagePath)) {
+                    String[] images = imagePaths.split(" \\| ");
+                    String firstImage = images[0]; // เอารายการแรก
+                    String[] parts = firstImage.split(" : ");
+                    String firstImagePath = parts.length > 1 ? parts[1] : "";
+
+                    if (Files.exists(Paths.get(firstImagePath))) {
+                        try (InputStream is = new FileInputStream(firstImagePath)) {
                             byte[] bytes = IOUtils.toByteArray(is);
                             int pictureIdx = workbook.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
 
@@ -1210,7 +1215,7 @@ public class TestResultController {
                             Picture picture = drawing.createPicture(anchor, pictureIdx);
                             picture.resize(1);
                         } catch (IOException e) {
-                            System.err.println("ไม่สามารถโหลดรูปภาพ: " + imagePath);
+                            System.err.println("ไม่สามารถโหลดรูปภาพ: " + firstImagePath);
                             row.createCell(imageColumnIndex).setCellValue("...");
                         }
                     } else {

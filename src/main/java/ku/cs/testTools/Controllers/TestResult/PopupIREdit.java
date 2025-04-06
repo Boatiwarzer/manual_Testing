@@ -420,7 +420,7 @@ public class PopupIREdit {
             String condition = onCondition.getText();
             String image = onImage.getText();
             String retest = onRetest.getText();
-            String manager = nameTester;
+            String manager = onManager.getText();
             String status = onStatusComboBox.getValue();
             String priority = onPriorityComboBox.getValue();
             String remark = onRemark.getText();

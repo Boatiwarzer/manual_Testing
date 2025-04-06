@@ -110,6 +110,7 @@ public class PopupAddTestresultController {
         setPriority();
         setLabel();
         clearInfo();
+        selectBox();
         if (FXRouter.getData() != null) {
             objects = (ArrayList) FXRouter.getData();
             projectName = (String) objects.get(0);
@@ -742,6 +743,30 @@ public class PopupAddTestresultController {
             System.err.println("ให้ตรวจสอบการกำหนด route");
         }
         isGenerated = false;
+    }
+
+    void selectBox(){
+//        TestResultDetail trd = testResultDetailList.findTRDById(id);
+//        System.out.println("id  " + id);
+//        System.out.println("trd  " + trd);
+//
+//        onPriorityComboBox.setDisable(!trd.getStatusTRD().equals("Fail"));
+        onPriorityComboBox.setDisable(true);
+
+        // ตั้ง listener ให้ comboBox1
+        onStatusComboBox.setOnAction(event -> {
+            String selectedValue = onStatusComboBox.getValue();
+
+            if ("Pass".equalsIgnoreCase(selectedValue)) {
+                onPriorityComboBox.setDisable(true); // ปิดการใช้งาน
+                onPriorityComboBox.setValue("None");
+            } else if ("Fail".equalsIgnoreCase(selectedValue)) {
+                onPriorityComboBox.setDisable(false); // เปิดให้ใช้งาน
+            } else {
+                onPriorityComboBox.setDisable(true); // กรณีอื่น ๆ ปิดไว้ก่อน
+                onPriorityComboBox.setValue("None");
+            }
+        });
     }
 
     boolean handleSaveAction() {
