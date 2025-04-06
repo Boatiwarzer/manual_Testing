@@ -482,6 +482,7 @@ public class IREditmanagerController {
         });
     }
     private void loadListView(IRreportList iRreportList) {
+        onSearchList.getItems().clear(); // ล้างข้อมูลเดิมก่อน
         onSearchList.refresh();
 
         ManagerRepository managerRepository = new ManagerRepository();
@@ -494,6 +495,8 @@ public class IREditmanagerController {
             return;
         }
 
+        Set<String> addedIds = new HashSet<>(); // ใช้สำหรับกันข้อมูลซ้ำ
+
         for (Manager manager : managers) {
             managerList.addManager(manager);
 
@@ -502,7 +505,10 @@ public class IREditmanagerController {
 
                 for (IRreport iRreport : iRreportList.getIRreportList()) {
                     if (!"null".equals(iRreport.getDateIR()) && !"true".equals(manager.getStatus())) {
-                        onSearchList.getItems().add(iRreport);
+                        if (!addedIds.contains(iRreport.getIdIR())) {
+                            onSearchList.getItems().add(iRreport);
+                            addedIds.add(iRreport.getIdIR()); // จดจำว่าอันนี้เพิ่มไปแล้ว
+                        }
                     }
                 }
             }

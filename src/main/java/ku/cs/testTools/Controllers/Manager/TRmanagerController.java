@@ -655,6 +655,7 @@ public class TRmanagerController {
     private void loadListView(TestResultList testResultList) {
         onEditButton.setVisible(false);
         onExportButton.setVisible(false);
+        onSearchList.getItems().clear(); // เพิ่มบรรทัดนี้ก่อนลูป
         onSearchList.refresh(); // รีเฟรช ListView
 
         ManagerRepository managerRepository = new ManagerRepository();
@@ -666,20 +667,24 @@ public class TRmanagerController {
             clearInfo();
             return;
         }
-
+        Set<String> addedIds = new HashSet<>();
         for (Manager manager : managers) {
             managerList.addManager(manager);
 
             if (testResultList != null) {
-                testResultList.sort(new TestResultComparable()); // จัดเรียง TestResult ก่อน
+                testResultList.sort(new TestResultComparable());
 
                 for (TestResult testResult : testResultList.getTestResultList()) {
                     if (!"null".equals(testResult.getDateTR()) && !"true".equals(manager.getStatus())) {
-                        onSearchList.getItems().add(testResult);
+                        if (!addedIds.contains(testResult.getIdTR())) {
+                            onSearchList.getItems().add(testResult);
+                            addedIds.add(testResult.getIdTR());
+                        }
                     }
                 }
             }
         }
+
 
         if (testResultList == null) {
             setTable();
