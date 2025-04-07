@@ -37,6 +37,7 @@ public class IRreportDetail {
     private String conditionIRD;
 
     @Column(name = "image_ird")
+    @Lob
     private String imageIRD;
 
     @Column(name = "retest_ird")
