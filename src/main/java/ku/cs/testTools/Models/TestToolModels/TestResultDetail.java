@@ -58,7 +58,8 @@ public class TestResultDetail {
     @Column(name = "tester_trd")  // Add Column annotation for testerTRD
     private String testerTRD;
 
-    @Column(name = "image_trd")  // Add Column annotation for imageTRD
+    @Column(name = "image_trd")
+    @Lob
     private String imageTRD;
 
     @Column(name = "retest_trd")
