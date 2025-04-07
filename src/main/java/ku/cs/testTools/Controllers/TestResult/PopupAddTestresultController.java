@@ -528,6 +528,7 @@ public class PopupAddTestresultController {
         onTestscriptIDComboBox.getSelectionModel().selectFirst();
         IdTSCombobox();
         onTestscriptIDComboBox.setOnAction(event -> {
+            onInputdataCombobox.getItems().clear();
             String selectedItem = onTestscriptIDComboBox.getSelectionModel().getSelectedItem();
             if (selectedItem != null) {
                 editorTsId.setText(selectedItem);
