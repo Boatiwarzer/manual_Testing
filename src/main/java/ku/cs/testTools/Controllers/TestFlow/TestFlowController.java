@@ -17,10 +17,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -1865,9 +1867,11 @@ public class TestFlowController {
             }
         } else if (Objects.equals(arrowType, "open")){
             if (head) {
-                Label arrow = new Label(">");
-                arrow.setLayoutX(line.getStartX() - 5);
-                arrow.setLayoutY(line.getStartY() - 5);
+                Label arrow = new Label("▶");
+                arrow.setFont(new Font(24));
+                arrow.setTextFill(Color.BLACK);
+                arrow.setLayoutX(line.getStartX() - 6);
+                arrow.setLayoutY(line.getStartY() - 18);
                 arrow.setDisable(true);
 
                 // set center of rotation to the center of the arrow
@@ -1879,9 +1883,11 @@ public class TestFlowController {
 
                 return arrow;
             } else {
-                Label arrow = new Label("<");
-                arrow.setLayoutX(line.getEndX() - 5);
-                arrow.setLayoutY(line.getEndY() - 5);
+                Label arrow = new Label("◀");
+                arrow.setFont(new Font(24));
+                arrow.setTextFill(Color.BLACK);
+                arrow.setLayoutX(line.getEndX() - 6);
+                arrow.setLayoutY(line.getEndY() - 18);
                 arrow.setDisable(true);
 
                 // set center of rotation to the center of the arrow

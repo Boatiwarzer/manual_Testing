@@ -1,6 +1,7 @@
 package ku.cs.testTools.Controllers.Home;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -95,7 +96,8 @@ public class LabelPageController {
                 }
 
             });
-
+        } else {
+            kiteCombobox();
         }
 
     }
@@ -248,6 +250,9 @@ public class LabelPageController {
             }
         }
     }
+    private void kiteCombobox() {
+        labelTextField.setItems(FXCollections.observableArrayList("Pass", "Fail"));
+    }
     
     public void handleConfirmButton(ActionEvent actionEvent) throws IOException {
         String note = noteTextArea.getText();
@@ -261,7 +266,7 @@ public class LabelPageController {
             errorText.setText("");
 
             // Get the label from the text field
-            String[] label = labelTextField.getValue().split(":");
+            String label = labelTextField.getValue();
 
             // Save the position of the component
 
@@ -277,7 +282,8 @@ public class LabelPageController {
             testFlowPosition = new TestFlowPosition(id,width,height,layoutX,layoutY,0,"testscript",projectName,name);
             testFlowPositionList.addPosition(testFlowPosition);
             if (testScript == null){
-                testScript = new TestScript(objectID,label[1],"-","-","-","-","-","-","-",testFlowPosition.getPositionID(),projectName,name);
+//                String[] text = label.split(":");
+                testScript = new TestScript(objectID,label,"-","-","-","-","-","-","-",testFlowPosition.getPositionID(),projectName,name);
             }else {
                 testScript.setPosition(testFlowPosition.getPositionID());
             }
@@ -292,7 +298,7 @@ public class LabelPageController {
             testFlowPosition = new TestFlowPosition(id,width,height,layoutX,layoutY,0,"testcase",projectName,name);
             testFlowPositionList.addPosition(testFlowPosition);
             if (testCase == null){
-                testCase = new TestCase(objectID,label[1],"-","-","-","-",testFlowPosition.getPositionID(),"-","-","-",projectName,name);
+                testCase = new TestCase(objectID,label,"-","-","-","-",testFlowPosition.getPositionID(),"-","-","-",projectName,name);
 
             }else {
                 testCase.setPosition(testFlowPosition.getPositionID());
@@ -305,14 +311,13 @@ public class LabelPageController {
 
         }else if (type.equals("Kite")){
             randomId();
-            Connection connection = new Connection(id,width,height,layoutX,layoutY, label[0], "none", "none", "none","!@#$%^&*()_+","decision",projectName,name);
+            Connection connection = new Connection(id,width,height,layoutX,layoutY, label, "none", "none", "none","!@#$%^&*()_+","decision",projectName,name);
             connectionList.addOrUpdate(connection);
             testFlowPosition = new TestFlowPosition(id,width,height,layoutX,layoutY,0,"decision",projectName,name);
             testFlowPositionList.addPosition(testFlowPosition);
             TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
             testFlowRepository.saveOrUpdateTestFlowPosition(testFlowPosition);
             saveRepo();
-
         }
             FXRouter.goTo("test_flow", objects);
 

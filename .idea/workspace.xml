@@ -12,13 +12,7 @@
     <list default="true" id="339e8b6d-7c1d-4583-b039-ece96beb9415" name="Changes" comment="merge">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Home/LabelPageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/Home/LabelPageController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestFlow/PopupInfoTestcaseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestFlow/PopupInfoTestcaseController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestFlow/PopupInfoTestscriptController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestFlow/PopupInfoTestscriptController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestFlow/PopupTestFlowAddTestscriptController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestFlow/PopupTestFlowAddTestscriptController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/TestScriptEditController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestScript/TestScriptEditController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/label-page.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/label-page.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/popup_info_testcase.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/popup_info_testcase.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/views/popup_info_testscript.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/popup_info_testscript.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestFlow/TestFlowController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ku/cs/testTools/Controllers/TestFlow/TestFlowController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
