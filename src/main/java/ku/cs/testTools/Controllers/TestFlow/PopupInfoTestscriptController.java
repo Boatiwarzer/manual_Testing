@@ -161,9 +161,8 @@ public class PopupInfoTestscriptController {
         String[] data = tc.split(" : ");
         System.out.println(Arrays.toString(name));
         setDate();
-        if (testcase == null){
-            testcase = testCaseList.findTCById(data[0]);
-        }
+
+        testcase = testCaseList.findTCById(data[0]);
         if (testcase != null){
             testcase = new TestCase(testcase.getIdTC(),name[1],testDateLabel.getText(),usecase,description,"-",testcase.getPosition(),preCon,post,onTestNameCombobox.getValue());
             String tc_combobox = testcase.getIdTC() + " : " + testcase.getNameTC();
@@ -542,15 +541,18 @@ public class PopupInfoTestscriptController {
         Set<String> uniqueItems = new HashSet<>(); // ใช้ Set เพื่อตรวจสอบค่าซ้ำ
 
         for (TestScript testScript : testScriptList.getTestScriptList()) {
-            String tsId = testScript.getIdTS().trim();
-            String tsName = testScript.getNameTS().trim();
-            String ts = tsId + " : " + tsName;
+            if (testScript.getProjectName().equals(projectName)){
+                String tsId = testScript.getIdTS().trim();
+                String tsName = testScript.getNameTS().trim();
+                String ts = tsId + " : " + tsName;
 
-            // ตรวจสอบว่ามีค่าอยู่แล้วหรือไม่
-            if (!uniqueItems.contains(ts)) {
-                uniqueItems.add(ts);
-                onTestNameCombobox.getItems().add(ts);
+                // ตรวจสอบว่ามีค่าอยู่แล้วหรือไม่
+                if (!uniqueItems.contains(ts)) {
+                    uniqueItems.add(ts);
+                    onTestNameCombobox.getItems().add(ts);
+                }
             }
+
         }
     }
 
@@ -603,15 +605,19 @@ public class PopupInfoTestscriptController {
 
     private void useCaseCombobox() {
         for (UseCase useCase : useCaseList.getUseCaseList()){
-            String uc_combobox = useCase.getUseCaseID() + " : " + useCase.getUseCaseName();
-            onUsecaseCombobox.getItems().add(uc_combobox);
+            if (useCase.getProjectName().equals(projectName)){
+                String uc_combobox = useCase.getUseCaseID() + " : " + useCase.getUseCaseName();
+                onUsecaseCombobox.getItems().add(uc_combobox);
+            }
         }
     }
 
     private void testCaseCombobox() {
         for (TestCase testCase : testCaseList.getTestCaseList()){
-            String tc_combobox = testCase.getIdTC() + " : " + testCase.getNameTC();
-            onTestcaseCombobox.getItems().add(tc_combobox);
+            if (testCase.getProjectName().equals(projectName)){
+                String tc_combobox = testCase.getIdTC() + " : " + testCase.getNameTC();
+                onTestcaseCombobox.getItems().add(tc_combobox);
+            }
         }
     }
 

@@ -31,19 +31,19 @@ public class TestResultDetail {
     @Column(name = "actor_trd")  // Add Column annotation for actorTRD
     private String actorTRD;
 
-    @Column(name = "description_trd")  // Add Column annotation for descriptTRD
+    @Column(name = "description_trd", length = 2000)  // Add Column annotation for descriptTRD
     private String descriptTRD;
 
-    @Column(name = "inputdata_trd")  // Add Column annotation for inputdataTRD
+    @Column(name = "inputdata_trd", length = 2000)  // Add Column annotation for inputdataTRD
     private String inputdataTRD;
 
-    @Column(name = "steps_trd")  // Add Column annotation for stepsTRD
+    @Column(name = "steps_trd", length = 2000)  // Add Column annotation for stepsTRD
     private String stepsTRD;
 
-    @Column(name = "expected_trd")  // Add Column annotation for expectedTRD
+    @Column(name = "expected_trd", length = 2000)  // Add Column annotation for expectedTRD
     private String expectedTRD;
 
-    @Column(name = "actual_trd")  // Add Column annotation for actualTRD
+    @Column(name = "actual_trd", length = 2000)  // Add Column annotation for actualTRD
     private String actualTRD;
 
     @Column(name = "status_trd")  // Add Column annotation for statusTRD

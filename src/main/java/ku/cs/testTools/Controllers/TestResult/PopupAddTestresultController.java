@@ -140,6 +140,7 @@ public class PopupAddTestresultController {
                 selectBox();
             } else {
                 randomId();
+                selectBox();
             }
 
         }

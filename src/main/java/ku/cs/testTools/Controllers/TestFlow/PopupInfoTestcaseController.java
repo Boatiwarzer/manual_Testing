@@ -406,10 +406,8 @@ public class PopupInfoTestcaseController {
                 onTestNameCombobox.getEditor().setText(selectedItem); // Set selected item in editor
                 Platform.runLater(onTestNameCombobox.getEditor()::end);
                 if (!selectedItem.equals("None")) {
-                    selectedComboBoxSetInfoTC(selectedItem);
-                }else {
-                    clearTestcase();
-                }
+                        selectedComboBoxSetInfoTC(selectedItem);
+                    }
             }
 
         });
@@ -471,19 +469,22 @@ public class PopupInfoTestcaseController {
 
 
     private void testCaseCombobox() {
-        onTestNameCombobox.getItems().clear(); // เคลียร์ค่าก่อน
+        //onTestNameCombobox.getItems().clear(); // เคลียร์ค่าก่อน
         Set<String> uniqueItems = new HashSet<>(); // ใช้ Set เพื่อตรวจสอบค่าซ้ำ
 
         for (TestCase testCase : testCaseList.getTestCaseList()) {
-            String tcId = testCase.getIdTC().trim();
-            String tcName = testCase.getNameTC().trim();
-            String tc = tcId + " : " + tcName;
+            if (testCase.getProjectName().equals(projectName)){
+                String tcId = testCase.getIdTC().trim();
+                String tcName = testCase.getNameTC();
+                String tc = tcId + " : " + tcName;
 
-            // ตรวจสอบว่ามีค่าอยู่แล้วหรือไม่
-            if (!uniqueItems.contains(tc)) {
-                uniqueItems.add(tc);
-                onTestNameCombobox.getItems().add(tc);
+                // ตรวจสอบว่ามีค่าอยู่แล้วหรือไม่
+                if (!uniqueItems.contains(tc)) {
+                    uniqueItems.add(tc);
+                    onTestNameCombobox.getItems().add(tc);
+                }
             }
+
         }
 
     }
@@ -516,14 +517,29 @@ public class PopupInfoTestcaseController {
 
     private void useCaseCombobox() {
         for (UseCase useCase : useCaseList.getUseCaseList()){
-            String uc_combobox = useCase.getUseCaseID() + " : " + useCase.getUseCaseName();
-            onUsecaseCombobox.getItems().add(uc_combobox);
+            if (useCase.getProjectName().equals(projectName)){
+                String uc_combobox = useCase.getUseCaseID() + " : " + useCase.getUseCaseName();
+                onUsecaseCombobox.getItems().add(uc_combobox);
+            }
         }
     }
     private void testScriptCombobox() {
-        for (TestScript testScript : testScriptList.getTestScriptList()){
-            String ts = testScript.getIdTS() + " : " + testScript.getNameTS();
-            onTestscriptCombobox.getItems().add(ts);
+        onTestscriptCombobox.getItems().clear(); // เคลียร์ค่าก่อน
+        Set<String> uniqueItems = new HashSet<>(); // ใช้ Set เพื่อตรวจสอบค่าซ้ำ
+
+        for (TestScript testScript : testScriptList.getTestScriptList()) {
+            if (testScript.getProjectName().equals(projectName)){
+                String tsId = testScript.getIdTS().trim();
+                String tsName = testScript.getNameTS().trim();
+                String ts = tsId + " : " + tsName;
+
+                // ตรวจสอบว่ามีค่าอยู่แล้วหรือไม่
+                if (!uniqueItems.contains(ts)) {
+                    uniqueItems.add(ts);
+                    onTestscriptCombobox.getItems().add(ts);
+                }
+            }
+
         }
     }
 
@@ -536,7 +552,7 @@ public class PopupInfoTestcaseController {
 
     @FXML
     void onAddButton(ActionEvent event) {
-        String[] data = onTestscriptCombobox.getValue().split(":");
+        String[] data = onTestNameCombobox.getValue().split(":");
         String name = data[1].trim();
         String idTC = tsId;
         String date = testDateLabel.getText();
