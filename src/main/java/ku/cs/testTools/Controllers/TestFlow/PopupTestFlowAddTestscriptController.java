@@ -84,8 +84,8 @@ public class PopupTestFlowAddTestscriptController {
     private void setTextEdit() {
         onTestNo.setText(testScriptDetail.getTestNo());
         onTeststepsArea.setText(testScriptDetail.getSteps().toLowerCase());;
-        testScriptIDLabel.setText(testScriptDetail.getIdTSD());
-        testScriptNameLabel.setText("");
+        //testScriptIDLabel.setText(testScriptDetail.getIdTSD());
+        //testScriptNameLabel.setText("");
     }
 
 

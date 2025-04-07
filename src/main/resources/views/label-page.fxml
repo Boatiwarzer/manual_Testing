@@ -3,9 +3,9 @@
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -20,10 +20,7 @@
                <font>
                   <Font size="14.0" />
                </font></Label>
-            <TextField fx:id="labelTextField" prefHeight="30.0" prefWidth="260.0" styleClass="input_box">
-               <font>
-                  <Font size="14.0" />
-               </font></TextField>
+            <ComboBox fx:id="labelTextField" prefHeight="26.0" prefWidth="365.0" />
             <Label fx:id="noteLabel" prefHeight="25.0" prefWidth="258.0" text="Note">
                <font>
                   <Font size="14.0" />

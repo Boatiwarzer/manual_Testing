@@ -1,5 +1,6 @@
 package ku.cs.testTools.Controllers.Home;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -17,11 +18,13 @@ import ku.cs.testTools.Models.TestToolModels.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public class LabelPageController {
     public Label labelText;
-    public TextField labelTextField;
+    public ComboBox<String> labelTextField;
     public Label noteLabel;
     public TextArea noteTextArea;
     public Text errorText;
@@ -59,7 +62,41 @@ public class LabelPageController {
             layoutX = (double) objects.get(5);
             layoutY = (double) objects.get(6);
             loadRepo();
+            labelTextField.setEditable(true);
             }
+        if (type.equals("Rectangle-curve")) {
+            testScriptCombobox();
+            labelTextField.setOnAction(event -> {
+                String selectedItem = labelTextField.getSelectionModel().getSelectedItem();
+                if (selectedItem != null) {
+                    labelTextField.getEditor().setText(selectedItem); // Set selected item in editor
+                    Platform.runLater(labelTextField.getEditor()::end);
+                    if (!selectedItem.equals("None")) {
+                        String[] se = labelTextField.getValue().split(":");
+                        testScript = testScriptList.findTSById(se[0].trim());
+                        System.out.println(se[0]);
+
+                    }
+                }
+
+            });
+        } else if (type.equals("Rectangle")){
+            testCaseCombobox();
+            labelTextField.setOnAction(event -> {
+                String selectedItem = labelTextField.getSelectionModel().getSelectedItem();
+                if (selectedItem != null) {
+                    labelTextField.getEditor().setText(selectedItem); // Set selected item in editor
+                    Platform.runLater(labelTextField.getEditor()::end);
+                    if (!selectedItem.equals("None")) {
+                        String[] se = labelTextField.getValue().split(" : ");
+                        System.out.println(se[0]);
+                        testCase = testCaseList.findTCById(se[0].trim());
+                    }
+                }
+
+            });
+
+        }
 
     }
     private void loadRepo(){
@@ -184,6 +221,34 @@ public class LabelPageController {
 
         // บันทึกข้อมูล TesterList
     }
+    private void testScriptCombobox() {
+        labelTextField.getItems().clear(); // เคลียร์ค่าก่อน
+        Set<String> uniqueItems = new HashSet<>(); // ใช้ Set เพื่อตรวจสอบค่าซ้ำ
+
+        for (TestScript testScript : testScriptList.getTestScriptList()) {
+            if (testScript.getProjectName().equals(projectName)){
+                String tsId = testScript.getIdTS().trim();
+                String tsName = testScript.getNameTS().trim();
+                String ts = tsId + " : " + tsName;
+
+                // ตรวจสอบว่ามีค่าอยู่แล้วหรือไม่
+                if (!uniqueItems.contains(ts)) {
+                    uniqueItems.add(ts);
+                    labelTextField.getItems().add(ts);
+                }
+            }
+
+        }
+    } 
+    private void testCaseCombobox() {
+        for (TestCase testCase : testCaseList.getTestCaseList()){
+            if (testCase.getProjectName().equals(projectName)){
+                String tc_combobox = testCase.getIdTC() + " : " + testCase.getNameTC();
+                labelTextField.getItems().add(tc_combobox);
+            }
+        }
+    }
+    
     public void handleConfirmButton(ActionEvent actionEvent) throws IOException {
         String note = noteTextArea.getText();
 
@@ -196,7 +261,7 @@ public class LabelPageController {
             errorText.setText("");
 
             // Get the label from the text field
-            String label = labelTextField.getText();
+            String[] label = labelTextField.getValue().split(":");
 
             // Save the position of the component
 
@@ -211,7 +276,11 @@ public class LabelPageController {
             randomId();
             testFlowPosition = new TestFlowPosition(id,width,height,layoutX,layoutY,0,"testscript",projectName,name);
             testFlowPositionList.addPosition(testFlowPosition);
-            testScript = new TestScript(objectID,label,"-","-","-","-","-","-","-",testFlowPosition.getPositionID(),projectName,name);
+            if (testScript == null){
+                testScript = new TestScript(objectID,label[1],"-","-","-","-","-","-","-",testFlowPosition.getPositionID(),projectName,name);
+            }else {
+                testScript.setPosition(testFlowPosition.getPositionID());
+            }
             testScriptList.addOrUpdateTestScript(testScript);
             TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
             testFlowRepository.saveOrUpdateTestFlowPosition(testFlowPosition);
@@ -222,7 +291,12 @@ public class LabelPageController {
             randomId();
             testFlowPosition = new TestFlowPosition(id,width,height,layoutX,layoutY,0,"testcase",projectName,name);
             testFlowPositionList.addPosition(testFlowPosition);
-            testCase = new TestCase(objectID,label,"-","-","-","-",testFlowPosition.getPositionID(),"-","-","-",projectName,name);
+            if (testCase == null){
+                testCase = new TestCase(objectID,label[1],"-","-","-","-",testFlowPosition.getPositionID(),"-","-","-",projectName,name);
+
+            }else {
+                testCase.setPosition(testFlowPosition.getPositionID());
+            }
             testCaseList.addOrUpdateTestCase(testCase);
             TestFlowPositionRepository testFlowRepository = new TestFlowPositionRepository();
             testFlowRepository.saveOrUpdateTestFlowPosition(testFlowPosition);
@@ -231,7 +305,7 @@ public class LabelPageController {
 
         }else if (type.equals("Kite")){
             randomId();
-            Connection connection = new Connection(id,width,height,layoutX,layoutY, label, "none", "none", "none","!@#$%^&*()_+","decision",projectName,name);
+            Connection connection = new Connection(id,width,height,layoutX,layoutY, label[0], "none", "none", "none","!@#$%^&*()_+","decision",projectName,name);
             connectionList.addOrUpdate(connection);
             testFlowPosition = new TestFlowPosition(id,width,height,layoutX,layoutY,0,"decision",projectName,name);
             testFlowPositionList.addPosition(testFlowPosition);
@@ -275,7 +349,7 @@ public class LabelPageController {
     }
 
     boolean handleSaveAction() {
-        if (labelTextField.getText() == null || labelTextField.getText().trim().isEmpty()) {
+        if (labelTextField.getValue() == null || labelTextField.getValue().trim().isEmpty()) {
             showAlert("กรุณากรอกข้อมูลชื่อ");
             return false;
         }
