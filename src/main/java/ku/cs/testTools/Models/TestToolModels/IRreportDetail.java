@@ -36,8 +36,8 @@ public class IRreportDetail {
     @Column(name = "condition_ird")
     private String conditionIRD;
 
-    @Column(name = "image_ird")
-    @Lob
+    @Column(name = "image_ird", length = 2000)
+//    @Lob
     private String imageIRD;
 
     @Column(name = "retest_ird")
