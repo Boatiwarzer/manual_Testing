@@ -129,6 +129,7 @@ public class PopupAddTestresultController {
 //                testResultDetail = testResultDetailList.findTRDById(testResultDetail.getIdTRD());
                 id = testResultDetail.getIdTRD();
                 setTextEdit();
+                selectBox();
             } else if (objects.get(6) != null && type.equals("retest")) {
                 testResultDetail = (TestResultDetail) objects.get(6);
                 testResultDetailListDelete = (TestResultDetailList)  objects.get(7);
@@ -136,6 +137,7 @@ public class PopupAddTestresultController {
 //                String retest = String.valueOf(Integer.parseInt(testResultDetail.getRetestTRD()) + 1);
 //                testResultDetail.setRetestTRD(retest);
                 setTextEdit();
+                selectBox();
             } else {
                 randomId();
             }
@@ -744,6 +746,30 @@ public class PopupAddTestresultController {
             System.err.println("ให้ตรวจสอบการกำหนด route");
         }
         isGenerated = false;
+    }
+
+    void selectBox(){
+//        TestResultDetail trd = testResultDetailList.findTRDById(id);
+//        System.out.println("id  " + id);
+//        System.out.println("trd  " + trd);
+
+        onPriorityComboBox.setDisable(!onStatusComboBox.getValue().equals("Fail"));
+//        onPriorityComboBox.setDisable(true);
+
+        // ตั้ง listener ให้ comboBox1
+        onStatusComboBox.setOnAction(event -> {
+            String selectedValue = onStatusComboBox.getValue();
+
+            if ("Pass".equalsIgnoreCase(selectedValue)) {
+                onPriorityComboBox.setDisable(true); // ปิดการใช้งาน
+                onPriorityComboBox.setValue("None");
+            } else if ("Fail".equalsIgnoreCase(selectedValue)) {
+                onPriorityComboBox.setDisable(false); // เปิดให้ใช้งาน
+            } else {
+                onPriorityComboBox.setDisable(true); // กรณีอื่น ๆ ปิดไว้ก่อน
+                onPriorityComboBox.setValue("None");
+            }
+        });
     }
 
     boolean handleSaveAction() {

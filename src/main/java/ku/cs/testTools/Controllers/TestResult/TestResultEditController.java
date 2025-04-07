@@ -141,7 +141,8 @@ public class TestResultEditController {
     }
 
     private void setSort() {
-        onSortCombobox.setItems(FXCollections.observableArrayList("All", "Approved", "Not Approved", "Waiting", "Retest"));
+        onSortCombobox.setItems(FXCollections.observableArrayList("All", "Approved", "Not Approved", "Waiting", "Retest",
+                "Low", "Medium", "High", "Critical"));
         onSortCombobox.setValue("All");
     }
 
@@ -1110,6 +1111,14 @@ public class TestResultEditController {
                         return "Waiting".equals(testResultDetail.getApproveTRD());
                     } else if ("Retest".equals(selectedFilter)) {
                         return "Retest".equals(testResultDetail.getApproveTRD());
+                    } else if ("Low".equals(selectedFilter)) {
+                        return "Low".equals(testResultDetail.getPriorityTRD());
+                    } else if ("Medium".equals(selectedFilter)) {
+                        return "Medium".equals(testResultDetail.getPriorityTRD());
+                    } else if ("High".equals(selectedFilter)) {
+                        return "High".equals(testResultDetail.getPriorityTRD());
+                    } else if ("Critical".equals(selectedFilter)) {
+                        return "Critical".equals(testResultDetail.getPriorityTRD());
                     }
                     return false;
                 })

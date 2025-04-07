@@ -12,26 +12,24 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import ku.cs.testTools.Services.Repository.*;
 import ku.cs.testTools.Services.fxrouter.FXRouter;
 import ku.cs.testTools.Models.TestToolModels.*;
 import ku.cs.testTools.Services.StringConfiguration;
 import ku.cs.testTools.Services.TableColumns;
 import ku.cs.testTools.Services.TableviewSet;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class IRTestresultController {
@@ -116,7 +114,8 @@ public class IRTestresultController {
     }
 
     private void setSort() {
-        onSortCombobox.setItems(FXCollections.observableArrayList("All", "In Manager", "In Developer", "In Tester", "Withdraw", "Done"));
+        onSortCombobox.setItems(FXCollections.observableArrayList("All", "In Manager", "In Developer", "In Tester",
+                "Withdraw", "Done", "Low", "Medium", "High", "Critical"));
         onSortCombobox.setValue("All");
     }
 
@@ -573,18 +572,18 @@ public class IRTestresultController {
         onEditListButton.setVisible(false);
     }
 
-    @FXML
-    void onExportButton(ActionEvent event) {
-        // Stage ที่เปิด FileChooser
-        Stage stage = (Stage) onTableIR.getScene().getWindow();
-
-        // ดึงข้อมูลจาก TableView โดยใช้ getItems()
-        List<IRreportDetail> irReportDetails = onTableIR.getItems();
-        String csvFileName = projectName;
-
-        // เรียกฟังก์ชัน saveAsExcel
-        saveToExcel(stage, irReportDetails, csvFileName);
-    }
+//    @FXML
+//    void onExportButton(ActionEvent event) {
+//        // Stage ที่เปิด FileChooser
+//        Stage stage = (Stage) onTableIR.getScene().getWindow();
+//
+//        // ดึงข้อมูลจาก TableView โดยใช้ getItems()
+//        List<IRreportDetail> irReportDetails = onTableIR.getItems();
+//        String csvFileName = projectName;
+//
+//        // เรียกฟังก์ชัน saveAsExcel
+//        saveToExcel(stage, irReportDetails, csvFileName);
+//    }
     @FXML
     void onEditListButton(ActionEvent event)  {
         try {
@@ -633,15 +632,12 @@ public class IRTestresultController {
         try {
             currentNewData();
             iRreportList.addOrUpdateIRreport(iRreport);
-            iRreportList.addOrUpdateIRreport(iRreport);
             IRReportRepository iRReportRepository = new IRReportRepository();
             IRDetailRepository iRDetailRepository = new IRDetailRepository();
             for (IRreportDetail iRreportDetail : iRreportDetailList.getIRreportDetailList()){
                 iRDetailRepository.updateIRReportDetail(iRreportDetail);
             }
             iRReportRepository.updateIRReport(iRreport);
-            // Write data to respective files
-            //saveRepo();
 
             objects = new ArrayList<>();
             objects.add(projectName);
@@ -672,6 +668,7 @@ public class IRTestresultController {
         String idTr = iRreport.getTrIR();
 //        String pn = iRreport.getProjectName();
         iRreport = new IRreport(idIR, nameIR, dateIR, noteIR, idTr, projectName, nameTester);
+        System.out.println("Ir sout  "+iRreport);
     }
     private void setDataIR() {
         irId = iRreport.getIdIR();
@@ -744,6 +741,14 @@ public class IRTestresultController {
                         return "Withdraw".equals(iRreportDetail.getStatusIRD());
                     } else if ("Done".equals(selectedFilter)) {
                         return "Done".equals(iRreportDetail.getStatusIRD());
+                    } else if ("Low".equals(selectedFilter)) {
+                        return "Low".equals(iRreportDetail.getPriorityIRD());
+                    } else if ("Medium".equals(selectedFilter)) {
+                        return "Medium".equals(iRreportDetail.getPriorityIRD());
+                    } else if ("High".equals(selectedFilter)) {
+                        return "High".equals(iRreportDetail.getPriorityIRD());
+                    } else if ("Critical".equals(selectedFilter)) {
+                        return "Critical".equals(iRreportDetail.getPriorityIRD());
                     }
                     return false;
                 })
@@ -757,6 +762,180 @@ public class IRTestresultController {
                 .collect(Collectors.toList());
 
         onTableIR.getItems().setAll(sortedList);
+    }
+
+    @FXML
+    void onExportButton(ActionEvent event) throws IOException {
+        Map<String, List<String[]>> iRreports = new LinkedHashMap<>();
+
+        for (IRreport iRreport : iRreportList.getIRreportList()) {
+            String id = iRreport.getIdIR();
+            iRreports.put(id, new ArrayList<>());
+        }
+
+        for (IRreportDetail iRreportDetail : iRreportDetailList.getIRreportDetailList()) {
+            String irId = iRreportDetail.getIdIR();
+            if (iRreports.containsKey(irId)) {
+                iRreports.get(irId).add(iRreportDetail.toArray());
+            }
+        }
+
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("IRreports");
+        int currentRow = 0;
+
+        //สร้างสไตล์หัวตาราง
+        CellStyle headerStyle = workbook.createCellStyle();
+        headerStyle.setFillForegroundColor(IndexedColors.LIGHT_ORANGE.getIndex());
+        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        headerStyle.setWrapText(true);
+        headerStyle.setAlignment(HorizontalAlignment.CENTER);
+        headerStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
+        //สร้างสไตล์สำหรับเนื้อหา (Wrap Text + จัดชิดบนซ้าย)
+        CellStyle contentStyle = workbook.createCellStyle();
+        contentStyle.setWrapText(true);
+        contentStyle.setAlignment(HorizontalAlignment.LEFT);
+        contentStyle.setVerticalAlignment(VerticalAlignment.TOP);
+
+        Row csvFileNameRow = sheet.createRow(currentRow++);
+        org.apache.poi.ss.usermodel.Cell csvFileNameCell = csvFileNameRow.createCell(0);
+        csvFileNameCell.setCellValue("Project Name: " + projectName);
+
+        // เพิ่มวันเวลา Export
+        Row exportTimeRow = sheet.createRow(currentRow++);
+        org.apache.poi.ss.usermodel.Cell exportTimeCell = exportTimeRow.createCell(0);
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        exportTimeCell.setCellValue("Export Date and Time: " + now.format(formatter));
+
+        Row NameRow = sheet.createRow(currentRow++);
+        org.apache.poi.ss.usermodel.Cell NameCell = NameRow.createCell(0);
+        NameCell.setCellValue("Tester: " + nameTester);
+
+        for (Map.Entry<String, List<String[]>> entry : iRreports.entrySet()) {
+            String irId = entry.getKey();
+            List<String[]> details = entry.getValue();
+
+            Row trRow = sheet.createRow(currentRow++);
+            trRow.setRowStyle(contentStyle);
+            trRow.createCell(0).setCellValue("iRreport: " + irId);
+
+            IRreport iRreport = iRreportList.findTRById(irId);
+            if (iRreport != null) {
+                trRow.createCell(2).setCellValue(iRreport.getNameIR());
+            }
+
+            currentRow += 1;
+
+            // **สร้าง Header ของ testResultDetail**
+            Row headerRow = sheet.createRow(currentRow++);
+            String[] columns = {
+                    "IRD ID", "TRD ID", "Test No.", "Tester", "Test times", "TS ID", "TC ID", "Description", "Condition",
+                    "Image", "Priority", "RCA", "Review By", "Status", "Remark"
+            };
+
+            for (int i = 0; i < columns.length; i++) {
+                org.apache.poi.ss.usermodel.Cell cell = headerRow.createCell(i);
+                cell.setCellValue(columns[i]);
+                cell.setCellStyle(headerStyle);
+//                sheet.autoSizeColumn(i);
+            }
+
+            Drawing<?> drawing = sheet.createDrawingPatriarch();
+
+            // **ใส่ข้อมูล testResultDetail**
+            for (String[] detail : details) {
+                Row row = sheet.createRow(currentRow++);
+                row.setHeightInPoints(40);
+
+                String[] arrangedDetail = new String[] {
+                        detail[0],  // IRD ID (id)
+                        detail[15], // TRD ID (trd)
+                        detail[1],  // Test No. (TrNo)
+                        detail[2],  // Tester
+                        detail[8],  // Test times (retest)
+                        detail[3],  // TS ID
+                        detail[4],  // TC ID
+                        detail[5],  // Description
+                        detail[6],  // Condition
+                        detail[7],  // Image
+                        detail[9],  // Priority
+                        detail[10], // RCA
+                        detail[11], // Review By (manager)
+                        detail[12], // Status
+                        detail[13]  // Remark
+                };
+
+                for (int i = 0; i < arrangedDetail.length; i++) {
+                    Cell cell = row.createCell(i);
+                    cell.setCellValue(arrangedDetail[i] != null ? arrangedDetail[i] : "");
+                    cell.setCellStyle(contentStyle);
+                }
+
+                int imageColumnIndex = 9;
+                if (arrangedDetail[imageColumnIndex] != null && !arrangedDetail[imageColumnIndex].isEmpty()) {
+                    String imagePaths = arrangedDetail[imageColumnIndex];
+                    String[] images = imagePaths.split(" \\| ");
+                    String firstImage = images[0];
+                    String[] parts = firstImage.split(" : ");
+                    String firstImagePath = parts.length > 1 ? parts[1] : "";
+
+                    if (Files.exists(Paths.get(firstImagePath))) {
+                        try (InputStream is = new FileInputStream(firstImagePath)) {
+                            byte[] bytes = IOUtils.toByteArray(is);
+                            int pictureIdx = workbook.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
+
+                            double colWidth = 160.0 / 7.5;
+                            sheet.setColumnWidth(imageColumnIndex, (int) colWidth * 256);
+                            row.setHeightInPoints(90);
+
+                            ClientAnchor anchor = workbook.getCreationHelper().createClientAnchor();
+                            anchor.setCol1(imageColumnIndex);
+                            anchor.setRow1(currentRow - 1);
+                            anchor.setCol2(imageColumnIndex + 1);
+                            anchor.setRow2(currentRow);
+
+                            Picture picture = drawing.createPicture(anchor, pictureIdx);
+                            picture.resize(1);
+                        } catch (IOException e) {
+                            System.err.println("ไม่สามารถโหลดรูปภาพ: " + firstImagePath);
+                            row.getCell(imageColumnIndex).setCellValue("...");
+                        }
+                    } else {
+                        row.getCell(imageColumnIndex).setCellValue("...");
+                    }
+                } else {
+                    row.getCell(imageColumnIndex).setCellValue("...");
+                }
+            }
+            currentRow += 1;
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("เลือกตำแหน่งบันทึกไฟล์");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files (*.xlsx)", "*.xlsx"));
+
+        Window window = ((Node) event.getSource()).getScene().getWindow();
+        File fileToSave = fileChooser.showSaveDialog(window);
+
+        if (fileToSave != null) {
+            String filePath = fileToSave.getAbsolutePath();
+            if (!filePath.toLowerCase().endsWith(".xlsx")) {
+                filePath += ".xlsx";
+            }
+
+            try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
+                workbook.write(fileOut);
+                System.out.println("บันทึกไฟล์สำเร็จ: " + filePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("ยกเลิกการบันทึกไฟล์");
+        }
+
+        workbook.close();
     }
 }
 

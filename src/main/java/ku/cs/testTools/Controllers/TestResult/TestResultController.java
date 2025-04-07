@@ -145,7 +145,8 @@ public class TestResultController {
     }
 
     private void setSort() {
-        onSortCombobox.setItems(FXCollections.observableArrayList("All", "Approved", "Not Approved", "Waiting", "Retest"));
+        onSortCombobox.setItems(FXCollections.observableArrayList("All", "Approved", "Not Approved", "Waiting", "Retest",
+                "Low", "Medium", "High", "Critical"));
         onSortCombobox.setValue("All");
     }
 
@@ -827,6 +828,7 @@ public class TestResultController {
     @FXML
     void onIRButton(ActionEvent event) {
         try {
+            loadRepo();
             // if have IdTR / update IR {
             //    case failed
             //    if have IdTRD / update IRD {
@@ -843,13 +845,13 @@ public class TestResultController {
                 String noteIR = ir.getNoteIR();
                 String dateIR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 System.out.println(idIR);
-                iRreportList.clearIR(idIR);
-                IRreport newIR = new IRreport(idIR, nameIR, dateIR, noteIR, idTR);
-                newIR.setProjectName(projectName);
-                newIR.setTester(nameTester);
-                iRreportList.addIR(newIR);
-                newIRreport = newIR;
+//                iRreportList.clearIR(idIR);
 
+                iRreport = new IRreport(idIR, nameIR, dateIR, noteIR, idTR, projectName, nameTester);
+                iRreportList.addOrUpdateIRreport(iRreport);
+                newIRreport = iRreport;
+                IRReportRepository irReportRepository = new IRReportRepository();
+                irReportRepository.updateIRReport(newIRreport);
 
                 List<TestResultDetail> trdList = testResultDetailList.findAllTRinTRDById(idTR.trim());
                 for (TestResultDetail trd : trdList) {
@@ -996,9 +998,9 @@ public class TestResultController {
                 String noteIR = "";
                 String dateIR = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 System.out.println(idIR);
-                iRreport = new IRreport(idIR, nameIR, dateIR, noteIR, idTR);
-                iRreport.setProjectName(projectName);
-                iRreport.setTester(nameTester);
+                iRreport = new IRreport(idIR, nameIR, dateIR, noteIR, idTR, projectName, nameTester);
+//                iRreport.setProjectName(projectName);
+//                iRreport.setTester(nameTester);
                 iRreportList.addOrUpdateIRreport(iRreport);
                 newIRreport = iRreport;
                 IRReportRepository irReportRepository = new IRReportRepository();
@@ -1170,60 +1172,65 @@ public class TestResultController {
 
             Drawing<?> drawing = sheet.createDrawingPatriarch();
 
-            // **ใส่ข้อมูล testResultDetail**
+            int[] selectedIndexes = {0, 1, 2, 3, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17};
+
             for (String[] detail : details) {
                 Row row = sheet.createRow(currentRow++);
-                row.setHeightInPoints(40); // ⬆️ ตั้งค่าความสูงของแถว (อัตโนมัติเมื่อ wrapText)
+                row.setHeightInPoints(40);
 
-                for (int i = 0; i < columns.length; i++) {
+                for (int i = 0; i < selectedIndexes.length; i++) {
+                    int selectedIndex = selectedIndexes[i];
                     Cell cell = row.createCell(i);
-                    if (i < detail.length) {
-                        cell.setCellValue(detail[i]);
+
+                    if (selectedIndex < detail.length) {
+                        cell.setCellValue(detail[selectedIndex]);
                     } else {
                         cell.setCellValue("");
                     }
+
                     cell.setCellStyle(contentStyle);
                 }
 
-                // **ใส่รูปภาพใน column "Image"**
-                int imageColumnIndex = 14;
-                if (detail.length > imageColumnIndex && detail[imageColumnIndex] != null && !detail[imageColumnIndex].isEmpty()) {
-                    String imagePaths = detail[imageColumnIndex];
-                    String[] parts = imagePaths.split(" : ");
-                    String imagePath = parts.length > 1 ? parts[1] : "";
+                // ใส่รูปเฉพาะคอลัมน์ Image ซึ่งอยู่ใน index 10 ของ columns[] ที่ export
+                int imageColumnIndexInExport = 10;
+                if (detail.length > 14 && detail[14] != null && !detail[14].isEmpty()) {
+                    String imagePaths = detail[14]; // ใช้ index ของ "Image" จาก original array
+                    String[] images = imagePaths.split(" \\| ");
+                    String firstImage = images[0];
+                    String[] parts = firstImage.split(" : ");
+                    String firstImagePath = parts.length > 1 ? parts[1] : "";
 
-                    if (Files.exists(Paths.get(imagePath))) {
-                        try (InputStream is = new FileInputStream(imagePath)) {
+                    if (Files.exists(Paths.get(firstImagePath))) {
+                        try (InputStream is = new FileInputStream(firstImagePath)) {
                             byte[] bytes = IOUtils.toByteArray(is);
                             int pictureIdx = workbook.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
 
                             double colWidth = 160.0 / 7.5;
-                            sheet.setColumnWidth(imageColumnIndex, (int) colWidth * 256);
+                            sheet.setColumnWidth(imageColumnIndexInExport, (int) colWidth * 256);
                             row.setHeightInPoints(90);
 
                             ClientAnchor anchor = workbook.getCreationHelper().createClientAnchor();
-                            anchor.setCol1(imageColumnIndex);
+                            anchor.setCol1(imageColumnIndexInExport);
                             anchor.setRow1(currentRow - 1);
-                            anchor.setCol2(imageColumnIndex + 1);
+                            anchor.setCol2(imageColumnIndexInExport + 1);
                             anchor.setRow2(currentRow);
 
                             Picture picture = drawing.createPicture(anchor, pictureIdx);
                             picture.resize(1);
                         } catch (IOException e) {
-                            System.err.println("ไม่สามารถโหลดรูปภาพ: " + imagePath);
-                            row.createCell(imageColumnIndex).setCellValue("...");
+                            System.err.println("ไม่สามารถโหลดรูปภาพ: " + firstImagePath);
+                            row.createCell(imageColumnIndexInExport).setCellValue("...");
                         }
                     } else {
-                        row.createCell(imageColumnIndex).setCellValue("...");
+                        row.createCell(imageColumnIndexInExport).setCellValue("...");
                     }
                 } else {
-                    row.createCell(imageColumnIndex).setCellValue("...");
+                    row.createCell(imageColumnIndexInExport).setCellValue("...");
                 }
             }
             currentRow += 1;
         }
 
-        // 📂 เลือกตำแหน่งบันทึกไฟล์
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("เลือกตำแหน่งบันทึกไฟล์");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files (*.xlsx)", "*.xlsx"));
@@ -1275,6 +1282,14 @@ public class TestResultController {
                         return "Waiting".equals(testResultDetail.getApproveTRD());
                     } else if ("Retest".equals(selectedFilter)) {
                         return "Retest".equals(testResultDetail.getApproveTRD());
+                    } else if ("Low".equals(selectedFilter)) {
+                        return "Low".equals(testResultDetail.getPriorityTRD());
+                    } else if ("Medium".equals(selectedFilter)) {
+                        return "Medium".equals(testResultDetail.getPriorityTRD());
+                    } else if ("High".equals(selectedFilter)) {
+                        return "High".equals(testResultDetail.getPriorityTRD());
+                    } else if ("Critical".equals(selectedFilter)) {
+                        return "Critical".equals(testResultDetail.getPriorityTRD());
                     }
                     return false;
                 })
