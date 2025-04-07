@@ -319,6 +319,7 @@ public class TestScriptEditController {
     private void selectedComboBox() {
         onTestcaseCombobox.getItems().clear();
         onTestcaseCombobox.setItems(FXCollections.observableArrayList("None"));
+        testCaseCombobox();
         new AutoCompleteComboBoxListener<>(onTestcaseCombobox);
         onTestcaseCombobox.getSelectionModel().selectFirst();
         onTestcaseCombobox.setEditable(false);
@@ -350,8 +351,11 @@ public class TestScriptEditController {
 
     private void testCaseCombobox() {
         for (TestCase testCase : testCaseList.getTestCaseList()){
-            String tc_combobox = testCase.getIdTC() + " : " + testCase.getNameTC();
-            onTestcaseCombobox.getItems().add(tc_combobox);
+            if (testCase.getProjectName().equals(projectName)){
+                String tc_combobox = testCase.getIdTC() + " : " + testCase.getNameTC();
+                onTestcaseCombobox.getItems().add(tc_combobox);
+            }
+
         }
 
     }

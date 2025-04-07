@@ -96,6 +96,7 @@ public class PopupInfoTestscriptController {
     private TestScriptDetailList testScriptDetailListDelete = new TestScriptDetailList();
     private TestCase testcase;
     private String tcId;
+    private UUID newID;
 
     @FXML
     void initialize() {
@@ -134,7 +135,7 @@ public class PopupInfoTestscriptController {
                 }
                 onTestNameCombobox.valueProperty().addListener((obs, oldValue, newValue) -> setTestcase());
                 onUsecaseCombobox.valueProperty().addListener((obs, oldValue, newValue) -> setTestcase());
-                onTestcaseCombobox.valueProperty().addListener((obs, oldValue, newValue) -> setTestcase());
+                //onTestcaseCombobox.valueProperty().addListener((obs, oldValue, newValue) -> setTestcase());
 
             }
             else{
@@ -158,11 +159,11 @@ public class PopupInfoTestscriptController {
         String preCon = infoPreconLabel.getText();
         String post = infoPostconLabel.getText();
         String tc = onTestcaseCombobox.getValue();
-        String[] data = tc.split(" : ");
+        String[] data = tc.split(":");
         System.out.println(Arrays.toString(name));
         setDate();
-
-        testcase = testCaseList.findTCById(data[0]);
+        System.out.println(data[0].trim());
+        testcase = testCaseList.findTCById(data[0].trim());
         if (testcase != null){
             testcase = new TestCase(testcase.getIdTC(),name[1],testDateLabel.getText(),usecase,description,"-",testcase.getPosition(),preCon,post,onTestNameCombobox.getValue());
             String tc_combobox = testcase.getIdTC() + " : " + testcase.getNameTC();
@@ -512,7 +513,8 @@ public class PopupInfoTestscriptController {
         testScriptDetailList.clearItems();
 
         if (data.length > 0 && testScriptList.findTSById(data[0].trim()) != null) {
-            testScript = testScriptList.findTSById(data[0].trim());
+            this.testScript = testScriptList.findTSById(data[0].trim());
+            setDataTS();
 
             // ตั้งค่าใน Label และ Fields
             testIDLabel.setText(testScript.getIdTS());
@@ -789,10 +791,7 @@ public class PopupInfoTestscriptController {
 
         // Validate fields
         String selectedItem = onTestNameCombobox.getValue();
-        String selectTC = onTestcaseCombobox.getValue();
         String[] data = selectedItem.split("[:,]");
-        String[] dataTC = selectTC.split("[:]");
-
         String name = data[1].trim();
         String idTS = data[0].trim();
         String date = testDateLabel.getText();
@@ -802,32 +801,18 @@ public class PopupInfoTestscriptController {
         String preCon = infoPreconLabel.getText();
         String note = onTestNoteField.getText();
         String post = infoPostconLabel.getText();
-        UUID newID = UUID.randomUUID();
-        UUID newIDTC = UUID.randomUUID();
 
         // Create a new TestScript object
         testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, post, note, position,projectName,nameTester);
-        testcase = testCaseList.findTCById(tc);
-        if (testcase != null){
-            testcase = new TestCase(testcase.getIdTC(),name,date,useCase,description,"-",testcase.getPosition(),preCon,post,idTS + " : " + name);
-            testcase.setProjectName(projectName);
-            testcase.setTester(nameTester);
-        }else {
-            testcase = new TestCase(dataTC[0],name,date,useCase,description,"-",newIDTC,preCon,post,idTS + " : " + name);
-            testcase.setProjectName(projectName);
-            testcase.setTester(nameTester);
-        }
-
         testScriptList.addOrUpdateTestScript(testScript);
-        testCaseList.addOrUpdateTestCase(testcase);
         TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(position);
-        testFlowPosition.setPositionID(newID);
-        testFlowPositionList.removePositionByID(position);
-        testScriptList.deleteTestScriptByPositionID(position);
+        if (testFlowPosition == null) {
+            testFlowPosition = new TestFlowPosition(); // ถ้ายังไม่มี สร้างใหม่
+        }
         testFlowPositionList.addPosition(testFlowPosition);
         TestScriptRepository testScriptRepository = new TestScriptRepository();
         TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
-        TestCaseRepository testCaseRepository = new TestCaseRepository();
+
         // ✅ อัปเดตหรือเพิ่ม TestScriptDetail โดยใช้ merge() ป้องกันปัญหา identifier ซ้ำ
         for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()) {
             testScriptDetailRepository.saveOrUpdateTestScriptDetail(testScriptDetail);
@@ -842,7 +827,6 @@ public class PopupInfoTestscriptController {
 
         // ✅ ใช้ merge() ป้องกันการเพิ่มซ้ำ
         testScriptRepository.saveOrUpdateTestScript(testScript);
-        testCaseRepository.saveOrUpdateTestCase(testcase);
 
         // ✅ ตรวจสอบก่อนเพิ่มตำแหน่ง
 
@@ -858,9 +842,6 @@ public class PopupInfoTestscriptController {
         alert.setContentText("Test script saved successfully!");
         alert.showAndWait();
 
-        // ✅ Save & Reload Data
-        saveRepo();
-        loadRepo();
 
         // ✅ ส่งค่าไปยังหน้า "test_flow"
         ArrayList<Object> objects = new ArrayList<>();
@@ -875,6 +856,11 @@ public class PopupInfoTestscriptController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+
+    private void randomUId() {
+        newID = UUID.randomUUID();
     }
 
     boolean handleSaveAction() {

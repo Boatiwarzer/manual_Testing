@@ -26,7 +26,7 @@
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="onTestNameCombobox" editable="true" prefHeight="36.0" prefWidth="378.0" />
+                  <ComboBox fx:id="onTestNameCombobox" disable="true" editable="true" prefHeight="36.0" prefWidth="378.0" />
                   <Label prefHeight="30.0" prefWidth="50.0" text="ID :">
                      <font>
                         <Font size="18.0" />
