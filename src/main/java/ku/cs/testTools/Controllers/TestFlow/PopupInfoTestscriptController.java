@@ -771,7 +771,10 @@ public class PopupInfoTestscriptController {
 
         // Validate fields
         String selectedItem = onTestNameCombobox.getValue();
+        String selectTC = onTestcaseCombobox.getValue();
         String[] data = selectedItem.split("[:,]");
+        String[] dataTC = selectTC.split("[:]");
+
         String name = data[1].trim();
         String idTS = data[0].trim();
         String date = testDateLabel.getText();
@@ -782,10 +785,23 @@ public class PopupInfoTestscriptController {
         String note = onTestNoteField.getText();
         String post = infoPostconLabel.getText();
         UUID newID = UUID.randomUUID();
+        UUID newIDTC = UUID.randomUUID();
 
         // Create a new TestScript object
         testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon, post, note, position,projectName,nameTester);
+        testcase = testCaseList.findTCById(tc);
+        if (testcase != null){
+            testcase = new TestCase(testcase.getIdTC(),name,date,useCase,description,"-",testcase.getPosition(),preCon,post,idTS + " : " + name);
+            testcase.setProjectName(projectName);
+            testcase.setTester(nameTester);
+        }else {
+            testcase = new TestCase(dataTC[0],name,date,useCase,description,"-",newIDTC,preCon,post,idTS + " : " + name);
+            testcase.setProjectName(projectName);
+            testcase.setTester(nameTester);
+        }
+
         testScriptList.addOrUpdateTestScript(testScript);
+        testCaseList.addOrUpdateTestCase(testcase);
         TestFlowPosition testFlowPosition = testFlowPositionList.findByPositionId(position);
         testFlowPosition.setPositionID(newID);
         testFlowPositionList.removePositionByID(position);
@@ -793,7 +809,7 @@ public class PopupInfoTestscriptController {
         testFlowPositionList.addPosition(testFlowPosition);
         TestScriptRepository testScriptRepository = new TestScriptRepository();
         TestScriptDetailRepository testScriptDetailRepository = new TestScriptDetailRepository();
-
+        TestCaseRepository testCaseRepository = new TestCaseRepository();
         // ✅ อัปเดตหรือเพิ่ม TestScriptDetail โดยใช้ merge() ป้องกันปัญหา identifier ซ้ำ
         for (TestScriptDetail testScriptDetail : testScriptDetailList.getTestScriptDetailList()) {
             testScriptDetailRepository.saveOrUpdateTestScriptDetail(testScriptDetail);
@@ -808,6 +824,7 @@ public class PopupInfoTestscriptController {
 
         // ✅ ใช้ merge() ป้องกันการเพิ่มซ้ำ
         testScriptRepository.saveOrUpdateTestScript(testScript);
+        testCaseRepository.saveOrUpdateTestCase(testcase);
 
         // ✅ ตรวจสอบก่อนเพิ่มตำแหน่ง
 
