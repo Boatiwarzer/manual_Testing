@@ -643,7 +643,7 @@ public class TestScriptEditController {
         String note = onTestNoteField.getText();
         String post = infoPostconLabel.getText();
 
-        testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post,note,position);
+        testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post,note,testScript.getPosition());
         testcase = new TestCase(testcase.getIdTC(),name,testDateLabel.getText(),useCase,description,"-", testcase.getPosition(),preCon,post, testcase.getIdTS(),projectName,nameTester);
         testcase.setProjectName(projectName);
         testcase.setTester(nameTester);
@@ -661,20 +661,20 @@ public class TestScriptEditController {
         String note = onTestNoteField.getText();
         String post = infoPostconLabel.getText();
 
-        testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post,note,position);
+        testScript = new TestScript(idTS, name, date, useCase, description, tc, preCon,post,note,testScript.getPosition());
         testcase = new TestCase(testcase.getIdTC(),name,testDateLabel.getText(),useCase,description,"-", testcase.getPosition(),preCon,post, testcase.getIdTS(),projectName,nameTester);
         testScript.setProjectName(projectName);
         testScript.setTester(nameTester);
         testcase.setProjectName(projectName);
         testcase.setTester(nameTester);
-        if (testFlowPositionList.findByPositionId(testScript.getPosition()) != null) {
-            testFlowPosition = testFlowPositionList.findByPositionId(testScript.getPosition());
-            testScript.setPosition(testFlowPosition.getPositionID());
-        }
-        if (testFlowPositionList.findByPositionId(testcase.getPosition()) != null) {
-            testFlowPositionTC = testFlowPositionList.findByPositionId(testcase.getPosition());
-            testcase.setPosition(testFlowPosition.getPositionID());
-        }
+//        if (testFlowPositionList.findByPositionId(testScript.getPosition()) != null) {
+//            testFlowPosition = testFlowPositionList.findByPositionId(testScript.getPosition());
+//            testScript.setPosition(testFlowPosition.getPositionID());
+//        }
+//        if (testFlowPositionList.findByPositionId(testcase.getPosition()) != null) {
+//            testFlowPositionTC = testFlowPositionList.findByPositionId(testcase.getPosition());
+//            testcase.setPosition(testFlowPositionTC.getPositionID());
+//        }
     }
     @FXML
     void onAddButton(ActionEvent event) {

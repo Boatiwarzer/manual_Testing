@@ -187,30 +187,55 @@ public class TRmanagerController {
 //        });
 
         // กรณีเลือกจาก projectList
+//        for (Node node : projectList.getChildren()) {
+//            if (node instanceof TitledPane titledPane) {
+//                Node content = titledPane.getContent();
+//                titledPane.setOnMouseClicked(event -> selectedTitledPane = titledPane);
+//
+//                if (content instanceof ListView<?> listView) {
+//                    listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+//                        if (newValue instanceof String) {
+//                            String[] data = ((String) newValue).split("[:,()]");
+//                            if (data.length > 0) {
+//                                String value = data[0].trim();
+//                                if (selectedTitledPane != null) {
+//                                    System.out.println("TitledPane: " + selectedTitledPane.getText().trim());
+//                                    System.out.println("Selected Value: " + value);
+//                                    showInfo(selectedTitledPane.getText().trim(), value);
+//                                }
+//                            }
+//                        } else {
+//
+//                        }
+//                    });
+//                }
+//            }
+//        }
         for (Node node : projectList.getChildren()) {
             if (node instanceof TitledPane titledPane) {
                 Node content = titledPane.getContent();
-                titledPane.setOnMouseClicked(event -> selectedTitledPane = titledPane);
-
                 if (content instanceof ListView<?> listView) {
+                    TitledPane currentPane = titledPane; // fix scope
                     listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                        if (newValue instanceof String) {
-                            String[] data = ((String) newValue).split("[:,()]");
+                        if (newValue != null && newValue instanceof String str) {
+                            String[] data = str.split("[:,()]");
                             if (data.length > 0) {
                                 String value = data[0].trim();
-                                if (selectedTitledPane != null) {
-                                    System.out.println("TitledPane: " + selectedTitledPane.getText().trim());
-                                    System.out.println("Selected Value: " + value);
-                                    showInfo(selectedTitledPane.getText().trim(), value);
-                                }
+                                selectedTitledPane = currentPane;
+                                System.out.println("TitledPane: " + currentPane.getText().trim());
+                                System.out.println("Selected Value: " + value);
+                                showInfo(currentPane.getText().trim(), value);
                             }
                         } else {
-                            clearInfo();
+                            // กรณีที่ clear แล้วไม่มี selection
+                            System.out.println("Selection cleared.");
+                            // สามารถเพิ่ม reset UI ตรงนี้ได้ เช่น clear label หรือ textfield
                         }
                     });
                 }
             }
         }
+
     }
 
     private void selectedVbox() {
@@ -273,7 +298,7 @@ public class TRmanagerController {
             System.out.println("Error: projectName or nameTester is invalid.");
             return;
         }
-
+        loadRepo();
         // Convert to lowercase for case-insensitive comparison
         String projectNameLower = projectName.toLowerCase();
         String nameTesterLower = nameTester.toLowerCase();
@@ -702,7 +727,6 @@ public class TRmanagerController {
         testIDLabel.setText("-");
         testNameLabel.setText("");
         infoNoteLabel.setText("");
-
     }
 
     private List<TestResult> searchList(String searchWords, ArrayList<TestResult> listOfResults) {

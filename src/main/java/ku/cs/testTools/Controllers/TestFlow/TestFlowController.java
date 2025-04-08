@@ -1869,7 +1869,7 @@ public class TestFlowController {
             if (head) {
                 Label arrow = new Label("▶");
                 arrow.setFont(new Font(24));
-                arrow.setTextFill(Color.BLACK);
+//                arrow.setTextFill(Color.BLACK);
                 arrow.setLayoutX(line.getStartX() - 6);
                 arrow.setLayoutY(line.getStartY() - 18);
                 arrow.setDisable(true);
@@ -1885,7 +1885,7 @@ public class TestFlowController {
             } else {
                 Label arrow = new Label("◀");
                 arrow.setFont(new Font(24));
-                arrow.setTextFill(Color.BLACK);
+//                arrow.setTextFill(Color.BLACK);
                 arrow.setLayoutX(line.getEndX() - 6);
                 arrow.setLayoutY(line.getEndY() - 18);
                 arrow.setDisable(true);

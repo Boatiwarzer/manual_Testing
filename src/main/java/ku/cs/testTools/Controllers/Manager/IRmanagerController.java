@@ -284,7 +284,7 @@ public class IRmanagerController {
             System.out.println("Error: projectName or nameTester is invalid.");
             return;
         }
-
+        loadRepo();
         // แปลงค่าให้เป็นตัวพิมพ์เล็กทั้งหมดเพื่อให้เปรียบเทียบได้แบบ case-insensitive
         String projectNameLower = projectName.toLowerCase();
         String nameTesterLower = nameTester.toLowerCase();

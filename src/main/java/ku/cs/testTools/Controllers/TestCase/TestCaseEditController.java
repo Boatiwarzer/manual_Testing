@@ -538,7 +538,7 @@ public class TestCaseEditController {
         String post = infoPostconField.getText();
         String idTS = onTestscriptCombobox.getValue();
 
-        testcase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post,idTS);
+        testcase = new TestCase(idTC, name, date, useCase, description,note,testcase.getPosition(),preCon,post,idTS);
         testcase.setProjectName(projectName);
         testcase.setTester(nameTester);
     }
@@ -553,13 +553,13 @@ public class TestCaseEditController {
         String post = infoPostconField.getText();
         String idTS = onTestscriptCombobox.getValue();
 
-        testcase = new TestCase(idTC, name, date, useCase, description,note,position,preCon,post,idTS);
+        testcase = new TestCase(idTC, name, date, useCase, description,note,testcase.getPosition(),preCon,post,idTS);
         testcase.setProjectName(projectName);
         testcase.setTester(nameTester);
-        if (testFlowPositionList.findByPositionId(testcase.getPosition()) != null) {
-            testFlowPosition = testFlowPositionList.findByPositionId(testcase.getPosition());
-            testcase.setPosition(testFlowPosition.getPositionID());
-        }
+//        if (testFlowPositionList.findByPositionId(testcase.getPosition()) != null) {
+//            testFlowPosition = testFlowPositionList.findByPositionId(testcase.getPosition());
+//            testcase.setPosition(testFlowPosition.getPositionID());
+//        }
 
     }
     private void objects() {
